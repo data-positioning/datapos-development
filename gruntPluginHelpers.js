@@ -123,22 +123,17 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         }
 
         if (logo) {
-            var myHeaders = new fetchModule.Headers();
-            myHeaders.append('Content-Type', 'image/jpeg');
-            myHeaders.append('Authorization', 'Bearer skIfsdRPC9hMrNVtkZSDTdHeHCqGRp0BqvSEQtXBjVoMdMrIdS0bBJ6t6BlVhZh5T9CJjuaQADbUja5f4');
-
-            var requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
+            const requestOptions = {
+                headers: { Authorization: 'Bearer skIfsdRPC9hMrNVtkZSDTdHeHCqGRp0BqvSEQtXBjVoMdMrIdS0bBJ6t6BlVhZh5T9CJjuaQADbUja5f4', 'Content-Type': 'image/jpeg' },
                 body: logo,
-                redirect: 'follow'
+                method: 'POST'
             };
 
-            fetchModule
-                .default('https://yxr5xjfo.api.sanity.io/v2021-06-07/assets/images/library-production', requestOptions)
-                .then((response) => response.text())
-                .then((result) => console.log(result))
-                .catch((error) => console.log('error', error));
+            const uploadSanityImageResponse = await fetchModule.default('https://yxr5xjfo.api.sanity.io/v2021-06-07/assets/images/library-production', requestOptions);
+            console.log('uploadSanityImageResponse', uploadSanityImageResponse);
+            // .then((response) => response.text())
+            // .then((result) => console.log(result))
+            // .catch((error) => console.log('error', error));
         }
 
         // Upsert Sanity document.

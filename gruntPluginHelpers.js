@@ -5,6 +5,9 @@
  * @license ISC
  */
 
+const sanityClient = require('@sanity/client');
+console.log('sanityClient', sanityClient);
+
 function getConnectorConfig(config, version, description, logo) {
     return {
         categoryId: config.categoryId,
@@ -87,13 +90,22 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         }
         console.log('Loaded connector instance to Firestore database.');
 
+        const query = '*[_type == "dataStore" %26%26 label == "File Store Emulator"]{ icon }';
+        const sanityLookupResponse = await fetchModule.default(`https://yxr5xjfo.api.sanity.io/v2021-10-21/data/query/library-production?query=${query}`);
+        if (!sanityLookupResponse.ok) {
+            console.log(sanityLookupResponse.status, sanityLookupResponse.statusText, await sanityLookupResponse.text());
+            return false;
+        }
+        console.log(sanityLookupResponse);
+        // console.log('Loaded connector document to Sanity dataset.');
+
         // Upsert Sanity document.
         const createOrReplace = {
             _id: config.id,
             _type: 'dataStore',
             category: config.categoryId,
             description,
-            // icon: { asset: { _ref: 'image-65aa51823e6437a14db0e6d86df0b2eca001b5cb-1200x800-svg' }, _type: 'reference' },
+            icon: { asset: { _ref: 'image-65aa51823e6437a14db0e6d86df0b2eca001b5cb-1200x800-svg' }, _type: 'reference' },
             label: config.label,
             logo,
             status: config.statusId,
@@ -117,8 +129,12 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
     }
 }
 
-async function loadContextModel(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {}
+async function loadContextModel(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {
+    console.log('loadContextModel NOT implemented.');
+}
 
-async function loadUsageKit(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {}
+async function loadUsageKit(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {
+    console.log('loadUsageKit NOT implemented.');
+}
 
 module.exports = { loadConnector, loadContextModel, loadUsageKit };

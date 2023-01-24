@@ -64,23 +64,11 @@ function getUsageKitConfig(config, version) {
 }
 
 function buildSanityURL(path, options) {
-    console.log(1111, `https://${options.sanityProjectId}.api.sanity.io/${options.sanityAPIVersion}/${path}/${options.sanityDataSetName}`);
     return `https://${options.sanityProjectId}.api.sanity.io/${options.sanityAPIVersion}/${path}/${options.sanityDataSetName}`;
 }
 
-async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {
+async function loadConnector(grunt, config, options, fetchModule) {
     try {
-        const options = {
-            firebaseAPIKey,
-            firebaseEmailAddress,
-            firebasePassword,
-            firebaseProjectId,
-            sanityAPIToken,
-            sanityAPIVersion: 'v2021-06-07',
-            sanityDataSetName: 'library-production',
-            sanityProjectId: 'yxr5xjfo'
-        };
-
         // Sign in to firebase.
         const firebaseSignInResponse = await fetchModule.default(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseAPIKey}`, {
             body: JSON.stringify({ email: firebaseEmailAddress, password: firebasePassword, returnSecureToken: true }),

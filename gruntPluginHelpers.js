@@ -65,7 +65,7 @@ function getUsageKitConfig(config, version) {
 
 async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {
     try {
-        const sanityAPIVersion = '2021-08-29';
+        const sanityAPIVersion = 'v2021-06-07';
         const sanityDataSetName = 'library-production';
         const sanityProjectId = 'yxr5xjfo';
 
@@ -122,6 +122,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         //     }
         // }
 
+        let imageId = undefined;
         if (logo) {
             const requestOptions = {
                 headers: { Authorization: `Bearer ${sanityAPIToken}`, 'Content-Type': 'image/jpeg' },
@@ -129,10 +130,15 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
                 method: 'POST'
             };
 
-            const uploadSanityImageResponse = await fetchModule.default('https://yxr5xjfo.api.sanity.io/v2021-06-07/assets/images/library-production', requestOptions);
+            const uploadSanityImageResponse = await fetchModule.default(
+                `https://${sanityProjectId}.api.sanity.io/${sanityAPIVersion}/assets/images/${sanityDataSetName}`,
+                requestOptions
+            );
             console.log('uploadSanityImageResponse', uploadSanityImageResponse);
             const uploadSanityImageResult = await uploadSanityImageResponse.json();
             console.log('uploadSanityImageResult', JSON.stringify(uploadSanityImageResult));
+            console.log(uploadSanityImageResult.document._id);
+            imageId = uploadSanityImageResult.document._id;
         }
 
         // Upsert Sanity document.
@@ -141,13 +147,13 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
             _type: 'dataStore',
             category: config.categoryId,
             description,
-            // icon: { asset: { _ref: 'image-65aa51823e6437a14db0e6d86df0b2eca001b5cb-1200x800-svg' }, _type: 'reference' },
+            icon: imageId ? { asset: { _ref: imageId }, _type: 'reference' } : undefined,
             label: config.label,
             logo,
             status: config.statusId,
             usage: config.usageId
         };
-        const sanityUpsertResponse = await fetchModule.default('https://yxr5xjfo.api.sanity.io/v2021-06-07/data/mutate/library-production', {
+        const sanityUpsertResponse = await fetchModule.default(`https://${sanityProjectId}.api.sanity.io/${sanityAPIVersion}/data/mutate/${sanityDataSetName}`, {
             body: JSON.stringify({ mutations: [{ createOrReplace }] }),
             headers: { Authorization: `Bearer ${sanityAPIToken}`, 'Content-Type': 'application/json' },
             method: 'POST'

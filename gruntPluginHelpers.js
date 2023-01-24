@@ -109,8 +109,8 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         // console.log('Loaded connector document to Sanity dataset.');
 
         // ...
-        const config = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
-        const client = sanityClient(config);
+        const sanityClientConfig = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
+        const client = sanityClient(sanityClientConfig);
         client
             .delete(sanityLookupResult[0].icon.asset._ref)
             .then((result) => {

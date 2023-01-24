@@ -31,5 +31,6 @@ module.exports = (grunt) => {
     grunt.registerTask('identifyLicenses', ['run:identifyLicensesUsingLicenseChecker', 'run:identifyLicensesUsingNLF']); // cmd+shift+i.
     grunt.registerTask('lint', ['run:lint']); // cmd+shift+l.
     grunt.registerTask('npmPublish', ['run:npmPublish']); // cmd+shift+n.
+    grunt.registerTask('release', ['gitadd', 'bump', 'run:npmPublish']); // cmd+shift+s.
     grunt.registerTask('synchronise', ['gitadd', 'bump']); // cmd+shift+s.
 };

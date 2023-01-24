@@ -131,6 +131,8 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
 
             const uploadSanityImageResponse = await fetchModule.default('https://yxr5xjfo.api.sanity.io/v2021-06-07/assets/images/library-production', requestOptions);
             console.log('uploadSanityImageResponse', uploadSanityImageResponse);
+            const uploadSanityImageResult = await uploadSanityImageResponse.json();
+            console.log('uploadSanityImageResult', JSON.stringify(uploadSanityImageResult));
             // .then((response) => response.text())
             // .then((result) => console.log(result))
             // .catch((error) => console.log('error', error));

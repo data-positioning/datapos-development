@@ -123,7 +123,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         }
 
         if (logo) {
-            var myHeaders = new Headers();
+            var myHeaders = new fetchModule.Headers();
             myHeaders.append('Content-Type', 'image/jpeg');
             myHeaders.append('Authorization', 'Bearer skIfsdRPC9hMrNVtkZSDTdHeHCqGRp0BqvSEQtXBjVoMdMrIdS0bBJ6t6BlVhZh5T9CJjuaQADbUja5f4');
 

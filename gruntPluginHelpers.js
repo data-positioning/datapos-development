@@ -63,11 +63,22 @@ function getUsageKitConfig(config, version) {
     };
 }
 
+function buildSanityURL(options) {
+    return `https://${options.sanityProjectId}.api.sanity.io/${options.sanityAPIVersion}/{$path}/${options.sanityDataSetName}`;
+}
+
 async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {
     try {
-        const sanityAPIVersion = 'v2021-06-07';
-        const sanityDataSetName = 'library-production';
-        const sanityProjectId = 'yxr5xjfo';
+        const options = {
+            firebaseAPIKey,
+            firebaseEmailAddress,
+            firebasePassword,
+            firebaseProjectId,
+            sanityAPIToken,
+            sanityAPIVersion: 'v2021-06-07',
+            sanityDataSetName: 'library-production',
+            sanityProjectId: 'yxr5xjfo'
+        };
 
         // Sign in to firebase.
         const firebaseSignInResponse = await fetchModule.default(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseAPIKey}`, {
@@ -101,7 +112,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         // ...
         let sanityImageId = undefined;
         if (logo) {
-            const uploadSanityImageResponse = await fetchModule.default(`https://${sanityProjectId}.api.sanity.io/${sanityAPIVersion}/assets/images/${sanityDataSetName}`, {
+            const uploadSanityImageResponse = await fetchModule.default(buildSanityURL('assets/images', options), {
                 headers: { Authorization: `Bearer ${sanityAPIToken}`, 'Content-Type': 'image/jpeg' },
                 body: logo,
                 method: 'POST'
@@ -111,7 +122,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
                 return false;
             }
             sanityImageId = (await uploadSanityImageResponse.json()).document._id;
-            console.log('Image uploaded to Sanity assets.');
+            console.log('Uploaded image to Sanity assets.');
         }
 
         // Upsert Sanity document.

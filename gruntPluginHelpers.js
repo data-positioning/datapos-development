@@ -64,7 +64,7 @@ function getUsageKitConfig(config, version) {
 }
 
 function buildSanityURL(path, options) {
-    console.log(1111, `https://${options.sanityProjectId}.api.sanity.io/${options.sanityAPIVersion}/{$path}/${options.sanityDataSetName}`);
+    console.log(1111, `https://${options.sanityProjectId}.api.sanity.io/${options.sanityAPIVersion}/${path}/${options.sanityDataSetName}`);
     return `https://${options.sanityProjectId}.api.sanity.io/${options.sanityAPIVersion}/{$path}/${options.sanityDataSetName}`;
 }
 

@@ -138,7 +138,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
             status: config.statusId,
             usage: config.usageId
         };
-        const sanityUpsertResponse = await fetchModule.default(`https://${sanityProjectId}.api.sanity.io/${sanityAPIVersion}/data/mutate/${sanityDataSetName}`, {
+        const sanityUpsertResponse = await fetchModule.default(buildSanityURL('data/mutate', options), {
             body: JSON.stringify({ mutations: [{ createOrReplace }] }),
             headers: { Authorization: `Bearer ${sanityAPIToken}`, 'Content-Type': 'application/json' },
             method: 'POST'

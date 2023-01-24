@@ -98,47 +98,20 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         }
         console.log('Loaded connector instance to Firestore database.');
 
-        // const query = '*[_type == "dataStore" %26%26 label == "File Store Emulator"]{ icon }';
-        // const sanityLookupResponse = await fetchModule.default(`https://yxr5xjfo.api.sanity.io/v2021-10-21/data/query/library-production?query=${query}`);
-        // if (!sanityLookupResponse.ok) {
-        //     console.log(sanityLookupResponse.status, sanityLookupResponse.statusText, await sanityLookupResponse.text());
-        //     return false;
-        // }
-        // const sanityLookupResult = await sanityLookupResponse.json();
-        // console.log(JSON.stringify(sanityLookupResult));
-        // let referenceIdToDelete = undefined;
-        // if (sanityLookupResult.result.length === 0) {
-        //     console.log('Creating new Sanity document.');
-        // } else {
-        //     console.log('Updating existing Sanity document.');
-        //     const icon = sanityLookupResult.result[0].icon;
-        //     if (icon) {
-        //         referenceIdToDelete = icon.asset._ref;
-        //         console.log(`Image to be deleted '${referenceIdToDelete}'`);
-        //         // const sanityClientConfig = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
-        //         // const client = sanityClient(sanityClientConfig);
-        //         // const deleteResponse = await client.delete(referenceId);
-        //         // console.log('deleteResponse', deleteResponse);
-        //     }
-        // }
-
-        let imageId = undefined;
+        // ...
+        let sanityImageId = undefined;
         if (logo) {
-            const requestOptions = {
+            const uploadSanityImageResponse = await fetchModule.default(`https://${sanityProjectId}.api.sanity.io/${sanityAPIVersion}/assets/images/${sanityDataSetName}`, {
                 headers: { Authorization: `Bearer ${sanityAPIToken}`, 'Content-Type': 'image/jpeg' },
                 body: logo,
                 method: 'POST'
-            };
-
-            const uploadSanityImageResponse = await fetchModule.default(
-                `https://${sanityProjectId}.api.sanity.io/${sanityAPIVersion}/assets/images/${sanityDataSetName}`,
-                requestOptions
-            );
-            console.log('uploadSanityImageResponse', uploadSanityImageResponse);
-            const uploadSanityImageResult = await uploadSanityImageResponse.json();
-            console.log('uploadSanityImageResult', JSON.stringify(uploadSanityImageResult));
-            console.log(uploadSanityImageResult.document._id);
-            imageId = uploadSanityImageResult.document._id;
+            });
+            if (!uploadSanityImageResponse.ok) {
+                console.log(uploadSanityImageResponse.status, uploadSanityImageResponse.statusText, await uploadSanityImageResponse.text());
+                return false;
+            }
+            sanityImageId = (await uploadSanityImageResponse.json()).document._id;
+            console.log('Image uploaded to Sanity assets.');
         }
 
         // Upsert Sanity document.
@@ -147,7 +120,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
             _type: 'dataStore',
             category: config.categoryId,
             description,
-            icon: imageId ? { asset: { _ref: imageId }, _type: 'reference' } : undefined,
+            icon: sanityImageId ? { asset: { _ref: sanityImageId }, _type: 'reference' } : undefined,
             label: config.label,
             logo,
             status: config.statusId,

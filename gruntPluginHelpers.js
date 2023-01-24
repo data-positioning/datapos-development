@@ -112,7 +112,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         const sanityClientConfig = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
         const client = sanityClient(sanityClientConfig);
         client
-            .delete(sanityLookupResult[0].icon.asset._ref)
+            .delete(sanityLookupResult.result[0].icon.asset._ref)
             .then((result) => {
                 console.log('deleted image asset', result);
             })

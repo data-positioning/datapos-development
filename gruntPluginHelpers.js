@@ -135,6 +135,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
             const uploadSanityImageResult = await uploadSanityImageResponse.json();
             console.log('uploadSanityImageResult', JSON.stringify(uploadSanityImageResult));
             imageId = uploadSanityImageResult.document._id;
+            console.log(imageId;)
         }
 
         // Upsert Sanity document.
@@ -143,13 +144,13 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
             _type: 'dataStore',
             category: config.categoryId,
             description,
-            icon: imageId ? { asset: { _ref: imageId }, _type: 'reference' } : null,
+            icon: imageId ? { asset: { _ref: imageId }, _type: 'reference' } : undefined,
             label: config.label,
             logo,
             status: config.statusId,
             usage: config.usageId
         };
-        const sanityUpsertResponse = await fetchModule.default(sanityURL, {
+        const sanityUpsertResponse = await fetchModule.default('https://yxr5xjfo.api.sanity.io/v2021-06-07/data/mutate/library-production', {
             body: JSON.stringify({ mutations: [{ createOrReplace }] }),
             headers: { Authorization: `Bearer ${sanityAPIToken}`, 'Content-Type': 'application/json' },
             method: 'POST'

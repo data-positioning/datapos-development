@@ -102,7 +102,7 @@ async function loadConnector(grunt, config, options, fetchModule) {
         let sanityImageId = undefined;
         if (logo) {
             const uploadSanityImageResponse = await fetchModule.default(buildSanityURL('assets/images', options), {
-                headers: { Authorization: `Bearer ${sanityAPIToken}`, 'Content-Type': 'image/jpeg' },
+                headers: { Authorization: `Bearer ${options.sanityAPIToken}`, 'Content-Type': 'image/jpeg' },
                 body: logo,
                 method: 'POST'
             });
@@ -128,7 +128,7 @@ async function loadConnector(grunt, config, options, fetchModule) {
         };
         const sanityUpsertResponse = await fetchModule.default(buildSanityURL('data/mutate', options), {
             body: JSON.stringify({ mutations: [{ createOrReplace }] }),
-            headers: { Authorization: `Bearer ${sanityAPIToken}`, 'Content-Type': 'application/json' },
+            headers: { Authorization: `Bearer ${options.sanityAPIToken}`, 'Content-Type': 'application/json' },
             method: 'POST'
         });
         if (!sanityUpsertResponse.ok) {

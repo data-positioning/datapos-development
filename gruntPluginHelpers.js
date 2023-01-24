@@ -129,10 +129,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
                 method: 'POST'
             };
 
-            const uploadSanityImageResponse = await fetchModule.default(
-                `https://${sanityProjectId}.api.sanity.io/${sanityAPIVersion}/assets/images/${sanityDataSetName}`,
-                requestOptions
-            );
+            const uploadSanityImageResponse = await fetchModule.default('https://yxr5xjfo.api.sanity.io/v2021-06-07/assets/images/library-production', requestOptions);
             console.log('uploadSanityImageResponse', uploadSanityImageResponse);
             const uploadSanityImageResult = await uploadSanityImageResponse.json();
             console.log('uploadSanityImageResult', JSON.stringify(uploadSanityImageResult));

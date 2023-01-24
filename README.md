@@ -1,6 +1,8 @@
 # Data Positioning Operations
 
-## Project Commands
+...
+
+## Repository Management Commands
 
 The following commands are available for repository management. For implementation details, see the [Grunt](https://gruntjs.com/) configuration file (gruntfile.js).
 

@@ -1,12 +1,16 @@
 /**
  * @author Jonathan Terrell <terrell.jm@gmail.com>
  * @copyright 2022 Jonathan Terrell
- * @file datapos-engine/src/gruntPluginHelpers.js
+ * @file datapos-operations/gruntPluginHelpers.js
  * @license ISC
  */
 
+// Vendor Dependencies
 const sanityClient = require('@sanity/client');
-console.log('sanityClient', sanityClient);
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function getConnectorConfig(config, version, description, logo) {
     return {
@@ -61,6 +65,10 @@ function getUsageKitConfig(config, version) {
 
 async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {
     try {
+        const sanityAPIVersion = '2021-08-29';
+        const sanityDataSetName = 'library-production';
+        const sanityProjectId = 'yxr5xjfo';
+
         // Sign in to firebase.
         const firebaseSignInResponse = await fetchModule.default(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseAPIKey}`, {
             body: JSON.stringify({ email: firebaseEmailAddress, password: firebasePassword, returnSecureToken: true }),
@@ -96,8 +104,21 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
             console.log(sanityLookupResponse.status, sanityLookupResponse.statusText, await sanityLookupResponse.text());
             return false;
         }
-        console.log(sanityLookupResponse);
+        const sanityLookupResult = await sanityLookupResponse.json();
+        console.log(sanityLookupResult);
         // console.log('Loaded connector document to Sanity dataset.');
+
+        // ...
+        const config = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
+        const client = sanityClient(config);
+        client
+            .delete(sanityLookupResult[0].icon.asset._ref)
+            .then((result) => {
+                console.log('deleted image asset', result);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
 
         // Upsert Sanity document.
         const createOrReplace = {

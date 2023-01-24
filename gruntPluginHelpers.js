@@ -108,17 +108,14 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         console.log(JSON.stringify(sanityLookupResult));
         // console.log('Loaded connector document to Sanity dataset.');
 
-        // ...
-        // const sanityClientConfig = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
-        // const client = sanityClient(sanityClientConfig);
-        // client
-        //     .delete(sanityLookupResult.result[0].icon.asset._ref)
-        //     .then((result) => {
-        //         console.log('deleted image asset', result);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
+        const icon = sanityLookupResult.result[0].icon;
+        if (icon) {
+            const referenceId = icon.asset._ref;
+            const sanityClientConfig = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
+            const client = sanityClient(sanityClientConfig);
+            const deleteResponse = await client.delete(referenceId);
+            console.log('deleteResponse', deleteResponse);
+        }
 
         // Upsert Sanity document.
         const createOrReplace = {

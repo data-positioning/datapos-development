@@ -70,9 +70,9 @@ function buildSanityURL(path, options) {
 async function loadConnector(grunt, config, options, fetchModule) {
     try {
         // Sign in to firebase.
-        const firebaseSignInResponse = await fetchModule.default(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseAPIKey}`, {
-            body: JSON.stringify({ email: firebaseEmailAddress, password: firebasePassword, returnSecureToken: true }),
-            headers: { Referer: `${firebaseProjectId}.web.app` },
+        const firebaseSignInResponse = await fetchModule.default(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${options.firebaseAPIKey}`, {
+            body: JSON.stringify({ email: options.firebaseEmailAddress, password: options.firebasePassword, returnSecureToken: true }),
+            headers: { Referer: `${options.firebaseProjectId}.web.app` },
             method: 'POST'
         });
         if (!firebaseSignInResponse.ok) {
@@ -87,7 +87,7 @@ async function loadConnector(grunt, config, options, fetchModule) {
         const logo = grunt.file.read('./src/logo.svg');
 
         // Upsert connector record in application service database (firestore).
-        const firebaseUpsertResponse = await fetchModule.default(`https://europe-west1-${firebaseProjectId}.cloudfunctions.net/api/plugins`, {
+        const firebaseUpsertResponse = await fetchModule.default(`https://europe-west1-${options.firebaseProjectId}.cloudfunctions.net/api/plugins`, {
             body: JSON.stringify(getConnectorConfig(config, grunt.config.data.pkg.version, description, logo)),
             headers: { Authorization: firebaseSignInResult.idToken, 'Content-Type': 'application/json' },
             method: 'POST'
@@ -144,11 +144,11 @@ async function loadConnector(grunt, config, options, fetchModule) {
     }
 }
 
-async function loadContextModel(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {
+async function loadContextModel(grunt, config, options, fetchModule) {
     console.log('loadContextModel NOT implemented.');
 }
 
-async function loadUsageKit(grunt, config, firebaseAPIKey, firebaseEmailAddress, firebasePassword, firebaseProjectId, sanityAPIToken, fetchModule) {
+async function loadUsageKit(grunt, config, options, fetchModule) {
     console.log('loadUsageKit NOT implemented.');
 }
 

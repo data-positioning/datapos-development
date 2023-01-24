@@ -63,7 +63,7 @@ function getUsageKitConfig(config, version) {
     };
 }
 
-function buildSanityURL(options) {
+function buildSanityURL(path, options) {
     return `https://${options.sanityProjectId}.api.sanity.io/${options.sanityAPIVersion}/{$path}/${options.sanityDataSetName}`;
 }
 

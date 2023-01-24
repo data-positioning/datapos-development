@@ -143,7 +143,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
             _type: 'dataStore',
             category: config.categoryId,
             description,
-            icon: imageId ? { asset: { _ref: imageId }, _type: 'reference' } : undefined,
+            icon: imageId ? { asset: { _ref: imageId }, _type: 'reference' } : null,
             label: config.label,
             logo,
             status: config.statusId,

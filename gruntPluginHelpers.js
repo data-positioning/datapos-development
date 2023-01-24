@@ -105,20 +105,20 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
             return false;
         }
         const sanityLookupResult = await sanityLookupResponse.json();
-        console.log(sanityLookupResult);
+        console.log(JSON.stringify(sanityLookupResult));
         // console.log('Loaded connector document to Sanity dataset.');
 
         // ...
-        const sanityClientConfig = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
-        const client = sanityClient(sanityClientConfig);
-        client
-            .delete(sanityLookupResult.result[0].icon.asset._ref)
-            .then((result) => {
-                console.log('deleted image asset', result);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        // const sanityClientConfig = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
+        // const client = sanityClient(sanityClientConfig);
+        // client
+        //     .delete(sanityLookupResult.result[0].icon.asset._ref)
+        //     .then((result) => {
+        //         console.log('deleted image asset', result);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
 
         // Upsert Sanity document.
         const createOrReplace = {
@@ -126,7 +126,7 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
             _type: 'dataStore',
             category: config.categoryId,
             description,
-            icon: { asset: { _ref: 'image-65aa51823e6437a14db0e6d86df0b2eca001b5cb-1200x800-svg' }, _type: 'reference' },
+            // icon: { asset: { _ref: 'image-65aa51823e6437a14db0e6d86df0b2eca001b5cb-1200x800-svg' }, _type: 'reference' },
             label: config.label,
             logo,
             status: config.statusId,

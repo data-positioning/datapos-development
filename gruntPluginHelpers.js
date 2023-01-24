@@ -106,15 +106,39 @@ async function loadConnector(grunt, config, firebaseAPIKey, firebaseEmailAddress
         }
         const sanityLookupResult = await sanityLookupResponse.json();
         console.log(JSON.stringify(sanityLookupResult));
-        // console.log('Loaded connector document to Sanity dataset.');
+        let referenceIdToDelete = undefined;
+        if (sanityLookupResult.result.length === 0) {
+            console.log('Creating new Sanity document.');
+        } else {
+            console.log('Updating existing Sanity document.');
+            const icon = sanityLookupResult.result[0].icon;
+            if (icon) {
+                referenceIdToDelete = icon.asset._ref;
+                console.log(`Image to be deleted '${referenceIdToDelete}'`);
+                // const sanityClientConfig = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
+                // const client = sanityClient(sanityClientConfig);
+                // const deleteResponse = await client.delete(referenceId);
+                // console.log('deleteResponse', deleteResponse);
+            }
+        }
 
-        const icon = sanityLookupResult.result[0].icon;
-        if (icon) {
-            const referenceId = icon.asset._ref;
-            const sanityClientConfig = { projectId: sanityProjectId, dataset: sanityDataSetName, apiVersion: sanityAPIVersion, token: sanityAPIToken };
-            const client = sanityClient(sanityClientConfig);
-            const deleteResponse = await client.delete(referenceId);
-            console.log('deleteResponse', deleteResponse);
+        if (logo) {
+            var myHeaders = new Headers();
+            myHeaders.append('Content-Type', 'image/jpeg');
+            myHeaders.append('Authorization', 'Bearer skIfsdRPC9hMrNVtkZSDTdHeHCqGRp0BqvSEQtXBjVoMdMrIdS0bBJ6t6BlVhZh5T9CJjuaQADbUja5f4');
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: logo,
+                redirect: 'follow'
+            };
+
+            fetchModule
+                .default('https://yxr5xjfo.api.sanity.io/v2021-06-07/assets/images/library-production', requestOptions)
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.log('error', error));
         }
 
         // Upsert Sanity document.

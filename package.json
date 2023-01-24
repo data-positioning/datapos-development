@@ -1,0 +1,9 @@
+{
+    "version": "0.0.3",
+    "devDependencies": {
+        "grunt": "^1.5.3",
+        "grunt-bump": "^0.8.0",
+        "grunt-git": "^1.1.1",
+        "grunt-run": "^0.8.1"
+    }
+}

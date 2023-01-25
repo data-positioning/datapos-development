@@ -56,18 +56,18 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
             console.log('Uploaded image to Sanity assets.');
         }
 
-        //     // Upsert Sanity document.
-        //     const createOrReplace = {
-        //         _id: config.id,
-        //         _type: 'dataStore',
-        //         category: config.categoryId,
-        //         description,
-        //         icon: sanityImageId ? { asset: { _ref: sanityImageId }, _type: 'reference' } : undefined,
-        //         label: config.label,
-        //         logo,
-        //         status: config.statusId,
-        //         usage: config.usageId
-        //     };
+        // Upsert Sanity document.
+        const createOrReplace = {
+            _id: config.id,
+            _type: 'dataStore',
+            category: config.categoryId,
+            description,
+            icon: sanityImageId ? { asset: { _ref: sanityImageId }, _type: 'reference' } : undefined,
+            label: config.label,
+            logo,
+            status: config.statusId,
+            usage: config.usageId
+        };
         //     const sanityUpsertResponse = await fetchModule.default(buildSanityURL('data/mutate', settings), {
         //         body: JSON.stringify({ mutations: [{ createOrReplace }] }),
         //         headers: { Authorization: `Bearer ${settings.sanityAPIToken}`, 'Content-Type': 'application/json' },

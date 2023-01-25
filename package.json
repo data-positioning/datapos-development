@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-operations",
-    "version": "0.0.40",
+    "version": "0.0.41",
     "devDependencies": {
         "grunt": "^1.5.3",
         "grunt-bump": "^0.8.0",

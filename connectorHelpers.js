@@ -52,7 +52,7 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
         }
         console.log('Loaded connector instance to Firestore database.');
 
-        // ...
+        // Upload logo. Sanity does not store duplicate copies, so no need to delete any prior copy.
         let sanityImageId;
         if (logo) {
             const uploadSanityImageResponse = await fetchModule.default(buildSanityURL('assets/images', settings), {
@@ -66,6 +66,8 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
             }
             sanityImageId = (await uploadSanityImageResponse.json()).document._id;
             console.log('Uploaded image to Sanity assets.');
+        } else {
+            sanityImageId = null;
         }
 
         // Upsert Sanity document.

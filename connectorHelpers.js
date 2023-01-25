@@ -24,9 +24,21 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
         const firebaseSignInResult = await firebaseSignInResponse.json();
         console.log('Authenticated with Firebase.');
 
-        // Retrieve description and logo.
-        const description = grunt.file.read('./src/description.md');
-        const logo = grunt.file.read('./src/logo.svg');
+        // Retrieve description.
+        let description;
+        try {
+            description = grunt.file.read('./src/description.md');
+        } catch (error) {
+            description = null;
+        }
+
+        // Retrieve logo.
+        let logo;
+        try {
+            logo = grunt.file.read('./src/logo.svg');
+        } catch (error) {
+            logo = null;
+        }
 
         // Upsert connector record in application service database (firestore).
         const firebaseUpsertResponse = await fetchModule.default(`https://europe-west1-${settings.firebaseProjectId}.cloudfunctions.net/api/plugins`, {
@@ -41,7 +53,7 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
         console.log('Loaded connector instance to Firestore database.');
 
         // ...
-        let sanityImageId = undefined;
+        let sanityImageId;
         if (logo) {
             const uploadSanityImageResponse = await fetchModule.default(buildSanityURL('assets/images', settings), {
                 headers: { Authorization: `Bearer ${settings.sanityAPIToken}`, 'Content-Type': 'image/jpeg' },
@@ -62,7 +74,7 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
             _type: 'dataStore',
             category: config.categoryId,
             description,
-            icon: sanityImageId ? { asset: { _ref: sanityImageId }, _type: 'reference' } : undefined,
+            icon: sanityImageId ? { asset: { _ref: sanityImageId }, _type: 'reference' } : null,
             label: config.label,
             logo,
             status: config.statusId,

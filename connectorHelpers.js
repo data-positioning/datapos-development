@@ -89,7 +89,7 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
     }
 }
 
-module.exports = { loadConnector };
+module.exports = { uploadConnector };
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Utilities

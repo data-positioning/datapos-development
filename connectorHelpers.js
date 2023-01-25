@@ -40,21 +40,22 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
         }
         console.log('Loaded connector instance to Firestore database.');
 
-        //     // ...
-        //     let sanityImageId = undefined;
-        //     if (logo) {
-        //         const uploadSanityImageResponse = await fetchModule.default(buildSanityURL('assets/images', settings), {
-        //             headers: { Authorization: `Bearer ${settings.sanityAPIToken}`, 'Content-Type': 'image/jpeg' },
-        //             body: logo,
-        //             method: 'POST'
-        //         });
-        //         if (!uploadSanityImageResponse.ok) {
-        //             console.log(uploadSanityImageResponse.status, uploadSanityImageResponse.statusText, await uploadSanityImageResponse.text());
-        //             return false;
-        //         }
-        //         sanityImageId = (await uploadSanityImageResponse.json()).document._id;
-        //         console.log('Uploaded image to Sanity assets.');
-        //     }
+        // ...
+        let sanityImageId = undefined;
+        if (logo) {
+            const uploadSanityImageResponse = await fetchModule.default(buildSanityURL('assets/images', settings), {
+                headers: { Authorization: `Bearer ${settings.sanityAPIToken}`, 'Content-Type': 'image/jpeg' },
+                body: logo,
+                method: 'POST'
+            });
+            if (!uploadSanityImageResponse.ok) {
+                console.log(uploadSanityImageResponse.status, uploadSanityImageResponse.statusText, await uploadSanityImageResponse.text());
+                return false;
+            }
+            sanityImageId = (await uploadSanityImageResponse.json()).document._id;
+            console.log('Uploaded image to Sanity assets.');
+        }
+
         //     // Upsert Sanity document.
         //     const createOrReplace = {
         //         _id: config.id,

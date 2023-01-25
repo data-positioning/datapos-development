@@ -68,16 +68,16 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
             status: config.statusId,
             usage: config.usageId
         };
-        //     const sanityUpsertResponse = await fetchModule.default(buildSanityURL('data/mutate', settings), {
-        //         body: JSON.stringify({ mutations: [{ createOrReplace }] }),
-        //         headers: { Authorization: `Bearer ${settings.sanityAPIToken}`, 'Content-Type': 'application/json' },
-        //         method: 'POST'
-        //     });
-        //     if (!sanityUpsertResponse.ok) {
-        //         console.log(sanityUpsertResponse.status, sanityUpsertResponse.statusText, await sanityUpsertResponse.text());
-        //         return false;
-        //     }
-        //     console.log('Loaded connector document to Sanity dataset.');
+        const sanityUpsertResponse = await fetchModule.default(buildSanityURL('data/mutate', settings), {
+            body: JSON.stringify({ mutations: [{ createOrReplace }] }),
+            headers: { Authorization: `Bearer ${settings.sanityAPIToken}`, 'Content-Type': 'application/json' },
+            method: 'POST'
+        });
+        if (!sanityUpsertResponse.ok) {
+            console.log(sanityUpsertResponse.status, sanityUpsertResponse.statusText, await sanityUpsertResponse.text());
+            return false;
+        }
+        console.log('Loaded connector document to Sanity dataset.');
         return true;
     } catch (error) {
         console.log(error);

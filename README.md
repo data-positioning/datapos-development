@@ -1,8 +1,8 @@
 # Data Positioning Operations
 
-This repository contains helpers and associated utilities used to manage other Data Positioning repositories.
+Contains helpers and associated utilities used to manage other Data Positioning repositories.
 
-The 'connectorHelpers.js' file contains helpers for uploading compiled connectors to Firebase Storage and registering them in Firestore. They also upload connector documentation to the Sanity Content Lake. These helpers are implemented as [Grunt](https://gruntjs.com/) tasks. All connector repositories install this repository as a development dependency.
+The 'connectorHelpers.js' file contains helpers for uploading compiled connectors to Firebase Storage and registering them in Firestore. These helpers also upload connector documentation to the Sanity Content Lake. All connector repositories install this repository as a development dependency and implement the 'uploadConnector' helper as a [Grunt](https://gruntjs.com/) tasks.
 
 ## Installation
 

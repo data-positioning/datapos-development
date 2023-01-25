@@ -17,7 +17,7 @@ module.exports = (grunt) => {
         run: {
             identifyLicensesUsingLicenseChecker: { args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'], cmd: 'npx' },
             identifyLicensesUsingNLF: { args: ['nlf', '-d'], cmd: 'npx' },
-            lint: { args: ['eslint', 'src/index.ts'], cmd: 'npx' },
+            lint: { args: ['eslint', '*.js'], cmd: 'npx' },
             npmPublish: { args: ['publish'], cmd: 'npx' },
             outdated: { args: ['npm', 'outdated'], cmd: 'npx' }
         }

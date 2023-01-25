@@ -121,38 +121,38 @@ function getConnectorConfig(config, version, description, logo) {
     };
 }
 
-function getContextModelConfig(config, version) {
-    return {
-        categoryId: config.categoryId,
-        dimensionCategories: config.dimensionCategories,
-        dimensions: config.dimensions,
-        entities: config.entities,
-        id: config.id,
-        label: config.label,
-        measureCategories: config.measureCategories,
-        measures: config.measures,
-        presentationCategories: config.presentationCategories,
-        presentations: config.presentations,
-        reference: `plugins%2FcontextModels%2F${config.id}`,
-        statusId: config.statusId,
-        summary: config.summary,
-        typeId: config.typeId,
-        version: `v${version}`
-    };
-}
+// function getContextModelConfig(config, version) {
+//     return {
+//         categoryId: config.categoryId,
+//         dimensionCategories: config.dimensionCategories,
+//         dimensions: config.dimensions,
+//         entities: config.entities,
+//         id: config.id,
+//         label: config.label,
+//         measureCategories: config.measureCategories,
+//         measures: config.measures,
+//         presentationCategories: config.presentationCategories,
+//         presentations: config.presentations,
+//         reference: `plugins%2FcontextModels%2F${config.id}`,
+//         statusId: config.statusId,
+//         summary: config.summary,
+//         typeId: config.typeId,
+//         version: `v${version}`
+//     };
+// }
 
-function getUsageKitConfig(config, version) {
-    return {
-        categoryId: config.categoryId,
-        id: config.id,
-        label: config.label,
-        reference: `plugins%2FusageKits%2F${config.id}`,
-        statusId: config.statusId,
-        summary: config.summary,
-        typeId: config.typeId,
-        version: `v${version}`
-    };
-}
+// function getUsageKitConfig(config, version) {
+//     return {
+//         categoryId: config.categoryId,
+//         id: config.id,
+//         label: config.label,
+//         reference: `plugins%2FusageKits%2F${config.id}`,
+//         statusId: config.statusId,
+//         summary: config.summary,
+//         typeId: config.typeId,
+//         version: `v${version}`
+//     };
+// }
 
 function buildSanityURL(path, settings) {
     return `https://${settings.sanityProjectId}.api.sanity.io/${settings.sanityAPIVersion}/${path}/${settings.sanityDataSetName}`;

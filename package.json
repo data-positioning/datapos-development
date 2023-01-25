@@ -1,7 +1,8 @@
 {
     "name": "@datapos/datapos-operations",
-    "version": "0.0.54",
+    "version": "0.0.55",
     "devDependencies": {
+        "eslint": "^8.32.0",
         "grunt": "^1.5.3",
         "grunt-bump": "^0.8.0",
         "grunt-git": "^1.1.1",

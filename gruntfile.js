@@ -22,6 +22,7 @@ module.exports = (grunt) => {
             outdated: { args: ['npm', 'outdated'], cmd: 'npx' }
         }
     });
+
     // Load external tasks.
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-git');

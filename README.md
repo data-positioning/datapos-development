@@ -14,10 +14,10 @@ npm install @datapos-operations --save-dev
 
 The following commands are available for repository management. For implementation details, see the [Grunt](https://gruntjs.com/) configuration file (gruntfile.js).
 
-| Name              | Key Code    | Notes                                                                                                                                                          |
-| ----------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Identify Licenses | cmd+shift+i | Identify licenses for all dependencies.                                                                                                                        |
-| Lint              | cmd+shift+l | Run [ESLint](https://eslint.org/) against the local repository.                                                                                                |
-| NPM Publish       | cmd+shift+n | Publish to [npm](https://www.npmjs.com/).                                                                                                                      |
-| Release           | cmd+shift+r | Synchronise the local repository with the GitHub repository and publish to NPM. Use the command line command 'npm publish' when publishing for the first time. |
-| Sync with GitHub  | cmd+shift+s | Synchronise the local repository with the GitHub repository.                                                                                                   |
+| Name              | Key Code    | Notes                                                                                                                                                    |
+| ----------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Identify Licenses | cmd+shift+i | Identify licenses for all dependencies.                                                                                                                  |
+| Lint              | cmd+shift+l | Run [ESLint](https://eslint.org/) against the local repository.                                                                                          |
+| NPM Publish       | cmd+shift+n | Publish to [npm](https://www.npmjs.com/). Requires prior synchronisation. Use the command line command 'npm publish' when publishing for the first time. |
+| Release           | cmd+shift+r | Synchronise the local repository with the GitHub repository and publish to [npm](https://www.npmjs.com/).                                                |
+| Sync with GitHub  | cmd+shift+s | Synchronise the local repository with the GitHub repository.                                                                                             |

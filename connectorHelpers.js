@@ -9,7 +9,7 @@
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-async function uploadConnector(grunt, fetchModule, config, settings) {
+async function uploadConnector(grunt, gruntConfig, fetchModule, settings) {
     try {
         // Sign in to firebase.
         const firebaseSignInResponse = await fetchModule.default(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${settings.firebaseAPIKey}`, {
@@ -42,7 +42,7 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
 
         // Upsert connector record in application service database (firestore).
         const firebaseUpsertResponse = await fetchModule.default(`https://europe-west1-${settings.firebaseProjectId}.cloudfunctions.net/api/plugins`, {
-            body: JSON.stringify(getConnectorConfig(config, grunt.config.data.pkg.version, description, logo)),
+            body: JSON.stringify(getConnectorConfig(gruntConfig, grunt.config.data.pkg.version, description, logo)),
             headers: { Authorization: firebaseSignInResult.idToken, 'Content-Type': 'application/json' },
             method: 'POST'
         });
@@ -72,15 +72,15 @@ async function uploadConnector(grunt, fetchModule, config, settings) {
 
         // Upsert Sanity document.
         const createOrReplace = {
-            _id: config.id,
+            _id: gruntConfig.id,
             _type: 'dataStore',
-            category: config.categoryId,
+            category: gruntConfig.categoryId,
             description,
             icon: sanityImageId ? { asset: { _ref: sanityImageId }, _type: 'reference' } : null,
-            label: config.label,
+            label: gruntConfig.label,
             logo,
-            status: config.statusId,
-            usage: config.usageId
+            status: gruntConfig.statusId,
+            usage: gruntConfig.usageId
         };
         const sanityUpsertResponse = await fetchModule.default(buildSanityURL('data/mutate', settings), {
             body: JSON.stringify({ mutations: [{ createOrReplace }] }),

@@ -7,7 +7,7 @@ The 'connectorHelpers.js' file contains helpers for uploading compiled connector
 ## Installation
 
 ```
-npm install @datapos-operations --save-dev
+npm install --save-dev @datapos-operations
 ```
 
 ## IDE Setup

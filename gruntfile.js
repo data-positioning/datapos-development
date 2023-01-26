@@ -28,7 +28,7 @@ module.exports = (grunt) => {
     grunt.loadNpmTasks('grunt-git');
     grunt.loadNpmTasks('grunt-run');
 
-    // Register standard tasks.
+    // Register standard repository management tasks.
     grunt.registerTask('identifyLicenses', ['run:identifyLicensesUsingLicenseChecker', 'run:identifyLicensesUsingNLF']); // cmd+shift+i.
     grunt.registerTask('lint', ['run:lint']); // cmd+shift+l.
     grunt.registerTask('npmPublish', ['run:npmPublish']); // cmd+shift+n.

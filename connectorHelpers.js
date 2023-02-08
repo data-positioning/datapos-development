@@ -73,7 +73,7 @@ async function uploadConnector(grunt, config, fetchModule, settings) {
         // Upsert Sanity document.
         const createOrReplace = {
             _id: config.id,
-            _type: (config.typeId === 'dataConnector' ? 'dataStore' : 'node'),
+            _type: config.typeId === 'dataConnector' ? 'dataStore' : 'node',
             category: config.categoryId,
             description,
             icon: sanityImageId ? { asset: { _ref: sanityImageId }, _type: 'reference' } : null,
@@ -108,15 +108,15 @@ module.exports = { uploadConnector };
 function getConnectorConfig(config, version, description, logo) {
     return {
         categoryId: config.categoryId,
+        description: description || null,
         id: config.id,
         implementations: config.implementations,
         label: config.label,
         logo: logo || null,
-        logoWidth: null,
-        narrative: description || null,
+        // logoWidth: null,
         reference: `plugins%2Fconnectors%2F${config.usage === 'node' ? 'node' : 'data'}%2F${config.id}`,
         statusId: config.statusId,
-        summary: config.summary,
+        // summary: config.summary,
         typeId: config.typeId,
         usageId: config.usageId,
         version: `v${version}`

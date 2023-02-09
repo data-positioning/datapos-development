@@ -113,10 +113,8 @@ function getConnectorConfig(config, version, description, logo) {
         implementations: config.implementations,
         label: config.label,
         logo: logo || null,
-        // logoWidth: null,
         reference: `plugins%2Fconnectors%2F${config.usage === 'node' ? 'node' : 'data'}%2F${config.id}`,
         statusId: config.statusId,
-        // summary: config.summary,
         typeId: config.typeId,
         usageId: config.usageId,
         version: `v${version}`

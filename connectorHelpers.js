@@ -73,7 +73,7 @@ async function uploadConnector(grunt, config, fetchModule, settings) {
         // Upsert Sanity document.
         const createOrReplace = {
             _id: config.id,
-            _type: config.typeId === 'dataConnector' ? 'dataStore' : 'node',
+            _type: config.typeId === 'dataConnector' ? 'dataStore' : 'nexusNode',
             category: config.categoryId,
             description,
             icon: sanityImageId ? { asset: { _ref: sanityImageId }, _type: 'reference' } : null,

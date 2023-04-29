@@ -41,7 +41,7 @@ async function uploadConnector(grunt, config, fetchModule, settings) {
         }
 
         // Upsert connector record in application service database (firestore).
-        const firebaseUpsertResponse = await fetchModule.default(`https://europe-west1-${settings.firebaseProjectId}.cloudfunctions.net/api/components`, {
+        const firebaseUpsertResponse = await fetchModule.default(`https://europe-west1-${settings.firebaseProjectId}.cloudfunctions.net/api/componentConfigs`, {
             body: JSON.stringify(getConnectorConfig(config, grunt.config.data.pkg.version, description, logo)),
             headers: { Authorization: firebaseSignInResult.idToken, 'Content-Type': 'application/json' },
             method: 'POST'

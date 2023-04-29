@@ -41,7 +41,7 @@ async function uploadConnector(grunt, config, fetchModule, settings) {
         }
 
         // Upsert connector record in application service database (firestore).
-        const firebaseUpsertResponse = await fetchModule.default(`https://europe-west1-${settings.firebaseProjectId}.cloudfunctions.net/api/plugins`, {
+        const firebaseUpsertResponse = await fetchModule.default(`https://europe-west1-${settings.firebaseProjectId}.cloudfunctions.net/api/components`, {
             body: JSON.stringify(getConnectorConfig(config, grunt.config.data.pkg.version, description, logo)),
             headers: { Authorization: firebaseSignInResult.idToken, 'Content-Type': 'application/json' },
             method: 'POST'
@@ -113,7 +113,7 @@ function getConnectorConfig(config, version, description, logo) {
         implementations: config.implementations,
         label: config.label,
         logo: logo || null,
-        reference: `plugins%2Fconnectors%2F${config.usage === 'node' ? 'node' : 'data'}%2F${config.id}`,
+        reference: `components%2Fconnectors%2F${config.usage === 'node' ? 'node' : 'data'}%2F${config.id}`,
         statusId: config.statusId,
         typeId: config.typeId,
         usageId: config.usageId,
@@ -133,7 +133,7 @@ function getConnectorConfig(config, version, description, logo) {
 //         measures: config.measures,
 //         presentationCategories: config.presentationCategories,
 //         presentations: config.presentations,
-//         reference: `plugins%2FcontextModels%2F${config.id}`,
+//         reference: `components%2FcontextModels%2F${config.id}`,
 //         statusId: config.statusId,
 //         summary: config.summary,
 //         typeId: config.typeId,
@@ -146,7 +146,7 @@ function getConnectorConfig(config, version, description, logo) {
 //         categoryId: config.categoryId,
 //         id: config.id,
 //         label: config.label,
-//         reference: `plugins%2FusageKits%2F${config.id}`,
+//         reference: `components%2FusageKits%2F${config.id}`,
 //         statusId: config.statusId,
 //         summary: config.summary,
 //         typeId: config.typeId,

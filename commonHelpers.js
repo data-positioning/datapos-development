@@ -5,6 +5,8 @@
  * @license ISC Licensed under the ISC license, Version 2.0. See the LICENSE.md file for details.
  */
 
+var async = require('async');
+
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -15,6 +17,26 @@ function checkDependencies(grunt, context) {
         grunt.log.writeln(result.stdout);
         done();
     });
+}
+
+function identifyLicenses(grunt, context) {
+    const done = context.async();
+    async.series(
+        [
+            (callback) =>
+                grunt.util.spawn({ cmd: 'npx', args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'] }, (error, result) => {
+                    grunt.log.writeln("Created 'LICENSES.json' file.");
+                    grunt.log.writeln(result.stdout);
+                    callback();
+                }),
+            (callback) =>
+                grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'] }, (error, result) => {
+                    grunt.log.writeln(result.stdout);
+                    callback();
+                })
+        ],
+        () => done()
+    );
 }
 
 function logNotImplementedMessage(taskName) {
@@ -40,4 +62,4 @@ function publishToNPM(grunt, context) {
     });
 }
 
-module.exports = { checkDependencies, logNotImplementedMessage, lintCode, publishToNPM };
+module.exports = { checkDependencies, identifyLicenses, logNotImplementedMessage, lintCode, publishToNPM };

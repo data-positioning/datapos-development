@@ -2,12 +2,11 @@
     "name": "@datapos/datapos-operations",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
     "license": "ISC",
-    "version": "0.1.27",
+    "version": "0.1.28",
     "devDependencies": {
         "eslint": "^8.32.0",
         "grunt": "^1.5.3",
         "grunt-bump": "^0.8.0",
-        "grunt-git": "^1.1.1",
-        "grunt-run": "^0.8.1"
+        "grunt-git": "^1.1.1"
     }
 }

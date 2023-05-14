@@ -11,6 +11,14 @@ var async = require('async');
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+function auditDependencies(grunt, context) {
+    const done = context.async();
+    grunt.util.spawn({ cmd: 'npm', args: ['audit'] }, (error, result) => {
+        grunt.log.writeln(result.stdout);
+        done();
+    });
+}
+
 function checkDependencies(grunt, context) {
     const done = context.async();
     grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, (error, result) => {
@@ -62,4 +70,4 @@ function publishToNPM(grunt, context) {
     });
 }
 
-module.exports = { checkDependencies, identifyLicenses, logNotImplementedMessage, lintCode, publishToNPM };
+module.exports = { auditDependencies, checkDependencies, identifyLicenses, logNotImplementedMessage, lintCode, publishToNPM };

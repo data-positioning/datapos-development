@@ -102,6 +102,7 @@
 async function uploadConnector(grunt, config, fetch, dataposConnectorUploadToken, projectId) {
     try {
         const formData = new FormData();
+
         formData.append('configuration', JSON.stringify(config));
 
         let description;
@@ -125,7 +126,7 @@ async function uploadConnector(grunt, config, fetch, dataposConnectorUploadToken
             const contentAsBlob = new Blob([grunt.file.read(absPath)], { type: 'text/plain' });
             formData.append(filename, contentAsBlob, filename);
         });
-        // const fetch = (await import('node-fetch')).default;
+
         const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/connectors`;
         const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposConnectorUploadToken }, body: formData });
         if (!response.ok) throw new Error(await response.text());

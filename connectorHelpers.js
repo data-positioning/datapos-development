@@ -2,7 +2,7 @@
  * @author Jonathan Terrell <terrell.jm@gmail.com>
  * @copyright 2023 Jonathan Terrell
  * @file datapos-operations/connectorHelpers.js
- * @license ISC
+ * @license ISC Licensed under the ISC license, Version 2.0. See the LICENSE.md file for details.
  */
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@
 //     }
 // }
 
-async function uploadConnector(grunt, config, fetch, firebaseProjectId, dataposConnectorUploadToken) {
+async function uploadConnector(grunt, config, fetch, dataposConnectorUploadToken, projectId) {
     try {
         const formData = new FormData();
         formData.append('configuration', JSON.stringify(config));
@@ -126,7 +126,7 @@ async function uploadConnector(grunt, config, fetch, firebaseProjectId, dataposC
             formData.append(filename, contentAsBlob, filename);
         });
         // const fetch = (await import('node-fetch')).default;
-        const url = `https://europe-west1-${firebaseProjectId}.cloudfunctions.net/api/connectors`;
+        const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/connectors`;
         const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposConnectorUploadToken }, body: formData });
         if (!response.ok) throw new Error(await response.text());
         return true;
@@ -191,6 +191,6 @@ module.exports = { uploadConnector };
 //     };
 // }
 
-function buildSanityURL(path, settings) {
-    return `https://${settings.sanityProjectId}.api.sanity.io/${settings.sanityAPIVersion}/${path}/${settings.sanityDataSetName}`;
-}
+// function buildSanityURL(path, settings) {
+//     return `https://${settings.sanityProjectId}.api.sanity.io/${settings.sanityAPIVersion}/${path}/${settings.sanityDataSetName}`;
+// }

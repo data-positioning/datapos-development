@@ -10,10 +10,18 @@
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-async function uploadConnector(grunt, context, config, fetch, dataposConnectorUploadToken, projectId) {
-    const done = context.async();
-    const status = await upload(grunt, config, fetch, dataposConnectorUploadToken, projectId);
-    done(status);
+function uploadConnector(grunt, context, config, fetch, dataposConnectorUploadToken, projectId) {
+    try {
+        console.log(1111);
+        const done = context.async();
+        console.log(2222);
+        const status = upload(grunt, config, fetch, dataposConnectorUploadToken, projectId);
+        console.log(3333);
+        done(status);
+        console.log(4444);
+    } catch (error) {
+        console.log(9999, error);
+    }
 }
 
 /**

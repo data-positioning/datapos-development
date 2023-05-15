@@ -111,7 +111,7 @@ function lintCode(grunt, context, args) {
 
 /**
  * Runs the 'publish' command using Grunt's util.spawn method and logs the output.
- * This command publishes the  package to the npm registry.
+ * This command publishes the package to the npm registry.
  * @param {Object} grunt - The Grunt object.
  * @param {Object} context - The task context object.
  */

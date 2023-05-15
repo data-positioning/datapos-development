@@ -67,16 +67,6 @@ function identifyLicenses(grunt, context) {
         () => done()
     );
 }
-/**
- * Logs a message indicating that a specific task is not implemented.
- * @param {string} taskName - The name of the task.
- */
-function logNotImplementedMessage(taskName) {
-    const message = `***** ${taskName} task NOT implemented *****`;
-    console.log('*'.repeat(message.length));
-    console.log(message);
-    console.log('*'.repeat(message.length));
-}
 
 /**
  * Runs the 'eslint' command using Grunt's util.spawn method with provided arguments and logs the output.
@@ -91,6 +81,17 @@ function lintCode(grunt, context, args) {
         grunt.log.writeln(result.stdout);
         done();
     });
+}
+
+/**
+ * Logs a message indicating that a specific task is not implemented.
+ * @param {string} taskName - The name of the task.
+ */
+function logNotImplementedMessage(taskName) {
+    const message = `***** ${taskName} task NOT implemented *****`;
+    console.log('*'.repeat(message.length));
+    console.log(message);
+    console.log('*'.repeat(message.length));
 }
 
 /**
@@ -123,4 +124,19 @@ function publishToNPM(grunt, context) {
     });
 }
 
-module.exports = { auditDependencies, checkDependencies, identifyLicenses, logNotImplementedMessage, migrateDependencies, lintCode, publishToNPM };
+/**
+ * Runs the Rollup bundling process using Grunt's util.spawn method and logs the output.
+ * Rollup is a module bundler for JavaScript which allows you to create bundles of code from separate modules.
+ * @param {Object} grunt - The Grunt object.
+ * @param {Object} context - The task context object.
+ * @param {string} configFileName - The name of the Rollup configuration file.
+ */
+function rollup(grunt, context, configFileName) {
+    const done = context.async();
+    grunt.util.spawn({ cmd: 'npx', args: ['rollup', '-c', configFileName, '--environment', 'BUILD:production'] }, (error, result) => {
+        grunt.log.writeln(result.stdout);
+        done();
+    });
+}
+
+module.exports = { auditDependencies, checkDependencies, identifyLicenses, lintCode, logNotImplementedMessage, migrateDependencies, publishToNPM, rollup };

@@ -10,7 +10,7 @@
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-function uploadConnector(grunt, context, config, fetch, dataposConnectorUploadToken, projectId) {
+async function uploadConnector(grunt, context, config, fetch, dataposConnectorUploadToken, projectId) {
     try {
         console.log(1111, grunt, context, config, fetch, dataposConnectorUploadToken, projectId);
         const done = context.async();

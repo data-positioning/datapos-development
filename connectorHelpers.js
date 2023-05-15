@@ -10,15 +10,12 @@
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-async function uploadConnector(grunt, context, config, fetch, dataposConnectorUploadToken, projectId) {
+async function uploadConnector(grunt, context, config, dataposConnectorUploadToken, projectId) {
     try {
-        console.log(1111, grunt, context, config, fetch, dataposConnectorUploadToken, projectId);
+        console.log(1111, fetch);
         const done = context.async();
-        console.log(2222);
-        const status = await upload(grunt, config, fetch, dataposConnectorUploadToken, projectId);
-        console.log(3333, status);
+        const status = await upload(grunt, config, dataposConnectorUploadToken, projectId);
         done(status);
-        console.log(4444);
     } catch (error) {
         console.log(9999, error);
     }
@@ -28,12 +25,11 @@ async function uploadConnector(grunt, context, config, fetch, dataposConnectorUp
  * Uploads a connector to the Data Positioning platform.
  * @param {Object} grunt - The Grunt object.
  * @param {Object} config - The configuration object for the connector.
- * @param {Function} fetch - The fetch function for making HTTP requests.
  * @param {string} dataposConnectorUploadToken - The authorization token for uploading the connector.
  * @param {string} projectId - The ID of the project where the connector should be uploaded.
  * @returns {Promise<boolean>} - A Promise that resolves to true if the connector upload is successful, otherwise false.
  */
-async function upload(grunt, config, fetch, dataposConnectorUploadToken, projectId) {
+async function upload(grunt, config, dataposConnectorUploadToken, projectId) {
     try {
         const formData = new FormData();
 

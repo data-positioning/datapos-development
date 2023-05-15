@@ -1,10 +1,10 @@
 # Data Positioning Operations
 
-This project contains helper functions used to manage other Data Positioning projects.
+This project contains helper functions used to manage other Data Positioning projects and repositories.
 
 The 'commonHelpers.js' file includes helper functions that implement common [Grunt](https://gruntjs.com/) tasks.
 
-The 'connectorHelpers.js' file includes helper functions for uploading compiled connectors to the Data Positioning platform. All connector projects install this project as a development dependency and implement the 'uploadConnector' helper function using a [Grunt](https://gruntjs.com/) task.
+The 'connectorHelpers.js' file includes helper functions for uploading compiled connectors to the Data Positioning platform. All connector projects install the packaged release of this project as a development dependency and implement the 'uploadConnector' helper function using a [Grunt](https://gruntjs.com/) task.
 
 ## Installation
 

@@ -6,7 +6,7 @@ The 'commonHelpers.js' file includes helper functions that implement common [Gru
 
 The 'connectorHelpers.js' file includes helper functions for uploading compiled connectors to the Data Positioning platform. All connector projects install the packaged release of this project as a development dependency and implement the 'uploadConnector' helper function using a [Grunt](https://gruntjs.com/) task.
 
-## Installation
+## Installation3
 
 ```
 npm install --save-dev @datapos-operations

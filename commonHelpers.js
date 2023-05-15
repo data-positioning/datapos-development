@@ -129,11 +129,11 @@ function publishToNPM(grunt, context) {
  * Rollup is a module bundler for JavaScript which allows you to create bundles of code from separate modules.
  * @param {Object} grunt - The Grunt object.
  * @param {Object} context - The task context object.
- * @param {string} configFileName - The name of the Rollup configuration file.
+ * @param {string} configTypeId - The identifier for the Rollup configuration.
  */
-function rollup(grunt, context, configFileName) {
+function rollup(grunt, context, configTypeId) {
     const done = context.async();
-    grunt.util.spawn({ cmd: 'npx', args: ['rollup', '-c', configFileName, '--environment', 'BUILD:production'] }, (error, result) => {
+    grunt.util.spawn({ cmd: 'npx', args: ['rollup', '-c', `rollup.config-${configTypeId}.js`, '--environment', 'BUILD:production'] }, (error, result) => {
         grunt.log.writeln(result.stdout);
         done();
     });

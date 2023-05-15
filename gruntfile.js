@@ -54,7 +54,7 @@ module.exports = (grunt) => {
     grunt.registerTask('lint', ['lintCode']); // alt+ctrl+shift+l.
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
     grunt.registerTask('publish', ['publishToNPM']); // alt+ctrl+shift+p.
-    grunt.registerTask('release', ['gitadd', 'bump', 'runPublishToNPM']); // alt+ctrl+shift+r.
+    grunt.registerTask('release', ['gitadd', 'bump', 'publishToNPM']); // alt+ctrl+shift+r.
     grunt.registerTask('synchronise', ['gitadd', 'bump']); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.

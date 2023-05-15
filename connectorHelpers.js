@@ -10,12 +10,23 @@
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Uploads a connector to the Data Positioning platform.
+ * @param {Object} grunt - The Grunt object.
+ * @param {Object} config - The configuration object for the connector.
+ * @param {Function} fetch - The fetch function for making HTTP requests.
+ * @param {string} dataposConnectorUploadToken - The authorization token for uploading the connector.
+ * @param {string} projectId - The ID of the project where the connector should be uploaded.
+ * @returns {Promise<boolean>} - A Promise that resolves to true if the connector upload is successful, otherwise false.
+ */
 async function uploadConnector(grunt, config, fetch, dataposConnectorUploadToken, projectId) {
     try {
         const formData = new FormData();
 
+        // Append the configuration to the form data object as a text field.
         formData.append('configuration', JSON.stringify(config));
 
+        // Read the description file and append contents to the form object as a text field.
         let description;
         try {
             description = grunt.file.read('src/description.md');
@@ -24,6 +35,7 @@ async function uploadConnector(grunt, config, fetch, dataposConnectorUploadToken
         }
         formData.append('description', description);
 
+        // Read the logo file and append contents to the form object as a text field.
         let logo;
         try {
             logo = grunt.file.read('src/logo.svg');
@@ -32,15 +44,18 @@ async function uploadConnector(grunt, config, fetch, dataposConnectorUploadToken
         }
         formData.append('logo', logo);
 
+        // Loop through the 'dist' directory and append the contents of each file as a blob field.
         grunt.file.recurse('dist', (absPath, rootDir, subDir, filename) => {
             if (subDir) return;
             const contentAsBlob = new Blob([grunt.file.read(absPath)], { type: 'text/plain' });
             formData.append(filename, contentAsBlob, filename);
         });
 
+        // Make a request to the Data Positioning endpoint to upload the connector.
         const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/connectors`;
         const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposConnectorUploadToken }, body: formData });
         if (!response.ok) throw new Error(await response.text());
+
         return true;
     } catch (error) {
         console.log(error);

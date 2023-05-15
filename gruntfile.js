@@ -16,7 +16,7 @@ const { auditDependencies, checkDependencies, identifyLicenses, logNotImplemente
 module.exports = (grunt) => {
     // Set configuration.
     grunt.initConfig({
-        bump: { options: { commitFiles: ['-a'], commitMessage: 'Release v%VERSION%', pushTo: 'origin' } },
+        bump: { options: { commitFiles: ['-a'], commitMessage: 'v%VERSION%', pushTo: 'origin' } },
         gitadd: { task: { options: { all: true } } }
     });
 

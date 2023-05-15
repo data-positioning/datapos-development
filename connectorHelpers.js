@@ -11,14 +11,9 @@
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 async function uploadConnector(grunt, context, config, dataposConnectorUploadToken, projectId) {
-    try {
-        console.log(1111, fetch);
-        const done = context.async();
-        const status = await upload(grunt, config, dataposConnectorUploadToken, projectId);
-        done(status);
-    } catch (error) {
-        console.log(9999, error);
-    }
+    const done = context.async();
+    const status = await upload(grunt, config, dataposConnectorUploadToken, projectId);
+    done(status);
 }
 
 /**

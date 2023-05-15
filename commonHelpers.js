@@ -139,4 +139,43 @@ function rollup(grunt, context, configTypeId) {
     });
 }
 
-module.exports = { auditDependencies, checkDependencies, identifyLicenses, lintCode, logNotImplementedMessage, migrateDependencies, publishToNPM, rollup };
+/**
+ * Updates a specific dependency by installing the latest version using Grunt's util.spawn method and logs the output.
+ * @param {Object} grunt - The Grunt object.
+ * @param {Object} context - The task context object.
+ * @param {string} updateTypeId - The identifier for the dependency to update.
+ */
+function updateDependency(grunt, context, updateTypeId) {
+    const done = context.async();
+    grunt.util.spawn({ cmd: 'npm', args: ['install', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
+        grunt.log.writeln(result.stdout);
+        done();
+    });
+}
+
+/**
+ * Updates a specific development dependency by installing the latest version using Grunt's util.spawn method and logs the output.
+ * @param {Object} grunt - The Grunt object.
+ * @param {Object} context - The task context object.
+ * @param {string} updateTypeId - The identifier for the development dependency to update.
+ */
+function updateDevDependency(grunt, context, updateTypeId) {
+    const done = context.async();
+    grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
+        grunt.log.writeln(result.stdout);
+        done();
+    });
+}
+
+module.exports = {
+    auditDependencies,
+    checkDependencies,
+    identifyLicenses,
+    lintCode,
+    logNotImplementedMessage,
+    migrateDependencies,
+    publishToNPM,
+    rollup,
+    updateDependency,
+    updateDevDependency
+};

@@ -1,8 +1,10 @@
 # Data Positioning Operations
 
-This repository contains helpers and associated utilities used to manage other Data Positioning repositories.
+This repository contains helper functions used to manage other Data Positioning repositories.
 
-The 'connectorHelpers.js' file contains helpers for uploading compiled connectors to Firebase Storage and registering them in Firestore. These helpers also upload connector documentation to the Sanity Content Lake. All connector repositories install this repository as a development dependency and implement the 'uploadConnector' helper as a [Grunt](https://gruntjs.com/) task.
+The 'commonHelpers.js' file includes helper functions that implement [Grunt](https://gruntjs.com/) tasks across all Data Positioning repositories.
+
+The 'connectorHelpers.js' file consists of helper functions for uploading compiled connectors to the Data Positioning registry. All connector repositories install this repository as a development dependency and implement the 'uploadConnector' helper function using a [Grunt](https://gruntjs.com/) task.
 
 ## Installation
 
@@ -12,12 +14,19 @@ npm install --save-dev @datapos-operations
 
 ## Repository Management Commands
 
-The following commands are available for repository management. For implementation details, see the [Grunt](https://gruntjs.com/) configuration file (gruntfile.js).
+The following list details the common repository management commands implementation for this repository. For more details, please refer to the [Grunt](https://gruntjs.com/) configuration file (gruntfile.js) in this repository.
 
-| Name                    | Key Code    | Notes                                                                                                                                                    |
-| ----------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Identify Licenses       | cmd+shift+i | Identify licenses for all dependencies.                                                                                                                  |
-| Lint                    | cmd+shift+l | Run [ESLint](https://eslint.org/) against the local repository.                                                                                          |
-| Publish to NPM          | cmd+shift+n | Publish to [npm](https://www.npmjs.com/). Requires prior synchronisation. Use the command line command 'npm publish' when publishing for the first time. |
-| Release                 | cmd+shift+r | Synchronise the local repository with the GitHub repository and publish to [npm](https://www.npmjs.com/).                                                |
-| Synchronise with GitHub | cmd+shift+s | Synchronise the local repository with the GitHub repository.                                                                                             |
+| Name        | Key Code         | Notes                                                                                                                                                                             |
+| ----------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Audit       | alt+ctrl+shift+a | Run 'npm audit' against this repository.                                                                                                                                          |
+| Build       | alt+ctrl+shift+b | NOT implemented.                                                                                                                                                                  |
+| Check       | alt+ctrl+shift+c | Run 'npm outdated' against this repository.                                                                                                                                       |
+| Document    | alt+ctrl+shift+d | Identify licenses for all dependencies.                                                                                                                                           |
+| Format      | alt+ctrl+shift+f | NOT implemented.                                                                                                                                                                  |
+| Lint        | alt+ctrl+shift+l | Run [ESLint](https://eslint.org/) against this repository.                                                                                                                        |
+| Migrate     | alt+ctrl+shift+l | NOT implemented.                                                                                                                                                                  |
+| Publish     | alt+ctrl+shift+n | Publish this repository to [npm](https://www.npmjs.com/). Publishes the last synchronised version. Use the command line command 'npm publish' when publishing for the first time. |
+| Release     | alt+ctrl+shift+r | Synchronise this repository with the main GitHub repository and publish it to [npm](https://www.npmjs.com/).                                                                      |
+| Synchronise | alt+ctrl+shift+s | Synchronise this repository with the main GitHub repository.                                                                                                                      |
+| Test        | alt+ctrl+shift+l | NOT implemented.                                                                                                                                                                  |
+| Update      | alt+ctrl+shift+l | NOT implemented.                                                                                                                                                                  |

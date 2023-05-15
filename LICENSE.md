@@ -1,4 +1,4 @@
-ISC License (ISC) 3
+ISC License (ISC)
 
 Copyright 2013 Jonathan Terrell
 

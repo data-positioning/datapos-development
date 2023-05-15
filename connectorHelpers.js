@@ -15,7 +15,7 @@ function uploadConnector(grunt, context, config, fetch, dataposConnectorUploadTo
         console.log(1111, grunt, context, config, fetch, dataposConnectorUploadToken, projectId);
         const done = context.async();
         console.log(2222);
-        const status = upload(grunt, config, fetch, dataposConnectorUploadToken, projectId);
+        const status = await upload(grunt, config, fetch, dataposConnectorUploadToken, projectId);
         console.log(3333, status);
         done(status);
         console.log(4444);

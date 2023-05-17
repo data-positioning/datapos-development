@@ -23,7 +23,7 @@ const async = require('async');
 function auditDependencies(grunt, context, directory = '.') {
     const done = context.async();
     grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory } }, (error, result) => {
-        if (error.message) {
+        if (error && error.message) {
             console.log(error.message);
             done(false); // Signal that the task failed.
         } else {
@@ -43,7 +43,7 @@ function auditDependencies(grunt, context, directory = '.') {
 function checkDependencies(grunt, context, directory = '.') {
     const done = context.async();
     grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, (error, result) => {
-        if (error.message) {
+        if (error && error.message) {
             console.log(error.message);
             done(false); // Signal that the task failed.
         } else {

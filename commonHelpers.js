@@ -23,8 +23,8 @@ const async = require('async');
 function auditDependencies(grunt, context, directory = '.') {
     const done = context.async();
     grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory } }, (error, result) => {
-        if (error) {
-            console.log(error);
+        if (error.message) {
+            console.log(error.message);
             done(false); // Signal that the task failed.
         } else {
             grunt.log.writeln(result.stdout);
@@ -41,13 +41,11 @@ function auditDependencies(grunt, context, directory = '.') {
  * @param {string} directory - The directory where the `npm audit` command should be executed. Default is the current directory.
  */
 function checkDependencies(grunt, context, directory = '.') {
-    console.log('ddd', directory);
     const done = context.async();
     grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, (error, result) => {
-        if (error) {
+        if (error.message) {
             console.log(error.message);
-            grunt.log.writeln(result.stdout);
-            done(true); // Signal that the task failed.
+            done(false); // Signal that the task failed.
         } else {
             grunt.log.writeln(result.stdout);
             done(true); // Signal that the task completed successfully.

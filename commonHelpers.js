@@ -114,6 +114,7 @@ function logNotImplementedMessage(taskName) {
  * @param {string} directory - The directory where the `npx npm-check-updates` and `npm install` commands should be executed. Default is the current directory.
  */ function migrateDependencies(grunt, context, directory = '.') {
     const done = context.async();
+    console.log('directory', directory);
     grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'], opts: { cwd: directory } }, (error, result) => {
         if (error && error.message) {
             console.log(error.message);

@@ -61,7 +61,7 @@ function checkDependencies(grunt, context, directory = '.') {
  * @param {Object} context - The task context object.
  * @param {string} directory - The directory where the `npm outdated` command should be executed. Default is the current directory.
  */
-function identifyLicenses(grunt, context, directory) {
+function identifyLicenses(grunt, context, directory = '.') {
     const done = context.async();
     async.series(
         [

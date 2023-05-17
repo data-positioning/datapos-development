@@ -59,19 +59,20 @@ function checkDependencies(grunt, context, directory = '.') {
  * 'nlf' (Node License Finder) command lists the licenses used in the project.
  * @param {Object} grunt - The Grunt object.
  * @param {Object} context - The task context object.
+ * @param {string} directory - The directory where the `npm outdated` command should be executed. Default is the current directory.
  */
-function identifyLicenses(grunt, context) {
+function identifyLicenses(grunt, context, directory) {
     const done = context.async();
     async.series(
         [
             (callback) =>
-                grunt.util.spawn({ cmd: 'npx', args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'] }, (error, result) => {
+                grunt.util.spawn({ cmd: 'npx', args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'], opts: { cwd: directory } }, (error, result) => {
                     grunt.log.writeln("Created 'LICENSES.json' file.");
                     grunt.log.writeln(result.stdout);
                     callback();
                 }),
             (callback) =>
-                grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'] }, (error, result) => {
+                grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'], opts: { cwd: directory } }, (error, result) => {
                     grunt.log.writeln(result.stdout);
                     callback();
                 })

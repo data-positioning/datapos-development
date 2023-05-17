@@ -45,7 +45,7 @@ function checkDependencies(grunt, context, directory = '.') {
     const done = context.async();
     grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, (error, result) => {
         if (error) {
-            console.log(error);
+            console.log(error.message);
             grunt.log.writeln(result.stdout);
             done(true); // Signal that the task failed.
         } else {

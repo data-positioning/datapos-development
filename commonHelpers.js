@@ -38,7 +38,7 @@ function auditDependencies(grunt, context, directory = '.') {
  * This command lists the dependencies in the project that are outdated.
  * @param {Object} grunt - The Grunt object.
  * @param {Object} context - The task context object.
- * @param {string} directory - The directory where the `npm audit` command should be executed. Default is the current directory.
+ * @param {string} directory - The directory where the `npm outdated` command should be executed. Default is the current directory.
  */
 function checkDependencies(grunt, context, directory = '.') {
     const done = context.async();
@@ -111,14 +111,25 @@ function logNotImplementedMessage(taskName) {
  * 'npm-check-updates' is a tool that allows you to update the project's package.json file with the latest dependency versions.
  * @param {Object} grunt - The Grunt object.
  * @param {Object} context - The task context object.
- */ function migrateDependencies(grunt, context) {
+ * @param {string} directory - The directory where the `npx npm-check-updates` and `npm install` commands should be executed. Default is the current directory.
+ */ function migrateDependencies(grunt, context, directory = '.') {
     const done = context.async();
-    grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'] }, (error, result) => {
-        grunt.log.writeln(result.stdout);
-        grunt.util.spawn({ cmd: 'npm', args: ['install'] }, (error, result) => {
+    grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'], opts: { cwd: directory } }, (error, result) => {
+        if (error && error.message) {
+            console.log(error.message);
+            done(false); // Signal that the task failed.
+        } else {
             grunt.log.writeln(result.stdout);
-            done();
-        });
+            grunt.util.spawn({ cmd: 'npm', args: ['install'], opts: { cwd: directory } }, (error, result) => {
+                if (error && error.message) {
+                    console.log(error.message);
+                    done(false); // Signal that the task failed.
+                } else {
+                    grunt.log.writeln(result.stdout);
+                    done(true); // Signal that the task completed successfully.
+                }
+            });
+        }
     });
 }
 

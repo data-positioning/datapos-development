@@ -18,12 +18,18 @@ const async = require('async');
  * This command checks the project's dependencies for known security vulnerabilities.
  * @param {Object} grunt - The Grunt object.
  * @param {Object} context - The task context object.
+ * @param {string} directory - The directory where the `npm audit` command should be executed. Default is the current directory.
  */
-function auditDependencies(grunt, context) {
+function auditDependencies(grunt, context, directory = '.') {
     const done = context.async();
-    grunt.util.spawn({ cmd: 'npm', args: ['audit'] }, (error, result) => {
-        grunt.log.writeln(result.stdout);
-        done();
+    grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory } }, (error, result) => {
+        if (error) {
+            console.log(error);
+            done(false); // Signal that the task failed.
+        } else {
+            grunt.log.writeln(result.stdout);
+            done(true); // Signal that the task completed successfully.
+        }
     });
 }
 
@@ -32,12 +38,18 @@ function auditDependencies(grunt, context) {
  * This command lists the dependencies in the project that are outdated.
  * @param {Object} grunt - The Grunt object.
  * @param {Object} context - The task context object.
+ * @param {string} directory - The directory where the `npm audit` command should be executed. Default is the current directory.
  */
-function checkDependencies(grunt, context) {
+function checkDependencies(grunt, context, directory = '.') {
     const done = context.async();
-    grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, (error, result) => {
-        grunt.log.writeln(result.stdout);
-        done();
+    grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, (error, result) => {
+        if (error) {
+            console.log(error);
+            done(false); // Signal that the task failed.
+        } else {
+            grunt.log.writeln(result.stdout);
+            done(true); // Signal that the task completed successfully.
+        }
     });
 }
 

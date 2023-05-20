@@ -171,7 +171,9 @@ function rollup(grunt, context, configTypeId) {
  */
 function updateDependency(grunt, context, updateTypeId) {
     const done = context.async();
+    console.log(1111, `@datapos/datapos-${updateTypeId}@latest`);
     grunt.util.spawn({ cmd: 'npm', args: ['install', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
+        console.log('error', error);
         grunt.log.writeln(result.stdout);
         done();
     });

@@ -58,7 +58,7 @@ async function upload(grunt, config, dataposConnectorUploadToken, projectId) {
 
         // Make a request to the Data Positioning endpoint to upload the connector.
         const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/connectors`;
-        const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposConnectorUploadToken, 'Content-Type': 'application/vnd.api+json' }, body: formData });
+        const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposConnectorUploadToken }, body: formData });
         if (!response.ok) throw new Error(await response.text());
 
         return true;

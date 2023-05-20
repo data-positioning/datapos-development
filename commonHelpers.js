@@ -156,8 +156,11 @@ function publishToNPM(grunt, context) {
  * @param {string} configTypeId - The identifier for the Rollup configuration.
  */
 function rollup(grunt, context, configTypeId) {
+    console.log(1111, configTypeId);
     const done = context.async();
+    console.log(2222);
     grunt.util.spawn({ cmd: 'npx', args: ['rollup', '-c', `rollup.config-${configTypeId}.js`, '--environment', 'BUILD:production'] }, (error, result) => {
+        console.log(3333, error);
         grunt.log.writeln(result.stdout);
         done();
     });

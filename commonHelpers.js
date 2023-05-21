@@ -176,7 +176,7 @@ function updateDependency(grunt, context, updateTypeId) {
     const done = context.async();
     console.log(1111, `@datapos/datapos-${updateTypeId}@latest`);
     grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, (error, result) => {
-        console.log('error 1', error ? error.message : 'NO ERROR');
+        console.log('error 1', error ? String(error) : 'NO ERROR');
         grunt.log.writeln(result.stdout);
         grunt.util.spawn({ cmd: 'npm', args: ['install', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
             console.log('error 2', error ? error.message : 'NO ERROR');
@@ -196,7 +196,7 @@ function updateDevDependency(grunt, context, updateTypeId) {
     const done = context.async();
     console.log(1111, `@datapos/datapos-${updateTypeId}@latest`);
     grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, (error, result) => {
-        console.log('error 1', error ? error.message : 'NO ERROR');
+        console.log('error 1', error ? String(error) : 'NO ERROR');
         grunt.log.writeln(result.stdout);
         grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
             console.log('error 2', error ? error.message : 'NO ERROR');

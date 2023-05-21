@@ -10,9 +10,9 @@
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-async function uploadConnector(grunt, context, config, dataposConnectorUploadToken, projectId) {
+async function uploadConnector(grunt, context, config, version, dataposConnectorUploadToken, projectId) {
     const done = context.async();
-    const status = await upload(grunt, config, dataposConnectorUploadToken, projectId);
+    const status = await upload(grunt, config, version, dataposConnectorUploadToken, projectId);
     done(status);
 }
 

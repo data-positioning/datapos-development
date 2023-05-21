@@ -24,12 +24,12 @@ async function uploadConnector(grunt, context, config, dataposConnectorUploadTok
  * @param {string} projectId - The ID of the project where the connector should be uploaded.
  * @returns {Promise<boolean>} - A Promise that resolves to true if the connector upload is successful, otherwise false.
  */
-async function upload(grunt, config, dataposConnectorUploadToken, projectId) {
+async function upload(grunt, config, version, dataposConnectorUploadToken, projectId) {
     try {
         const formData = new FormData();
 
         // Append the configuration to the form data object as a text field.
-        formData.append('configuration', JSON.stringify(config));
+        formData.append('configuration', JSON.stringify({ ...config, reference: `components%2F${config.id}`, version }));
 
         // Read the description file and append contents to the form object as a text field.
         let description;

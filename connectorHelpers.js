@@ -26,11 +26,6 @@ async function uploadConnector(grunt, context, config, version, dataposConnector
  */
 async function upload(grunt, config, version, dataposConnectorUploadToken, projectId) {
     try {
-        const formData = new FormData();
-
-        // Append the configuration to the form data object as a text field.
-        formData.append('configuration', JSON.stringify({ ...config, reference: `components%2F${config.id}`, version }));
-
         // Read the description file and append contents to the form object as a text field.
         let description;
         try {
@@ -38,7 +33,6 @@ async function upload(grunt, config, version, dataposConnectorUploadToken, proje
         } catch (error) {
             description = '';
         }
-        formData.append('description', description);
 
         // Read the logo file and append contents to the form object as a text field.
         let logo;
@@ -47,6 +41,12 @@ async function upload(grunt, config, version, dataposConnectorUploadToken, proje
         } catch (error) {
             logo = '';
         }
+
+        const formData = new FormData();
+
+        // Append the configuration to the form data object as a text field.
+        formData.append('configuration', JSON.stringify({ ...config, description, logo, reference: `components%2F${config.id}`, version }));
+        formData.append('description', description);
         formData.append('logo', logo);
 
         // Loop through the 'dist' directory and append the contents of each file as a blob field.

@@ -175,10 +175,14 @@ function rollup(grunt, context, configTypeId) {
 function updateDependency(grunt, context, updateTypeId) {
     const done = context.async();
     console.log(1111, `@datapos/datapos-${updateTypeId}@latest`);
-    grunt.util.spawn({ cmd: 'npm', args: ['install', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
-        console.log('error', error);
+    grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, (error, result) => {
+        console.log('error 1', error);
         grunt.log.writeln(result.stdout);
-        done();
+        grunt.util.spawn({ cmd: 'npm', args: ['install', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
+            console.log('error 2', error);
+            grunt.log.writeln(result.stdout);
+            done();
+        });
     });
 }
 
@@ -190,9 +194,15 @@ function updateDependency(grunt, context, updateTypeId) {
  */
 function updateDevDependency(grunt, context, updateTypeId) {
     const done = context.async();
-    grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
+    console.log(1111, `@datapos/datapos-${updateTypeId}@latest`);
+    grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, (error, result) => {
+        console.log('error 1', error);
         grunt.log.writeln(result.stdout);
-        done();
+        grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
+            console.log('error 2', error);
+            grunt.log.writeln(result.stdout);
+            done();
+        });
     });
 }
 

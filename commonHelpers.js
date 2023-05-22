@@ -13,13 +13,6 @@ const async = require('async');
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-/**
- * Runs the 'npm audit' command using Grunt's util.spawn method and logs the output.
- * This command checks the project's dependencies for known security vulnerabilities.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} context - The task context object.
- * @param {string} directory - The directory where the `npm audit` command should be executed. Default is the current directory.
- */
 function auditDependencies(grunt, context, directory = '.') {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -27,13 +20,6 @@ function auditDependencies(grunt, context, directory = '.') {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Runs the 'npm outdated' command using Grunt's util.spawn method and logs the output.
- * This command lists the dependencies in the project that are outdated.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} context - The task context object.
- * @param {string} directory - The directory where the `npm outdated` command should be executed. Default is the current directory.
- */
 function checkDependencies(grunt, context, directory = '.') {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -41,14 +27,6 @@ function checkDependencies(grunt, context, directory = '.') {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Runs the 'license-checker' and 'nlf' commands using Grunt's util.spawn method to identify licenses and logs the output.
- * 'license-checker' command checks the licenses of the project's dependencies.
- * 'nlf' (Node License Finder) command lists the licenses used in the project.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} context - The task context object.
- * @param {string} directory - The directory where the `npm outdated` command should be executed. Default is the current directory.
- */
 function identifyLicenses(grunt, context, directory = '.') {
     const done = context.async();
     async.parallel(
@@ -56,36 +34,20 @@ function identifyLicenses(grunt, context, directory = '.') {
             (callback) => {
                 const childProcess = grunt.util.spawn(
                     { cmd: 'npx', args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'], opts: { cwd: directory } },
-                    (error, result, code) => {
-                        console.log(1111, error, result, code);
-                        callback(error);
-                    }
+                    (error) => callback(error)
                 );
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
             },
             (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'], opts: { cwd: directory } }, (error, result, code) => {
-                    console.log(2222, error, result, code);
-                    callback(error);
-                });
+                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'], opts: { cwd: directory } }, (error) => callback(error));
                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
             }
         ],
-        (error) => {
-            console.log(3333, error);
-            done(error ? false : true);
-        }
+        (error) => done(error ? false : true)
     );
 }
 
-/**
- * Runs the 'eslint' command using Grunt's util.spawn method with provided arguments and logs the output.
- * 'eslint' is a popular JavaScript linter that checks the code for potential errors and enforces coding styles.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} context - The task context object.
- * @param {Array} args - Additional arguments for the ESLint command.
- */
 function lintCode(grunt, context, args) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -93,10 +55,6 @@ function lintCode(grunt, context, args) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Logs a message indicating that a specific task is not implemented.
- * @param {string} taskName - The name of the task.
- */
 function logNotImplementedMessage(taskName) {
     const message = `***** ${taskName} task NOT implemented *****`;
     console.log('*'.repeat(message.length));
@@ -104,13 +62,7 @@ function logNotImplementedMessage(taskName) {
     console.log('*'.repeat(message.length));
 }
 
-/**
- * Runs the 'npm-check-updates -u' command to update dependencies and 'npm install' command to install the updated dependencies.
- * 'npm-check-updates' is a tool that allows you to update the project's package.json file with the latest dependency versions.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} context - The task context object.
- * @param {string} directory - The directory where the `npx npm-check-updates` and `npm install` commands should be executed. Default is the current directory.
- */ function migrateDependencies(grunt, context, directory = '.') {
+function migrateDependencies(grunt, context, directory = '.') {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'], opts: { cwd: directory } }, (error, result, code) => {
         if (code !== 0) {
@@ -125,12 +77,6 @@ function logNotImplementedMessage(taskName) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Runs the 'publish' command using Grunt's util.spawn method and logs the output.
- * This command publishes the package to the npm registry.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} context - The task context object.
- */
 function publishPackageToNPM(grunt, context) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['publish'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -138,13 +84,6 @@ function publishPackageToNPM(grunt, context) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Runs the Rollup bundling process using Grunt's util.spawn method and logs the output.
- * Rollup is a module bundler for JavaScript which allows you to create bundles of code from separate modules.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} context - The task context object.
- * @param {string} configTypeId - The identifier for the Rollup configuration.
- */
 function rollupCode(grunt, context, configTypeId) {
     const done = context.async();
     const childProcess = grunt.util.spawn(
@@ -155,21 +94,15 @@ function rollupCode(grunt, context, configTypeId) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Updates a specific dependency by installing the latest version using Grunt's util.spawn method and logs the output.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} context - The task context object.
- * @param {string} updateTypeId - The identifier for the dependency to update.
- */
 function updateDataPosDependencies(grunt, context, updateTypeIds) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {
         async.parallel(
             [
                 (callback) => {
-                    const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'] }, () => {
+                    const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'] }, (error) => {
                         console.log('\nUpdated: @datapos/datapos-operations@latest');
-                        callback();
+                        callback(error);
                     });
                     grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
                     grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
@@ -178,18 +111,18 @@ function updateDataPosDependencies(grunt, context, updateTypeIds) {
                     if (updateTypeIds) {
                         const modules = [];
                         for (const updateTypeId of updateTypeIds.split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
-                        const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, () => {
+                        const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, (error) => {
                             for (const module of modules) console.log(`\nUpdated: ${module}`);
-                            callback();
+                            callback(error);
                         });
                         grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
                         grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
                     } else {
-                        callback();
+                        callback(null);
                     }
                 }
             ],
-            () => done()
+            (error) => done(error ? false : true)
         );
     });
     childProcess.stderr.on('data', (data) => process.stderr.write(data));

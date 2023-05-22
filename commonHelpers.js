@@ -21,16 +21,21 @@ const async = require('async');
  * @param {string} directory - The directory where the `npm audit` command should be executed. Default is the current directory.
  */
 function auditDependencies(grunt, context, directory = '.') {
+    // const done = context.async();
+    // grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory } }, (error, result) => {
+    //     if (error && error.message) {
+    //         console.log(error.message);
+    //         done(false); // Signal that the task failed.
+    //     } else {
+    //         grunt.log.writeln(result.stdout);
+    //         done(true); // Signal that the task completed successfully.
+    //     }
+    // });
     const done = context.async();
-    grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory } }, (error, result) => {
-        if (error && error.message) {
-            console.log(error.message);
-            done(false); // Signal that the task failed.
-        } else {
-            grunt.log.writeln(result.stdout);
-            done(true); // Signal that the task completed successfully.
-        }
-    });
+    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory,stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+    childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    childProcess.stderr.on('data', (data) => process.stderr.write(data));
+
 }
 
 /**
@@ -89,11 +94,6 @@ function identifyLicenses(grunt, context, directory = '.') {
  * @param {Array} args - Additional arguments for the ESLint command.
  */
 function lintCode(grunt, context, args) {
-    // const done = context.async();
-    // grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args) }, (error, result) => {
-    //     grunt.log.writeln(result.stdout);
-    //     done();
-    // });
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
     childProcess.stdout.on('data', (data) => process.stdout.write(data));

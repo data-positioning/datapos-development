@@ -35,16 +35,6 @@ function auditDependencies(grunt, context, directory = '.') {
  * @param {string} directory - The directory where the `npm outdated` command should be executed. Default is the current directory.
  */
 function checkDependencies(grunt, context, directory = '.') {
-    // const done = context.async();
-    // grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, (error, result) => {
-    //     if (error && error.message) {
-    //         console.log(error.message);
-    //         done(false); // Signal that the task failed.
-    //     } else {
-    //         grunt.log.writeln(result.stdout);
-    //         done(true); // Signal that the task completed successfully.
-    //     }
-    // });
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
     childProcess.stdout.on('data', (data) => process.stdout.write(data));
@@ -61,19 +51,19 @@ function checkDependencies(grunt, context, directory = '.') {
  */
 function identifyLicenses(grunt, context, directory = '.') {
     const done = context.async();
-    async.series(
+    async.parallel(
         [
-            (callback) =>
-                grunt.util.spawn({ cmd: 'npx', args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'], opts: { cwd: directory } }, (error, result) => {
-                    grunt.log.writeln("Created 'LICENSES.json' file.");
-                    grunt.log.writeln(result.stdout);
-                    callback();
-                }),
-            (callback) =>
-                grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'], opts: { cwd: directory } }, (error, result) => {
-                    grunt.log.writeln(result.stdout);
-                    callback();
-                })
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'], opts: { cwd: directory } }, () =>
+                    callback()
+                );
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            },
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'], opts: { cwd: directory } }, () => callback());
+                childProcess.stdout.on('data', (data) => process.stdout.write(data));
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            }
         ],
         () => done()
     );
@@ -112,23 +102,17 @@ function logNotImplementedMessage(taskName) {
  * @param {string} directory - The directory where the `npx npm-check-updates` and `npm install` commands should be executed. Default is the current directory.
  */ function migrateDependencies(grunt, context, directory = '.') {
     const done = context.async();
-    grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'], opts: { cwd: directory } }, (error, result) => {
-        if (error && error.message) {
-            console.log(error.message);
+    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'], opts: { cwd: directory } }, (error, result, code) => {
+        if (code !== 0) {
             done(false); // Signal that the task failed.
         } else {
-            grunt.log.writeln(result.stdout);
-            grunt.util.spawn({ cmd: 'npm', args: ['install'], opts: { cwd: directory } }, (error, result) => {
-                if (error && error.message) {
-                    console.log(error.message);
-                    done(false); // Signal that the task failed.
-                } else {
-                    grunt.log.writeln(result.stdout);
-                    done(true); // Signal that the task completed successfully.
-                }
-            });
+            const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install'], opts: { cwd: directory } }, (error, result, code) => done(code === 0));
+            grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
+            grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
         }
     });
+    childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
 /**
@@ -138,11 +122,6 @@ function logNotImplementedMessage(taskName) {
  * @param {Object} context - The task context object.
  */
 function publishPackageToNPM(grunt, context) {
-    // const done = context.async();
-    // grunt.util.spawn({ cmd: 'npx', args: ['publish'] }, (error, result) => {
-    //     grunt.log.writeln(result.stdout);
-    //     done();
-    // });
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['publish'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
     childProcess.stdout.on('data', (data) => process.stdout.write(data));
@@ -157,14 +136,6 @@ function publishPackageToNPM(grunt, context) {
  * @param {string} configTypeId - The identifier for the Rollup configuration.
  */
 function rollupCode(grunt, context, configTypeId) {
-    // console.log(1111, configTypeId);
-    // const done = context.async();
-    // console.log(2222);
-    // grunt.util.spawn({ cmd: 'npx', args: ['rollup', '-c', `rollup.config-${configTypeId}.js`, '--environment', 'BUILD:production'] }, (error, result) => {
-    //     console.log(3333, error);
-    //     grunt.log.writeln(result.stdout);
-    //     done();
-    // });
     const done = context.async();
     const childProcess = grunt.util.spawn(
         { cmd: 'npx', args: ['rollup', '-c', `rollup.config-${configTypeId}.js`, '--environment', 'BUILD:production'], opts: { stdio: 'pipe' } },

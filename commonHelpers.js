@@ -56,17 +56,26 @@ function identifyLicenses(grunt, context, directory = '.') {
             (callback) => {
                 const childProcess = grunt.util.spawn(
                     { cmd: 'npx', args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'], opts: { cwd: directory } },
-                    (error) => callback(error)
+                    (error, result, code) => {
+                        console.log(1111, error, result, code);
+                        callback(error);
+                    }
                 );
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
             },
             (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'], opts: { cwd: directory } }, (error) => callback(error));
+                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'], opts: { cwd: directory } }, (error, result, code) => {
+                    console.log(2222, error, result, code);
+                    callback(error);
+                });
                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
             }
         ],
-        (error) => done(!!error)
+        (error) => {
+            console.log(3333, error);
+            done(!!error);
+        }
     );
 }
 

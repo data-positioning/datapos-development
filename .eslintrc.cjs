@@ -13,6 +13,7 @@
 module.exports = {
     env: { browser: true, node: true },
     extends: ['eslint:recommended'],
+    globals: {},
     parserOptions: { ecmaVersion: 'latest' },
     root: true,
     rules: {

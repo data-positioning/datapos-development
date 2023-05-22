@@ -180,7 +180,7 @@ function rollupCode(grunt, context, configTypeId) {
  * @param {Object} context - The task context object.
  * @param {string} updateTypeId - The identifier for the dependency to update.
  */
-function updateDependencies(grunt, context, updateTypeIds) {
+function updateDataPosDependencies(grunt, context, updateTypeIds) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {
         async.series(
@@ -217,5 +217,5 @@ module.exports = {
     migrateDependencies,
     publishPackageToNPM,
     rollupCode,
-    updateDependencies
+    updateDataPosDependencies
 };

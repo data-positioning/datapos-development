@@ -6,7 +6,7 @@
  * @copyright 2023 Jonathan Terrell
  */
 
-// Framework/Vendor Dependencies
+// Dependencies - Framework/Vendor
 const async = require('async');
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -21,21 +21,10 @@ const async = require('async');
  * @param {string} directory - The directory where the `npm audit` command should be executed. Default is the current directory.
  */
 function auditDependencies(grunt, context, directory = '.') {
-    // const done = context.async();
-    // grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory } }, (error, result) => {
-    //     if (error && error.message) {
-    //         console.log(error.message);
-    //         done(false); // Signal that the task failed.
-    //     } else {
-    //         grunt.log.writeln(result.stdout);
-    //         done(true); // Signal that the task completed successfully.
-    //     }
-    // });
     const done = context.async();
-    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory,stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
     childProcess.stdout.on('data', (data) => process.stdout.write(data));
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
-
 }
 
 /**
@@ -46,16 +35,20 @@ function auditDependencies(grunt, context, directory = '.') {
  * @param {string} directory - The directory where the `npm outdated` command should be executed. Default is the current directory.
  */
 function checkDependencies(grunt, context, directory = '.') {
+    // const done = context.async();
+    // grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, (error, result) => {
+    //     if (error && error.message) {
+    //         console.log(error.message);
+    //         done(false); // Signal that the task failed.
+    //     } else {
+    //         grunt.log.writeln(result.stdout);
+    //         done(true); // Signal that the task completed successfully.
+    //     }
+    // });
     const done = context.async();
-    grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, (error, result) => {
-        if (error && error.message) {
-            console.log(error.message);
-            done(false); // Signal that the task failed.
-        } else {
-            grunt.log.writeln(result.stdout);
-            done(true); // Signal that the task completed successfully.
-        }
-    });
+    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+    childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
 /**
@@ -145,11 +138,15 @@ function logNotImplementedMessage(taskName) {
  * @param {Object} context - The task context object.
  */
 function publishToNPM(grunt, context) {
+    // const done = context.async();
+    // grunt.util.spawn({ cmd: 'npx', args: ['publish'] }, (error, result) => {
+    //     grunt.log.writeln(result.stdout);
+    //     done();
+    // });
     const done = context.async();
-    grunt.util.spawn({ cmd: 'npx', args: ['publish'] }, (error, result) => {
-        grunt.log.writeln(result.stdout);
-        done();
-    });
+    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['publish'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+    childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
 /**
@@ -160,14 +157,21 @@ function publishToNPM(grunt, context) {
  * @param {string} configTypeId - The identifier for the Rollup configuration.
  */
 function rollup(grunt, context, configTypeId) {
-    console.log(1111, configTypeId);
+    // console.log(1111, configTypeId);
+    // const done = context.async();
+    // console.log(2222);
+    // grunt.util.spawn({ cmd: 'npx', args: ['rollup', '-c', `rollup.config-${configTypeId}.js`, '--environment', 'BUILD:production'] }, (error, result) => {
+    //     console.log(3333, error);
+    //     grunt.log.writeln(result.stdout);
+    //     done();
+    // });
     const done = context.async();
-    console.log(2222);
-    grunt.util.spawn({ cmd: 'npx', args: ['rollup', '-c', `rollup.config-${configTypeId}.js`, '--environment', 'BUILD:production'] }, (error, result) => {
-        console.log(3333, error);
-        grunt.log.writeln(result.stdout);
-        done();
-    });
+    const childProcess = grunt.util.spawn(
+        { cmd: 'npx', args: ['rollup', '-c', `rollup.config-${configTypeId}.js`, '--environment', 'BUILD:production'], opts: { stdio: 'pipe' } },
+        (error, result, code) => done(code === 0)
+    );
+    childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
 /**
@@ -176,19 +180,31 @@ function rollup(grunt, context, configTypeId) {
  * @param {Object} context - The task context object.
  * @param {string} updateTypeId - The identifier for the dependency to update.
  */
-function updateDependency(grunt, context, updateTypeId) {
+function updateDependency(grunt, context, updateTypeIds) {
     const done = context.async();
-    console.log(1111, `@datapos/datapos-${updateTypeId}@latest`);
-    grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, (error, result) => {
-        console.log('error 1', error ? String(error) : 'NO ERROR');
-        console.log('error 1', error ? JSON.stringify(error) : 'NO ERROR');
-        grunt.log.writeln(result.stdout);
-        grunt.util.spawn({ cmd: 'npm', args: ['install', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
-            console.log('error 2', error ? error.message : 'NO ERROR');
-            grunt.log.writeln(result.stdout);
-            done();
-        });
+    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {
+        async.series(
+            [
+                (callback) => {
+                    const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', `@datapos/datapos-operations@latest`] }, () => callback());
+                    grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
+                    grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
+                },
+                (callback) => {
+                    if (!updateTypeIds) callback();
+                    const modules = [];
+                    for (const updateTypeId of (updateTypeIds || []).split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
+                    console.log('MODULES', modules);
+                    const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, () => callback());
+                    grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
+                    grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
+                }
+            ],
+            () => done()
+        );
     });
+    // childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
 /**

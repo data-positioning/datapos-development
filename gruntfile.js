@@ -6,7 +6,7 @@
  * @copyright 2023 Jonathan Terrell
  */
 
-// Framework/Vendor Dependencies
+// Dependencies - Framework/Vendor
 const { auditDependencies, checkDependencies, identifyLicenses, logNotImplementedMessage, migrateDependencies, lintCode, publishToNPM } = require('./commonHelpers');
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

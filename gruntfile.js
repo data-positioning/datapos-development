@@ -7,7 +7,7 @@
  */
 
 // Dependencies - Framework/Vendor
-const { auditDependencies, checkDependencies, identifyLicenses, logNotImplementedMessage, migrateDependencies, lintCode, publishToNPM } = require('./commonHelpers');
+const { auditDependencies, checkDependencies, identifyLicenses, logNotImplementedMessage, migrateDependencies, lintCode, publishPackageToNPM } = require('./commonHelpers');
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Initialisation
@@ -41,8 +41,8 @@ module.exports = (grunt) => {
         migrateDependencies(grunt, this);
     });
     grunt.registerTask('logNotImplementedMessage', (taskName) => logNotImplementedMessage(taskName));
-    grunt.registerTask('publishToNPM', function () {
-        publishToNPM(grunt, this);
+    grunt.registerTask('publishPackageToNPM', function () {
+        publishPackageToNPM(grunt, this);
     });
 
     // Register common repository management tasks. These tasks are all invoked by VSCode keyboard shortcuts identified in the comments.
@@ -53,8 +53,8 @@ module.exports = (grunt) => {
     grunt.registerTask('format', ['logNotImplementedMessage:Format']); // alt+ctrl+shift+f.
     grunt.registerTask('lint', ['lintCode']); // alt+ctrl+shift+l.
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
-    grunt.registerTask('publish', ['publishToNPM']); // alt+ctrl+shift+p.
-    grunt.registerTask('release', ['gitadd', 'bump', 'publishToNPM']); // alt+ctrl+shift+r.
+    grunt.registerTask('publish', ['publishPackageToNPM']); // alt+ctrl+shift+p.
+    grunt.registerTask('release', ['gitadd', 'bump', 'publishPackageToNPM']); // alt+ctrl+shift+r.
     grunt.registerTask('synchronise', ['gitadd', 'bump']); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.

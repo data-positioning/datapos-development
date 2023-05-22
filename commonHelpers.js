@@ -74,7 +74,7 @@ function identifyLicenses(grunt, context, directory = '.') {
         ],
         (error) => {
             console.log(3333, error);
-            done(!!error);
+            done(error ? false : true);
         }
     );
 }

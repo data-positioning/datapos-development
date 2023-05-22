@@ -186,7 +186,10 @@ function updateDataPosDependencies(grunt, context, updateTypeIds) {
         async.series(
             [
                 (callback) => {
-                    const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', `@datapos/datapos-operations@latest`] }, () => callback());
+                    const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'] }, () => {
+                        console.log('@datapos/datapos-operations@latest');
+                        callback();
+                    });
                     grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
                     grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
                 },
@@ -194,7 +197,10 @@ function updateDataPosDependencies(grunt, context, updateTypeIds) {
                     if (updateTypeIds) {
                         const modules = [];
                         for (const updateTypeId of updateTypeIds.split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
-                        const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, () => callback());
+                        const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, () => {
+                            for (const module of modules) console.log(module);
+                            callback();
+                        });
                         grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
                         grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
                     } else {

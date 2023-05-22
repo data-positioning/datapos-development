@@ -137,7 +137,7 @@ function logNotImplementedMessage(taskName) {
  * @param {Object} grunt - The Grunt object.
  * @param {Object} context - The task context object.
  */
-function publishToNPM(grunt, context) {
+function publishPackageToNPM(grunt, context) {
     // const done = context.async();
     // grunt.util.spawn({ cmd: 'npx', args: ['publish'] }, (error, result) => {
     //     grunt.log.writeln(result.stdout);
@@ -156,7 +156,7 @@ function publishToNPM(grunt, context) {
  * @param {Object} context - The task context object.
  * @param {string} configTypeId - The identifier for the Rollup configuration.
  */
-function rollup(grunt, context, configTypeId) {
+function rollupCode(grunt, context, configTypeId) {
     // console.log(1111, configTypeId);
     // const done = context.async();
     // console.log(2222);
@@ -208,27 +208,6 @@ function updateDependencies(grunt, context, updateTypeIds) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Updates a specific development dependency by installing the latest version using Grunt's util.spawn method and logs the output.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} context - The task context object.
- * @param {string} updateTypeId - The identifier for the development dependency to update.
- */
-function updateDevDependency(grunt, context, updateTypeId) {
-    const done = context.async();
-    console.log(1111, `@datapos/datapos-${updateTypeId}@latest`);
-    grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, (error, result) => {
-        console.log('error 1', error ? String(error) : 'NO ERROR');
-        console.log('error 1', error ? JSON.stringify(error) : 'NO ERROR');
-        grunt.log.writeln(result.stdout);
-        grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', `@datapos/datapos-${updateTypeId}@latest`] }, (error, result) => {
-            console.log('error 2', error ? error.message : 'NO ERROR');
-            grunt.log.writeln(result.stdout);
-            done();
-        });
-    });
-}
-
 module.exports = {
     auditDependencies,
     checkDependencies,
@@ -236,8 +215,7 @@ module.exports = {
     lintCode,
     logNotImplementedMessage,
     migrateDependencies,
-    publishToNPM,
-    rollup,
-    updateDependencies,
-    updateDevDependency
+    publishPackageToNPM,
+    rollupCode,
+    updateDependencies
 };

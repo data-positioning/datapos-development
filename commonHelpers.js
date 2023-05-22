@@ -66,7 +66,7 @@ function identifyLicenses(grunt, context, directory = '.') {
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
             }
         ],
-        (error) => done(error === 0)
+        (error) => done(!!error)
     );
 }
 

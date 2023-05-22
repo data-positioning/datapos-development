@@ -180,7 +180,7 @@ function rollup(grunt, context, configTypeId) {
  * @param {Object} context - The task context object.
  * @param {string} updateTypeId - The identifier for the dependency to update.
  */
-function updateDependency(grunt, context, updateTypeIds) {
+function updateDependencies(grunt, context, updateTypeIds) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {
         async.series(
@@ -194,7 +194,6 @@ function updateDependency(grunt, context, updateTypeIds) {
                     if (updateTypeIds) {
                         const modules = [];
                         for (const updateTypeId of updateTypeIds.split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
-                        console.log('MODULES', modules);
                         const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, () => callback());
                         grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
                         grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
@@ -206,7 +205,6 @@ function updateDependency(grunt, context, updateTypeIds) {
             () => done()
         );
     });
-    // childProcess.stdout.on('data', (data) => process.stdout.write(data));
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
@@ -240,6 +238,6 @@ module.exports = {
     migrateDependencies,
     publishToNPM,
     rollup,
-    updateDependency,
+    updateDependencies,
     updateDevDependency
 };

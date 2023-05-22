@@ -193,7 +193,7 @@ function updateDependency(grunt, context, updateTypeIds) {
                 (callback) => {
                     if (updateTypeIds) {
                         const modules = [];
-                        for (const updateTypeId of (updateTypeIds || '').split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
+                        for (const updateTypeId of updateTypeIds.split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
                         console.log('MODULES', modules);
                         const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, () => callback());
                         grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));

@@ -10,6 +10,17 @@
 // Helpers
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Uploads a connector using the specified parameters.
+ *
+ * @param {Object} grunt - The Grunt task runner.
+ * @param {Object} context - The context object.
+ * @param {Object} config - The configuration object.
+ * @param {string} version - The version of the connector.
+ * @param {string} dataposConnectorUploadToken - The upload token for the connector.
+ * @param {string} projectId - The ID of the project.
+ * @returns {Promise} A promise that resolves with the status of the upload.
+ */
 async function uploadConnector(grunt, context, config, version, dataposConnectorUploadToken, projectId) {
     const done = context.async();
     const status = await upload(grunt, config, version, dataposConnectorUploadToken, projectId);
@@ -46,8 +57,8 @@ async function upload(grunt, config, version, dataposConnectorUploadToken, proje
 
         // Append the configuration to the form data object as a text field.
         formData.append('configuration', JSON.stringify({ ...config, description, logo, reference: `components%2F${config.id}`, version }));
-        formData.append('description', description);
-        formData.append('logo', logo);
+        // formData.append('description', description);
+        // formData.append('logo', logo);
 
         // Loop through the 'dist' directory and append the contents of each file as a blob field.
         grunt.file.recurse('dist', (absPath, rootDir, subDir, filename) => {

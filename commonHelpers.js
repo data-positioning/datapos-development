@@ -89,11 +89,15 @@ function identifyLicenses(grunt, context, directory = '.') {
  * @param {Array} args - Additional arguments for the ESLint command.
  */
 function lintCode(grunt, context, args) {
-    const done = context.async();
-    grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args) }, (error, result) => {
-        grunt.log.writeln(result.stdout);
-        done();
-    });
+    // const done = context.async();
+    // grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args) }, (error, result) => {
+    //     grunt.log.writeln(result.stdout);
+    //     done();
+    // });
+    const done = this.async();
+    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+    childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
 /**

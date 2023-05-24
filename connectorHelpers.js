@@ -56,7 +56,7 @@ async function upload(grunt, config, version, dataposConnectorUploadToken, proje
         const formData = new FormData();
 
         // Append the configuration to the form data object as a text field.
-        formData.append('configuration', JSON.stringify({ ...config, description, logo, reference: `components%2F${config.id}`, version }));
+        formData.append('configuration', JSON.stringify({ ...config, description, logo, version }));
         // formData.append('description', description);
         // formData.append('logo', logo);
 

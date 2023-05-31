@@ -29,7 +29,7 @@ function auditDependencies(grunt, context, directory = '.') {
 }
 
 /**
- * Runs the npm outdated command to check for outdated dependencies in the project.
+ * Runs the npm outdated command and the depcheck package to check for outdated dependencies in the project.
  *
  * @param {object} grunt - The Grunt instance.
  * @param {object} context - The Grunt task context.
@@ -38,9 +38,21 @@ function auditDependencies(grunt, context, directory = '.') {
  */
 function checkDependencies(grunt, context, directory = '.') {
     const done = context.async();
-    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
-    childProcess.stdout.on('data', (data) => process.stdout.write(data));
-    childProcess.stderr.on('data', (data) => process.stderr.write(data));
+    async.series(
+        [
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, (error) => callback(error));
+                childProcess.stdout.on('data', (data) => process.stdout.write(data));
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            },
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['depcheck'], opts: { cwd: directory } }, (error) => callback(error));
+                childProcess.stdout.on('data', (data) => process.stdout.write(data));
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            }
+        ],
+        (error) => done(error ? false : true)
+    );
 }
 
 /**

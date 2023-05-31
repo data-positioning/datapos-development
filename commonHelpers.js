@@ -29,7 +29,7 @@ function auditDependencies(grunt, context, directory = '.') {
 }
 
 /**
- * Runs the npm outdated command and the depcheck package to check for outdated and redundant dependencies in the project.
+ * Runs the npm outdated command and the depcheck command to check for outdated and redundant dependencies in the project.
  *
  * @param {object} grunt - The Grunt instance.
  * @param {object} context - The Grunt task context.
@@ -41,7 +41,7 @@ function checkDependencies(grunt, context, directory = '.') {
     async.series(
         [
             (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, (error) => callback(error));
+                const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, () => callback(undefined));
                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
             },

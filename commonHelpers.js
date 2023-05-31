@@ -47,7 +47,7 @@ function checkDependencies(grunt, context, directory = '.') {
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
             },
             (callback) => {
-                console.log('\nCheck for unused and missing dependencies...\n');
+                console.log('\nCheck for unused and missing dependencies (dynamically imported dependencies maybe reported as unused or missing)...\n');
                 const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['depcheck'], opts: { cwd: directory } }, () => callback(undefined));
                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));

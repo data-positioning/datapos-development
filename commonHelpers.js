@@ -29,7 +29,7 @@ function auditDependencies(grunt, context, directory = '.') {
 }
 
 /**
- * Runs the npm outdated command and the depcheck package to check for outdated dependencies in the project.
+ * Runs the npm outdated command and the depcheck package to check for outdated and redundant dependencies in the project.
  *
  * @param {object} grunt - The Grunt instance.
  * @param {object} context - The Grunt task context.

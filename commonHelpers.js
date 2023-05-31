@@ -41,12 +41,14 @@ function checkDependencies(grunt, context, directory = '.') {
     async.series(
         [
             (callback) => {
+                console.log('\nCheck for outdated dependencies...\n');
                 const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, () => callback(undefined));
                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
             },
             (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['depcheck'], opts: { cwd: directory } }, (error) => callback(error));
+                console.log('\nCheck for unused and missing dependencies...\n');
+                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['depcheck'], opts: { cwd: directory } }, () => callback(undefined));
                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
             }

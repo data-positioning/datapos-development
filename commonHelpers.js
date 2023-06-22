@@ -96,6 +96,7 @@ function identifyLicenses(grunt, context, directory = '.') {
  * @returns {void}
  */
 function lintCode(grunt, context, args, directory = '.') {
+    console.log('directory',directory);
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
     childProcess.stdout.on('data', (data) => process.stdout.write(data));

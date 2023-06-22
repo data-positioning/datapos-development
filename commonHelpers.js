@@ -30,7 +30,9 @@ function auditDependencies(grunt, context, directory = '.') {
  * @param {*} fs
  * @param {*} dataPath
  */
-function buildDataIndex(grunt, fs, dataPath) {
+
+//
+function buildDataIndex(grunt, context, fs, dataPath) {
     const processDirectory = (topLevelPath, path, parentItem) => {
         const searchPath = `${path}/*`;
         for (const childPath of grunt.file.expand({ filter: 'isDirectory' }, searchPath)) {

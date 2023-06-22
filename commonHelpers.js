@@ -92,15 +92,11 @@ function identifyLicenses(grunt, context, directory = '.') {
  * @param {object} grunt - The Grunt instance.
  * @param {object} context - The Grunt task context.
  * @param {string[]} args - An array of additional arguments to be passed to ESLint.
- * @param {string} [directory='.'] - The directory path where the commands will be executed. Defaults to the current directory.
  * @returns {void}
  */
-function lintCode(grunt, context, args, directory = '.') {
-    console.log('directory', directory);
+function lintCode(grunt, context, args) {
     const done = context.async();
-    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint', '-c', './.eslintrc.cjs'].concat(args), opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) =>
-        done(code === 0)
-    );
+    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
     childProcess.stdout.on('data', (data) => process.stdout.write(data));
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }

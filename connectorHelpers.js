@@ -1,36 +1,11 @@
-/**
- * Connector helper functions used by project management tasks.
- */
-
-// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-/**
- * Uploads a connector using the specified parameters.
- *
- * @param {Object} grunt - The Grunt task runner.
- * @param {Object} context - The context object.
- * @param {Object} config - The configuration object.
- * @param {string} version - The version of the connector.
- * @param {string} dataposConnectorUploadToken - The upload token for the connector.
- * @param {string} projectId - The ID of the project.
- * @returns {Promise} A promise that resolves with the status of the upload.
- */
+// Helper: Uploads a connector.
 async function uploadConnector(grunt, context, config, version, dataposConnectorUploadToken, projectId) {
     const done = context.async();
     const status = await upload(grunt, config, version, dataposConnectorUploadToken, projectId);
     done(status);
 }
 
-/**
- * Uploads a connector to the Data Positioning platform.
- * @param {Object} grunt - The Grunt object.
- * @param {Object} config - The configuration object for the connector.
- * @param {string} dataposConnectorUploadToken - The authorization token for uploading the connector.
- * @param {string} projectId - The ID of the project where the connector should be uploaded.
- * @returns {Promise<boolean>} - A Promise that resolves to true if the connector upload is successful, otherwise false.
- */
+// Utility: Uploads a connector to the Data Positioning platform.
 async function upload(grunt, config, version, dataposConnectorUploadToken, projectId) {
     try {
         // Read the description file and append contents to the form object as a text field.

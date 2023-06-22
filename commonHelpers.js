@@ -1,9 +1,5 @@
 /**
- * @file datapos-operations/commonHelpers.js
- * @description Common helper functions used by project management tasks.
- * @license ISC Licensed under the ISC license, Version 2.0. See the LICENSE.md file for details.
- * @author Jonathan Terrell <terrell.jm@gmail.com>
- * @copyright 2023 Jonathan Terrell
+ * Common helper functions used by project management tasks.
  */
 
 // Dependencies - Framework/Vendor
@@ -26,6 +22,31 @@ function auditDependencies(grunt, context, directory = '.') {
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
     childProcess.stdout.on('data', (data) => process.stdout.write(data));
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
+}
+
+/**
+ *
+ * @param {*} grunt
+ * @param {*} fs
+ * @param {*} dataPath
+ */
+function buildDataIndex(grunt, fs, dataPath) {
+    const processDirectory = (topLevelPath, path, parentItem) => {
+        const searchPath = `${path}/*`;
+        for (const childPath of grunt.file.expand({ filter: 'isDirectory' }, searchPath)) {
+            processDirectory(topLevelPath, childPath, []);
+            parentItem.push({ path: childPath.substr(path.length + 1), typeId: 'folder' });
+        }
+        for (const childPath of grunt.file.expand({ filter: 'isFile' }, searchPath)) {
+            var stats = fs.statSync(childPath);
+            parentItem.push({ lastModifiedAt: stats.mtimeMs, path: childPath.substr(path.length + 1), size: stats.size, typeId: 'file' });
+        }
+        index[path === topLevelPath ? '/' : `/${path.substr(topLevelPath.length + 1)}`] = parentItem;
+    };
+    const folderPath = `public/${dataPath}`;
+    const index = {};
+    processDirectory(folderPath, folderPath, []);
+    grunt.file.write(`public/${dataPath}Index.json`, JSON.stringify(index));
 }
 
 /**
@@ -213,6 +234,7 @@ function updateDataPosDependencies(grunt, context, updateTypeIds) {
 
 module.exports = {
     auditDependencies,
+    buildDataIndex,
     checkDependencies,
     identifyLicenses,
     lintCode,

@@ -1,22 +1,7 @@
-/**
- * Common helper functions used by project management tasks.
- */
-
 // Dependencies - Framework/Vendor
 const async = require('async');
 
-// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-/**
- * Runs the npm audit command to check for vulnerabilities in project dependencies.
- *
- * @param {object} grunt - The Grunt instance.
- * @param {object} context - The Grunt task context.
- * @param {string} [directory='.'] - The directory path where the npm audit command will be executed. Defaults to the current directory.
- * @returns {void}
- */
+// Helper: Runs npm audit command to check for vulnerabilities in project dependencies.
 function auditDependencies(grunt, context, directory = '.') {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -24,14 +9,7 @@ function auditDependencies(grunt, context, directory = '.') {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- *
- * @param {*} grunt
- * @param {*} fs
- * @param {*} dataPath
- */
-
-//
+// Helper: Builds an index of the data files in the specified path.
 function buildDataIndex(grunt, context, fs, dataPath) {
     const processDirectory = (topLevelPath, path, parentItem) => {
         const searchPath = `${path}/*`;
@@ -51,14 +29,7 @@ function buildDataIndex(grunt, context, fs, dataPath) {
     grunt.file.write(`public/${dataPath}Index.json`, JSON.stringify(index));
 }
 
-/**
- * Runs the npm outdated command and the depcheck command to check for outdated and redundant dependencies in the project.
- *
- * @param {object} grunt - The Grunt instance.
- * @param {object} context - The Grunt task context.
- * @param {string} [directory='.'] - The directory path where the npm outdated command will be executed. Defaults to the current directory.
- * @returns {void}
- */
+// Helper: Runs npm outdated and depcheck commands to check for outdated and unused/missing dependencies.
 function checkDependencies(grunt, context, directory = '.') {
     const done = context.async();
     async.series(
@@ -80,14 +51,7 @@ function checkDependencies(grunt, context, directory = '.') {
     );
 }
 
-/**
- * Runs license-checker and nlf commands to identify licenses used by project dependencies.
- *
- * @param {object} grunt - The Grunt instance.
- * @param {object} context - The Grunt task context.
- * @param {string} [directory='.'] - The directory path where the commands will be executed. Defaults to the current directory.
- * @returns {void}
- */
+// Helper: Runs license-checker and nlf commands to identify licenses used by project dependencies.
 function identifyLicenses(grunt, context, directory = '.') {
     const done = context.async();
     async.parallel(
@@ -109,14 +73,7 @@ function identifyLicenses(grunt, context, directory = '.') {
     );
 }
 
-/**
- * Runs ESLint to perform linting on code using specified arguments.
- *
- * @param {object} grunt - The Grunt instance.
- * @param {object} context - The Grunt task context.
- * @param {string[]} args - An array of additional arguments to be passed to ESLint.
- * @returns {void}
- */
+// Helper: Runs eslint command to lint the code.
 function lintCode(grunt, context, args) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -124,12 +81,7 @@ function lintCode(grunt, context, args) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Logs a "task not implemented" message to the console.
- *
- * @param {string} taskName - The name of the task that is not implemented.
- * @returns {void}
- */
+// Helper: Logs a message indicating that the specified task has not been implemented.
 function logNotImplementedMessage(taskName) {
     const message = `***** ${taskName} task NOT implemented *****`;
     console.log('*'.repeat(message.length));
@@ -137,14 +89,7 @@ function logNotImplementedMessage(taskName) {
     console.log('*'.repeat(message.length));
 }
 
-/**
- * Upgrades project dependencies using npm-check-updates and installs the updated dependencies using npm.
- *
- * @param {object} grunt - The Grunt instance.
- * @param {object} context - The Grunt task context.
- * @param {string} [directory='.'] - The directory path where the commands will be executed. Defaults to the current directory.
- * @returns {void}
- */
+// Helper: Runs npm-check-updates and npm install commands to migrate dependencies to the latest versions.
 function migrateDependencies(grunt, context, directory = '.') {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'], opts: { cwd: directory } }, (error, result, code) => {
@@ -160,13 +105,7 @@ function migrateDependencies(grunt, context, directory = '.') {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Publishes the package to the npm registry using the `npm publish` command.
- *
- * @param {object} grunt - The Grunt instance.
- * @param {object} context - The Grunt task context.
- * @returns {void}
- */
+// Helper: Runs npm publish command to publish the package to NPM.
 function publishPackageToNPM(grunt, context) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['publish'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -174,14 +113,7 @@ function publishPackageToNPM(grunt, context) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Uses Rollup to bundle the code based on the specified configuration type.
- *
- * @param {object} grunt - The Grunt instance.
- * @param {object} context - The Grunt task context.
- * @param {string} configTypeId - The identifier of the Rollup configuration to use.
- * @returns {void}
- */
+// Helper: Runs rollup command to bundle the code.
 function rollupCode(grunt, context, configTypeId) {
     const done = context.async();
     const childProcess = grunt.util.spawn(
@@ -192,14 +124,7 @@ function rollupCode(grunt, context, configTypeId) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-/**
- * Updates Data Positioning dependencies based on the specified update type identifiers.
- *
- * @param {object} grunt - The Grunt instance.
- * @param {object} context - The Grunt task context.
- * @param {string} updateTypeIds - Pipe-separated string of update type identifiers.
- * @returns {void}
- */
+// Helper: Runs npm outdated and npm install commands to update @datapos/datapos-operations and @datapos/datapos-* dependencies to the latest versions.
 function updateDataPosDependencies(grunt, context, updateTypeIds) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {

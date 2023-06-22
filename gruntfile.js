@@ -35,7 +35,7 @@ module.exports = (grunt) => {
         identifyLicenses(grunt, this);
     });
     grunt.registerTask('lintCode', function () {
-        lintCode(grunt, this, ['*.js']);
+        lintCode(grunt, this, ['*.cjs', '*.js']);
     });
     grunt.registerTask('migrateDependencies', function () {
         migrateDependencies(grunt, this);

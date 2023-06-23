@@ -20,7 +20,10 @@ module.exports = (grunt) => {
         // shell: { commitAndPushToGitHub: { command: ['git add .', 'git commit -m "updated"', 'git push origin main:main'].join('&&') } }
         shell: {
             commitAndPushToGitHub: {
-                command: (message) => ['git add .', 'git commit -m "' + message + '"', 'git push origin main:main'].join('&&')
+                command: (message) => {
+                    const msg = getNewVersion();
+                    return ['git add .', `git commit -m "v${msg}"`, 'git push origin main:main'].join('&&');
+                }
             }
         }
     });

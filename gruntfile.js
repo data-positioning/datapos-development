@@ -3,7 +3,7 @@ const {
     auditDependencies,
     checkDependencies,
     identifyLicenses,
-    incrementVersion,
+    incrementVersionPatch,
     logNotImplementedMessage,
     migrateDependencies,
     lintCode,
@@ -32,8 +32,8 @@ module.exports = (grunt) => {
     grunt.registerTask('identifyLicenses', function () {
         identifyLicenses(grunt, this);
     });
-    grunt.registerTask('incrementVersion', function () {
-        incrementVersion(grunt, this, 'package.json');
+    grunt.registerTask('incrementVersionPatch', function () {
+        incrementVersionPatch(grunt, this, 'package.json');
     });
     grunt.registerTask('lintCode', function () {
         lintCode(grunt, this, ['*.cjs', '*.js']);
@@ -56,7 +56,7 @@ module.exports = (grunt) => {
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
     grunt.registerTask('publish', ['publishPackageToNPM']); // alt+ctrl+shift+p.
     grunt.registerTask('release', ['gitadd', 'bump', 'publishPackageToNPM']); // alt+ctrl+shift+r.
-    grunt.registerTask('synchronise', ['incrementVersion', 'gitadd', 'bump']); // alt+ctrl+shift+s.
+    grunt.registerTask('synchronise', ['incrementVersionPatch', 'gitadd', 'bump']); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.
 };

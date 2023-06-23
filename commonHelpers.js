@@ -82,7 +82,7 @@ function identifyLicenses(grunt, context, directory = '.') {
 }
 
 // Helper
-function incrementVersion(grunt, context, filePath) {
+function incrementVersionPatch(grunt, context, filePath) {
     var pkg = grunt.file.readJSON(filePath);
     console.log(pkg);
 }
@@ -167,7 +167,7 @@ module.exports = {
     buildDataIndex,
     checkDependencies,
     identifyLicenses,
-    incrementVersion,
+    incrementVersionPatch,
     lintCode,
     logNotImplementedMessage,
     migrateDependencies,

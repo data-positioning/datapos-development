@@ -121,17 +121,6 @@ function publishPackageToNPM(grunt, context) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-// // Helper
-// function rollupCode(grunt, context, configTypeId) {
-//     const done = context.async();
-//     const childProcess = grunt.util.spawn(
-//         { cmd: 'npx', args: ['rollup', '-c', `rollup.config-${configTypeId}.js`, '--environment', 'BUILD:production'], opts: { stdio: 'pipe' } },
-//         (error, result, code) => done(code === 0)
-//     );
-//     childProcess.stdout.on('data', (data) => process.stdout.write(data));
-//     childProcess.stderr.on('data', (data) => process.stderr.write(data));
-// }
-
 // Helper
 function updateDataPosDependencies(grunt, context, updateTypeIds) {
     const done = context.async();
@@ -176,6 +165,5 @@ module.exports = {
     logNotImplementedMessage,
     migrateDependencies,
     publishPackageToNPM,
-    // rollupCode,
     updateDataPosDependencies
 };

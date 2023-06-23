@@ -83,8 +83,14 @@ function identifyLicenses(grunt, context, directory = '.') {
 
 // Helper
 function incrementVersionPatch(grunt, context, filePath) {
-    var pkg = grunt.file.readJSON(filePath);
-    console.log(pkg);
+    var data = grunt.file.readJSON(filePath);
+    console.log(1111, data);
+    const versionSegments = data.version.split('.');
+    const newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+    console.log(newVersion);
+    data.version = newVersion;
+    console.log(2222, data);
+    grunt.file.write(filePath, JSON.stringify(data, null, 4));
 }
 
 // Helper

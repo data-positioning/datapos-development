@@ -2,29 +2,16 @@
 const {
     auditDependencies,
     checkDependencies,
-    // getNewVersion,
     identifyLicenses,
-    incrementVersionPatch,
     logNotImplementedMessage,
     migrateDependencies,
     lintCode,
-    publishPackageToNPM
+    publishPackageToNPM,
+    syncWithGithub
 } = require('./commonHelpers');
 
 // Configuration.
 module.exports = (grunt) => {
-    // // Set external task configuration.
-    // grunt.initConfig({
-    //     shell: {
-    //         commitAndPushToGitHub: {
-    //             command: () => ['git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'].join('&&')
-    //         }
-    //     }
-    // });
-
-    // // Load external tasks.
-    // grunt.loadNpmTasks('grunt-shell');
-
     // Register local tasks.
     grunt.registerTask('auditDependencies', function () {
         auditDependencies(grunt, this);
@@ -35,8 +22,8 @@ module.exports = (grunt) => {
     grunt.registerTask('identifyLicenses', function () {
         identifyLicenses(grunt, this);
     });
-    grunt.registerTask('incrementVersionPatch', function () {
-        incrementVersionPatch(grunt, this, 'package.json');
+    grunt.registerTask('syncWithGithub', function () {
+        syncWithGithub(grunt, this, 'package.json');
     });
     grunt.registerTask('lintCode', function () {
         lintCode(grunt, this, ['*.cjs', '*.js']);
@@ -58,8 +45,8 @@ module.exports = (grunt) => {
     grunt.registerTask('lint', ['lintCode']); // alt+ctrl+shift+l.
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
     grunt.registerTask('publish', ['publishPackageToNPM']); // alt+ctrl+shift+p.
-    grunt.registerTask('release', ['incrementVersionPatch', 'publishPackageToNPM']); // alt+ctrl+shift+r.
-    grunt.registerTask('synchronise', ['incrementVersionPatch']); // alt+ctrl+shift+s.
+    grunt.registerTask('release', ['syncWithGithub', 'publishPackageToNPM']); // alt+ctrl+shift+r.
+    grunt.registerTask('synchronise', ['syncWithGithub']); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.
 };

@@ -1,9 +1,6 @@
 // Dependencies - Framework/Vendor
 const async = require('async');
 
-// Module Variables
-let newVersion;
-
 // Helper
 function auditDependencies(grunt, context, directory = '.') {
     const done = context.async();
@@ -63,11 +60,6 @@ function checkDependencies(grunt, context, directory = '.') {
 }
 
 // Helper
-function getNewVersion() {
-    return newVersion;
-}
-
-// Helper
 function identifyLicenses(grunt, context, directory = '.') {
     const done = context.async();
     async.parallel(
@@ -90,18 +82,9 @@ function identifyLicenses(grunt, context, directory = '.') {
 }
 
 // Helper
-function incrementVersionPatch(grunt, context, filePath) {
+function syncWithGithub(grunt, context, filePath) {
     const done = context.async();
     let newVersion;
-    // var data = grunt.file.readJSON(filePath);
-    // const versionSegments = data.version.split('.');
-    // newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-    // data.version = newVersion;
-    // grunt.file.write(filePath, JSON.stringify(data, null, 4));
-    // // 'git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'
-    // const childProcess = grunt.util.spawn({ cmd: 'git', args: ['push', 'origin', 'main:main'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
-    // childProcess.stdout.on('data', (data) => process.stdout.write(data));
-    // childProcess.stderr.on('data', (data) => process.stderr.write(data));
     async.series(
         [
             (callback) => {
@@ -215,12 +198,11 @@ module.exports = {
     auditDependencies,
     buildDataIndex,
     checkDependencies,
-    getNewVersion,
     identifyLicenses,
-    incrementVersionPatch,
     lintCode,
     logNotImplementedMessage,
     migrateDependencies,
     publishPackageToNPM,
+    syncWithGithub,
     updateDataPosDependencies
 };

@@ -53,6 +53,10 @@ module.exports = (grunt) => {
         publishPackageToNPM(grunt, this);
     });
 
+    const getVersion = () => {
+        return 'newer updates';
+    };
+
     // Register common repository management tasks. These tasks are all invoked by VSCode keyboard shortcuts identified in the comments.
     grunt.registerTask('audit', ['auditDependencies']); // alt+ctrl+shift+a.
     grunt.registerTask('build', ['logNotImplementedMessage:Build']); // alt+ctrl+shift+b.
@@ -63,7 +67,7 @@ module.exports = (grunt) => {
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
     grunt.registerTask('publish', ['publishPackageToNPM']); // alt+ctrl+shift+p.
     grunt.registerTask('release', ['commitAndPushToGitHub:' + 'new updates', 'publishPackageToNPM']); // alt+ctrl+shift+r.
-    grunt.registerTask('synchronise', ['incrementVersionPatch', 'shell:commitAndPushToGitHub:' + 'new updates']); // alt+ctrl+shift+s.
+    grunt.registerTask('synchronise', ['incrementVersionPatch', 'shell:commitAndPushToGitHub:' + getVersion()]); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.
 };

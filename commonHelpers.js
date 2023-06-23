@@ -42,17 +42,18 @@ function checkDependencies(grunt, context, directory = '.') {
     async.series(
         [
             (callback) => {
-                console.log('\nCheck for outdated dependencies...\n');
+                // console.log('\nCheck for outdated dependencies...\n');
                 const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, () => callback(undefined));
                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            },
-            (callback) => {
-                console.log('\nCheck for unused and missing dependencies (dynamically imported dependencies maybe reported as unused or missing)...\n');
-                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['depcheck'], opts: { cwd: directory } }, () => callback(undefined));
-                childProcess.stdout.on('data', (data) => process.stdout.write(data));
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
             }
+            // TODO: This does not appear to be very accurate
+            // (callback) => {
+            //     console.log('\nCheck for unused and missing dependencies (dynamically imported dependencies maybe reported as unused or missing)...\n');
+            //     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['depcheck'], opts: { cwd: directory } }, () => callback(undefined));
+            //     childProcess.stdout.on('data', (data) => process.stdout.write(data));
+            //     childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            // }
         ],
         (error) => done(error ? false : true)
     );

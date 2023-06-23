@@ -20,9 +20,9 @@ module.exports = (grunt) => {
         // shell: { commitAndPushToGitHub: { command: ['git add .', 'git commit -m "updated"', 'git push origin main:main'].join('&&') } }
         shell: {
             commitAndPushToGitHub: {
-                command: (message) => {
+                command: () => {
                     const msg = getNewVersion();
-                    return ['git add .', `git commit -m "v${msg}"`, 'git push origin main:main'].join('&&');
+                    return ['git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'].join('&&');
                 }
             }
         }
@@ -66,8 +66,8 @@ module.exports = (grunt) => {
     grunt.registerTask('lint', ['lintCode']); // alt+ctrl+shift+l.
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
     grunt.registerTask('publish', ['publishPackageToNPM']); // alt+ctrl+shift+p.
-    grunt.registerTask('release', [`shell:commitAndPushToGitHub:${getNewVersion()}`, 'publishPackageToNPM']); // alt+ctrl+shift+r.
-    grunt.registerTask('synchronise', ['incrementVersionPatch', `shell:commitAndPushToGitHub:${getNewVersion()}`]); // alt+ctrl+shift+s.
+    grunt.registerTask('release', ['shell:commitAndPushToGitHub', 'publishPackageToNPM']); // alt+ctrl+shift+r.
+    grunt.registerTask('synchronise', ['incrementVersionPatch', 'shell:commitAndPushToGitHub']); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.
 };

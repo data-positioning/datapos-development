@@ -13,23 +13,23 @@ function auditDependencies(grunt, context, directory = '.') {
 function buildDataIndex(grunt, context, fs, dataPath) {
     const index = {};
 
-    // Utility       
+    // Utility
     const processDirectory = (topLevelPath, path, parentItem) => {
-        let childCount = 0;
+        let itemCount = 0;
         const searchPath = `${path}/*`;
         for (const childPath of grunt.file.expand({ filter: 'isDirectory' }, searchPath)) {
-            processDirectory(topLevelPath, childPath, []);
-            parentItem.push({ path: childPath.substr(path.length + 1), typeId: 'folder' });
-            childCount++;
+            const childCount = processDirectory(topLevelPath, childPath, []);
+            parentItem.push({ childCount, path: childPath.substr(path.length + 1), typeId: 'folder' });
+            itemCount++;
         }
         for (const childPath of grunt.file.expand({ filter: 'isFile' }, searchPath)) {
             var stats = fs.statSync(childPath);
             parentItem.push({ lastModifiedAt: stats.mtimeMs, path: childPath.substr(path.length + 1), size: stats.size, typeId: 'file' });
-            childCount++;
+            itemCount++;
         }
         index[path === topLevelPath ? '/' : `/${path.substr(topLevelPath.length + 1)}`] = parentItem;
-        console.log(searchPath, childCount);
-        return childCount;
+        console.log(searchPath, itemCount);
+        return itemCount;
     };
 
     const folderPath = `public/${dataPath}`;

@@ -1,7 +1,7 @@
 // Dependencies - Framework/Vendor
 const async = require('async');
 
-// Helper: Runs npm audit command to check for vulnerabilities in project dependencies.
+// Helper
 function auditDependencies(grunt, context, directory = '.') {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -9,27 +9,35 @@ function auditDependencies(grunt, context, directory = '.') {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-// Helper: Builds an index of the data files in the specified path.
+// Helper
 function buildDataIndex(grunt, context, fs, dataPath) {
+    const index = {};
+
+    // Utility
     const processDirectory = (topLevelPath, path, parentItem) => {
+        let childCount = 0;
         const searchPath = `${path}/*`;
         for (const childPath of grunt.file.expand({ filter: 'isDirectory' }, searchPath)) {
             processDirectory(topLevelPath, childPath, []);
             parentItem.push({ path: childPath.substr(path.length + 1), typeId: 'folder' });
+            childCount++;
         }
         for (const childPath of grunt.file.expand({ filter: 'isFile' }, searchPath)) {
             var stats = fs.statSync(childPath);
             parentItem.push({ lastModifiedAt: stats.mtimeMs, path: childPath.substr(path.length + 1), size: stats.size, typeId: 'file' });
+            childCount++;
         }
         index[path === topLevelPath ? '/' : `/${path.substr(topLevelPath.length + 1)}`] = parentItem;
+        console.log(searchPath, childCount);
+        return childCount;
     };
+
     const folderPath = `public/${dataPath}`;
-    const index = {};
     processDirectory(folderPath, folderPath, []);
     grunt.file.write(`public/${dataPath}Index.json`, JSON.stringify(index));
 }
 
-// Helper: Runs npm outdated and depcheck commands to check for outdated and unused/missing dependencies.
+// Helper
 function checkDependencies(grunt, context, directory = '.') {
     const done = context.async();
     async.series(
@@ -51,7 +59,7 @@ function checkDependencies(grunt, context, directory = '.') {
     );
 }
 
-// Helper: Runs license-checker and nlf commands to identify licenses used by project dependencies.
+// Helper
 function identifyLicenses(grunt, context, directory = '.') {
     const done = context.async();
     async.parallel(
@@ -73,7 +81,7 @@ function identifyLicenses(grunt, context, directory = '.') {
     );
 }
 
-// Helper: Runs eslint command to lint the code.
+// Helper
 function lintCode(grunt, context, args) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -81,7 +89,7 @@ function lintCode(grunt, context, args) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-// Helper: Logs a message indicating that the specified task has not been implemented.
+// Helper
 function logNotImplementedMessage(taskName) {
     const message = `***** ${taskName} task NOT implemented *****`;
     console.log('*'.repeat(message.length));
@@ -89,7 +97,7 @@ function logNotImplementedMessage(taskName) {
     console.log('*'.repeat(message.length));
 }
 
-// Helper: Runs npm-check-updates and npm install commands to migrate dependencies to the latest versions.
+// Helper
 function migrateDependencies(grunt, context, directory = '.') {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'], opts: { cwd: directory } }, (error, result, code) => {
@@ -105,7 +113,7 @@ function migrateDependencies(grunt, context, directory = '.') {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-// Helper: Runs npm publish command to publish the package to NPM.
+// Helper
 function publishPackageToNPM(grunt, context) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['publish'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -113,7 +121,7 @@ function publishPackageToNPM(grunt, context) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-// Helper: Runs rollup command to bundle the code.
+// Helper
 function rollupCode(grunt, context, configTypeId) {
     const done = context.async();
     const childProcess = grunt.util.spawn(
@@ -124,7 +132,7 @@ function rollupCode(grunt, context, configTypeId) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-// Helper: Runs npm outdated and npm install commands to update @datapos/datapos-operations and @datapos/datapos-* dependencies to the latest versions.
+// Helper
 function updateDataPosDependencies(grunt, context, updateTypeIds) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {

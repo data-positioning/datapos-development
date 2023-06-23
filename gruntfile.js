@@ -15,22 +15,14 @@ const {
 module.exports = (grunt) => {
     // Set external task configuration.
     grunt.initConfig({
-        // bump: { options: { commitFiles: ['-a'], commitMessage: 'v%VERSION%', pushTo: 'origin' } },
-        // gitadd: { task: { options: { all: true } } },
-        // shell: { commitAndPushToGitHub: { command: ['git add .', 'git commit -m "updated"', 'git push origin main:main'].join('&&') } }
         shell: {
             commitAndPushToGitHub: {
-                command: () => {
-                    const msg = getNewVersion();
-                    return ['git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'].join('&&');
-                }
+                command: () => ['git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'].join('&&')
             }
         }
     });
 
     // Load external tasks.
-    // grunt.loadNpmTasks('grunt-bump');
-    // grunt.loadNpmTasks('grunt-git');
     grunt.loadNpmTasks('grunt-shell');
 
     // Register local tasks.

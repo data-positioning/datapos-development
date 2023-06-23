@@ -22,9 +22,6 @@ module.exports = (grunt) => {
     grunt.registerTask('identifyLicenses', function () {
         identifyLicenses(grunt, this);
     });
-    grunt.registerTask('syncRepoWithGithub', function () {
-        syncRepoWithGithub(grunt, this, 'package.json');
-    });
     grunt.registerTask('lintCode', function () {
         lintCode(grunt, this, ['*.cjs', '*.js']);
     });
@@ -34,6 +31,9 @@ module.exports = (grunt) => {
     grunt.registerTask('logNotImplementedMessage', (taskName) => logNotImplementedMessage(taskName));
     grunt.registerTask('publishPackageToNPM', function () {
         publishPackageToNPM(grunt, this);
+    });
+    grunt.registerTask('syncRepoWithGithub', function () {
+        syncRepoWithGithub(grunt, this, 'package.json');
     });
 
     // Register common repository management tasks. These tasks are all invoked by VSCode keyboard shortcuts identified in the comments.

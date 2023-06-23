@@ -28,7 +28,6 @@ function buildDataIndex(grunt, context, fs, dataPath) {
             itemCount++;
         }
         index[path === topLevelPath ? '/' : `/${path.substr(topLevelPath.length + 1)}`] = parentItem;
-        console.log(searchPath, itemCount);
         return itemCount;
     };
 

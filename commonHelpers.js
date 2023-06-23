@@ -94,7 +94,6 @@ function incrementVersionPatch(grunt, context, filePath) {
     var data = grunt.file.readJSON(filePath);
     const versionSegments = data.version.split('.');
     newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-    console.log(1111, newVersion);
     data.version = newVersion;
     grunt.file.write(filePath, JSON.stringify(data, null, 4));
 }

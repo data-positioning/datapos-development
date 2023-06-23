@@ -64,6 +64,7 @@ function checkDependencies(grunt, context, directory = '.') {
 
 // Helper
 function getNewVersion() {
+    console.log(2222, newVersion);
     return newVersion;
 }
 
@@ -94,6 +95,7 @@ function incrementVersionPatch(grunt, context, filePath) {
     var data = grunt.file.readJSON(filePath);
     const versionSegments = data.version.split('.');
     newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+    console.log(1111, newVersion);
     data.version = newVersion;
     grunt.file.write(filePath, JSON.stringify(data, null, 4));
 }

@@ -64,7 +64,6 @@ function checkDependencies(grunt, context, directory = '.') {
 
 // Helper
 function getNewVersion() {
-    console.log(2222, newVersion);
     return newVersion;
 }
 

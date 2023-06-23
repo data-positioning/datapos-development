@@ -16,7 +16,7 @@ module.exports = (grunt) => {
     grunt.initConfig({
         bump: { options: { commitFiles: ['-a'], commitMessage: 'v%VERSION%', pushTo: 'origin' } },
         gitadd: { task: { options: { all: true } } },
-        shell: { pushToGitHub: { command: 'git push origin master' } }
+        shell: { pushToGitHub: { command: 'git push origin main:main' } }
     });
 
     // Load external tasks.

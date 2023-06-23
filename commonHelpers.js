@@ -13,7 +13,7 @@ function auditDependencies(grunt, context, directory = '.') {
 function buildDataIndex(grunt, context, fs, dataPath) {
     const index = {};
 
-    // Utility
+    // Utility       
     const processDirectory = (topLevelPath, path, parentItem) => {
         let childCount = 0;
         const searchPath = `${path}/*`;

@@ -41,10 +41,14 @@ function buildWithVite(grunt, context) {
     console.log(1111);
     const done = context.async();
     console.log(2222);
-    const childProcess = grunt.util.spawn({ cmd: 'vite', args: ['build'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+    const childProcess = grunt.util.spawn({ cmd: 'vite', args: ['build'], opts: { stdio: 'pipe' } }, (error, result, code) => {
+        console.log(333, error, result, code);
+        done(code === 0);
+    });
+    console.log(4444);
     childProcess.stdout.on('data', (data) => process.stdout.write(data));
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
-    console.log(3333);
+    console.log(5555);
 }
 
 // Helper

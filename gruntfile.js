@@ -7,7 +7,7 @@ const {
     migrateDependencies,
     lintCode,
     publishPackageToNPM,
-    syncWithGithub
+    syncRepoWithGithub
 } = require('./commonHelpers');
 
 // Configuration.
@@ -22,8 +22,8 @@ module.exports = (grunt) => {
     grunt.registerTask('identifyLicenses', function () {
         identifyLicenses(grunt, this);
     });
-    grunt.registerTask('syncWithGithub', function () {
-        syncWithGithub(grunt, this, 'package.json');
+    grunt.registerTask('syncRepoWithGithub', function () {
+        syncRepoWithGithub(grunt, this, 'package.json');
     });
     grunt.registerTask('lintCode', function () {
         lintCode(grunt, this, ['*.cjs', '*.js']);
@@ -45,8 +45,8 @@ module.exports = (grunt) => {
     grunt.registerTask('lint', ['lintCode']); // alt+ctrl+shift+l.
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
     grunt.registerTask('publish', ['publishPackageToNPM']); // alt+ctrl+shift+p.
-    grunt.registerTask('release', ['syncWithGithub', 'publishPackageToNPM']); // alt+ctrl+shift+r.
-    grunt.registerTask('synchronise', ['syncWithGithub']); // alt+ctrl+shift+s.
+    grunt.registerTask('release', ['syncRepoWithGithub', 'publishPackageToNPM']); // alt+ctrl+shift+r.
+    grunt.registerTask('synchronise', ['syncRepoWithGithub']); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.
 };

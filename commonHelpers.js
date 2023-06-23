@@ -82,7 +82,7 @@ function identifyLicenses(grunt, context, directory = '.') {
 }
 
 // Helper
-function syncWithGithub(grunt, context, filePath) {
+function syncRepoWithGithub(grunt, context, filePath) {
     const done = context.async();
     let newVersion;
     async.series(
@@ -203,6 +203,6 @@ module.exports = {
     logNotImplementedMessage,
     migrateDependencies,
     publishPackageToNPM,
-    syncWithGithub,
+    syncRepoWithGithub,
     updateDataPosDependencies
 };

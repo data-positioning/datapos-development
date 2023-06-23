@@ -1,7 +1,7 @@
 // Dependencies - Framework/Vendor
 const { auditDependencies, checkDependencies, identifyLicenses, logNotImplementedMessage, migrateDependencies, lintCode, publishPackageToNPM } = require('./commonHelpers');
 
-// Grunt configuration.
+// Configuration.
 module.exports = (grunt) => {
     // Set external task configuration.
     grunt.initConfig({

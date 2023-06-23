@@ -16,7 +16,7 @@ module.exports = (grunt) => {
     grunt.initConfig({
         bump: { options: { commitFiles: ['-a'], commitMessage: 'v%VERSION%', pushTo: 'origin' } },
         gitadd: { task: { options: { all: true } } },
-        shell: { pushToGitHub: { command: ['git add .', 'git commit -m "v%VERSION%"', 'git push origin main:main'].join('&&') } }
+        shell: { commitAndPushToGitHub: { command: ['git add .', 'git commit -m "updated"', 'git push origin main:main'].join('&&') } }
     });
 
     // Load external tasks.
@@ -58,7 +58,7 @@ module.exports = (grunt) => {
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
     grunt.registerTask('publish', ['publishPackageToNPM']); // alt+ctrl+shift+p.
     grunt.registerTask('release', ['gitadd', 'bump', 'publishPackageToNPM']); // alt+ctrl+shift+r.
-    grunt.registerTask('synchronise', ['incrementVersionPatch', 'shell:pushToGitHub' /*, 'bump' */]); // alt+ctrl+shift+s.
+    grunt.registerTask('synchronise', ['incrementVersionPatch', 'shell:commitAndPushToGitHub' /*, 'bump' */]); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.
 };

@@ -82,6 +82,12 @@ function identifyLicenses(grunt, context, directory = '.') {
 }
 
 // Helper
+function incrementVersion(grunt, context, filePath) {
+    var pkg = grunt.file.readJSON(filePath);
+    console.log(pkg);
+}
+
+// Helper
 function lintCode(grunt, context, args) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -161,6 +167,7 @@ module.exports = {
     buildDataIndex,
     checkDependencies,
     identifyLicenses,
+    incrementVersion,
     lintCode,
     logNotImplementedMessage,
     migrateDependencies,

@@ -38,17 +38,10 @@ function buildDataIndex(grunt, context, fs, dataPath) {
 
 // Helper
 function buildWithVite(grunt, context) {
-    console.log(1111);
     const done = context.async();
-    console.log(2222);
-    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['vite', 'build'], opts: { stdio: 'pipe' } }, (error, result, code) => {
-        console.log(333, error, result, code);
-        done(code === 0);
-    });
-    console.log(4444);
+    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['vite', 'build'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
     childProcess.stdout.on('data', (data) => process.stdout.write(data));
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
-    console.log(5555);
 }
 
 // Helper

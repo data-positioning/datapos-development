@@ -92,15 +92,48 @@ function identifyLicenses(grunt, context, directory = '.') {
 // Helper
 function incrementVersionPatch(grunt, context, filePath) {
     const done = context.async();
-    var data = grunt.file.readJSON(filePath);
-    const versionSegments = data.version.split('.');
-    newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-    data.version = newVersion;
-    grunt.file.write(filePath, JSON.stringify(data, null, 4));
-    // 'git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'
-    const childProcess = grunt.util.spawn({ cmd: 'git', args: ['add', '.'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
-    childProcess.stdout.on('data', (data) => process.stdout.write(data));
-    childProcess.stderr.on('data', (data) => process.stderr.write(data));
+    let newVersion;
+    // var data = grunt.file.readJSON(filePath);
+    // const versionSegments = data.version.split('.');
+    // newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+    // data.version = newVersion;
+    // grunt.file.write(filePath, JSON.stringify(data, null, 4));
+    // // 'git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'
+    // const childProcess = grunt.util.spawn({ cmd: 'git', args: ['push', 'origin', 'main:main'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+    // childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    // childProcess.stderr.on('data', (data) => process.stderr.write(data));
+    async.series(
+        [
+            (callback) => {
+                try {
+                    var data = grunt.file.readJSON(filePath);
+                    const versionSegments = data.version.split('.');
+                    newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+                    data.version = newVersion;
+                    grunt.file.write(filePath, JSON.stringify(data, null, 4));
+                    callback(undefined);
+                } catch (error) {
+                    callback(error);
+                }
+            },
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['add', '.'], opts: { stdio: 'pipe' } }, (error) => callback(error));
+                childProcess.stdout.on('data', (data) => process.stdout.write(data));
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            },
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['commit', '-m', `v${newVersion}`], opts: { stdio: 'pipe' } }, (error) => callback(error));
+                childProcess.stdout.on('data', (data) => process.stdout.write(data));
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            },
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['push', 'origin', 'main:main'], opts: { stdio: 'pipe' } }, (error) => callback(error));
+                childProcess.stdout.on('data', (data) => process.stdout.write(data));
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            }
+        ],
+        (error) => done(error ? false : true)
+    );
 }
 
 // Helper

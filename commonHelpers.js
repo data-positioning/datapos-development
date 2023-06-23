@@ -91,11 +91,16 @@ function identifyLicenses(grunt, context, directory = '.') {
 
 // Helper
 function incrementVersionPatch(grunt, context, filePath) {
+    const done = context.async();
     var data = grunt.file.readJSON(filePath);
     const versionSegments = data.version.split('.');
     newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
     data.version = newVersion;
     grunt.file.write(filePath, JSON.stringify(data, null, 4));
+    // 'git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'
+    const childProcess = grunt.util.spawn({ cmd: 'git', args: ['add', '.'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+    childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
 // Helper

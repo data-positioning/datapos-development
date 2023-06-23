@@ -59,7 +59,7 @@ module.exports = (grunt) => {
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
     grunt.registerTask('publish', ['publishPackageToNPM']); // alt+ctrl+shift+p.
     grunt.registerTask('release', ['incrementVersionPatch', 'shell:commitAndPushToGitHub', 'publishPackageToNPM']); // alt+ctrl+shift+r.
-    grunt.registerTask('synchronise', ['incrementVersionPatch', 'shell:commitAndPushToGitHub']); // alt+ctrl+shift+s.
+    grunt.registerTask('synchronise', ['incrementVersionPatch']); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.
 };

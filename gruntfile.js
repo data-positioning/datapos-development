@@ -2,7 +2,7 @@
 const {
     auditDependencies,
     checkDependencies,
-    getNewVersion,
+    // getNewVersion,
     identifyLicenses,
     incrementVersionPatch,
     logNotImplementedMessage,
@@ -13,17 +13,17 @@ const {
 
 // Configuration.
 module.exports = (grunt) => {
-    // Set external task configuration.
-    grunt.initConfig({
-        shell: {
-            commitAndPushToGitHub: {
-                command: () => ['git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'].join('&&')
-            }
-        }
-    });
+    // // Set external task configuration.
+    // grunt.initConfig({
+    //     shell: {
+    //         commitAndPushToGitHub: {
+    //             command: () => ['git add .', `git commit -m "v${getNewVersion()}"`, 'git push origin main:main'].join('&&')
+    //         }
+    //     }
+    // });
 
-    // Load external tasks.
-    grunt.loadNpmTasks('grunt-shell');
+    // // Load external tasks.
+    // grunt.loadNpmTasks('grunt-shell');
 
     // Register local tasks.
     grunt.registerTask('auditDependencies', function () {
@@ -58,7 +58,7 @@ module.exports = (grunt) => {
     grunt.registerTask('lint', ['lintCode']); // alt+ctrl+shift+l.
     grunt.registerTask('migrate', ['migrateDependencies']); // alt+ctrl+shift+m.
     grunt.registerTask('publish', ['publishPackageToNPM']); // alt+ctrl+shift+p.
-    grunt.registerTask('release', ['incrementVersionPatch', 'shell:commitAndPushToGitHub', 'publishPackageToNPM']); // alt+ctrl+shift+r.
+    grunt.registerTask('release', ['incrementVersionPatch', 'publishPackageToNPM']); // alt+ctrl+shift+r.
     grunt.registerTask('synchronise', ['incrementVersionPatch']); // alt+ctrl+shift+s.
     grunt.registerTask('test', ['logNotImplementedMessage:Test']); // alt+ctrl+shift+t.
     grunt.registerTask('update', ['logNotImplementedMessage:Update']); // alt+ctrl+shift+u.

@@ -1,6 +1,9 @@
 // Dependencies - Framework/Vendor
 const async = require('async');
 
+// Module Variables
+let newVersion;
+
 // Helper
 function auditDependencies(grunt, context, directory = '.') {
     const done = context.async();
@@ -60,6 +63,11 @@ function checkDependencies(grunt, context, directory = '.') {
 }
 
 // Helper
+function getNewVersion() {
+    return newVersion;
+}
+
+// Helper
 function identifyLicenses(grunt, context, directory = '.') {
     const done = context.async();
     async.parallel(
@@ -84,12 +92,9 @@ function identifyLicenses(grunt, context, directory = '.') {
 // Helper
 function incrementVersionPatch(grunt, context, filePath) {
     var data = grunt.file.readJSON(filePath);
-    console.log(1111, data);
     const versionSegments = data.version.split('.');
-    const newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-    console.log(newVersion);
+    newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
     data.version = newVersion;
-    console.log(2222, data);
     grunt.file.write(filePath, JSON.stringify(data, null, 4));
 }
 
@@ -172,6 +177,7 @@ module.exports = {
     auditDependencies,
     buildDataIndex,
     checkDependencies,
+    getNewVersion,
     identifyLicenses,
     incrementVersionPatch,
     lintCode,

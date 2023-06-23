@@ -37,6 +37,14 @@ function buildDataIndex(grunt, context, fs, dataPath) {
 }
 
 // Helper
+function buildWithVite(grunt, context) {
+    const done = context.async();
+    const childProcess = grunt.util.spawn({ cmd: 'vite', args: ['build'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+    childProcess.stdout.on('data', (data) => process.stdout.write(data));
+    childProcess.stderr.on('data', (data) => process.stderr.write(data));
+}
+
+// Helper
 function checkDependencies(grunt, context, directory = '.') {
     const done = context.async();
     async.series(
@@ -197,6 +205,7 @@ function updateDataPosDependencies(grunt, context, updateTypeIds) {
 module.exports = {
     auditDependencies,
     buildDataIndex,
+    buildWithVite,
     checkDependencies,
     identifyLicenses,
     lintCode,

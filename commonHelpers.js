@@ -90,44 +90,6 @@ function identifyLicenses(grunt, context, directory = '.') {
 }
 
 // Helper
-function syncRepoWithGithub(grunt, context, filePath) {
-    const done = context.async();
-    let newVersion;
-    async.series(
-        [
-            (callback) => {
-                try {
-                    var data = grunt.file.readJSON(filePath);
-                    const versionSegments = data.version.split('.');
-                    newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-                    data.version = newVersion;
-                    grunt.file.write(filePath, JSON.stringify(data, null, 4));
-                    callback(undefined);
-                } catch (error) {
-                    callback(error);
-                }
-            },
-            (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['add', '.'], opts: { stdio: 'pipe' } }, (error) => callback(error));
-                childProcess.stdout.on('data', (data) => process.stdout.write(data));
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            },
-            (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['commit', '-m', `v${newVersion}`], opts: { stdio: 'pipe' } }, (error) => callback(error));
-                childProcess.stdout.on('data', (data) => process.stdout.write(data));
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            },
-            (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['push', 'origin', 'main:main'], opts: { stdio: 'pipe' } }, (error) => callback(error));
-                childProcess.stdout.on('data', (data) => process.stdout.write(data));
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            }
-        ],
-        (error) => done(error ? false : true)
-    );
-}
-
-// Helper
 function lintCode(grunt, context, args) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
@@ -165,6 +127,46 @@ function publishPackageToNPM(grunt, context) {
     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['publish'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
     childProcess.stdout.on('data', (data) => process.stdout.write(data));
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
+}
+
+// Helper
+function syncRepoWithGithub(grunt, context, filePaths) {
+    const done = context.async();
+    let newVersion;
+    async.series(
+        [
+            (callback) => {
+                try {
+                    for (const filePath of filePaths) {
+                        var data = grunt.file.readJSON(filePath);
+                        const versionSegments = data.version.split('.');
+                        newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+                        data.version = newVersion;
+                        grunt.file.write(filePath, JSON.stringify(data, null, 4));
+                        callback(undefined);
+                    }
+                } catch (error) {
+                    callback(error);
+                }
+            },
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['add', '.'], opts: { stdio: 'pipe' } }, (error) => callback(error));
+                childProcess.stdout.on('data', (data) => process.stdout.write(data));
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            },
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['commit', '-m', `v${newVersion}`], opts: { stdio: 'pipe' } }, (error) => callback(error));
+                childProcess.stdout.on('data', (data) => process.stdout.write(data));
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            },
+            (callback) => {
+                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['push', 'origin', 'main:main'], opts: { stdio: 'pipe' } }, (error) => callback(error));
+                childProcess.stdout.on('data', (data) => process.stdout.write(data));
+                childProcess.stderr.on('data', (data) => process.stderr.write(data));
+            }
+        ],
+        (error) => done(error ? false : true)
+    );
 }
 
 // Helper

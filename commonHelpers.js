@@ -143,8 +143,8 @@ function syncRepoWithGithub(grunt, context, filePaths) {
                         newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
                         data.version = newVersion;
                         grunt.file.write(filePath, JSON.stringify(data, null, 4));
-                        callback(undefined);
                     }
+                    callback(undefined);
                 } catch (error) {
                     callback(error);
                 }

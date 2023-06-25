@@ -170,19 +170,19 @@ function syncRepoWithGithub(grunt, context, filePaths) {
 }
 
 // Helper
+// TODO: Add directory parameter so backend can update functions directory.
+// TODO: Given we are already passing a parameter array of 'updateTypeIds' we need to include directory as first parameter.
+// TODO: This will require all projects to be updated.
 function updateDataPosDependencies(grunt, context, updateTypeIds) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {
         async.parallel(
             [
                 (callback) => {
-                    const grandChildProcess = grunt.util.spawn(
-                        { cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'] },
-                        (error) => {
-                            console.log('\nUpdated: @datapos/datapos-operations@latest');
-                            callback(error);
-                        }
-                    );
+                    const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'] }, (error) => {
+                        console.log('\nUpdated: @datapos/datapos-operations@latest');
+                        callback(error);
+                    });
                     grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
                     grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
                 },

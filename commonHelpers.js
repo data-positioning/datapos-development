@@ -170,16 +170,19 @@ function syncRepoWithGithub(grunt, context, filePaths) {
 }
 
 // Helper
-function updateDataPosDependencies(grunt, context, updateTypeIds) {
+function updateDataPosDependencies(grunt, context, updateTypeIds, directory = '.') {
     const done = context.async();
-    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {
+    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, () => {
         async.parallel(
             [
                 (callback) => {
-                    const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'] }, (error) => {
-                        console.log('\nUpdated: @datapos/datapos-operations@latest');
-                        callback(error);
-                    });
+                    const grandChildProcess = grunt.util.spawn(
+                        { cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'], opts: { cwd: directory } },
+                        (error) => {
+                            console.log('\nUpdated: @datapos/datapos-operations@latest');
+                            callback(error);
+                        }
+                    );
                     grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
                     grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
                 },
@@ -187,7 +190,7 @@ function updateDataPosDependencies(grunt, context, updateTypeIds) {
                     if (updateTypeIds) {
                         const modules = [];
                         for (const updateTypeId of updateTypeIds.split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
-                        const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, (error) => {
+                        const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules], opts: { cwd: directory } }, (error) => {
                             for (const module of modules) console.log(`\nUpdated: ${module}`);
                             callback(error);
                         });

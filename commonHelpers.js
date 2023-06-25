@@ -170,14 +170,14 @@ function syncRepoWithGithub(grunt, context, filePaths) {
 }
 
 // Helper
-function updateDataPosDependencies(grunt, context, updateTypeIds, directory = '.') {
+function updateDataPosDependencies(grunt, context, updateTypeIds) {
     const done = context.async();
-    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, () => {
+    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {
         async.parallel(
             [
                 (callback) => {
                     const grandChildProcess = grunt.util.spawn(
-                        { cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'], opts: { cwd: directory } },
+                        { cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'] },
                         (error) => {
                             console.log('\nUpdated: @datapos/datapos-operations@latest');
                             callback(error);
@@ -190,7 +190,7 @@ function updateDataPosDependencies(grunt, context, updateTypeIds, directory = '.
                     if (updateTypeIds) {
                         const modules = [];
                         for (const updateTypeId of updateTypeIds.split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
-                        const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules], opts: { cwd: directory } }, (error) => {
+                        const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, (error) => {
                             for (const module of modules) console.log(`\nUpdated: ${module}`);
                             callback(error);
                         });

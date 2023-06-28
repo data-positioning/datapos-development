@@ -1,4 +1,20 @@
-// Helper
+// Helper - Build Context
+async function buildContext(grunt, context, dataposContextUploadToken, projectId) {
+    const done = context.async();
+    const status = await upload(grunt, dataposContextUploadToken, projectId);
+    done(status);
+}
+
+// Utility
+const processDirectory = (grunt, dirPath) => {};
+
+// Utility
+const readJSONFile = (grunt, filePath) => {};
+
+// Utility
+const readMarkdownFile = (grunt, filePath) => {};
+
+// Helper - Upload Context
 async function uploadContext(grunt, context, dataposContextUploadToken, projectId) {
     const done = context.async();
     const status = await upload(grunt, dataposContextUploadToken, projectId);
@@ -19,9 +35,9 @@ async function upload(grunt, dataposContextUploadToken, projectId) {
             formData.append(filename, contentAsBlob, filename);
         });
 
-        // const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/connectors`;
-        // const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposContextUploadToken }, body: formData });
-        // if (!response.ok) throw new Error(await response.text());
+        const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/contexts`;
+        const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposContextUploadToken }, body: formData });
+        if (!response.ok) throw new Error(await response.text());
 
         return true;
     } catch (error) {
@@ -30,4 +46,4 @@ async function upload(grunt, dataposContextUploadToken, projectId) {
     }
 }
 
-module.exports = { uploadContext };
+module.exports = { buildContext, uploadContext };

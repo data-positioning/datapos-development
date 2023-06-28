@@ -24,7 +24,7 @@ async function upload(grunt, config, version, dataposConnectorUploadToken, proje
 
         const formData = new FormData();
 
-        formData.append('configuration', JSON.stringify({ ...config, description, logo, version }));
+        formData.append('config', JSON.stringify({ ...config, description, logo, version }));
 
         grunt.file.recurse('dist', (absPath, rootDir, subDir, filename) => {
             if (subDir) return;

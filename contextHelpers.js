@@ -11,9 +11,11 @@ async function upload(grunt, dataposContextUploadToken, projectId) {
         const formData = new FormData();
 
         grunt.file.recurse('dist', (absPath, rootDir, subDir, filename) => {
-            console.log('FILE', absPath, rootDir, subDir, filename);
             if (subDir) return;
-            const contentAsBlob = new Blob([grunt.file.read(absPath)], { type: 'text/plain' });
+            console.log('FILE', absPath);
+            const data = grunt.file.read(absPath);
+            console.log('Data', data);
+            const contentAsBlob = new Blob([data], { type: 'text/plain' });
             formData.append(filename, contentAsBlob, filename);
         });
 

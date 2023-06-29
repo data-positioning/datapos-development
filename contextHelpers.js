@@ -41,11 +41,11 @@ async function upload(grunt, dataposContextUploadToken, projectId) {
         console.log(2222);
         const response = await fetch(url, {
             method: 'POST',
-            headers: { Authorization: dataposContextUploadToken },
+            headers: { Authorization: dataposContextUploadToken, 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: files[0].filename, config: data })
         });
-        console.log(9999);
         if (!response.ok) throw new Error(await response.text());
+        console.log(9999);
 
         return true;
     } catch (error) {

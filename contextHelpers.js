@@ -33,7 +33,7 @@ async function upload(grunt, dataposContextUploadToken, projectId) {
             // formData.append(filename, contentAsBlob, filename);
             console.log(1111);
             const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/contexts`;
-            const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposContextUploadToken }, body: { name: filename, config: data } });
+            const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposContextUploadToken }, body: JSON.stringify({ name: filename, config: data }) });
             console.log(9999);
             if (!response.ok) throw new Error(await response.text());
         });

@@ -26,31 +26,26 @@ async function upload(grunt, dataposContextUploadToken, projectId) {
     try {
         // const formData = new FormData();
 
+        const files = [];
         grunt.file.recurse('dist', (absPath, rootDir, subDir, filename) => {
-            try {
-                if (subDir) return;
-                const data = grunt.file.read(absPath);
-                // const contentAsBlob = new Blob([data], { type: 'text/plain' });
-                // formData.append(filename, contentAsBlob, filename);
-                console.log(1111);
-                const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/contexts`;
-                console.log(2222);
-                fetch(url, {
-                    method: 'POST',
-                    headers: { Authorization: dataposContextUploadToken },
-                    body: JSON.stringify({ name: filename, config: data })
-                })
-                    .then((response) => {
-                        console.log(9999, response);
-                        // if (!response.ok) throw new Error(await response.text());})
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            } catch (error) {
-                console.log(error);
-            }
+            if (subDir) return;
+            // const data = grunt.file.read(absPath);
+            // const contentAsBlob = new Blob([data], { type: 'text/plain' });
+            // formData.append(filename, contentAsBlob, filename);
+            files.push({ absPath, filename });
         });
+
+        const data = grunt.file.read(files[0].absPath);
+        console.log(1111);
+        const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/contexts`;
+        console.log(2222);
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { Authorization: dataposContextUploadToken },
+            body: JSON.stringify({ name: files[0].filename, config: data })
+        });
+        console.log(9999);
+        if (!response.ok) throw new Error(await response.text());
 
         return true;
     } catch (error) {

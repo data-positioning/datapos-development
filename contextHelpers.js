@@ -26,7 +26,7 @@ async function upload(grunt, dataposContextUploadToken, projectId) {
     try {
         // const formData = new FormData();
 
-        grunt.file.recurse('dist', async (absPath, rootDir, subDir, filename) => {
+        grunt.file.recurse('dist', (absPath, rootDir, subDir, filename) => {
             try {
                 if (subDir) return;
                 const data = grunt.file.read(absPath);
@@ -35,13 +35,18 @@ async function upload(grunt, dataposContextUploadToken, projectId) {
                 console.log(1111);
                 const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/contexts`;
                 console.log(2222);
-                const response = await fetch(url, {
+                fetch(url, {
                     method: 'POST',
                     headers: { Authorization: dataposContextUploadToken },
                     body: JSON.stringify({ name: filename, config: data })
-                });
-                console.log(9999);
-                if (!response.ok) throw new Error(await response.text());
+                })
+                    .then((response) => {
+                        console.log(9999, response);
+                        // if (!response.ok) throw new Error(await response.text());})
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             } catch (error) {
                 console.log(error);
             }

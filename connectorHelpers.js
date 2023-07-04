@@ -8,11 +8,11 @@ async function uploadConnector(grunt, context, config, version, dataposConnector
 // Utility
 async function upload(grunt, config, version, dataposConnectorUploadToken, projectId) {
     try {
-        let description;
+        let descriptionEN;
         try {
-            description = grunt.file.read('src/description.md');
+            descriptionEN = grunt.file.read('src/description.en.md');
         } catch (error) {
-            description = '';
+            descriptionEN = '';
         }
 
         let logo;
@@ -24,7 +24,7 @@ async function upload(grunt, config, version, dataposConnectorUploadToken, proje
 
         const formData = new FormData();
 
-        formData.append('config', JSON.stringify({ ...config, description, logo, version }));
+        formData.append('config', JSON.stringify({ ...config, description: { en: descriptionEN }, logo, version }));
 
         grunt.file.recurse('dist', (absPath, rootDir, subDir, filename) => {
             if (subDir) return;

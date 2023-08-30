@@ -1,4 +1,4 @@
-# Data Positioning Operations
+# Datapos - Operations
 
 This project contains helper functions used to manage other Data Positioning projects and repositories.
 

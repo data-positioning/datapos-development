@@ -1,7 +1,7 @@
 {
     "name": "@datapos/datapos-operations",
     "private": false,
-    "version": "0.1.230",
+    "version": "0.1.231",
     "devDependencies": {
         "eslint": "^8.44.0",
         "prettier": "^3.0.3"
@@ -15,7 +15,7 @@
         "lint": "npx eslint *.js",
         "publishToNPM": "npm publish",
         "release": "npm run syncWithGitHub && npm run publishToNPM",
-        "syncWithGitHub": "node -e \"require('./commonHelpers').syncWithGitHub(['package.json'])\"",
+        "syncWithGitHub": "node -e \"require('./scriptHelpers').syncWithGitHub(['package.json'])\"",
         "test": "echo \"***** TEST SCRIPT NOT IMPLEMENTED. *****\"",
         "updateDependencies": "echo \"***** UPDATE DEPENDENCIES SCRIPT NOT IMPLEMENTED. *****\""
     }

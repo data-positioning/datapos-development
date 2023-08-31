@@ -1,6 +1,6 @@
 # Datapos - Operations
 
-This project contains helper functions used to manage other Data Positioning projects and repositories.
+Implements a TypeScript library of functions used with [Grunt](https://gruntjs.com/) to manage Datapos projects and repositories.
 
 The 'commonHelpers.js' file includes helper functions that implement common [Grunt](https://gruntjs.com/) tasks.
 
@@ -24,7 +24,6 @@ The following list details the common repository management commands implementat
 | Document    | alt+ctrl+shift+d | Identify the licenses of the project's dependencies.                                                                                                                                                        |
 | Format      | alt+ctrl+shift+f | NOT implemented.                                                                                                                                                                                            |
 | Lint        | alt+ctrl+shift+l | Check the code for potential errors and enforces coding styles.                                                                                                                                             |
-| Migrate     | alt+ctrl+shift+l | Install the latest version of outdated dependencies.                                                                                                                                                        |
 | Publish     | alt+ctrl+shift+n | Publishes the package to the [npm](https://www.npmjs.com/) registry. This action will publish the last synchronised version. Use the command line command 'npm publish' when publishing for the first time. |
 | Release     | alt+ctrl+shift+r | Synchronise the local repository with the main GitHub repository and publish the package to the [npm](https://www.npmjs.com/) registry.                                                                     |
 | Synchronise | alt+ctrl+shift+s | Synchronise the local repository with the main GitHub repository.                                                                                                                                           |

@@ -1,7 +1,7 @@
 {
-  "@datapos/datapos-operations@0.1.176": {
+  "@datapos/datapos-operations@0.1.201": {
     "licenses": "ISC*",
-    "path": "/Users/jonathanterrell/Data Positioning/GitHub/datapos-operations",
-    "licenseFile": "/Users/jonathanterrell/Data Positioning/GitHub/datapos-operations/LICENSE.md"
+    "path": "/Users/jonathanterrell/Data Positioning/GitHub/data-positioning/datapos-operations",
+    "licenseFile": "/Users/jonathanterrell/Data Positioning/GitHub/data-positioning/datapos-operations/LICENSE.md"
   }
 }

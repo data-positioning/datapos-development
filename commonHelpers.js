@@ -1,13 +1,13 @@
 // Dependencies - Framework/Vendor
-const async = require('async');
+// const async = require('async');
 
-// Helper
-function auditDependencies(grunt, context, directory = '.') {
-    const done = context.async();
-    const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
-    childProcess.stdout.on('data', (data) => process.stdout.write(data));
-    childProcess.stderr.on('data', (data) => process.stderr.write(data));
-}
+// // Helper
+// function auditDependencies(grunt, context, directory = '.') {
+//     const done = context.async();
+//     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['audit'], opts: { cwd: directory, stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+//     childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//     childProcess.stderr.on('data', (data) => process.stderr.write(data));
+// }
 
 // Helper
 function buildDataIndex(grunt, context, fs, dataPath) {
@@ -44,129 +44,168 @@ function buildWithVite(grunt, context) {
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
-// Helper
-function checkDependencies(grunt, context, directory = '.') {
-    const done = context.async();
-    async.series(
-        [
-            (callback) => {
-                // console.log('\nCheck for outdated dependencies...\n');
-                const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, () => callback(undefined));
-                childProcess.stdout.on('data', (data) => process.stdout.write(data));
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            }
-            // TODO: This does not appear to be very accurate
-            // (callback) => {
-            //     console.log('\nCheck for unused and missing dependencies (dynamically imported dependencies maybe reported as unused or missing)...\n');
-            //     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['depcheck'], opts: { cwd: directory } }, () => callback(undefined));
-            //     childProcess.stdout.on('data', (data) => process.stdout.write(data));
-            //     childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            // }
-        ],
-        (error) => done(error ? false : true)
-    );
-}
+// // Helper
+// function checkDependencies(grunt, context, directory = '.') {
+//     const done = context.async();
+//     async.series(
+//         [
+//             (callback) => {
+//                 // console.log('\nCheck for outdated dependencies...\n');
+//                 const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'], opts: { cwd: directory } }, () => callback(undefined));
+//                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
+//             }
+//             // TODO: This does not appear to be very accurate
+//             // (callback) => {
+//             //     console.log('\nCheck for unused and missing dependencies (dynamically imported dependencies maybe reported as unused or missing)...\n');
+//             //     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['depcheck'], opts: { cwd: directory } }, () => callback(undefined));
+//             //     childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//             //     childProcess.stderr.on('data', (data) => process.stderr.write(data));
+//             // }
+//         ],
+//         (error) => done(error ? false : true)
+//     );
+// }
 
-// Helper
-function identifyLicenses(grunt, context, directory = '.') {
-    const done = context.async();
-    async.parallel(
-        [
-            (callback) => {
-                const childProcess = grunt.util.spawn(
-                    { cmd: 'npx', args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'], opts: { cwd: directory } },
-                    (error) => callback(error)
-                );
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            },
-            (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'], opts: { cwd: directory } }, (error) => callback(error));
-                childProcess.stdout.on('data', (data) => process.stdout.write(data));
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            }
-        ],
-        (error) => done(error ? false : true)
-    );
-}
+// // Helper
+// function identifyLicenses(grunt, context, directory = '.') {
+//     const done = context.async();
+//     async.parallel(
+//         [
+//             (callback) => {
+//                 const childProcess = grunt.util.spawn(
+//                     { cmd: 'npx', args: ['license-checker', '--production', '--json', '--out', 'LICENSES.json'], opts: { cwd: directory } },
+//                     (error) => callback(error)
+//                 );
+//                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
+//             },
+//             (callback) => {
+//                 const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['nlf', '-d'], opts: { cwd: directory } }, (error) => callback(error));
+//                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
+//             }
+//         ],
+//         (error) => done(error ? false : true)
+//     );
+// }
 
-// Helper
-function lintCode(grunt, context, args) {
-    const done = context.async();
-    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
-    childProcess.stdout.on('data', (data) => process.stdout.write(data));
-    childProcess.stderr.on('data', (data) => process.stderr.write(data));
-}
+// // Helper
+// function lintCode(grunt, context, args) {
+//     const done = context.async();
+//     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['eslint'].concat(args), opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+//     childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//     childProcess.stderr.on('data', (data) => process.stderr.write(data));
+// }
 
-// Helper
-function logNotImplementedMessage(taskName) {
-    const message = `***** ${taskName} task NOT implemented *****`;
-    console.log('*'.repeat(message.length));
-    console.log(message);
-    console.log('*'.repeat(message.length));
-}
+// // Helper
+// function logNotImplementedMessage(taskName) {
+//     const message = `***** ${taskName} task NOT implemented *****`;
+//     console.log('*'.repeat(message.length));
+//     console.log(message);
+//     console.log('*'.repeat(message.length));
+// }
 
-// Helper
-function migrateDependencies(grunt, context, directory = '.') {
-    const done = context.async();
-    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'], opts: { cwd: directory } }, (error, result, code) => {
-        if (code !== 0) {
-            done(false); // Signal that the task failed.
-        } else {
-            const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install'], opts: { cwd: directory } }, (error, result, code) => done(code === 0));
-            grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
-            grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
-        }
-    });
-    childProcess.stdout.on('data', (data) => process.stdout.write(data));
-    childProcess.stderr.on('data', (data) => process.stderr.write(data));
-}
+// // Helper
+// function migrateDependencies(grunt, context, directory = '.') {
+//     const done = context.async();
+//     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['npm-check-updates', '-u'], opts: { cwd: directory } }, (error, result, code) => {
+//         if (code !== 0) {
+//             done(false); // Signal that the task failed.
+//         } else {
+//             const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install'], opts: { cwd: directory } }, (error, result, code) => done(code === 0));
+//             grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
+//             grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
+//         }
+//     });
+//     childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//     childProcess.stderr.on('data', (data) => process.stderr.write(data));
+// }
 
-// Helper
-function publishPackageToNPM(grunt, context) {
-    const done = context.async();
-    const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['publish'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
-    childProcess.stdout.on('data', (data) => process.stdout.write(data));
-    childProcess.stderr.on('data', (data) => process.stderr.write(data));
-}
+// // Helper
+// function publishPackageToNPM(grunt, context) {
+//     const done = context.async();
+//     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['publish'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
+//     childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//     childProcess.stderr.on('data', (data) => process.stderr.write(data));
+// }
 
-// Helper
-function syncRepoWithGithub(grunt, context, filePaths) {
-    const done = context.async();
-    let newVersion;
-    async.series(
-        [
-            (callback) => {
+// // Helper
+// function syncRepoWithGithub(grunt, context, filePaths) {
+//     const done = context.async();
+//     let newVersion;
+//     async.series(
+//         [
+//             (callback) => {
+//                 try {
+//                     for (const filePath of filePaths) {
+//                         var data = grunt.file.readJSON(filePath);
+//                         const versionSegments = data.version.split('.');
+//                         newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+//                         data.version = newVersion;
+//                         grunt.file.write(filePath, JSON.stringify(data, null, 4));
+//                     }
+//                     callback(undefined);
+//                 } catch (error) {
+//                     callback(error);
+//                 }
+//             },
+//             (callback) => {
+//                 const childProcess = grunt.util.spawn({ cmd: 'git', args: ['add', '.'], opts: { stdio: 'pipe' } }, (error) => callback(error));
+//                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
+//             },
+//             (callback) => {
+//                 const childProcess = grunt.util.spawn({ cmd: 'git', args: ['commit', '-m', `v${newVersion}`], opts: { stdio: 'pipe' } }, (error) => callback(error));
+//                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
+//             },
+//             (callback) => {
+//                 const childProcess = grunt.util.spawn({ cmd: 'git', args: ['push', 'origin', 'main:main'], opts: { stdio: 'pipe' } }, (error) => callback(error));
+//                 childProcess.stdout.on('data', (data) => process.stdout.write(data));
+//                 childProcess.stderr.on('data', (data) => process.stderr.write(data));
+//             }
+//         ],
+//         (error) => done(error ? false : true)
+//     );
+// }
+
+function syncRepoWithGitHub(filePaths) {
+    const exec = require('child_process').exec;
+    const fs = require('fs');
+    try {
+        for (const filePath of filePaths) {
+            fs.readFile(filePath, 'utf8', (error, data) => {
                 try {
-                    for (const filePath of filePaths) {
-                        var data = grunt.file.readJSON(filePath);
-                        const versionSegments = data.version.split('.');
-                        newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-                        data.version = newVersion;
-                        grunt.file.write(filePath, JSON.stringify(data, null, 4));
-                    }
-                    callback(undefined);
+                    if (error) throw error;
+                    const dataAsJSON = JSON.parse(data);
+                    const versionSegments = dataAsJSON.version.split('.');
+                    const newVersion = Number(versionSegments[2]) + 1;
+                    dataAsJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${newVersion}`;
+                    fs.writeFile(filePath, JSON.stringify(dataAsJSON, undefined, 4), (error) => {
+                        if (error) console.error(error);
+                        exec('git add .', (error, stdout, stderr) => {
+                            if (stderr) {
+                                console.error(stderr);
+                                return;
+                            }
+                            console.log(stdout);
+                            exec(`git commit -m v${newVersion}`, (error, stdout, stderr) => {
+                                if (stderr) {
+                                    console.error(stderr);
+                                    return;
+                                }
+                                console.log(stdout);
+                            });
+                        });
+                    });
                 } catch (error) {
-                    callback(error);
+                    console.error(error);
                 }
-            },
-            (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['add', '.'], opts: { stdio: 'pipe' } }, (error) => callback(error));
-                childProcess.stdout.on('data', (data) => process.stdout.write(data));
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            },
-            (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['commit', '-m', `v${newVersion}`], opts: { stdio: 'pipe' } }, (error) => callback(error));
-                childProcess.stdout.on('data', (data) => process.stdout.write(data));
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            },
-            (callback) => {
-                const childProcess = grunt.util.spawn({ cmd: 'git', args: ['push', 'origin', 'main:main'], opts: { stdio: 'pipe' } }, (error) => callback(error));
-                childProcess.stdout.on('data', (data) => process.stdout.write(data));
-                childProcess.stderr.on('data', (data) => process.stderr.write(data));
-            }
-        ],
-        (error) => done(error ? false : true)
-    );
+            });
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 // Helper
@@ -176,47 +215,47 @@ function syncRepoWithGithub(grunt, context, filePaths) {
 function updateDataPosDependencies(grunt, context, updateTypeIds) {
     const done = context.async();
     const childProcess = grunt.util.spawn({ cmd: 'npm', args: ['outdated'] }, () => {
-        async.parallel(
-            [
-                (callback) => {
-                    const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'] }, (error) => {
-                        console.log('\nUpdated: @datapos/datapos-operations@latest');
-                        callback(error);
-                    });
-                    grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
-                    grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
-                },
-                (callback) => {
-                    if (updateTypeIds) {
-                        const modules = [];
-                        for (const updateTypeId of updateTypeIds.split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
-                        const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, (error) => {
-                            for (const module of modules) console.log(`\nUpdated: ${module}`);
-                            callback(error);
-                        });
-                        grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
-                        grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
-                    } else {
-                        callback(null);
-                    }
-                }
-            ],
-            (error) => done(error ? false : true)
-        );
+        // async.parallel(
+        //     [
+        //         (callback) => {
+        //             const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', '--save-dev', '@datapos/datapos-operations@latest'] }, (error) => {
+        //                 console.log('\nUpdated: @datapos/datapos-operations@latest');
+        //                 callback(error);
+        //             });
+        //             grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
+        //             grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
+        //         },
+        //         (callback) => {
+        //             if (updateTypeIds) {
+        //                 const modules = [];
+        //                 for (const updateTypeId of updateTypeIds.split('|')) modules.push(`@datapos/datapos-${updateTypeId}@latest`);
+        //                 const grandChildProcess = grunt.util.spawn({ cmd: 'npm', args: ['install', ...modules] }, (error) => {
+        //                     for (const module of modules) console.log(`\nUpdated: ${module}`);
+        //                     callback(error);
+        //                 });
+        //                 grandChildProcess.stdout.on('data', (data) => process.stdout.write(data));
+        //                 grandChildProcess.stderr.on('data', (data) => process.stderr.write(data));
+        //             } else {
+        //                 callback(null);
+        //             }
+        //         }
+        //     ],
+        //     (error) => done(error ? false : true)
+        // );
     });
     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 }
 
 module.exports = {
-    auditDependencies,
+    // auditDependencies,
     buildDataIndex,
     buildWithVite,
-    checkDependencies,
-    identifyLicenses,
-    lintCode,
-    logNotImplementedMessage,
-    migrateDependencies,
-    publishPackageToNPM,
-    syncRepoWithGithub,
+    // checkDependencies,
+    // identifyLicenses,
+    // lintCode,
+    // logNotImplementedMessage,
+    // migrateDependencies,
+    // publishPackageToNPM,
+    syncRepoWithGitHub,
     updateDataPosDependencies
 };

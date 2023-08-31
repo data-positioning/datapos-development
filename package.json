@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-operations",
-    "version": "0.1.225",
+    "version": "0.1.226",
     "devDependencies": {
         "eslint": "^8.44.0",
         "prettier": "^3.0.3"
@@ -12,8 +12,8 @@
         "document": "npx license-checker --production --json --out LICENSES.json",
         "format": "echo \"***** FORMAT SCRIPT NOT IMPLEMENTED. *****\"",
         "lint": "npx eslint *.js",
-        "publish": "npm publish",
-        "release": "npm run synchronise && npm publish",
+        "publishToNPM": "npm publish",
+        "release": "npm run synchronise && npm run publishToNPM",
         "synchronise": "node -e \"require('./commonHelpers').syncRepoWithGitHub(['package.json'])\"",
         "test": "echo \"***** TEST SCRIPT NOT IMPLEMENTED. *****\"",
         "update": "echo \"***** UPDATE SCRIPT NOT IMPLEMENTED. *****\""

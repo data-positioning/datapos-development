@@ -23,13 +23,6 @@
 //     grunt.file.write(`public/${dataPath}Index.json`, JSON.stringify(index));
 // }
 
-// function buildWithVite(grunt, context) {
-//     const done = context.async();
-//     const childProcess = grunt.util.spawn({ cmd: 'npx', args: ['vite', 'build'], opts: { stdio: 'pipe' } }, (error, result, code) => done(code === 0));
-//     childProcess.stdout.on('data', (data) => process.stdout.write(data));
-//     childProcess.stderr.on('data', (data) => process.stderr.write(data));
-// }
-
 function syncWithGitHub(filePaths) {
     const exec = require('child_process').exec;
     const fs = require('fs');

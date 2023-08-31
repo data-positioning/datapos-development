@@ -1,10 +1,12 @@
 # Datapos - Operations
 
-Implements a TypeScript library of functions used with [Grunt](https://gruntjs.com/) to manage Datapos projects and repositories.
+Implements a Javascript library of functions used to manage Datapos projects and repositories.
 
-The 'commonHelpers.js' file includes helper functions that implement common [Grunt](https://gruntjs.com/) tasks.
+The 'commonHelpers.js' file includes helper functions that implement common tasks.
 
-The 'connectorHelpers.js' file includes helper functions for uploading compiled connectors to the Data Positioning platform. All connector projects install the packaged release of this project as a development dependency and implement the 'uploadConnector' helper function using a [Grunt](https://gruntjs.com/) task.
+The 'connectorHelpers.js' file includes helper functions for uploading compiled connectors to the Data Positioning platform. All connector projects install the packaged release of this project as a development dependency and implement the 'uploadConnector' helper function package.json scripts.
+
+The 'contextHelpers.js' ...
 
 ## Installation
 
@@ -14,7 +16,7 @@ npm install --save-dev @datapos-operations
 
 ## Repository Management Commands
 
-The following list details the common repository management commands implementation for this project. For more details, please refer to the [Grunt](https://gruntjs.com/) configuration file (gruntfile.js) in this project.
+The following list details the repository management commands implementation by this project. For more details, please refer to the scripts section of the package.json file in this project.
 
 | Name        | Key Code         | Notes                                                                                                                                                                                                       |
 | ----------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

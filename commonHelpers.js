@@ -179,8 +179,8 @@ function syncRepoWithGitHub(filePaths) {
                     if (error) throw error;
                     const dataAsJSON = JSON.parse(data);
                     const versionSegments = dataAsJSON.version.split('.');
-                    const newVersion = Number(versionSegments[2]) + 1;
-                    dataAsJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${newVersion}`;
+                    const newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+                    dataAsJSON.version = newVersion;
                     fs.writeFile(filePath, JSON.stringify(dataAsJSON, undefined, 4), (error) => {
                         if (error) console.error(error);
                         exec('git add .', (error, stdout, stderr) => {

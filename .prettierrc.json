@@ -1,5 +1,5 @@
 {
-    "arrowParens": "always",
+    "arrowParens": "always2",
     "bracketSameLine": false,
     "bracketSpacing": true,
     "cursorOffset": -1,
@@ -20,5 +20,5 @@
     "tabWidth": 4,
     "trailingComma": "none",
     "useTabs": false,
-    "vueIndentScriptAndStyle":false
+    "vueIndentScriptAndStyle": false
 }

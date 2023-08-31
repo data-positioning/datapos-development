@@ -1,6 +1,7 @@
+const exec = require('child_process').exec;
+const fs = require('fs');
+
 function syncWithGitHub(filePaths) {
-    const exec = require('child_process').exec;
-    const fs = require('fs');
     try {
         for (const filePath of filePaths) {
             fs.readFile(filePath, 'utf8', (error, data) => {

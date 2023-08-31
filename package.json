@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-operations",
-    "version": "0.1.213",
+    "version": "0.1.214",
     "private": false,
     "devDependencies": {
         "eslint": "^8.44.0",
@@ -14,8 +14,8 @@
         "format": "echo \"***** FORMAT SCRIPT NOT IMPLEMENTED. *****\"",
         "lint": "npx eslint *.js",
         "publish": "npx publish",
-        "release": "node -e \"require('./commonHelpers').syncRepoWithGitHub(['package.json'])\"",
-        "synchronise": "",
+        "release": "npm run synchronise && npm run publish",
+        "synchronise": "node -e \"require('./commonHelpers').syncRepoWithGitHub(['package.json'])\"",
         "test": "echo \"***** TEST SCRIPT NOT IMPLEMENTED. *****\"",
         "update": "echo \"***** UPDATE SCRIPT NOT IMPLEMENTED. *****\""
     }

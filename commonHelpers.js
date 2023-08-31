@@ -195,6 +195,13 @@ function syncRepoWithGitHub(filePaths) {
                                     return;
                                 }
                                 console.log(stdout);
+                                exec('git push origin main:main', (error, stdout, stderr) => {
+                                    if (stderr) {
+                                        console.error(stderr);
+                                        return;
+                                    }
+                                    console.log(stdout);
+                                });
                             });
                         });
                     });

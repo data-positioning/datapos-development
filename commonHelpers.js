@@ -1,27 +1,27 @@
-function buildDataIndex(grunt, context, fs, dataPath) {
-    const index = {};
+// function buildDataIndex(grunt, context, fs, dataPath) {
+//     const index = {};
 
-    const processDirectory = (topLevelPath, path, parentItem) => {
-        let itemCount = 0;
-        const searchPath = `${path}/*`;
-        for (const childPath of grunt.file.expand({ filter: 'isDirectory' }, searchPath)) {
-            const childCount = processDirectory(topLevelPath, childPath, []);
-            parentItem.push({ childCount, path: childPath.substr(path.length + 1), typeId: 'folder' });
-            itemCount++;
-        }
-        for (const childPath of grunt.file.expand({ filter: 'isFile' }, searchPath)) {
-            var stats = fs.statSync(childPath);
-            parentItem.push({ lastModifiedAt: stats.mtimeMs, path: childPath.substr(path.length + 1), size: stats.size, typeId: 'file' });
-            itemCount++;
-        }
-        index[path === topLevelPath ? '/' : `/${path.substr(topLevelPath.length + 1)}`] = parentItem;
-        return itemCount;
-    };
+//     const processDirectory = (topLevelPath, path, parentItem) => {
+//         let itemCount = 0;
+//         const searchPath = `${path}/*`;
+//         for (const childPath of grunt.file.expand({ filter: 'isDirectory' }, searchPath)) {
+//             const childCount = processDirectory(topLevelPath, childPath, []);
+//             parentItem.push({ childCount, path: childPath.substr(path.length + 1), typeId: 'folder' });
+//             itemCount++;
+//         }
+//         for (const childPath of grunt.file.expand({ filter: 'isFile' }, searchPath)) {
+//             var stats = fs.statSync(childPath);
+//             parentItem.push({ lastModifiedAt: stats.mtimeMs, path: childPath.substr(path.length + 1), size: stats.size, typeId: 'file' });
+//             itemCount++;
+//         }
+//         index[path === topLevelPath ? '/' : `/${path.substr(topLevelPath.length + 1)}`] = parentItem;
+//         return itemCount;
+//     };
 
-    const folderPath = `public/${dataPath}`;
-    processDirectory(folderPath, folderPath, []);
-    grunt.file.write(`public/${dataPath}Index.json`, JSON.stringify(index));
-}
+//     const folderPath = `public/${dataPath}`;
+//     processDirectory(folderPath, folderPath, []);
+//     grunt.file.write(`public/${dataPath}Index.json`, JSON.stringify(index));
+// }
 
 // function buildWithVite(grunt, context) {
 //     const done = context.async();
@@ -30,7 +30,7 @@ function buildDataIndex(grunt, context, fs, dataPath) {
 //     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 // }
 
-function syncRepoWithGitHub(filePaths) {
+function syncWithGitHub(filePaths) {
     const exec = require('child_process').exec;
     const fs = require('fs');
     try {
@@ -114,4 +114,4 @@ function syncRepoWithGitHub(filePaths) {
 //     childProcess.stderr.on('data', (data) => process.stderr.write(data));
 // }
 
-module.exports = { buildDataIndex, syncRepoWithGitHub };
+module.exports = { syncWithGitHub };

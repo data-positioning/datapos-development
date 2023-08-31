@@ -1,5 +1,5 @@
 {
-    "arrowParens": "always2",
+    "arrowParens": "always",
     "bracketSameLine": false,
     "bracketSpacing": true,
     "cursorOffset": -1,

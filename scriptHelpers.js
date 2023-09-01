@@ -1,37 +1,9 @@
 const exec = require('child_process').exec;
 const fs = require('fs').promises;
-const fss = require('fs');
+const path = require('path');
 const util = require('util');
 
-function syncWithGitHubSync(filePaths) {
-    for (const filePath of filePaths) {
-        fss.readFile(filePath, 'utf8', (error, data) => {
-            if (error) return console.error(error);
-            const dataAsJSON = JSON.parse(data);
-            const versionSegments = dataAsJSON.version.split('.');
-            const newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-            dataAsJSON.version = newVersion;
-            fss.writeFile(filePath, JSON.stringify(dataAsJSON, undefined, 4), (error) => {
-                if (error) return console.error(error);
-                exec('git add .', (error, stdout, stderr) => {
-                    if (stderr) return console.error(stderr);
-                    console.log(stdout);
-                    exec(`git commit -m v${newVersion}`, (error, stdout, stderr) => {
-                        if (stderr) return console.error(stderr);
-                        console.log(stdout);
-                        exec('git push origin main:main', (error, stdout, stderr) => {
-                            if (stderr) return console.error(stderr);
-                            console.log(stdout);
-                        });
-                    });
-                });
-            });
-        });
-    }
-}
-
 async function syncWithGitHub() {
-    console.log('util', util);
     const packageData = await fs.readFile('package.json', 'utf8');
     const packageAsJSON = JSON.parse(packageData);
     const versionSegments = packageAsJSON.version.split('.');
@@ -85,14 +57,15 @@ async function uploadConnector() {
         formData.append('config', JSON.stringify({ config: configAsJSON, description: { en: descriptionEN }, logo, version: packageAsJSON.version }));
 
         const children = await fs.readdir('dist');
-        for (const filePath of children) {
+        for (const fileName of children) {
+            const filePath = path.join('dist', fileName);
             const stats = await fs.stat(filePath);
             if (stats.isDirectory()) return;
-            console.log(filePath, stats);
+            console.log(filePath, fileName);
             const xxxx = await fs.readFile(filePath, 'utf8');
             console.log('xxxx', xxxx);
             const contentAsBlob = new Blob([xxxx], { type: 'text/plain' });
-            // formData.append(filename, contentAsBlob, filename);
+            formData.append(fileName, contentAsBlob, fileName);
         }
 
         // const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/connectors`;

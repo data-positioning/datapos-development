@@ -3,20 +3,24 @@ const exec = util.promisify(require('child_process').exec);
 const fs = require('fs').promises;
 const path = require('path');
 
+async function bumpVersion() {
+    const packageData = await fs.readFile('package.json', 'utf8');
+    const packageJSON = JSON.parse(packageData);
+    const versionSegments = packageJSON.version.split('.');
+    packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+    fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
+}
+
 async function getBackendConfig() {
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
-    fs.writeFile('src/config.json', JSON.stringify({ name: packageJSON.name, nodeVersion: packageJSON.engines.node, version: packageJSON.version }, undefined, 4));
+    fs.writeFile('src/config.json', JSON.stringify({ name: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }
 
 async function syncWithGitHub() {
     const packageData = await fs.readFile('package.json', 'utf8');
     const packageJSON = JSON.parse(packageData);
-    const versionSegments = packageJSON.version.split('.');
-    const newVersion = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-    packageJSON.version = newVersion;
-    fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
     await exec('git add .');
-    await exec(`git commit -m v${newVersion}`);
+    await exec(`git commit -m v${packageJSON.version}`);
     await exec('git push origin main:main');
 }
 
@@ -39,10 +43,13 @@ async function uploadConnector() {
     }
 
     // TODO: Need to get 'api-5ykjycpiha-ew.a.run.app' or portion of it from token.
-    const url = `https://api-5ykjycpiha-ew.a.run.app/ping`;
-    // const response = await fetch(url, { method: 'POST', headers: { Authorization: envJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
-    const response = await fetch(url, { method: 'GET' });
+    const url = `https://api-5ykjycpiha-ew.a.run.app/connectors`;
+    const response = await fetch(url, { method: 'POST', headers: { Authorization: envJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
     if (!response.ok) throw new Error(await response.text());
 }
 
-module.exports = { getBackendConfig, syncWithGitHub, uploadConnector };
+async function uploadContext() {
+    console.log('Upload context requested...');
+}
+
+module.exports = { bumpVersion, getBackendConfig, syncWithGitHub, uploadConnector, uploadContext };

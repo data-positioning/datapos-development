@@ -54,7 +54,9 @@ async function uploadConnector() {
         formData.append('config', JSON.stringify({ ...configAsJSON, description: { en: descriptionEN }, logo, version: packageAsJSON.version }));
 
         const itemNames = await fs.readdir('dist');
+        console.log(1111, itemNames);
         for (const itemName of itemNames) {
+            console.log(2222, itemName);
             const itemPath = path.join('dist', itemName);
             const stats = await fs.stat(itemPath);
             if (stats.isDirectory()) return;

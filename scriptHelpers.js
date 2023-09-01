@@ -27,10 +27,13 @@ async function syncWithGitHub() {
 async function uploadConnector() {
     try {
         const configAsJSON = JSON.parse(await fs.readFile('src/config.json', 'utf8'));
+        console.log(1111);
         const descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
         const envAsJSON = JSON.parse(await fs.readFile('.env.local', 'utf8'));
+        console.log(2222);
         const logo = await fs.readFile('src/logo.svg', 'utf8');
         const packageAsJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+        console.log(3333);
 
         const formData = new FormData();
         formData.append('config', JSON.stringify({ ...configAsJSON, description: { en: descriptionEN }, logo, version: packageAsJSON.version }));
@@ -47,7 +50,7 @@ async function uploadConnector() {
         // const response = await fetch(url, { method: 'POST', headers: { Authorization: envAsJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
         const response = await fetch(url, { method: 'GET' });
         if (!response.ok) throw new Error(await response.text());
-        console.log('RESPONSE', response);
+        console.log('RESPONSE', response.text());
     } catch (error) {
         console.log(error);
     }

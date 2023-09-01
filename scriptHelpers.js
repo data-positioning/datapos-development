@@ -44,7 +44,8 @@ async function uploadConnector() {
         }
 
         const url = `https://api-5ykjycpiha-ew.a.run.app/ping`;
-        const response = await fetch(url, { method: 'POST', headers: { Authorization: envAsJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
+        // const response = await fetch(url, { method: 'POST', headers: { Authorization: envAsJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
+        const response = await fetch(url, { method: 'GET' });
         if (!response.ok) throw new Error(await response.text());
         console.log('RESPONSE', response.json());
     } catch (error) {

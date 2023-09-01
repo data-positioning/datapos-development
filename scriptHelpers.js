@@ -59,7 +59,7 @@ async function uploadConnector() {
             console.log(2222, itemName);
             const itemPath = path.join('dist', itemName);
             const stats = await fs.stat(itemPath);
-            if (stats.isDirectory()) return;
+            if (stats.isDirectory()) continue;
             console.log(3333, itemPath, itemName);
             const contentAsBlob = new Blob([await fs.readFile(itemPath, 'utf8')], { type: 'text/plain' });
             console.log(4444);

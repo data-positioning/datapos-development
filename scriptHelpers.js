@@ -1,8 +1,12 @@
-//const exec = require('child_process').exec;
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs').promises;
 const path = require('path');
+
+async function getBackendConfig() {
+    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+    fs.writeFile('src/config.json', JSON.stringify({ name: packageJSON.name, nodeVersion: packageJSON.engines.node, version: packageJSON.version }, undefined, 4));
+}
 
 async function syncWithGitHub() {
     const packageData = await fs.readFile('package.json', 'utf8');
@@ -34,11 +38,11 @@ async function uploadConnector() {
         formData.append(itemName, contentBlob, itemName);
     }
 
+    // TODO: Need to get 'api-5ykjycpiha-ew.a.run.app' or portion of it from token.
     const url = `https://api-5ykjycpiha-ew.a.run.app/ping`;
     // const response = await fetch(url, { method: 'POST', headers: { Authorization: envJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
     const response = await fetch(url, { method: 'GET' });
     if (!response.ok) throw new Error(await response.text());
-    console.log(await response.json());
 }
 
-module.exports = { syncWithGitHub, uploadConnector };
+module.exports = { getBackendConfig, syncWithGitHub, uploadConnector };

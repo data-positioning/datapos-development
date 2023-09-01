@@ -26,55 +26,30 @@ async function syncWithGitHub() {
 
 async function uploadConnector() {
     try {
+        const configAsJSON = JSON.parse(await fs.readFile('src/config.json', 'utf8'));
+        const descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
+        const envAsJSON = JSON.parse(await fs.readFile('.env.local', 'utf8'));
+        const logo = await fs.readFile('src/logo.svg', 'utf8');
+        const packageAsJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+
         const formData = new FormData();
-
-        const envData = await fs.readFile('.env.local', 'utf8');
-        const envAsJSON = JSON.parse(envData);
-
-        const packageData = await fs.readFile('package.json', 'utf8');
-        const packageAsJSON = JSON.parse(packageData);
-
-        const configData = await fs.readFile('src/config.json', 'utf8');
-        const configAsJSON = JSON.parse(configData);
-
-        let descriptionEN;
-        try {
-            descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
-        } catch (error) {
-            descriptionEN = '';
-        }
-
-        let logo;
-        try {
-            logo = await fs.readFile('src/logo.svg', 'utf8');
-        } catch (error) {
-            logo = '';
-        }
-
         formData.append('config', JSON.stringify({ ...configAsJSON, description: { en: descriptionEN }, logo, version: packageAsJSON.version }));
-
         const itemNames = await fs.readdir('dist');
-        console.log(1111, itemNames);
         for (const itemName of itemNames) {
-            console.log(2222, itemName);
             const itemPath = path.join('dist', itemName);
             const stats = await fs.stat(itemPath);
             if (stats.isDirectory()) continue;
-            console.log(3333, itemPath, itemName);
             const contentAsBlob = new Blob([await fs.readFile(itemPath, 'utf8')], { type: 'text/plain' });
-            console.log(4444);
             formData.append(itemName, contentAsBlob, itemName);
-            console.log(7777);
         }
 
-        console.log(8888, envAsJSON);
-        const url = `https://europe-west1-datapos-${envAsJSON.DATAPOS_PROJECT_ID}.cloudfunctions.net/api/connectors`;
-        console.log('url', url);
+        const url = `https://api-5ykjycpiha-ew.a.run.app/ping`;
         const response = await fetch(url, { method: 'POST', headers: { Authorization: envAsJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
         if (!response.ok) throw new Error(await response.text());
-        console.log(9999, response);
+        console.log('RESPONSE', response.json());
     } catch (error) {
         console.log(error);
     }
 }
+
 module.exports = { syncWithGitHub, uploadConnector };

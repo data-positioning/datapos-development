@@ -56,16 +56,14 @@ async function uploadConnector() {
 
         formData.append('config', JSON.stringify({ config: configAsJSON, description: { en: descriptionEN }, logo, version: packageAsJSON.version }));
 
-        const children = await fs.readdir('dist');
-        for (const fileName of children) {
-            const filePath = path.join('dist', fileName);
-            const stats = await fs.stat(filePath);
+        const itemNames = await fs.readdir('dist');
+        for (const itemName of itemNames) {
+            const itemPath = path.join('dist', itemName);
+            const stats = await fs.stat(itemPath);
             if (stats.isDirectory()) return;
-            console.log(filePath, fileName);
-            const xxxx = await fs.readFile(filePath, 'utf8');
-            console.log('xxxx', xxxx);
-            const contentAsBlob = new Blob([xxxx], { type: 'text/plain' });
-            formData.append(fileName, contentAsBlob, fileName);
+            console.log(itemPath, itemName);
+            const contentAsBlob = new Blob([await fs.readFile(itemPath, 'utf8')], { type: 'text/plain' });
+            formData.append(itemName, contentAsBlob, itemName);
         }
 
         // const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/connectors`;

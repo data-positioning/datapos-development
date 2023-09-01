@@ -30,15 +30,12 @@ async function uploadConnector() {
 
         const envData = await fs.readFile('.env.local', 'utf8');
         const envAsJSON = JSON.parse(envData);
-        console.log('envAsJSON', envAsJSON);
 
         const packageData = await fs.readFile('package.json', 'utf8');
         const packageAsJSON = JSON.parse(packageData);
-        console.log('packageAsJSON', packageAsJSON);
 
         const configData = await fs.readFile('src/config.json', 'utf8');
         const configAsJSON = JSON.parse(configData);
-        console.log('configAsJSON', configAsJSON);
 
         let descriptionEN;
         try {
@@ -54,18 +51,21 @@ async function uploadConnector() {
             logo = '';
         }
 
-        formData.append('config', JSON.stringify({ config: configAsJSON, description: { en: descriptionEN }, logo, version: packageAsJSON.version }));
+        formData.append('config', JSON.stringify({ ...configAsJSON, description: { en: descriptionEN }, logo, version: packageAsJSON.version }));
 
         const itemNames = await fs.readdir('dist');
         for (const itemName of itemNames) {
             const itemPath = path.join('dist', itemName);
             const stats = await fs.stat(itemPath);
             if (stats.isDirectory()) return;
-            console.log(itemPath, itemName);
+            console.log(3333, itemPath, itemName);
             const contentAsBlob = new Blob([await fs.readFile(itemPath, 'utf8')], { type: 'text/plain' });
+            console.log(4444);
             formData.append(itemName, contentAsBlob, itemName);
+            console.log(7777);
         }
 
+        console.log(8888, envAsJSON);
         const url = `https://europe-west1-datapos-${envAsJSON.DATAPOS_PROJECT_ID}.cloudfunctions.net/api/connectors`;
         console.log('url', url);
         const response = await fetch(url, { method: 'POST', headers: { Authorization: envAsJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });

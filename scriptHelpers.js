@@ -66,9 +66,9 @@ async function uploadConnector() {
             formData.append(itemName, contentAsBlob, itemName);
         }
 
-        // const url = `https://europe-west1-datapos-${projectId}.cloudfunctions.net/api/connectors`;
-        // const response = await fetch(url, { method: 'POST', headers: { Authorization: dataposConnectorUploadToken }, body: formData });
-        // if (!response.ok) throw new Error(await response.text());
+        const url = `https://europe-west1-datapos-${envAsJSON.DATAPOS_PROJECT_ID}.cloudfunctions.net/api/connectors`;
+        const response = await fetch(url, { method: 'POST', headers: { Authorization: envAsJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
+        if (!response.ok) throw new Error(await response.text());
 
         return true;
     } catch (error) {

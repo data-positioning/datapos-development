@@ -47,7 +47,7 @@ async function uploadConnector() {
         // const response = await fetch(url, { method: 'POST', headers: { Authorization: envAsJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
         const response = await fetch(url, { method: 'GET' });
         if (!response.ok) throw new Error(await response.text());
-        console.log('RESPONSE', response.text());
+        console.log('RESPONSE', response);
     } catch (error) {
         console.log(error);
     }

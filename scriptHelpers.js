@@ -67,14 +67,12 @@ async function uploadConnector() {
         }
 
         const url = `https://europe-west1-datapos-${envAsJSON.DATAPOS_PROJECT_ID}.cloudfunctions.net/api/connectors`;
+        console.log('url', url);
         const response = await fetch(url, { method: 'POST', headers: { Authorization: envAsJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
         if (!response.ok) throw new Error(await response.text());
-        console.log(999, response);
-
-        return true;
+        console.log(9999, response);
     } catch (error) {
         console.log(error);
-        return false;
     }
 }
 module.exports = { syncWithGitHub, uploadConnector };

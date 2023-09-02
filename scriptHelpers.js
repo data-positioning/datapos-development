@@ -1,4 +1,6 @@
 const util = require('util');
+
+const dotenv = require('dotenv');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs').promises;
 const path = require('path');
@@ -27,7 +29,11 @@ async function syncWithGitHub() {
 async function uploadConnector() {
     const configJSON = JSON.parse(await fs.readFile('src/config.json', 'utf8'));
     const descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
-    const envJSON = JSON.parse(await fs.readFile('.env.local', 'utf8'));
+    // const envJSON = JSON.parse(await fs.readFile('.env.local', 'utf8'));
+    const result = dotenv.config({ path: '.env.local' });
+    if (result.error) throw result.error;
+    console.log(1111, process.env);
+    console.log(2222, process.env.DATAPOS_CONNECTOR_UPLOAD_TOKEN);
     const logo = await fs.readFile('src/logo.svg', 'utf8');
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
 
@@ -44,7 +50,7 @@ async function uploadConnector() {
 
     // TODO: Need to get 'api-5ykjycpiha-ew.a.run.app' or portion of it from token.
     const url = `https://api-5ykjycpiha-ew.a.run.app/connectors`;
-    const response = await fetch(url, { method: 'POST', headers: { Authorization: envJSON.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
+    const response = await fetch(url, { method: 'POST', headers: { Authorization: process.env.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
     if (!response.ok) throw new Error(await response.text());
 }
 

@@ -1,6 +1,6 @@
 # Datapos - Operations Library
 
-Implements a Javascript library of functions used to manage Datapos repositories.
+A Javascript library of functions used to manage Datapos repositories.
 
 The 'commonHelpers.js' file includes helper functions that implement common tasks.
 

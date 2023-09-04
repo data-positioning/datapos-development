@@ -13,9 +13,40 @@ async function bumpVersion() {
     fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
 }
 
+async function generateFileStoreIndex() {
+    async function readDirectoryRecursively(directoryPath, itemNames) {
+        const items = [];
+        index[directoryPath.substring(16)] = items;
+        for (const itemName of itemNames) {
+            const itemPath = path.join(directoryPath, itemName);
+            const stats = await fs.stat(itemPath);
+            if (stats.isDirectory()) {
+                const nextLevelChildren = await fs.readdir(itemPath);
+                items.push({ childCount: nextLevelChildren.length, itemName, typeId: 'folder' });
+                await readDirectoryRecursively(itemPath, nextLevelChildren);
+            } else {
+                items.push({ lastModifiedAt: stats.mtimeMs, itemName, size: stats.size, typeId: 'object' });
+            }
+        }
+    }
+
+    const index = {};
+    const toplevelChildren = await fs.readdir('public/fileStore/');
+    await readDirectoryRecursively('public/fileStore/', toplevelChildren);
+    fs.writeFile('./public/fileStoreIndex.json', JSON.stringify(index, undefined, 4), (error) => {
+        if (error) return console.error(error);
+    });
+}
+
 async function getBackendConfig() {
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
     fs.writeFile('src/config.json', JSON.stringify({ name: packageJSON.name, version: packageJSON.version }, undefined, 4));
+}
+
+async function getWorkbenchConfig() {
+    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+    const engineVersion = packageJSON.dependencies['@datapos/datapos-engine'].substring(1);
+    fs.writeFile('src/config.json', JSON.stringify({ engineVersion, version: packageJSON.version }, undefined, 4));
 }
 
 async function syncWithGitHub() {
@@ -55,4 +86,4 @@ async function uploadContext() {
     console.log('Upload context requested...');
 }
 
-module.exports = { bumpVersion, getBackendConfig, syncWithGitHub, uploadConnector, uploadContext };
+module.exports = { bumpVersion, generateFileStoreIndex, getBackendConfig, getWorkbenchConfig, syncWithGitHub, uploadConnector, uploadContext };

@@ -1,7 +1,10 @@
 {
     "name": "@datapos/datapos-operations",
     "private": false,
-    "version": "0.1.261",
+    "version": "0.1.262",
+    "dependencies": {
+        "dotenv": "^16.3.1"
+    },
     "devDependencies": {
         "eslint": "^8.44.0",
         "prettier": "^3.0.3"
@@ -19,8 +22,5 @@
         "syncWithGitHub": "npm run bumpVersion && node -e \"require('./scriptHelpers').syncWithGitHub()\"",
         "test": "echo \"***** TEST SCRIPT NOT IMPLEMENTED. *****\"",
         "updateDependencies": "echo \"***** UPDATE DEPENDENCIES SCRIPT NOT IMPLEMENTED. *****\""
-    },
-    "dependencies": {
-        "dotenv": "^16.3.1"
     }
 }

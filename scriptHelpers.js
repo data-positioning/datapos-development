@@ -13,99 +13,98 @@ let modelConfig;
 async function buildContext() {
     const contextData = await fs.readFile('./src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
-    await buildContextPrepare();
-    await buildContextOutput();
+    await buildContext_Prepare();
+    await buildContext_Output();
     if (issueCount > 0) console.log(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
-const buildContextPrepare = async () => {
+const buildContext_Prepare = async () => {
     const itemPaths = await fs.readdir('./src');
 
-    itemPaths.forEach((itemPath) => {
+    for (const itemPath of itemPaths) {
         console.log(1111, itemPath);
-        //     if (grunt.file.isDir(itemPath)) {
-        //         const itemPathSegments = itemPath.split('/');
-        //         if (itemPathSegments.length === 3) {
-        //             const focusId = itemPathSegments[2];
-        //             const focusData = readJSONFile(grunt, `${itemPath}/data.json`);
-        //             focusData.description = readMarkdownFile(grunt, `${itemPath}/description.en.md`);
-        //             focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
-        //             contextConfig.focuses.push(focusConfig);
-        //             processDirectory(grunt, itemPath);
-        //         } else if (itemPathSegments.length === 4) {
-        //             const modelId = itemPathSegments[3];
-        //             const modelData = readJSONFile(grunt, `${itemPath}/data.json`);
-        //             modelData.description = readMarkdownFile(grunt, `${itemPath}/description.en.md`);
-        //             console.log(modelId, modelData, modelData.description);
-        //             modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
-
-        //             const dimensionPaths = grunt.file.expand(`${itemPath}/dimensions/*.json`);
-        //             dimensionPaths.forEach((dimensionPath) => {
-        //                 const dimensionPathSegments = dimensionPath.split('/');
-        //                 const dimensionId = dimensionPathSegments[5].split('.')[0];
-        //                 const dimensionData = readJSONFile(grunt, `${itemPath}/dimensions/${dimensionId}.json`);
-        //                 dimensionData.description = readMarkdownFile(grunt, `${itemPath}/dimensions/${dimensionId}.en.md`);
-        //                 const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
-        //                 modelConfig.dimensions.push(dimensionConfig);
-        //             });
-
-        //             const entityPaths = grunt.file.expand(`${itemPath}/entities/*.json`);
-        //             entityPaths.forEach((entityPath) => {
-        //                 const entityPathSegments = entityPath.split('/');
-        //                 const entityId = entityPathSegments[5].split('.')[0];
-        //                 const entityData = readJSONFile(grunt, `${itemPath}/entities/${entityId}.json`);
-        //                 entityData.description = readMarkdownFile(grunt, `${itemPath}/entities/${entityId}.en.md`);
-        //                 const entityConfig = {
-        //                     id: entityId,
-        //                     label: entityData.label,
-        //                     description: { en: entityData.description },
-        //                     typeId: 'entity',
-        //                     characteristics: [],
-        //                     computations: [],
-        //                     events: []
-        //                 };
-        //                 for (const characteristic of entityData.characteristics || []) {
-        //                     const characteristicConfig = {
-        //                         entityTypeId: characteristic.entityTypeId,
-        //                         id: characteristic.id,
-        //                         label: characteristic.label,
-        //                         description: characteristic.description,
-        //                         typeId: 'characteristic',
-        //                         type: characteristic.type
-        //                     };
-        //                     entityConfig.characteristics.push(characteristicConfig);
-        //                 }
-        //                 for (const computation of entityData.computations || []) {
-        //                     const computationConfig = {
-        //                         id: computation.id,
-        //                         label: computation.label,
-        //                         description: computation.description,
-        //                         typeId: 'computation',
-        //                         formula: computation.formula
-        //                     };
-        //                     entityConfig.computations.push(computationConfig);
-        //                 }
-        //                 for (const event of entityData.events || []) {
-        //                     const eventConfig = {
-        //                         id: event.id,
-        //                         label: event.label,
-        //                         description: event.description,
-        //                         typeId: 'event'
-        //                     };
-        //                     entityConfig.events.push(eventConfig);
-        //                 }
-        //                 modelConfig.entities.push(entityConfig);
-        //             });
-
-        //             focusConfig.models.push(modelConfig);
-        //         } else {
-        //             throw new Error(`Unexpected directory level: ${itemPath}.`);
-        //         }
-        //     }
-    });
+        const stats = await fs.stat(`./src/${itemPath}`);
+        if (stats.isDirectory()) {
+            console.log(2222, itemPath);
+            // const itemPathSegments = itemPath.split('/');
+            // if (itemPathSegments.length === 3) {
+            //     const focusId = itemPathSegments[2];
+            //     const focusData = readJSONFile(grunt, `${itemPath}/data.json`);
+            //     focusData.description = readMarkdownFile(grunt, `${itemPath}/description.en.md`);
+            //     focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
+            //     contextConfig.focuses.push(focusConfig);
+            //     processDirectory(grunt, itemPath);
+            // } else if (itemPathSegments.length === 4) {
+            //     const modelId = itemPathSegments[3];
+            //     const modelData = readJSONFile(grunt, `${itemPath}/data.json`);
+            //     modelData.description = readMarkdownFile(grunt, `${itemPath}/description.en.md`);
+            //     console.log(modelId, modelData, modelData.description);
+            //     modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
+            //     const dimensionPaths = grunt.file.expand(`${itemPath}/dimensions/*.json`);
+            //     dimensionPaths.forEach((dimensionPath) => {
+            //         const dimensionPathSegments = dimensionPath.split('/');
+            //         const dimensionId = dimensionPathSegments[5].split('.')[0];
+            //         const dimensionData = readJSONFile(grunt, `${itemPath}/dimensions/${dimensionId}.json`);
+            //         dimensionData.description = readMarkdownFile(grunt, `${itemPath}/dimensions/${dimensionId}.en.md`);
+            //         const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
+            //         modelConfig.dimensions.push(dimensionConfig);
+            //     });
+            //     const entityPaths = grunt.file.expand(`${itemPath}/entities/*.json`);
+            //     entityPaths.forEach((entityPath) => {
+            //         const entityPathSegments = entityPath.split('/');
+            //         const entityId = entityPathSegments[5].split('.')[0];
+            //         const entityData = readJSONFile(grunt, `${itemPath}/entities/${entityId}.json`);
+            //         entityData.description = readMarkdownFile(grunt, `${itemPath}/entities/${entityId}.en.md`);
+            //         const entityConfig = {
+            //             id: entityId,
+            //             label: entityData.label,
+            //             description: { en: entityData.description },
+            //             typeId: 'entity',
+            //             characteristics: [],
+            //             computations: [],
+            //             events: []
+            //         };
+            //         for (const characteristic of entityData.characteristics || []) {
+            //             const characteristicConfig = {
+            //                 entityTypeId: characteristic.entityTypeId,
+            //                 id: characteristic.id,
+            //                 label: characteristic.label,
+            //                 description: characteristic.description,
+            //                 typeId: 'characteristic',
+            //                 type: characteristic.type
+            //             };
+            //             entityConfig.characteristics.push(characteristicConfig);
+            //         }
+            //         for (const computation of entityData.computations || []) {
+            //             const computationConfig = {
+            //                 id: computation.id,
+            //                 label: computation.label,
+            //                 description: computation.description,
+            //                 typeId: 'computation',
+            //                 formula: computation.formula
+            //             };
+            //             entityConfig.computations.push(computationConfig);
+            //         }
+            //         for (const event of entityData.events || []) {
+            //             const eventConfig = {
+            //                 id: event.id,
+            //                 label: event.label,
+            //                 description: event.description,
+            //                 typeId: 'event'
+            //             };
+            //             entityConfig.events.push(eventConfig);
+            //         }
+            //         modelConfig.entities.push(entityConfig);
+            //     });
+            //     focusConfig.models.push(modelConfig);
+            // } else {
+            //     throw new Error(`Unexpected directory level: ${itemPath}.`);
+            // }
+        }
+    }
 };
 
-const buildContextOutput = () => {
+const buildContext_Output = () => {
     const characteristics = [];
     const computations = [];
     const dimensions = [];

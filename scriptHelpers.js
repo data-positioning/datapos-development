@@ -22,7 +22,6 @@ const readJSONFile = async (itemPath) => {
     try {
         return JSON.parse(await fs.readFile(itemPath, 'utf8'));
     } catch (error) {
-        console.log(error);
         issueCount++;
         console.log(`ERROR__: JSON file '${itemPath}' not found.`);
         return {};

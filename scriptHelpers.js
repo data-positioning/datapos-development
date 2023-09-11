@@ -14,6 +14,8 @@ async function buildContext() {
     const contextData = await fs.readFile('src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
     await buildContext_Prepare('src');
+    console.log('contextConfig', contextConfig);
+    console.log('modelConfig', modelConfig);
     await buildContext_Output();
     if (issueCount > 0) console.log(`WARNING: ${issueCount} issues(s) encountered.`);
 }
@@ -120,8 +122,6 @@ const buildContext_Prepare = async (path) => {
             }
         }
     }
-    console.log('contextConfig', contextConfig);
-    console.log('modelConfig', modelConfig);
 };
 
 const buildContext_Output = () => {

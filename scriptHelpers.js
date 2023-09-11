@@ -23,7 +23,7 @@ const readJSONFile = async (itemPath) => {
         return JSON.parse(await fs.readFile(itemPath, 'utf8'));
     } catch (error) {
         issueCount++;
-        console.log(`ERROR__: JSON file '${itemPath}' not found.`);
+        console.log(`ERROR__: JSON file '${itemPath}' not found or invalid.`);
         return {};
     }
 };
@@ -33,7 +33,7 @@ const readMarkdownFile = async (itemPath) => {
         return await fs.readFile(itemPath, 'utf8');
     } catch (error) {
         issueCount++;
-        console.log(`ERROR__: Markdown file '${itemPath}' not found.`);
+        console.log(`ERROR__: Markdown file '${itemPath}' not found or invalid.`);
         return '';
     }
 };
@@ -46,7 +46,6 @@ const buildContext_Prepare = async (path) => {
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
             if (itemPathSegments.length === 2) {
-                console.log('CONTEXT:', itemName, itemPath, itemPathSegments.length);
                 const focusId = itemPathSegments[1];
                 const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 focusData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
@@ -54,21 +53,19 @@ const buildContext_Prepare = async (path) => {
                 contextConfig.focuses.push(focusConfig);
                 buildContext_Prepare(itemPath);
             } else if (itemPathSegments.length === 3) {
-                console.log('MODEL__:', itemName, itemPath, itemPathSegments.length);
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 modelData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
-                console.log(modelId, modelData, modelData.description);
-                //     modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
-                //     const dimensionPaths = grunt.file.expand(`${itemPath}/dimensions/*.json`);
-                //     dimensionPaths.forEach((dimensionPath) => {
-                //         const dimensionPathSegments = dimensionPath.split('/');
-                //         const dimensionId = dimensionPathSegments[5].split('.')[0];
-                //         const dimensionData = readJSONFile(grunt, `${itemPath}/dimensions/${dimensionId}.json`);
-                //         dimensionData.description = readMarkdownFile(grunt, `${itemPath}/dimensions/${dimensionId}.en.md`);
-                //         const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
-                //         modelConfig.dimensions.push(dimensionConfig);
-                //     });
+                modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
+                const dimensionPaths = await fs.readdir(`${itemPath}/dimensions`).filter((fn) => fn.endsWith('.json'));
+                for (const dimensionPath of dimensionPaths) {
+                    const dimensionPathSegments = dimensionPath.split('/');
+                    const dimensionId = dimensionPathSegments[5].split('.')[0];
+                    const dimensionData = readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
+                    dimensionData.description = readMarkdownFile(`${itemPath}/dimensions/${dimensionId}.en.md`);
+                    const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
+                    modelConfig.dimensions.push(dimensionConfig);
+                }
                 //     const entityPaths = grunt.file.expand(`${itemPath}/entities/*.json`);
                 //     entityPaths.forEach((entityPath) => {
                 //         const entityPathSegments = entityPath.split('/');
@@ -122,6 +119,8 @@ const buildContext_Prepare = async (path) => {
             }
         }
     }
+    console.log('contextConfig', contextConfig);
+    console.log('modelConfig', modelConfig);
 };
 
 const buildContext_Output = () => {

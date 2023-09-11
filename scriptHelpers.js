@@ -20,22 +20,32 @@ async function buildContext() {
     if (issueCount > 0) console.log(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
-const readJSONFile = async (itemPath) => {
+const readDirectory = async (path) => {
     try {
-        return JSON.parse(await fs.readFile(itemPath, 'utf8'));
+        return await fs.readdir(`${path}/dimensions`);
     } catch (error) {
         issueCount++;
-        console.log(`ERROR__: JSON file '${itemPath}' not found or invalid.`);
+        console.log(`ERROR: Directory '${path}' not found or invalid.`);
+        return [];
+    }
+};
+
+const readJSONFile = async (path) => {
+    try {
+        return JSON.parse(await fs.readFile(path, 'utf8'));
+    } catch (error) {
+        issueCount++;
+        console.log(`ERROR: JSON file '${path}' not found or invalid.`);
         return {};
     }
 };
 
-const readMarkdownFile = async (itemPath) => {
+const readMarkdownFile = async (path) => {
     try {
-        return await fs.readFile(itemPath, 'utf8');
+        return await fs.readFile(path, 'utf8');
     } catch (error) {
         issueCount++;
-        console.log(`ERROR__: Markdown file '${itemPath}' not found or invalid.`);
+        console.log(`ERROR: Markdown file '${path}' not found or invalid.`);
         return '';
     }
 };
@@ -59,7 +69,7 @@ const buildContext_Prepare = async (path) => {
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 modelData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
                 modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
-                const dimensionPaths = (await fs.readdir(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
+                const dimensionPaths = (await readDirectory(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
                 for (const dimensionPath of dimensionPaths) {
                     console.log('dimensionPath', dimensionPath);
                     // const dimensionPathSegments = dimensionPath.split('/');

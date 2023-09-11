@@ -11,17 +11,18 @@ let issueCount = 0;
 let modelConfig;
 
 async function buildContext() {
-    const contextData = await fs.readFile('./src/data.json', 'utf8');
+    const contextData = await fs.readFile('src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
-    await buildContext_Prepare('./src');
+    await buildContext_Prepare('src');
     await buildContext_Output();
     if (issueCount > 0) console.log(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
 const readJSONFile = async (itemPath) => {
     try {
-        return JSON.parse(await fs.readFile(`${itemPath}/data.json`, 'utf8'));
+        return JSON.parse(await fs.readFile(itemPath, 'utf8'));
     } catch (error) {
+        console.log(error);
         issueCount++;
         console.log(`ERROR__: JSON file '${itemPath}' not found.`);
         return {};
@@ -30,7 +31,7 @@ const readJSONFile = async (itemPath) => {
 
 const readMarkdownFile = async (itemPath) => {
     try {
-        return await fs.readFile(`${itemPath}/description.en.md`, 'utf8');
+        return await fs.readFile(itemPath, 'utf8');
     } catch (error) {
         issueCount++;
         console.log(`ERROR__: Markdown file '${itemPath}' not found.`);

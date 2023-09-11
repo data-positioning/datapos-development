@@ -60,9 +60,9 @@ const buildContext_Prepare = async (path) => {
                 const dimensionPaths = (await fs.readdir(`${itemPath}/${modelId}/dimensions`)).filter((fn) => fn.endsWith('.json'));
                 for (const dimensionPath of dimensionPaths) {
                     const dimensionPathSegments = dimensionPath.split('/');
-                    const dimensionId = dimensionPathSegments[5].split('.')[0];
-                    const dimensionData = readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
-                    dimensionData.description = readMarkdownFile(`${itemPath}/dimensions/${dimensionId}.en.md`);
+                    const dimensionId = dimensionPathSegments[4].split('.')[0];
+                    const dimensionData = readJSONFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.json`);
+                    dimensionData.description = readMarkdownFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.en.md`);
                     const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
                     modelConfig.dimensions.push(dimensionConfig);
                 }

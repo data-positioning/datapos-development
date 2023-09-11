@@ -63,7 +63,7 @@ const buildContext_Prepare = async (path) => {
                 focusData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
                 focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
                 contextConfig.focuses.push(focusConfig);
-                buildContext_Prepare(itemPath);
+                await buildContext_Prepare(itemPath);
             } else if (itemPathSegments.length === 3) {
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');

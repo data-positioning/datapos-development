@@ -18,12 +18,22 @@ async function buildContext() {
     if (issueCount > 0) console.log(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
+const readJSONFile = async (itemPath) => {
+    try {
+        return JSON.parse(await fs.readFile(`${itemPath}/data.json`, 'utf8'));
+    } catch (error) {
+        issueCount++;
+        console.log(`ERROR__: JSON file '${itemPath}' not found.`);
+        return {};
+    }
+};
+
 const readMarkdownFile = async (itemPath) => {
     try {
         return await fs.readFile(`${itemPath}/description.en.md`, 'utf8');
     } catch (error) {
         issueCount++;
-        console.log(`ERROR: Markdown file '${itemPath}' not found.`);
+        console.log(`ERROR__: Markdown file '${itemPath}' not found.`);
         return '';
     }
 };
@@ -35,19 +45,20 @@ const buildContext_Prepare = async (path) => {
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
-            console.log(1111, itemName, itemPath, itemPathSegments.length);
             if (itemPathSegments.length === 2) {
+                console.log('CONTEXT:', itemName, itemPath, itemPathSegments.length);
                 const focusId = itemPathSegments[1];
-                const focusData = JSON.parse(await fs.readFile(`${itemPath}/data.json`, 'utf8'));
+                const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 focusData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
                 focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
                 contextConfig.focuses.push(focusConfig);
                 buildContext_Prepare(itemPath);
             } else if (itemPathSegments.length === 3) {
-                //     const modelId = itemPathSegments[3];
-                //     const modelData = readJSONFile(grunt, `${itemPath}/data.json`);
-                //     modelData.description = readMarkdownFile(grunt, `${itemPath}/description.en.md`);
-                //     console.log(modelId, modelData, modelData.description);
+                console.log('MODEL__:', itemName, itemPath, itemPathSegments.length);
+                const modelId = itemPathSegments[2];
+                const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                modelData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
+                console.log(modelId, modelData, modelData.description);
                 //     modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
                 //     const dimensionPaths = grunt.file.expand(`${itemPath}/dimensions/*.json`);
                 //     dimensionPaths.forEach((dimensionPath) => {

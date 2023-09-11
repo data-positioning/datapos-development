@@ -22,7 +22,7 @@ async function buildContext() {
 
 const readDirectory = async (path) => {
     try {
-        return await fs.readdir(`${path}/dimensions`);
+        return await fs.readdir(`${path}`);
     } catch (error) {
         issueCount++;
         console.log(`ERROR: Directory '${path}' not found or invalid.`);
@@ -69,7 +69,7 @@ const buildContext_Prepare = async (path) => {
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 modelData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
                 modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
-                const dimensionPaths = (await readDirectory(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
+                const dimensionPaths = await readDirectory(`${itemPath}/dimensions`);
                 for (const dimensionPath of dimensionPaths) {
                     console.log('dimensionPath', dimensionPath);
                     // const dimensionPathSegments = dimensionPath.split('/');

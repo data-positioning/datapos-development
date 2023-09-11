@@ -26,14 +26,14 @@ const buildContext_Prepare = async (path) => {
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
             console.log(1111, itemName, itemPath, itemPathSegments.length);
-            if (itemPathSegments.length === 3) {
+            if (itemPathSegments.length === 2) {
                 //     const focusId = itemPathSegments[2];
                 //     const focusData = readJSONFile(grunt, `${itemPath}/data.json`);
                 //     focusData.description = readMarkdownFile(grunt, `${itemPath}/description.en.md`);
                 //     focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
                 //     contextConfig.focuses.push(focusConfig);
-                //     processDirectory(grunt, itemPath);
-            } else if (itemPathSegments.length === 4) {
+                //     buildContext_Prepare(grunt, itemPath);
+            } else if (itemPathSegments.length === 3) {
                 //     const modelId = itemPathSegments[3];
                 //     const modelData = readJSONFile(grunt, `${itemPath}/data.json`);
                 //     modelData.description = readMarkdownFile(grunt, `${itemPath}/description.en.md`);

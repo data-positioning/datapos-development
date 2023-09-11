@@ -32,7 +32,7 @@ const buildContext_Prepare = async (path) => {
                 //     focusData.description = readMarkdownFile(grunt, `${itemPath}/description.en.md`);
                 //     focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
                 //     contextConfig.focuses.push(focusConfig);
-                //     buildContext_Prepare(grunt, itemPath);
+                buildContext_Prepare(itemPath);
             } else if (itemPathSegments.length === 3) {
                 //     const modelId = itemPathSegments[3];
                 //     const modelData = readJSONFile(grunt, `${itemPath}/data.json`);

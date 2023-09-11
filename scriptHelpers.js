@@ -18,6 +18,16 @@ async function buildContext() {
     if (issueCount > 0) console.log(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
+const readMarkdownFile = async (itemPath) => {
+    try {
+        return await fs.readFile(`${itemPath}/description.en.md`, 'utf8');
+    } catch (error) {
+        issueCount++;
+        console.log(`ERROR: Markdown file '${itemPath}' not found.`);
+        return '';
+    }
+};
+
 const buildContext_Prepare = async (path) => {
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
@@ -27,11 +37,11 @@ const buildContext_Prepare = async (path) => {
             const itemPathSegments = itemPath.split('/');
             console.log(1111, itemName, itemPath, itemPathSegments.length);
             if (itemPathSegments.length === 2) {
-                //     const focusId = itemPathSegments[2];
-                //     const focusData = readJSONFile(grunt, `${itemPath}/data.json`);
-                //     focusData.description = readMarkdownFile(grunt, `${itemPath}/description.en.md`);
-                //     focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
-                //     contextConfig.focuses.push(focusConfig);
+                const focusId = itemPathSegments[1];
+                const focusData = JSON.parse(await fs.readFile(`${itemPath}/data.json`, 'utf8'));
+                focusData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
+                focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
+                contextConfig.focuses.push(focusConfig);
                 buildContext_Prepare(itemPath);
             } else if (itemPathSegments.length === 3) {
                 //     const modelId = itemPathSegments[3];

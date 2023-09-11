@@ -11,9 +11,9 @@ let issueCount = 0;
 let modelConfig;
 
 async function buildContext() {
-    const contextData = await fs.readFile('src/data.json', 'utf8');
+    const contextData = await fs.readFile('./src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
-    await buildContext_Prepare('src');
+    await buildContext_Prepare('./src');
     await buildContext_Output();
     if (issueCount > 0) console.log(`WARNING: ${issueCount} issues(s) encountered.`);
 }

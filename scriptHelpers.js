@@ -69,7 +69,7 @@ const buildContext_Prepare = async (path) => {
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 modelData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
                 modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
-                const dimensionPaths = await readDirectory(`${itemPath}/dimensions`);
+                const dimensionPaths = await readDirectory(`${itemPath}/dimensions`).filter((fn) => fn.endsWith('.json'));
                 for (const dimensionPath of dimensionPaths) {
                     console.log('dimensionPath', dimensionPath);
                     // const dimensionPathSegments = dimensionPath.split('/');

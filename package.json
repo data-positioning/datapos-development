@@ -1,7 +1,7 @@
 {
     "name": "@datapos/datapos-operations",
     "private": false,
-    "version": "0.1.291",
+    "version": "0.1.292",
     "dependencies": {
         "dotenv": "^16.3.1"
     },

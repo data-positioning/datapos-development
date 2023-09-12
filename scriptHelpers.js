@@ -80,50 +80,49 @@ const buildContext_Prepare = async (path) => {
                 const entityPaths = (await readDirectory(`${itemPath}/entities`)).filter((fn) => fn.endsWith('.json'));
                 for (const entityPath of entityPaths) {
                     console.log('entityPath', entityPath);
-                    //         const entityPathSegments = entityPath.split('/');
-                    //         const entityId = entityPathSegments[5].split('.')[0];
-                    //         const entityData = readJSONFile(grunt, `${itemPath}/entities/${entityId}.json`);
-                    //         entityData.description = readMarkdownFile(grunt, `${itemPath}/entities/${entityId}.en.md`);
-                    //         const entityConfig = {
-                    //             id: entityId,
-                    //             label: entityData.label,
-                    //             description: { en: entityData.description },
-                    //             typeId: 'entity',
-                    //             characteristics: [],
-                    //             computations: [],
-                    //             events: []
-                    //         };
-                    //         for (const characteristic of entityData.characteristics || []) {
-                    //             const characteristicConfig = {
-                    //                 entityTypeId: characteristic.entityTypeId,
-                    //                 id: characteristic.id,
-                    //                 label: characteristic.label,
-                    //                 description: characteristic.description,
-                    //                 typeId: 'characteristic',
-                    //                 type: characteristic.type
-                    //             };
-                    //             entityConfig.characteristics.push(characteristicConfig);
-                    //         }
-                    //         for (const computation of entityData.computations || []) {
-                    //             const computationConfig = {
-                    //                 id: computation.id,
-                    //                 label: computation.label,
-                    //                 description: computation.description,
-                    //                 typeId: 'computation',
-                    //                 formula: computation.formula
-                    //             };
-                    //             entityConfig.computations.push(computationConfig);
-                    //         }
-                    //         for (const event of entityData.events || []) {
-                    //             const eventConfig = {
-                    //                 id: event.id,
-                    //                 label: event.label,
-                    //                 description: event.description,
-                    //                 typeId: 'event'
-                    //             };
-                    //             entityConfig.events.push(eventConfig);
-                    //         }
-                    //         modelConfig.entities.push(entityConfig);
+                    const entityId = entityPath.split('.')[0];
+                    const entityData = readJSONFile(`${itemPath}/${modelId}/dimensions/${entityId}.json`);
+                    entityData.description = readMarkdownFile(`${itemPath}/${modelId}/dimensions/${entityId}.en.md`);
+                    const entityConfig = {
+                        id: entityId,
+                        label: entityData.label,
+                        description: { en: entityData.description },
+                        typeId: 'entity',
+                        characteristics: [],
+                        computations: [],
+                        events: []
+                    };
+                    for (const characteristic of entityData.characteristics || []) {
+                        const characteristicConfig = {
+                            entityTypeId: characteristic.entityTypeId,
+                            id: characteristic.id,
+                            label: characteristic.label,
+                            description: characteristic.description,
+                            typeId: 'characteristic',
+                            type: characteristic.type
+                        };
+                        entityConfig.characteristics.push(characteristicConfig);
+                    }
+                    for (const computation of entityData.computations || []) {
+                        const computationConfig = {
+                            id: computation.id,
+                            label: computation.label,
+                            description: computation.description,
+                            typeId: 'computation',
+                            formula: computation.formula
+                        };
+                        entityConfig.computations.push(computationConfig);
+                    }
+                    for (const event of entityData.events || []) {
+                        const eventConfig = {
+                            id: event.id,
+                            label: event.label,
+                            description: event.description,
+                            typeId: 'event'
+                        };
+                        entityConfig.events.push(eventConfig);
+                    }
+                    modelConfig.entities.push(entityConfig);
                 }
                 focusConfig.models.push(modelConfig);
             } else {
@@ -142,79 +141,79 @@ const buildContext_Output = () => {
     const models = [];
     const views = [];
 
-    // const context = { id: 'datapos-context-default', label: contextConfig.label, typeId: contextConfig.typeId, focuses: [] };
-    // for (const focus of contextConfig.focuses) {
-    //     const focusId = `datapos-context-default-focus-${focus.id}`;
-    //     const focusReference = { id: focusId, label: focus.label, models: [] };
-    //     for (const model of focus.models) {
-    //         const modelId = `datapos-context-default-model-${model.id}`;
-    //         const modelConfig = {
-    //             id: modelId,
-    //             label: model.label,
-    //             description: model.description,
-    //             typeId: model.typeId,
-    //             dimensions: [],
-    //             entities: [],
-    //             views: []
-    //         };
+    const context = { id: 'datapos-context-default', label: contextConfig.label, typeId: contextConfig.typeId, focuses: [] };
+    for (const focus of contextConfig.focuses) {
+        const focusId = `datapos-context-default-focus-${focus.id}`;
+        const focusReference = { id: focusId, label: focus.label, models: [] };
+        for (const model of focus.models) {
+            const modelId = `datapos-context-default-model-${model.id}`;
+            const modelConfig = {
+                id: modelId,
+                label: model.label,
+                description: model.description,
+                typeId: model.typeId,
+                dimensions: [],
+                entities: [],
+                views: []
+            };
 
-    //         for (const dimension of model.dimensions) {
-    //             const dimensionId = `datapos-context-default-dimension-${dimension.id}`;
-    //             const dimensionConfig = {
-    //                 id: dimensionId,
-    //                 label: dimension.label,
-    //                 description: dimension.description,
-    //                 typeId: dimension.typeId,
-    //                 levels: dimension.levels
-    //             };
-    //             grunt.file.write(`./dist/${dimensionId}.json`, JSON.stringify(dimensionConfig));
-    //             const dimensionReference = { id: dimensionId, label: dimension.label };
-    //             modelConfig.dimensions.push(dimensionReference);
-    //             dimensions.push({ ...dimensionReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
-    //         }
+            for (const dimension of model.dimensions) {
+                const dimensionId = `datapos-context-default-dimension-${dimension.id}`;
+                const dimensionConfig = {
+                    id: dimensionId,
+                    label: dimension.label,
+                    description: dimension.description,
+                    typeId: dimension.typeId,
+                    levels: dimension.levels
+                };
+                fs.writeFile(`dist/${dimensionId}.json`, JSON.stringify(dimensionConfig));
+                const dimensionReference = { id: dimensionId, label: dimension.label };
+                modelConfig.dimensions.push(dimensionReference);
+                dimensions.push({ ...dimensionReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
+            }
 
-    //         for (const entity of model.entities) {
-    //             const entityId = `datapos-context-default-entity-${entity.id}`;
-    //             const entityConfig = {
-    //                 id: entityId,
-    //                 label: entity.label,
-    //                 description: entity.description,
-    //                 typeId: entity.typeId,
-    //                 characteristics: entity.characteristics,
-    //                 computations: entity.computations,
-    //                 events: entity.events
-    //             };
-    //             grunt.file.write(`./dist/${entityId}.json`, JSON.stringify(entityConfig));
-    //             const entityReference = { id: entityId, label: entity.label };
-    //             modelConfig.entities.push(entityReference);
-    //             entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
-    //         }
+            for (const entity of model.entities) {
+                const entityId = `datapos-context-default-entity-${entity.id}`;
+                const entityConfig = {
+                    id: entityId,
+                    label: entity.label,
+                    description: entity.description,
+                    typeId: entity.typeId,
+                    characteristics: entity.characteristics,
+                    computations: entity.computations,
+                    events: entity.events
+                };
+                fs.writeFile(`dist/${entityId}.json`, JSON.stringify(entityConfig));
+                const entityReference = { id: entityId, label: entity.label };
+                modelConfig.entities.push(entityReference);
+                entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
+            }
 
-    //         for (const view of model.views) {
-    //             const viewId = `datapos-context-default-view-${view.id}`;
-    //             const viewConfig = {
-    //                 id: viewId,
-    //                 label: view.label,
-    //                 description: view.description,
-    //                 typeId: view.typeId
-    //             };
-    //             grunt.file.write(`./dist/${viewId}.json`, JSON.stringify(viewConfig));
-    //             const viewReference = { id: viewId, label: view.label };
-    //             modelConfig.views.push(viewReference);
-    //             views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
-    //         }
-    //         grunt.file.write(`./dist/${modelId}.json`, JSON.stringify(modelConfig));
-    //         const modelReference = { id: modelId, label: model.label };
-    //         focusReference.models.push(modelReference);
-    //         models.push({ ...modelReference, focusId: focusId, focusLabel: focus.label });
-    //     }
-    //     context.focuses.push(focusReference);
-    // }
-    // grunt.file.write('./dist/datapos-context-default.json', JSON.stringify(context));
-    // grunt.file.write('./dist/datapos-context-default-models.json', JSON.stringify(models));
-    // grunt.file.write('./dist/datapos-context-default-dimensions.json', JSON.stringify(dimensions));
-    // grunt.file.write('./dist/datapos-context-default-entities.json', JSON.stringify(entities));
-    // grunt.file.write('./dist/datapos-context-default-views.json', JSON.stringify(views));
+            for (const view of model.views) {
+                const viewId = `datapos-context-default-view-${view.id}`;
+                const viewConfig = {
+                    id: viewId,
+                    label: view.label,
+                    description: view.description,
+                    typeId: view.typeId
+                };
+                fs.writeFile(`dist/${viewId}.json`, JSON.stringify(viewConfig));
+                const viewReference = { id: viewId, label: view.label };
+                modelConfig.views.push(viewReference);
+                views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
+            }
+            fs.writeFile(`dist/${modelId}.json`, JSON.stringify(modelId));
+            const modelReference = { id: modelId, label: model.label };
+            focusReference.models.push(modelReference);
+            models.push({ ...modelReference, focusId: focusId, focusLabel: focus.label });
+        }
+        context.focuses.push(focusReference);
+    }
+    fs.writeFile('dist/datapos-context-default.json', JSON.stringify(context));
+    fs.writeFile('dist/datapos-context-default-models.json', JSON.stringify(models));
+    fs.writeFile('dist/datapos-context-default-dimensions.json', JSON.stringify(dimensions));
+    fs.writeFile('dist/datapos-context-default-entities.json', JSON.stringify(entities));
+    fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify(views));
 };
 
 async function bumpVersion() {

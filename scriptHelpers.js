@@ -15,7 +15,6 @@ async function buildContext() {
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
     await buildContext_Prepare('src');
     console.log('contextConfig', contextConfig);
-    console.log('modelConfig', modelConfig);
     await buildContext_Output();
     if (issueCount > 0) console.log(`WARNING: ${issueCount} issues(s) encountered.`);
 }
@@ -72,12 +71,11 @@ const buildContext_Prepare = async (path) => {
                 const dimensionPaths = (await readDirectory(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
                 for (const dimensionPath of dimensionPaths) {
                     console.log('dimensionPath', dimensionPath);
-                    // const dimensionPathSegments = dimensionPath.split('/');
-                    // const dimensionId = dimensionPathSegments[4].split('.')[0];
-                    // const dimensionData = readJSONFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.json`);
-                    // dimensionData.description = readMarkdownFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.en.md`);
-                    // const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
-                    // modelConfig.dimensions.push(dimensionConfig);
+                    const dimensionId = dimensionPath.split('.')[0];
+                    const dimensionData = readJSONFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.json`);
+                    dimensionData.description = readMarkdownFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.en.md`);
+                    const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
+                    modelConfig.dimensions.push(dimensionConfig);
                 }
                 //     const entityPaths = grunt.file.expand(`${itemPath}/entities/*.json`);
                 //     entityPaths.forEach((entityPath) => {
@@ -132,6 +130,7 @@ const buildContext_Prepare = async (path) => {
             }
         }
     }
+    console.log('modelConfig', modelConfig);
 };
 
 const buildContext_Output = () => {

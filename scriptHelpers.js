@@ -72,8 +72,8 @@ const buildContext_Prepare = async (path) => {
                 for (const dimensionPath of dimensionPaths) {
                     console.log('dimensionPath', dimensionPath);
                     const dimensionId = dimensionPath.split('.')[0];
-                    const dimensionData = readJSONFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.json`);
-                    dimensionData.description = readMarkdownFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.en.md`);
+                    const dimensionData = readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
+                    dimensionData.description = readMarkdownFile(`${itemPath}/dimensions/${dimensionId}.en.md`);
                     const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
                     modelConfig.dimensions.push(dimensionConfig);
                 }
@@ -81,8 +81,8 @@ const buildContext_Prepare = async (path) => {
                 for (const entityPath of entityPaths) {
                     console.log('entityPath', entityPath);
                     const entityId = entityPath.split('.')[0];
-                    const entityData = readJSONFile(`${itemPath}/${modelId}/dimensions/${entityId}.json`);
-                    entityData.description = readMarkdownFile(`${itemPath}/${modelId}/dimensions/${entityId}.en.md`);
+                    const entityData = readJSONFile(`${itemPath}/dimensions/${entityId}.json`);
+                    entityData.description = readMarkdownFile(`${itemPath}/dimensions/${entityId}.en.md`);
                     const entityConfig = {
                         id: entityId,
                         label: entityData.label,

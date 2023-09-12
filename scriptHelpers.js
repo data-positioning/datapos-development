@@ -76,56 +76,56 @@ const buildContext_Prepare = async (path) => {
                     dimensionData.description = readMarkdownFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.en.md`);
                     const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
                     modelConfig.dimensions.push(dimensionConfig);
-                    console.log(1111, modelConfig);
                 }
-                //     const entityPaths = grunt.file.expand(`${itemPath}/entities/*.json`);
-                //     entityPaths.forEach((entityPath) => {
-                //         const entityPathSegments = entityPath.split('/');
-                //         const entityId = entityPathSegments[5].split('.')[0];
-                //         const entityData = readJSONFile(grunt, `${itemPath}/entities/${entityId}.json`);
-                //         entityData.description = readMarkdownFile(grunt, `${itemPath}/entities/${entityId}.en.md`);
-                //         const entityConfig = {
-                //             id: entityId,
-                //             label: entityData.label,
-                //             description: { en: entityData.description },
-                //             typeId: 'entity',
-                //             characteristics: [],
-                //             computations: [],
-                //             events: []
-                //         };
-                //         for (const characteristic of entityData.characteristics || []) {
-                //             const characteristicConfig = {
-                //                 entityTypeId: characteristic.entityTypeId,
-                //                 id: characteristic.id,
-                //                 label: characteristic.label,
-                //                 description: characteristic.description,
-                //                 typeId: 'characteristic',
-                //                 type: characteristic.type
-                //             };
-                //             entityConfig.characteristics.push(characteristicConfig);
-                //         }
-                //         for (const computation of entityData.computations || []) {
-                //             const computationConfig = {
-                //                 id: computation.id,
-                //                 label: computation.label,
-                //                 description: computation.description,
-                //                 typeId: 'computation',
-                //                 formula: computation.formula
-                //             };
-                //             entityConfig.computations.push(computationConfig);
-                //         }
-                //         for (const event of entityData.events || []) {
-                //             const eventConfig = {
-                //                 id: event.id,
-                //                 label: event.label,
-                //                 description: event.description,
-                //                 typeId: 'event'
-                //             };
-                //             entityConfig.events.push(eventConfig);
-                //         }
-                //         modelConfig.entities.push(entityConfig);
-                //     });
-                //     focusConfig.models.push(modelConfig);
+                const entityPaths = (await readDirectory(`${itemPath}/entities`)).filter((fn) => fn.endsWith('.json'));
+                for (const entityPath of entityPaths) {
+                    console.log('entityPath', entityPath);
+                    //         const entityPathSegments = entityPath.split('/');
+                    //         const entityId = entityPathSegments[5].split('.')[0];
+                    //         const entityData = readJSONFile(grunt, `${itemPath}/entities/${entityId}.json`);
+                    //         entityData.description = readMarkdownFile(grunt, `${itemPath}/entities/${entityId}.en.md`);
+                    //         const entityConfig = {
+                    //             id: entityId,
+                    //             label: entityData.label,
+                    //             description: { en: entityData.description },
+                    //             typeId: 'entity',
+                    //             characteristics: [],
+                    //             computations: [],
+                    //             events: []
+                    //         };
+                    //         for (const characteristic of entityData.characteristics || []) {
+                    //             const characteristicConfig = {
+                    //                 entityTypeId: characteristic.entityTypeId,
+                    //                 id: characteristic.id,
+                    //                 label: characteristic.label,
+                    //                 description: characteristic.description,
+                    //                 typeId: 'characteristic',
+                    //                 type: characteristic.type
+                    //             };
+                    //             entityConfig.characteristics.push(characteristicConfig);
+                    //         }
+                    //         for (const computation of entityData.computations || []) {
+                    //             const computationConfig = {
+                    //                 id: computation.id,
+                    //                 label: computation.label,
+                    //                 description: computation.description,
+                    //                 typeId: 'computation',
+                    //                 formula: computation.formula
+                    //             };
+                    //             entityConfig.computations.push(computationConfig);
+                    //         }
+                    //         for (const event of entityData.events || []) {
+                    //             const eventConfig = {
+                    //                 id: event.id,
+                    //                 label: event.label,
+                    //                 description: event.description,
+                    //                 typeId: 'event'
+                    //             };
+                    //             entityConfig.events.push(eventConfig);
+                    //         }
+                    //         modelConfig.entities.push(entityConfig);
+                }
+                focusConfig.models.push(modelConfig);
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
             }

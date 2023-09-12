@@ -76,6 +76,7 @@ const buildContext_Prepare = async (path) => {
                     dimensionData.description = readMarkdownFile(`${itemPath}/${modelId}/dimensions/${dimensionId}.en.md`);
                     const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
                     modelConfig.dimensions.push(dimensionConfig);
+                    console.log(1111, modelConfig);
                 }
                 //     const entityPaths = grunt.file.expand(`${itemPath}/entities/*.json`);
                 //     entityPaths.forEach((entityPath) => {
@@ -130,7 +131,6 @@ const buildContext_Prepare = async (path) => {
             }
         }
     }
-    console.log('modelConfig', modelConfig);
 };
 
 const buildContext_Output = () => {

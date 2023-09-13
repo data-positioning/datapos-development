@@ -4,7 +4,6 @@ const dotenv = require('dotenv');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs').promises;
 const path = require('path');
-const { errorMonitor } = require('events');
 
 let contextConfig;
 let focusConfig;

@@ -10,45 +10,16 @@ let focusConfig;
 let issueCount = 0;
 let modelConfig;
 
+// Helpers - Build Context
 async function buildContext() {
     const contextData = await fs.readFile('src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
     await buildContext_Prepare('src');
-    console.log('contextConfig', contextConfig);
     await buildContext_Output();
-    if (issueCount > 0) console.log(`WARNING: ${issueCount} issues(s) encountered.`);
+    if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
-const readDirectory = async (path) => {
-    try {
-        return await fs.readdir(`${path}`);
-    } catch (error) {
-        issueCount++;
-        console.log(`ERROR: Directory '${path}' not found or invalid.`);
-        return [];
-    }
-};
-
-const readJSONFile = async (path) => {
-    try {
-        return JSON.parse(await fs.readFile(path, 'utf8'));
-    } catch (error) {
-        issueCount++;
-        console.log(`ERROR: JSON file '${path}' not found or invalid.`);
-        return {};
-    }
-};
-
-const readMarkdownFile = async (path) => {
-    try {
-        return await fs.readFile(path, 'utf8');
-    } catch (error) {
-        issueCount++;
-        console.log(`ERROR: Markdown file '${path}' not found or invalid.`);
-        return '';
-    }
-};
-
+// Helpers - Build Context - Prepare
 const buildContext_Prepare = async (path) => {
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
@@ -59,30 +30,28 @@ const buildContext_Prepare = async (path) => {
             if (itemPathSegments.length === 2) {
                 const focusId = itemPathSegments[1];
                 const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                focusData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
+                focusData.description = await readTextFile(`${itemPath}/description.en.md`);
                 focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
                 contextConfig.focuses.push(focusConfig);
                 await buildContext_Prepare(itemPath);
             } else if (itemPathSegments.length === 3) {
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                modelData.description = await readMarkdownFile(`${itemPath}/description.en.md`);
+                modelData.description = await readTextFile(`${itemPath}/description.en.md`);
                 modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
                 const dimensionPaths = (await readDirectory(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
                 for (const dimensionPath of dimensionPaths) {
-                    console.log('dimensionPath', dimensionPath);
                     const dimensionId = dimensionPath.split('.')[0];
                     const dimensionData = readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
-                    dimensionData.description = readMarkdownFile(`${itemPath}/dimensions/${dimensionId}.en.md`);
+                    dimensionData.description = readTextFile(`${itemPath}/dimensions/${dimensionId}.en.md`);
                     const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
                     modelConfig.dimensions.push(dimensionConfig);
                 }
                 const entityPaths = (await readDirectory(`${itemPath}/entities`)).filter((fn) => fn.endsWith('.json'));
                 for (const entityPath of entityPaths) {
-                    console.log('entityPath', entityPath);
                     const entityId = entityPath.split('.')[0];
                     const entityData = readJSONFile(`${itemPath}/dimensions/${entityId}.json`);
-                    entityData.description = readMarkdownFile(`${itemPath}/dimensions/${entityId}.en.md`);
+                    entityData.description = readTextFile(`${itemPath}/dimensions/${entityId}.en.md`);
                     const entityConfig = {
                         id: entityId,
                         label: entityData.label,
@@ -132,6 +101,7 @@ const buildContext_Prepare = async (path) => {
     }
 };
 
+// Helpers - Build Context - Output
 const buildContext_Output = () => {
     const characteristics = [];
     const computations = [];
@@ -216,15 +186,8 @@ const buildContext_Output = () => {
     fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify(views));
 };
 
-async function bumpVersion() {
-    const packageData = await fs.readFile('package.json', 'utf8');
-    const packageJSON = JSON.parse(packageData);
-    const versionSegments = packageJSON.version.split('.');
-    packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-    fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
-}
-
-async function generateFileStoreIndex() {
+// Helpers - Build Resource Index
+async function buildResourceIndex(id) {
     async function readDirectoryRecursively(directoryPath, itemNames) {
         const items = [];
         index[directoryPath.substring(16)] = items;
@@ -242,24 +205,36 @@ async function generateFileStoreIndex() {
     }
 
     const index = {};
-    const toplevelChildren = await fs.readdir('public/fileStore/');
-    await readDirectoryRecursively('public/fileStore/', toplevelChildren);
-    fs.writeFile('./public/fileStoreIndex.json', JSON.stringify(index, undefined, 4), (error) => {
+    const toplevelChildren = await fs.readdir(`public/${id}/`);
+    await readDirectoryRecursively(`public/${id}/`, toplevelChildren);
+    fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index, undefined, 4), (error) => {
         if (error) return console.error(error);
     });
 }
 
+// Helpers - Bump Version
+async function bumpVersion() {
+    const packageData = await fs.readFile('package.json', 'utf8');
+    const packageJSON = JSON.parse(packageData);
+    const versionSegments = packageJSON.version.split('.');
+    packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+    fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
+}
+
+// Helpers -
 async function getBackendConfig() {
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
     fs.writeFile('src/config.json', JSON.stringify({ name: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }
 
+// Helpers -
 async function getWorkbenchConfig() {
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
     const engineVersion = packageJSON.dependencies['@datapos/datapos-engine'].substring(1);
     fs.writeFile('src/config.json', JSON.stringify({ engineVersion, version: packageJSON.version }, undefined, 4));
 }
 
+// Helpers - Sync with Github
 async function syncWithGitHub() {
     const packageData = await fs.readFile('package.json', 'utf8');
     const packageJSON = JSON.parse(packageData);
@@ -268,6 +243,7 @@ async function syncWithGitHub() {
     await exec('git push origin main:main');
 }
 
+// Helpers - Upload Connector
 async function uploadConnector() {
     const configJSON = JSON.parse(await fs.readFile('src/config.json', 'utf8'));
     const descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
@@ -293,6 +269,7 @@ async function uploadConnector() {
     if (!response.ok) throw new Error(await response.text());
 }
 
+// Helpers - Upload Context
 async function uploadContext() {
     const items = [];
     const itemNames = await fs.readdir('dist');
@@ -304,16 +281,48 @@ async function uploadContext() {
     }
 
     for (const item of items) {
-        console.log('ITEM', item.itemName, item.itemPath);
-        // const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
-        // const url = 'https://api-5ykjycpiha-ew.a.run.app/connectors/contexts';
-        // const response = await fetch(url, {
-        //     method: 'POST',
-        //     headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ name: item.itemName.slice(0, -5), config: data })
-        // });
-        // if (!response.ok) throw new Error(await response.text());
+        const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
+        const url = 'https://api-5ykjycpiha-ew.a.run.app/connectors/contexts';
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: item.itemName.slice(0, -5), config: data })
+        });
+        if (!response.ok) throw new Error(await response.text());
     }
 }
 
-module.exports = { buildContext, bumpVersion, generateFileStoreIndex, getBackendConfig, getWorkbenchConfig, syncWithGitHub, uploadConnector, uploadContext };
+// Utilities - Read Directory
+const readDirectory = async (path) => {
+    try {
+        return await fs.readdir(`${path}`);
+    } catch (error) {
+        issueCount++;
+        console.warn(`WARN: Directory '${path}' not found or invalid.`);
+        return [];
+    }
+};
+
+// Utilities - Read JSON File
+const readJSONFile = async (path) => {
+    try {
+        return JSON.parse(await fs.readFile(path, 'utf8'));
+    } catch (error) {
+        issueCount++;
+        console.warn(`WARN: JSON file '${path}' not found or invalid.`);
+        return {};
+    }
+};
+
+// Utilities - Read Text File
+const readTextFile = async (path) => {
+    try {
+        return await fs.readFile(path, 'utf8');
+    } catch (error) {
+        issueCount++;
+        console.warn(`WARN: Markdown file '${path}' not found or invalid.`);
+        return '';
+    }
+};
+
+module.exports = { buildContext, buildResourceIndex, bumpVersion, getBackendConfig, getWorkbenchConfig, syncWithGitHub, uploadConnector, uploadContext };

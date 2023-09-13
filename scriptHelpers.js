@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs').promises;
 const path = require('path');
+const { errorMonitor } = require('events');
 
 let contextConfig;
 let focusConfig;
@@ -276,6 +277,7 @@ async function uploadContext() {
     }
 
     for (const item of items) {
+        console.log('ITEM', item);
         const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
         const url = 'https://api-5ykjycpiha-ew.a.run.app/contexts';
         const response = await fetch(url, {
@@ -283,7 +285,13 @@ async function uploadContext() {
             headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: item.itemName.slice(0, -5), config: data })
         });
-        if (!response.ok) throw new Error(await response.text());
+        console.log(1111);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.log(2222, errorText);
+            throw new Error(errorText);
+        }
+        console.log(3333);
     }
 }
 

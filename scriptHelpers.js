@@ -259,8 +259,8 @@ async function uploadConnector() {
         formData.append(itemName, contentBlob, itemName);
     }
 
-    // TODO: Need to get 'api-5ykjycpiha-ew.a.run.app' or portion of it from token.
-    const url = 'https://api-5ykjycpiha-ew.a.run.app/connectors';
+    // TODO: Need to get 'api-dwizkzi4ga-ew.a.run.app' or portion of it from token.
+    const url = 'https://api-dwizkzi4ga-ew.a.run.app/connectors';
     const response = await fetch(url, { method: 'POST', headers: { Authorization: process.env.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
     if (!response.ok) throw new Error(await response.text());
 }
@@ -279,7 +279,7 @@ async function uploadContext() {
     for (const item of items) {
         console.log('ITEM', item);
         const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
-        const url = 'https://api-5ykjycpiha-ew.a.run.app/contexts';
+        const url = 'https://api-dwizkzi4ga-ew.a.run.app/contexts';
         const response = await fetch(url, {
             method: 'POST',
             headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },

@@ -277,7 +277,7 @@ async function uploadContext() {
 
     for (const item of items) {
         const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
-        const url = 'https://api-5ykjycpiha-ew.a.run.app/connectors/contexts';
+        const url = 'https://api-5ykjycpiha-ew.a.run.app/contexts';
         const response = await fetch(url, {
             method: 'POST',
             headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },

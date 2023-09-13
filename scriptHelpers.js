@@ -10,17 +10,25 @@ let focusConfig;
 let issueCount = 0;
 let modelConfig;
 
+// Helpers - Build Config
+async function buildConfig() {
+    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+    const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
+    const engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
+    fs.writeFile('src/config.json', JSON.stringify({ name: packageJSON.name, engineVersion, version: packageJSON.version }, undefined, 4));
+}
+
 // Helpers - Build Context
 async function buildContext() {
     const contextData = await fs.readFile('src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
-    await buildContext_Prepare('src');
-    await buildContext_Output();
+    await buildContext_PrepareContext('src');
+    await buildContext_OutputContext();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
-// Helpers - Build Context - Prepare
-const buildContext_Prepare = async (path) => {
+// Helpers - Build Context - Prepare Context
+const buildContext_PrepareContext = async (path) => {
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
@@ -33,7 +41,7 @@ const buildContext_Prepare = async (path) => {
                 focusData.description = await readTextFile(`${itemPath}/description.en.md`);
                 focusConfig = { id: focusId, label: focusData.label, description: { en: focusData.description }, typeId: 'focus', models: [] };
                 contextConfig.focuses.push(focusConfig);
-                await buildContext_Prepare(itemPath);
+                await buildContext_PrepareContext(itemPath);
             } else if (itemPathSegments.length === 3) {
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
@@ -101,8 +109,8 @@ const buildContext_Prepare = async (path) => {
     }
 };
 
-// Helpers - Build Context - Output
-const buildContext_Output = () => {
+// Helpers - Build Context - Output Context
+const buildContext_OutputContext = () => {
     const characteristics = [];
     const computations = [];
     const dimensions = [];
@@ -186,8 +194,8 @@ const buildContext_Output = () => {
     fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify(views));
 };
 
-// Helpers - Build Resource Index
-async function buildResourceIndex(id) {
+// Helpers - Build Public Directory Index
+async function buildPublicDirectoryIndex(id) {
     async function readDirectoryRecursively(directoryPath, itemNames) {
         const items = [];
         index[directoryPath.substring(16)] = items;
@@ -219,19 +227,6 @@ async function bumpVersion() {
     const versionSegments = packageJSON.version.split('.');
     packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
     fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
-}
-
-// Helpers -
-async function getBackendConfig() {
-    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
-    fs.writeFile('src/config.json', JSON.stringify({ name: packageJSON.name, version: packageJSON.version }, undefined, 4));
-}
-
-// Helpers -
-async function getWorkbenchConfig() {
-    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
-    const engineVersion = packageJSON.dependencies['@datapos/datapos-engine'].substring(1);
-    fs.writeFile('src/config.json', JSON.stringify({ engineVersion, version: packageJSON.version }, undefined, 4));
 }
 
 // Helpers - Sync with Github
@@ -325,4 +320,4 @@ const readTextFile = async (path) => {
     }
 };
 
-module.exports = { buildContext, buildResourceIndex, bumpVersion, getBackendConfig, getWorkbenchConfig, syncWithGitHub, uploadConnector, uploadContext };
+module.exports = { buildConfig, buildContext, buildPublicDirectoryIndex, bumpVersion, syncWithGitHub, uploadConnector, uploadContext };

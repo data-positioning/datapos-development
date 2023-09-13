@@ -277,7 +277,6 @@ async function uploadContext() {
     }
 
     for (const item of items) {
-        console.log('ITEM', item);
         const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
         const url = 'https://api-dwizkzi4ga-ew.a.run.app/contexts';
         const response = await fetch(url, {
@@ -285,13 +284,7 @@ async function uploadContext() {
             headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: item.itemName.slice(0, -5), config: data })
         });
-        console.log(1111);
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.log(2222, errorText);
-            throw new Error(errorText);
-        }
-        console.log(3333);
+        if (!response.ok) throw new Error(await response.text());
     }
 }
 

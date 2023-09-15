@@ -180,7 +180,7 @@ const buildContext_OutputContext = () => {
                 modelConfig.views.push(viewReference);
                 views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
             }
-            fs.writeFile(`dist/${modelId}.json`, JSON.stringify(modelId));
+            fs.writeFile(`dist/${modelId}.json`, JSON.stringify(modelConfig));
             const modelReference = { id: modelId, label: model.label };
             focusReference.models.push(modelReference);
             models.push({ ...modelReference, focusId: focusId, focusLabel: focus.label });

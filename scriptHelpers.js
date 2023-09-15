@@ -23,7 +23,7 @@ async function buildContext() {
     const contextData = await fs.readFile('src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
     await buildContext_PrepareContext('src');
-    await buildContext_OutputContext();
+    // await buildContext_OutputContext();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
@@ -47,7 +47,7 @@ const buildContext_PrepareContext = async (path) => {
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 modelData.description = await readTextFile(`${itemPath}/description.en.md`);
                 modelConfig = { id: modelId, label: modelData.label, description: { en: modelData.description }, typeId: 'model', dimensions: [], entities: [], views: [] };
-                const dimensionPaths = (await readDirectory(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
+                const dimensionPaths = (await listDirectoryItems(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
                 for (const dimensionPath of dimensionPaths) {
                     const dimensionId = dimensionPath.split('.')[0];
                     const dimensionData = readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
@@ -55,7 +55,7 @@ const buildContext_PrepareContext = async (path) => {
                     const dimensionConfig = { id: dimensionId, label: dimensionData.label, description: { en: dimensionData.description }, typeId: 'dimension', levels: [] };
                     modelConfig.dimensions.push(dimensionConfig);
                 }
-                const entityPaths = (await readDirectory(`${itemPath}/entities`)).filter((fn) => fn.endsWith('.json'));
+                const entityPaths = (await listDirectoryItems(`${itemPath}/entities`)).filter((fn) => fn.endsWith('.json'));
                 for (const entityPath of entityPaths) {
                     const entityId = entityPath.split('.')[0];
                     const entityData = readJSONFile(`${itemPath}/dimensions/${entityId}.json`);
@@ -118,6 +118,8 @@ const buildContext_OutputContext = () => {
     const events = [];
     const models = [];
     const views = [];
+
+    clearDirectory('dist');
 
     const context = { id: 'datapos-context-default', label: contextConfig.label, typeId: contextConfig.typeId, focuses: [] };
     for (const focus of contextConfig.focuses) {
@@ -196,7 +198,7 @@ const buildContext_OutputContext = () => {
 
 // Helpers - Build Public Directory Index
 async function buildPublicDirectoryIndex(id) {
-    async function readDirectoryRecursively(directoryPath, itemNames) {
+    async function listDirectoryItemsRecursively(directoryPath, itemNames) {
         const items = [];
         index[directoryPath.substring(16)] = items;
         for (const itemName of itemNames) {
@@ -205,7 +207,7 @@ async function buildPublicDirectoryIndex(id) {
             if (stats.isDirectory()) {
                 const nextLevelChildren = await fs.readdir(itemPath);
                 items.push({ childCount: nextLevelChildren.length, itemName, typeId: 'folder' });
-                await readDirectoryRecursively(itemPath, nextLevelChildren);
+                await listDirectoryItemsRecursively(itemPath, nextLevelChildren);
             } else {
                 items.push({ lastModifiedAt: stats.mtimeMs, itemName, size: stats.size, typeId: 'object' });
             }
@@ -214,7 +216,7 @@ async function buildPublicDirectoryIndex(id) {
 
     const index = {};
     const toplevelChildren = await fs.readdir(`public/${id}/`);
-    await readDirectoryRecursively(`public/${id}/`, toplevelChildren);
+    await listDirectoryItemsRecursively(`public/${id}/`, toplevelChildren);
     fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index, undefined, 4), (error) => {
         if (error) return console.error(error);
     });
@@ -287,8 +289,21 @@ async function uploadContext() {
     }
 }
 
-// Utilities - Read Directory
-const readDirectory = async (path) => {
+// Utilities - Clear Directory
+const clearDirectory = async (path) => {
+    try {
+        for (const fileName of await fs.readdir(path)) {
+            await fs.unlink(`${path}/${fileName}`);
+        }
+    } catch (error) {
+        issueCount++;
+        console.warn(`WARN: Directory '${path}' not found or invalid.`);
+        return [];
+    }
+};
+
+// Utilities - List Directory Items
+const listDirectoryItems = async (path) => {
     try {
         return await fs.readdir(`${path}`);
     } catch (error) {

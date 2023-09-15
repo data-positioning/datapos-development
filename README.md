@@ -30,9 +30,9 @@ The 'scriptHelpers.js' file exports the following helper functions.
 | UploadConnector           |       |
 | UploadContext             |       |
 
-## Common Repository Management Commands
+## Repository Management Commands
 
-The following list details the common repository management commands implementation by this project. For more details, please refer to the scripts section of the 'package.json' file in this project.
+The following list details the repository management commands implementation by this project. For more details, please refer to the scripts section of the 'package.json' file in this project.
 
 | Name               | Key Code         | Notes                                                                                                                                                                                                                                                                              |
 | ------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

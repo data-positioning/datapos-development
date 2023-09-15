@@ -2,7 +2,7 @@
     "name": "@datapos/datapos-operations",
     "license": "ISC",
     "private": false,
-    "version": "0.1.308",
+    "version": "0.1.309",
     "dependencies": {
         "dotenv": "^16.3.1"
     },
@@ -15,7 +15,7 @@
         "build": "echo \"***** BUILD SCRIPT NOT IMPLEMENTED. *****\"",
         "bumpVersion": "node -e \"require('./scriptHelpers').bumpVersion()\"",
         "check": "npm outdated",
-        "document": "npx license-checker --production --json --out LICENSES.json",
+        "document": "npx npm-license-crawler --onlyDirectDependencies --production --relativeLicensePath --json LICENSES.json",
         "format": "prettier --write *.js",
         "lint": "npx eslint *.js",
         "publishToNPM": "npm publish",

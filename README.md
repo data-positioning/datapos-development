@@ -10,11 +10,7 @@ npm install --save-dev @datapos-operations
 
 ## Helpers
 
-The 'commonHelpers.js' file includes helper functions that implement common tasks.
-
-The 'connectorHelpers.js' file includes helper functions for uploading compiled connectors to the Data Positioning platform. All connector projects install the packaged release of this project as a development dependency and implement the 'uploadConnector' helper function package.json scripts.
-
-The 'contextHelpers.js' ...
+The 'scriptHelpers.js' file exports the following helper functions.
 
 | Name                      | Notes |
 | ------------------------- | ----- |
@@ -36,7 +32,7 @@ The following list details the repository management commands implementation by 
 | build              | alt+ctrl+shift+b | NOT implemented.                                                                                                                                                                                            |
 | check              | alt+ctrl+shift+c | List the dependencies in the project that are outdated.                                                                                                                                                     |
 | document           | alt+ctrl+shift+d | Identify the licenses of the project's dependencies.                                                                                                                                                        |
-| format             | alt+ctrl+shift+f | NOT implemented.                                                                                                                                                                                            |
+| format             | alt+ctrl+shift+f | Format the code.                                                                                                                                                                                            |
 | lint               | alt+ctrl+shift+l | Check the code for potential errors and enforces coding styles.                                                                                                                                             |
 | publishToNPM       | alt+ctrl+shift+n | Publishes the package to the [npm](https://www.npmjs.com/) registry. This action will publish the last synchronised version. Use the command line command 'npm publish' when publishing for the first time. |
 | release            | alt+ctrl+shift+r | Synchronise the local repository with the main GitHub repository and publish the package to the [npm](https://www.npmjs.com/) registry.                                                                     |

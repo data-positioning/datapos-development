@@ -110,7 +110,7 @@ const buildContext_PrepareContext = async (path) => {
 };
 
 // Helpers - Build Context - Output Context
-const buildContext_OutputContext = () => {
+const buildContext_OutputContext = async () => {
     const characteristics = [];
     const computations = [];
     const dimensions = [];
@@ -119,7 +119,7 @@ const buildContext_OutputContext = () => {
     const models = [];
     const views = [];
 
-    clearDirectory('dist');
+    await clearDirectory('dist');
 
     const context = { id: 'datapos-context-default', label: contextConfig.label, typeId: contextConfig.typeId, focuses: [] };
     for (const focus of contextConfig.focuses) {

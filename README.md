@@ -2,17 +2,29 @@
 
 A Javascript library of functions used to manage Datapos repositories.
 
+## Installation
+
+```
+npm install --save-dev @datapos-operations
+```
+
+## Helpers
+
 The 'commonHelpers.js' file includes helper functions that implement common tasks.
 
 The 'connectorHelpers.js' file includes helper functions for uploading compiled connectors to the Data Positioning platform. All connector projects install the packaged release of this project as a development dependency and implement the 'uploadConnector' helper function package.json scripts.
 
 The 'contextHelpers.js' ...
 
-## Installation
-
-```
-npm install --save-dev @datapos-operations
-```
+| Name                      | Notes |
+| ------------------------- | ----- |
+| buildConfig               |       |
+| buildContext              |       |
+| buildPublicDirectoryIndex |       |
+| bumpVersion               |       |
+| syncWithGitHub            |       |
+| UploadConnector           |       |
+| UploadContext             |       |
 
 ## Repository Management Commands
 

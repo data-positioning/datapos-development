@@ -1,7 +1,11 @@
 {
-    "env": { "browser": true, "node": true, "es2022": true },
+    "env": {
+        "node": true
+    },
     "extends": ["eslint:recommended"],
-    "root": true,
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
     "rules": {
         "no-empty": "warn",
         "no-unused-vars": "warn",

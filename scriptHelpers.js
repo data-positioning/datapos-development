@@ -23,9 +23,7 @@ async function buildContext() {
     const contextData = await fs.readFile('src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
     await buildContext_PrepareContext('src');
-    clearDirectory('dist');
-
-    // await buildContext_OutputContext();
+    await buildContext_OutputContext();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
@@ -292,15 +290,15 @@ async function uploadContext() {
 }
 
 // Utilities - Clear Directory
-const clearDirectory = async (path) => {
-    try {
-        for (const fileName of await fs.readdir(path)) {
-            await fs.unlink(`${path}/${fileName}`);
+const clearDirectory = async (directoryPath) => {
+    for (const itemName of await fs.readdir(directoryPath)) {
+        const itemPath = `${directoryPath}/${itemName}`;
+        const stats = await fs.stat(itemPath);
+        if (stats.isDirectory()) {
+            await fs.rmdir(itemPath);
+        } else {
+            await fs.unlink(itemPath);
         }
-    } catch (error) {
-        issueCount++;
-        console.warn(`WARN: Directory '${path}' not found or invalid.`);
-        return [];
     }
 };
 

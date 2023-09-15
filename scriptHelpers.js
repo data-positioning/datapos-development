@@ -23,6 +23,8 @@ async function buildContext() {
     const contextData = await fs.readFile('src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
     await buildContext_PrepareContext('src');
+    clearDirectory('dist');
+
     // await buildContext_OutputContext();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }

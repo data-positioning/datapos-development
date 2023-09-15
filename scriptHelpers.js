@@ -193,6 +193,9 @@ const buildContext_OutputContext = async () => {
     fs.writeFile('dist/datapos-context-default-models.json', JSON.stringify(models));
     fs.writeFile('dist/datapos-context-default-dimensions.json', JSON.stringify(dimensions));
     fs.writeFile('dist/datapos-context-default-entities.json', JSON.stringify(entities));
+    fs.writeFile('dist/datapos-context-default-characteristics.json', JSON.stringify(characteristics));
+    fs.writeFile('dist/datapos-context-default-computations.json', JSON.stringify(computations));
+    fs.writeFile('dist/datapos-context-default-events.json', JSON.stringify(events));
     fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify(views));
 };
 

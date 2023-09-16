@@ -1,13 +1,9 @@
 {
-  "@datapos/datapos-operations@0.1.306": {
-    "licenses": "ISC",
-    "path": "/Users/jonathanterrell/Data Positioning/GitHub/data-positioning/datapos-operations",
-    "licenseFile": "/Users/jonathanterrell/Data Positioning/GitHub/data-positioning/datapos-operations/LICENSE.md"
-  },
-  "dotenv@16.3.1": {
-    "licenses": "BSD-2-Clause",
-    "repository": "https://github.com/motdotla/dotenv",
-    "path": "/Users/jonathanterrell/Data Positioning/GitHub/data-positioning/datapos-operations/node_modules/dotenv",
-    "licenseFile": "/Users/jonathanterrell/Data Positioning/GitHub/data-positioning/datapos-operations/node_modules/dotenv/LICENSE"
-  }
+    "dotenv@16.3.1": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/motdotla/dotenv",
+        "licenseFile": "node_modules/dotenv/LICENSE",
+        "licenseUrl": "https://github.com/motdotla/dotenv/raw/master/LICENSE",
+        "parents": "@datapos/datapos-operations"
+    }
 }

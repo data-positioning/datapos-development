@@ -10,11 +10,7 @@ npm install --save-dev @datapos-operations
 
 ## Production Dependencies
 
-The following packages are included in the production release. Please refer to 'package.json' and 'LICENSES.json' for version and license details.
-
-| Name   | References                                                                               |
-| ------ | ---------------------------------------------------------------------------------------- |
-| dotenv | [GitHub](https://github.com/motdotla/dotenv) [NPM](https://www.npmjs.com/package/dotenv) |
+There is no production release.
 
 ## Helpers
 

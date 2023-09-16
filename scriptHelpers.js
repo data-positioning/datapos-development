@@ -44,7 +44,7 @@ const buildContext_PrepareContext = async (path) => {
                 focusConfig = {
                     id: focusId,
                     label: focusData.label,
-                    description: { en: markdownIt.render(focusData.description) },
+                    description: { en: markdownIt.render(focusData.description || '') },
                     typeId: 'focus',
                     models: []
                 };

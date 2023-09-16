@@ -82,6 +82,7 @@ const buildContext_PrepareContext = async (path) => {
                     const entityId = entityPath.split('.')[0];
                     const entityData = await readJSONFile(`${itemPath}/entities/${entityId}.json`);
                     entityData.description = await readTextFile(`${itemPath}/entities/${entityId}.en.md`);
+                    console.log('entityConfig', entityData);
                     const entityConfig = {
                         id: entityId,
                         label: entityData.label || { en: entityId },

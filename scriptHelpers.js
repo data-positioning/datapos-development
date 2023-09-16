@@ -40,11 +40,11 @@ const buildContext_PrepareContext = async (path) => {
             if (itemPathSegments.length === 2) {
                 const focusId = itemPathSegments[1];
                 const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                focusData.description = await readTextFile(`${itemPath}/description.en.md`);
+                focusData.description.en = await readTextFile(`${itemPath}/description.en.md`);
                 focusConfig = {
                     id: focusId,
                     label: focusData.label || { en: focusId },
-                    description: { en: markdownIt.render(focusData.description || '') },
+                    description: { en: markdownIt.render(focusData.description.en || '') },
                     typeId: 'focus',
                     models: []
                 };
@@ -53,11 +53,11 @@ const buildContext_PrepareContext = async (path) => {
             } else if (itemPathSegments.length === 3) {
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                modelData.description = await readTextFile(`${itemPath}/description.en.md`);
+                modelData.description.en = await readTextFile(`${itemPath}/description.en.md`);
                 modelConfig = {
                     id: modelId,
                     label: modelData.label || { en: modelId },
-                    description: { en: markdownIt.render(modelData.description || '') },
+                    description: { en: markdownIt.render(modelData.description.en || '') },
                     typeId: 'model',
                     dimensions: [],
                     entities: [],
@@ -71,7 +71,7 @@ const buildContext_PrepareContext = async (path) => {
                     const dimensionConfig = {
                         id: dimensionId,
                         label: dimensionData.label || { en: dimensionId },
-                        description: { en: markdownIt.render(dimensionData.description || '') },
+                        description: { en: markdownIt.render(dimensionData.description.en || '') },
                         typeId: 'dimension',
                         levels: []
                     };
@@ -81,12 +81,12 @@ const buildContext_PrepareContext = async (path) => {
                 for (const entityPath of entityPaths) {
                     const entityId = entityPath.split('.')[0];
                     const entityData = await readJSONFile(`${itemPath}/entities/${entityId}.json`);
-                    entityData.description = await readTextFile(`${itemPath}/entities/${entityId}.en.md`);
+                    entityData.description.en = await readTextFile(`${itemPath}/entities/${entityId}.en.md`);
                     console.log('entityConfig', entityData);
                     const entityConfig = {
                         id: entityId,
                         label: entityData.label || { en: entityId },
-                        description: { en: markdownIt.render(entityData.description || '') },
+                        description: { en: markdownIt.render(entityData.description.en || '') },
                         typeId: 'entity',
                         characteristics: [],
                         computations: [],
@@ -98,7 +98,7 @@ const buildContext_PrepareContext = async (path) => {
                             entityTypeId: characteristic.entityTypeId,
                             id: characteristic.id,
                             label: characteristic.label || { en: characteristic.id },
-                            description: { en: markdownIt.render(characteristic.description || '') },
+                            description: { en: markdownIt.render(characteristic.description.en || '') },
                             typeId: 'characteristic',
                             type: characteristic.type
                         };
@@ -109,7 +109,7 @@ const buildContext_PrepareContext = async (path) => {
                         const computationConfig = {
                             id: computation.id,
                             label: computation.label || { en: computation.id },
-                            description: { en: markdownIt.render(computation.description || '') },
+                            description: { en: markdownIt.render(computation.description.en || '') },
                             typeId: 'computation',
                             formula: computation.formula
                         };
@@ -120,7 +120,7 @@ const buildContext_PrepareContext = async (path) => {
                         const eventConfig = {
                             id: event.id,
                             label: event.label || { en: event.id },
-                            description: { en: markdownIt.render(event.description || '') },
+                            description: { en: markdownIt.render(event.description.en || '') },
                             typeId: 'event'
                         };
                         entityConfig.events.push(eventConfig);

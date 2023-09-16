@@ -82,7 +82,6 @@ const buildContext_PrepareContext = async (path) => {
                     const entityId = entityPath.split('.')[0];
                     const entityData = await readJSONFile(`${itemPath}/entities/${entityId}.json`);
                     entityData.description = { en: await readTextFile(`${itemPath}/entities/${entityId}.en.md`) };
-                    console.log('entityConfig', entityData);
                     const entityConfig = {
                         id: entityId,
                         label: entityData.label || { en: entityId },
@@ -93,7 +92,6 @@ const buildContext_PrepareContext = async (path) => {
                         events: []
                     };
                     for (const characteristic of entityData.characteristics || []) {
-                        console.log('characteristic', characteristic);
                         const characteristicConfig = {
                             entityTypeId: characteristic.entityTypeId,
                             id: characteristic.id,
@@ -105,7 +103,6 @@ const buildContext_PrepareContext = async (path) => {
                         entityConfig.characteristics.push(characteristicConfig);
                     }
                     for (const computation of entityData.computations || []) {
-                        console.log('computation', computation);
                         const computationConfig = {
                             id: computation.id,
                             label: computation.label || { en: computation.id },
@@ -116,7 +113,6 @@ const buildContext_PrepareContext = async (path) => {
                         entityConfig.computations.push(computationConfig);
                     }
                     for (const event of entityData.events || []) {
-                        console.log('event', event);
                         const eventConfig = {
                             id: event.id,
                             label: event.label || { en: event.id },
@@ -125,11 +121,9 @@ const buildContext_PrepareContext = async (path) => {
                         };
                         entityConfig.events.push(eventConfig);
                     }
-                    console.log(8888);
                     modelConfig.entities.push(entityConfig);
                 }
                 focusConfig.models.push(modelConfig);
-                console.log(9999);
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
             }

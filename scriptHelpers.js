@@ -41,7 +41,6 @@ const buildContext_PrepareContext = async (path) => {
                 const focusId = itemPathSegments[1];
                 const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 focusData.description = await readTextFile(`${itemPath}/description.en.md`);
-                console.log(1111, focusData.description);
                 focusConfig = {
                     id: focusId,
                     label: focusData.label,
@@ -55,7 +54,6 @@ const buildContext_PrepareContext = async (path) => {
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 modelData.description = await readTextFile(`${itemPath}/description.en.md`);
-                console.log(2222, modelData.description);
                 modelConfig = {
                     id: modelId,
                     label: modelData.label,
@@ -70,7 +68,6 @@ const buildContext_PrepareContext = async (path) => {
                     const dimensionId = dimensionPath.split('.')[0];
                     const dimensionData = await readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
                     dimensionData.description = await readTextFile(`${itemPath}/dimensions/${dimensionId}.en.md`);
-                    console.log(3333, dimensionData.description);
                     const dimensionConfig = {
                         id: dimensionId,
                         label: dimensionData.label,
@@ -85,7 +82,6 @@ const buildContext_PrepareContext = async (path) => {
                     const entityId = entityPath.split('.')[0];
                     const entityData = await readJSONFile(`${itemPath}/dimensions/${entityId}.json`);
                     entityData.description = await readTextFile(`${itemPath}/dimensions/${entityId}.en.md`);
-                    console.log(4444, entityData.description);
                     const entityConfig = {
                         id: entityId,
                         label: entityData.label,
@@ -96,7 +92,6 @@ const buildContext_PrepareContext = async (path) => {
                         events: []
                     };
                     for (const characteristic of entityData.characteristics || []) {
-                        console.log(5555, characteristic.description);
                         const characteristicConfig = {
                             entityTypeId: characteristic.entityTypeId,
                             id: characteristic.id,
@@ -108,7 +103,6 @@ const buildContext_PrepareContext = async (path) => {
                         entityConfig.characteristics.push(characteristicConfig);
                     }
                     for (const computation of entityData.computations || []) {
-                        console.log(7777, computation.description);
                         const computationConfig = {
                             id: computation.id,
                             label: computation.label,
@@ -119,7 +113,6 @@ const buildContext_PrepareContext = async (path) => {
                         entityConfig.computations.push(computationConfig);
                     }
                     for (const event of entityData.events || []) {
-                        console.log(8888, event.description);
                         const eventConfig = {
                             id: event.id,
                             label: event.label,

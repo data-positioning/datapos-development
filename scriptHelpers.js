@@ -57,7 +57,7 @@ const buildContext_PrepareContext = async (path) => {
                 modelConfig = {
                     id: modelId,
                     label: modelData.label,
-                    description: { en: markdownIt.render(modelData.description) },
+                    description: { en: markdownIt.render(modelData.description || '') },
                     typeId: 'model',
                     dimensions: [],
                     entities: [],
@@ -71,7 +71,7 @@ const buildContext_PrepareContext = async (path) => {
                     const dimensionConfig = {
                         id: dimensionId,
                         label: dimensionData.label,
-                        description: { en: markdownIt.render(dimensionData.description) },
+                        description: { en: markdownIt.render(dimensionData.description || '') },
                         typeId: 'dimension',
                         levels: []
                     };
@@ -85,7 +85,7 @@ const buildContext_PrepareContext = async (path) => {
                     const entityConfig = {
                         id: entityId,
                         label: entityData.label,
-                        description: { en: markdownIt.render(entityData.description) },
+                        description: { en: markdownIt.render(entityData.description || '') },
                         typeId: 'entity',
                         characteristics: [],
                         computations: [],
@@ -96,7 +96,7 @@ const buildContext_PrepareContext = async (path) => {
                             entityTypeId: characteristic.entityTypeId,
                             id: characteristic.id,
                             label: characteristic.label,
-                            description: { en: markdownIt.render(characteristic.description) },
+                            description: { en: markdownIt.render(characteristic.description || '') },
                             typeId: 'characteristic',
                             type: characteristic.type
                         };
@@ -106,7 +106,7 @@ const buildContext_PrepareContext = async (path) => {
                         const computationConfig = {
                             id: computation.id,
                             label: computation.label,
-                            description: { en: markdownIt.render(computation.description) },
+                            description: { en: markdownIt.render(computation.description || '') },
                             typeId: 'computation',
                             formula: computation.formula
                         };
@@ -116,7 +116,7 @@ const buildContext_PrepareContext = async (path) => {
                         const eventConfig = {
                             id: event.id,
                             label: event.label,
-                            description: { en: markdownIt.render(event.description) },
+                            description: { en: markdownIt.render(event.description || '') },
                             typeId: 'event'
                         };
                         entityConfig.events.push(eventConfig);

@@ -49,3 +49,20 @@ The following list details the repository management commands implementation by 
 | syncWithGitHub     | alt+ctrl+shift+s | Synchronise the local repository with the main GitHub repository.                                                                                                                                                                                                                  |
 | test               | alt+ctrl+shift+l | NOT implemented.                                                                                                                                                                                                                                                                   |
 | updateDependencies | alt+ctrl+shift+l | NOT implemented.                                                                                                                                                                                                                                                                   |
+
+## The 'cors.json' File
+
+Set CORS Policy on Firebase Storage Bucket (No-longer publishing to Firebase Storage)
+
+See: https://firebase.google.com/docs/storage/web/download-files#cors_configuration
+See: https://stackoverflow.com/questions/37760695/firebase-storage-and-access-control-allow-origin/37765371
+
+```
+gsutil cors set cors.json gs://datapos-prod.appspot.com
+```
+
+To list:
+
+```
+gsutil cors get gs://datapos-prod.appspot.com
+```

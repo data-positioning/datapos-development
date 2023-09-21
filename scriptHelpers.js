@@ -223,25 +223,25 @@ const buildContext_OutputContext = async () => {
 
 // Helpers - Build Public Directory Index
 async function buildPublicDirectoryIndex(id) {
-    async function listDirectoryItemsRecursively(directoryPath, itemNames) {
-        const items = [];
-        index[directoryPath.substring(16)] = items;
-        for (const itemName of itemNames) {
-            const itemPath = path.join(directoryPath, itemName);
+    async function listDirectoryEntriesRecursively(directoryPath, names) {
+        const entries = [];
+        index[directoryPath.substring(16)] = entries;
+        for (const name of names) {
+            const itemPath = path.join(directoryPath, name);
             const stats = await fs.stat(itemPath);
             if (stats.isDirectory()) {
                 const nextLevelChildren = await fs.readdir(itemPath);
-                items.push({ childCount: nextLevelChildren.length, itemName, typeId: 'folder' });
-                await listDirectoryItemsRecursively(itemPath, nextLevelChildren);
+                entries.push({ childCount: nextLevelChildren.length, name, typeId: 'folder' });
+                await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
             } else {
-                items.push({ lastModifiedAt: stats.mtimeMs, itemName, size: stats.size, typeId: 'object' });
+                entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
             }
         }
     }
 
     const index = {};
-    const toplevelChildren = await fs.readdir(`public/${id}/`);
-    await listDirectoryItemsRecursively(`public/${id}/`, toplevelChildren);
+    const toplevelNames = await fs.readdir(`public/${id}/`);
+    await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
     fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index, undefined, 4), (error) => {
         if (error) return console.error(error);
     });

@@ -242,7 +242,7 @@ async function buildPublicDirectoryIndex(id) {
     const index = {};
     const toplevelNames = await fs.readdir(`public/${id}/`);
     await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
-    fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index, undefined, 4), (error) => {
+    fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
         if (error) return console.error(error);
     });
 }

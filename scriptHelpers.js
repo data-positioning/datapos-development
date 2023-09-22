@@ -63,7 +63,7 @@ const buildContext_PrepareContext = async (path) => {
                     entities: [],
                     views: []
                 };
-                const dimensionPaths = (await listDirectoryItems(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
+                const dimensionPaths = (await listDirectoryEntries(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
                 for (const dimensionPath of dimensionPaths) {
                     const dimensionId = dimensionPath.split('.')[0];
                     const dimensionData = await readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
@@ -77,7 +77,7 @@ const buildContext_PrepareContext = async (path) => {
                     };
                     modelConfig.dimensions.push(dimensionConfig);
                 }
-                const entityPaths = (await listDirectoryItems(`${itemPath}/entities`)).filter((fn) => fn.endsWith('.json'));
+                const entityPaths = (await listDirectoryEntries(`${itemPath}/entities`)).filter((fn) => fn.endsWith('.json'));
                 for (const entityPath of entityPaths) {
                     const entityId = entityPath.split('.')[0];
                     const entityData = await readJSONFile(`${itemPath}/entities/${entityId}.json`);
@@ -327,8 +327,8 @@ const clearDirectory = async (directoryPath) => {
     }
 };
 
-// Utilities - List Directory Items
-const listDirectoryItems = async (path) => {
+// Utilities - List Directory Entries
+const listDirectoryEntries = async (path) => {
     try {
         return await fs.readdir(`${path}`);
     } catch (error) {

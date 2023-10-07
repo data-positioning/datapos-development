@@ -1,17 +1,20 @@
-const util = require('util');
-
+// Dependencies
 const dotenv = require('dotenv');
-const exec = util.promisify(require('child_process').exec);
 const fs = require('fs').promises;
 const MarkdownIt = require('markdown-it');
 const path = require('path');
 
+// Dependencies - Promisify Exec
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
+
+// Module Variables
 let contextConfig;
 let focusConfig;
 let issueCount = 0;
 let modelConfig;
 
-// Helpers - Build Config
+// Helpers - Build Configuration
 async function buildConfig() {
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
     const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
@@ -363,4 +366,5 @@ const readTextFile = async (path) => {
 // Utilities - Render Markdown
 const renderMarkdown = (markdownIt, content) => (content && content.en ? markdownIt.render(content.en) : '');
 
+/// Exports
 module.exports = { buildConfig, buildContext, buildPublicDirectoryIndex, bumpVersion, syncWithGitHub, uploadConnector, uploadContext };

@@ -230,8 +230,9 @@ const buildContext_OutputContext = async () => {
 // Helpers - Build Presentations
 async function buildPresentations() {
     const presentationsData = await fs.readFile('src/data.json', 'utf8');
-    console.log(1111, presentationsData);
+    console.log(1111, presentationsData, presentationsData.label);
     presentationsConfig = { label: presentationsData.label, focuses: [] };
+    console.log(2222, JSON.stringify(presentationsConfig));
     await buildPresentations_PreparePresentations('src');
     await buildPresentations_OutputPresentations();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
@@ -270,7 +271,7 @@ const buildPresentations_PreparePresentations = async (path) => {
                 focusConfig.children.push(focusLevel1Config);
                 await buildPresentations_PreparePresentations(itemPath);
             } else if (itemPathSegments.length === 4) {
-                const focusLevel3Id = itemPathSegments[2];
+                const focusLevel3Id = itemPathSegments[3];
                 const focusLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 console.log('LEVEL 3', focusLevel3Id, focusLevel3Data);
                 focusLevel2Config = {

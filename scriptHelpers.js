@@ -230,7 +230,8 @@ const buildContext_OutputContext = async () => {
 // Helpers - Build Presentations
 async function buildPresentations() {
     const presentationsData = await fs.readFile('src/data.json', 'utf8');
-    presentationsConfig = { label: presentationsData.label, typeId: 'presentation', focuses: [] };
+    console.log(1111, presentationsData);
+    presentationsConfig = { label: presentationsData.label, focuses: [] };
     await buildPresentations_PreparePresentations('src');
     await buildPresentations_OutputPresentations();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);

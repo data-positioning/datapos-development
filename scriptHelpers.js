@@ -229,7 +229,7 @@ const buildContext_OutputContext = async () => {
 
 // Helpers - Build Presentations
 async function buildPresentations() {
-    const presentationsData = await fs.readFile('src/data.json', 'utf8');
+    const presentationsData = await readJSONFile('src/data.json', 'utf8');
     console.log(1111, presentationsData, presentationsData.label);
     presentationsConfig = { label: presentationsData.label, focuses: [] };
     console.log(2222, JSON.stringify(presentationsConfig));

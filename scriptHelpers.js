@@ -243,14 +243,19 @@ const buildPresentations_PreparePresentations = async (path) => {
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
             if (itemPathSegments.length === 2) {
-                const focusId = itemPathSegments[1];
-                const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                console.log('FOCUS', focusId, focusData);
+                const level1Id = itemPathSegments[1];
+                const level1Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                console.log('LEVEL 1', level1Id, level1Data);
                 await buildPresentations_PreparePresentations(itemPath);
             } else if (itemPathSegments.length === 3) {
-                const modelId = itemPathSegments[2];
-                const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                console.log('MODEL', modelId, modelData);
+                const level2Id = itemPathSegments[2];
+                const level2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                console.log('LEVEL 2', level2Id, level2Data);
+                await buildPresentations_PreparePresentations(itemPath);
+            } else if (itemPathSegments.length === 4) {
+                const level3Id = itemPathSegments[2];
+                const level3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                console.log('LEVEL 3', level3Id, level3Data);
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
             }

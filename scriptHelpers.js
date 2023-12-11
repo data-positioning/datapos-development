@@ -280,6 +280,7 @@ const buildPresentations_PreparePresentations = async (path) => {
                 for (const presentationPath of presentationPaths) {
                     console.log('presentationPath', presentationPath);
                     const presentationId = presentationPath;
+                    console.log('presentationId', presentationId);
                     const presentationData = await readJSONFile(presentationPath, 'utf8');
                     console.log('presentationData', presentationData);
                     focusLevel2Config.presentations.push({ id: presentationId, data: presentationData });

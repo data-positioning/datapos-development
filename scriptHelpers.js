@@ -27,7 +27,7 @@ async function buildConfig(env) {
 
 // Helpers - Build Context
 async function buildContext() {
-    const contextData = await fs.readFile('src/data.json', 'utf8');
+    const contextData = await readJSONFile('src/data.json', 'utf8');
     contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
     await buildContext_PrepareContext('src');
     await buildContext_OutputContext();
@@ -230,9 +230,7 @@ const buildContext_OutputContext = async () => {
 // Helpers - Build Presentations
 async function buildPresentations() {
     const presentationsData = await readJSONFile('src/data.json', 'utf8');
-    console.log(1111, presentationsData, presentationsData.label);
     presentationsConfig = { label: presentationsData.label, focuses: [] };
-    console.log(2222, JSON.stringify(presentationsConfig));
     await buildPresentations_PreparePresentations('src');
     await buildPresentations_OutputPresentations();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
@@ -251,37 +249,41 @@ const buildPresentations_PreparePresentations = async (path) => {
             if (itemPathSegments.length === 2) {
                 const focusId = itemPathSegments[1];
                 const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                console.log('FOCUS 1', focusId, focusData);
                 focusConfig = {
                     id: focusId,
                     label: focusData.label || { en: focusId },
-                    children: []
+                    folders: []
                 };
                 presentationsConfig.focuses.push(focusConfig);
                 await buildPresentations_PreparePresentations(itemPath);
             } else if (itemPathSegments.length === 3) {
                 const focusLevel2Id = itemPathSegments[2];
                 const focusLevel2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                console.log('LEVEL 2', focusLevel2Id, focusLevel2Data);
                 focusLevel1Config = {
                     id: focusLevel2Id,
                     label: focusLevel2Data.label || { en: focusLevel2Id },
-                    children: []
+                    folders: []
                 };
-                focusConfig.children.push(focusLevel1Config);
+                focusConfig.folders.push(focusLevel1Config);
                 await buildPresentations_PreparePresentations(itemPath);
             } else if (itemPathSegments.length === 4) {
                 const focusLevel3Id = itemPathSegments[3];
                 const focusLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                console.log('LEVEL 3', focusLevel3Id, focusLevel3Data);
                 focusLevel2Config = {
                     id: focusLevel3Id,
                     label: focusLevel3Data.label || { en: focusLevel3Id },
-                    children: []
+                    folders: [],
+                    presentations: []
                 };
-                focusLevel1Config.children.push(focusLevel2Config);
+                focusLevel1Config.folders.push(focusLevel2Config);
                 const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
-                console.log('presentationPaths', presentationPaths);
+                for (const presentationPath of presentationPaths) {
+                    console.log('presentationPath', presentationPath);
+                    const presentationId = presentationPath;
+                    const presentationData = await readJSONFile(presentationPath, 'utf8');
+                    console.log('presentationData', presentationData);
+                    focusLevel2Config.presentations.push({ id: presentationId, data: presentationData });
+                }
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
             }

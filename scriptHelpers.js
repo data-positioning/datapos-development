@@ -235,6 +235,8 @@ async function buildPresentations() {
     await buildPresentations_PreparePresentations('src');
     await buildPresentations_OutputPresentations();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
+
+    console.log('presentationsConfig', presentationsConfig, JSON.stringify(presentationsConfig));
 }
 
 // Helpers - Build Presentations - Prepare Presentations
@@ -284,7 +286,6 @@ const buildPresentations_PreparePresentations = async (path) => {
             }
         }
     }
-    console.log('presentationsConfig', presentationsConfig, JSON.stringify(presentationsConfig));
 };
 
 // Helpers - Build Presentations - Output Presentations

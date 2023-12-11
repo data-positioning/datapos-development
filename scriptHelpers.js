@@ -257,7 +257,7 @@ const buildPresentations_PreparePresentations = async (path) => {
                 const level3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 console.log('LEVEL 3', level3Id, level3Data);
                 const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((fn) => !fn.endsWith('data.json'));
-                console.log('presentationPaths', presentationPaths);
+                console.log('presentationPaths', itemPath, presentationPaths);
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
             }

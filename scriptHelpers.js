@@ -246,7 +246,7 @@ const buildPresentations_PreparePresentations = async (path) => {
                 const focusId = itemPathSegments[1];
                 const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 console.log('FOCUS', focusId, focusData);
-                await buildContext_PrepareContext(itemPath);
+                await buildPresentations_PreparePresentations(itemPath);
             } else if (itemPathSegments.length === 3) {
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');

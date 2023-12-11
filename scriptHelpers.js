@@ -13,6 +13,7 @@ let contextConfig;
 let focusConfig;
 let issueCount = 0;
 let modelConfig;
+let presentationsConfig;
 
 // Helpers - Build Configuration
 async function buildConfig(env) {
@@ -224,6 +225,41 @@ const buildContext_OutputContext = async () => {
     fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify(views));
 };
 
+// Helpers - Build Presentations
+async function buildPresentations() {
+    const presentationsData = await fs.readFile('src/data.json', 'utf8');
+    presentationsConfig = { label: presentationsData.label, typeId: 'presentation', focuses: [] };
+    await buildPresentations_PreparePresentations('src');
+    await buildPresentations_OutputPresentations();
+    if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
+}
+
+// Helpers - Build Presentations - Prepare Presentations
+const buildPresentations_PreparePresentations = async (path) => {
+    const itemNames = await fs.readdir(path);
+    for (const itemName of itemNames) {
+        const itemPath = `${path}/${itemName}`;
+        const stats = await fs.stat(itemPath);
+        if (stats.isDirectory()) {
+            const itemPathSegments = itemPath.split('/');
+            if (itemPathSegments.length === 2) {
+                const focusId = itemPathSegments[1];
+                const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                console.log('FOCUS', focusId, focusData);
+            } else if (itemPathSegments.length === 3) {
+                const modelId = itemPathSegments[2];
+                const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                console.log('MODEL', modelId, modelData);
+            } else {
+                throw new Error(`Unexpected directory level: ${itemPath}.`);
+            }
+        }
+    }
+};
+
+// Helpers - Build Presentations - Output Presentations
+const buildPresentations_OutputPresentations = async () => {};
+
 // Helpers - Build Public Directory Index
 async function buildPublicDirectoryIndex(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
@@ -367,4 +403,4 @@ const readTextFile = async (path) => {
 const renderMarkdown = (markdownIt, content) => (content && content.en ? markdownIt.render(content.en) : '');
 
 /// Exports
-module.exports = { buildConfig, buildContext, buildPublicDirectoryIndex, bumpVersion, syncWithGitHub, uploadConnector, uploadContext };
+module.exports = { buildConfig, buildContext, buildPresentations, buildPublicDirectoryIndex, bumpVersion, syncWithGitHub, uploadConnector, uploadContext };

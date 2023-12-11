@@ -11,6 +11,8 @@ const exec = util.promisify(require('child_process').exec);
 // Module Variables
 let contextConfig;
 let focusConfig;
+let focusLevel1Config;
+let focusLevel2Config;
 let issueCount = 0;
 let modelConfig;
 let presentationsConfig;
@@ -67,7 +69,7 @@ const buildContext_PrepareContext = async (path) => {
                     entities: [],
                     views: []
                 };
-                const dimensionPaths = (await listDirectoryEntries(`${itemPath}/dimensions`)).filter((fn) => fn.endsWith('.json'));
+                const dimensionPaths = (await listDirectoryEntries(`${itemPath}/dimensions`)).filter((name) => name.endsWith('.json'));
                 for (const dimensionPath of dimensionPaths) {
                     const dimensionId = dimensionPath.split('.')[0];
                     const dimensionData = await readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
@@ -81,7 +83,7 @@ const buildContext_PrepareContext = async (path) => {
                     };
                     modelConfig.dimensions.push(dimensionConfig);
                 }
-                const entityPaths = (await listDirectoryEntries(`${itemPath}/entities`)).filter((fn) => fn.endsWith('.json'));
+                const entityPaths = (await listDirectoryEntries(`${itemPath}/entities`)).filter((name) => name.endsWith('.json'));
                 for (const entityPath of entityPaths) {
                     const entityId = entityPath.split('.')[0];
                     const entityData = await readJSONFile(`${itemPath}/entities/${entityId}.json`);
@@ -243,26 +245,45 @@ const buildPresentations_PreparePresentations = async (path) => {
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
             if (itemPathSegments.length === 2) {
-                const level1Id = itemPathSegments[1];
-                const level1Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                console.log('LEVEL 1', level1Id, level1Data);
+                const focusId = itemPathSegments[1];
+                const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                console.log('FOCUS 1', focusId, focusData);
+                focusConfig = {
+                    id: focusId,
+                    label: focusData.label || { en: focusId },
+                    children: []
+                };
+                presentationsConfig.focuses.push(focusConfig);
                 await buildPresentations_PreparePresentations(itemPath);
             } else if (itemPathSegments.length === 3) {
-                const level2Id = itemPathSegments[2];
-                const level2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                console.log('LEVEL 2', level2Id, level2Data);
+                const focusLevel2Id = itemPathSegments[2];
+                const focusLevel2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                console.log('LEVEL 2', focusLevel2Id, focusLevel2Data);
+                focusLevel1Config = {
+                    id: focusLevel2Id,
+                    label: focusLevel2Data.label || { en: focusLevel2Id },
+                    children: []
+                };
+                focusConfig.children.push(focusLevel1Config);
                 await buildPresentations_PreparePresentations(itemPath);
             } else if (itemPathSegments.length === 4) {
-                const level3Id = itemPathSegments[2];
-                const level3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                console.log('LEVEL 3', level3Id, level3Data);
-                const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((fn) => !fn.endsWith('data.json'));
-                console.log('presentationPaths', itemPath, presentationPaths);
+                const focusLevel3Id = itemPathSegments[2];
+                const focusLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                console.log('LEVEL 3', focusLevel3Id, focusLevel3Data);
+                focusLevel2Config = {
+                    id: focusLevel3Id,
+                    label: focusLevel3Data.label || { en: focusLevel3Id },
+                    children: []
+                };
+                focusLevel1Config.children.push(focusLevel2Config);
+                const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
+                console.log('presentationPaths', presentationPaths);
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
             }
         }
     }
+    console.log('presentationsConfig', presentationsConfig);
 };
 
 // Helpers - Build Presentations - Output Presentations

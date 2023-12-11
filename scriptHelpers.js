@@ -283,7 +283,7 @@ const buildPresentations_PreparePresentations = async (path) => {
             }
         }
     }
-    console.log('presentationsConfig', presentationsConfig);
+    console.log('presentationsConfig', presentationsConfig, JSON.stringify(presentationsConfig));
 };
 
 // Helpers - Build Presentations - Output Presentations

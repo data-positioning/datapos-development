@@ -238,6 +238,7 @@ async function buildPresentations() {
 
 // Helpers - Build Presentations - Prepare Presentations
 const buildPresentations_PreparePresentations = async (path) => {
+    await clearDirectory('dist');
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
@@ -286,7 +287,6 @@ const buildPresentations_PreparePresentations = async (path) => {
             }
         }
     }
-    await clearDirectory('dist');
     fs.writeFile('dist/datapos-presentations-default.json', JSON.stringify(presentationsConfig));
 };
 

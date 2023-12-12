@@ -281,7 +281,7 @@ const buildPresentations_PreparePresentations = async (path) => {
                     console.log(2222, presentationPath);
                     const presentationId = presentationPath.slice(0, -5);
                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
-                    console.log(3333);
+                    console.log(3333, `dist/${presentationId}.json`, presentationData);
                     fs.writeFile(`dist/${presentationId}.json`, JSON.stringify(presentationData));
                     console.log(4444);
                     focusLevel2Config.presentations.push({ id: presentationId });

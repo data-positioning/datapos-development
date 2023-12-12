@@ -292,7 +292,7 @@ const buildPresentations_PreparePresentations = async (path) => {
             }
         }
     }
-    fs.writeFile('dist/datapos-presentations-default.json', JSON.stringify(presentationsConfig));
+    // fs.writeFile('dist/datapos-presentations-default.json', JSON.stringify(presentationsConfig));
 };
 
 // Helpers - Build Presentations - Output Presentations

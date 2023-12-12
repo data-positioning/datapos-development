@@ -386,6 +386,29 @@ async function uploadContext() {
     }
 }
 
+// Helpers - Upload Presentation
+async function uploadPresentation() {
+    const items = [];
+    const itemNames = await fs.readdir('dist');
+    for (const itemName of itemNames) {
+        const itemPath = path.join('dist', itemName);
+        const stats = await fs.stat(itemPath);
+        if (stats.isDirectory()) continue;
+        items.push({ itemPath, itemName });
+    }
+
+    for (const item of items) {
+        const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
+        const url = 'https://api-dwizkzi4ga-ew.a.run.app/contexts';
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: item.itemName.slice(0, -5), config: data })
+        });
+        if (!response.ok) throw new Error(await response.text());
+    }
+}
+
 // Utilities - Clear Directory
 const clearDirectory = async (directoryPath) => {
     for (const itemName of await fs.readdir(directoryPath)) {
@@ -436,4 +459,4 @@ const readTextFile = async (path) => {
 const renderMarkdown = (markdownIt, content) => (content && content.en ? markdownIt.render(content.en) : '');
 
 /// Exports
-module.exports = { buildConfig, buildContext, buildPresentations, buildPublicDirectoryIndex, bumpVersion, syncWithGitHub, uploadConnector, uploadContext };
+module.exports = { buildConfig, buildContext, buildPresentations, buildPublicDirectoryIndex, bumpVersion, syncWithGitHub, uploadConnector, uploadContext, uploadPresentation };

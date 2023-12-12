@@ -387,7 +387,7 @@ async function uploadContext() {
 }
 
 // Helpers - Upload Presentation
-async function uploadPresentation() {
+async function uploadPresentations() {
     const items = [];
     const itemNames = await fs.readdir('dist');
     for (const itemName of itemNames) {
@@ -459,4 +459,4 @@ const readTextFile = async (path) => {
 const renderMarkdown = (markdownIt, content) => (content && content.en ? markdownIt.render(content.en) : '');
 
 /// Exports
-module.exports = { buildConfig, buildContext, buildPresentations, buildPublicDirectoryIndex, bumpVersion, syncWithGitHub, uploadConnector, uploadContext, uploadPresentation };
+module.exports = { buildConfig, buildContext, buildPresentations, buildPublicDirectoryIndex, bumpVersion, syncWithGitHub, uploadConnector, uploadContext, uploadPresentations };

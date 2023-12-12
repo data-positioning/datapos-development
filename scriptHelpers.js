@@ -282,7 +282,12 @@ const buildPresentations_PreparePresentations = async (path) => {
                     const presentationId = presentationPath.slice(0, -5);
                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
                     console.log(3333, `dist/${presentationId}.json`, presentationData);
-                    fs.writeFile(`dist/${presentationId}.json`, JSON.stringify(presentationData));
+                    try {
+                        fs.writeFile(`dist/${presentationId}.json`, JSON.stringify(presentationData));
+                    } catch (error) {
+                        console.log(error);
+                    }
+                    fs.writeFile('dist/datapos-presentations-default.json', JSON.stringify(presentationsConfig));
                     console.log(4444);
                     focusLevel2Config.presentations.push({ id: presentationId });
                     console.log(5555);

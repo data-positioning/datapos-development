@@ -231,6 +231,7 @@ const buildContext_OutputContext = async () => {
 async function buildPresentations() {
     const presentationsData = await readJSONFile('src/data.json', 'utf8');
     presentationsConfig = { label: presentationsData.label, focuses: [] };
+    await clearDirectory('dist');
     await buildPresentations_PreparePresentations('src');
     await buildPresentations_OutputPresentations();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
@@ -238,7 +239,6 @@ async function buildPresentations() {
 
 // Helpers - Build Presentations - Prepare Presentations
 const buildPresentations_PreparePresentations = async (path) => {
-    await clearDirectory('dist');
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
@@ -276,28 +276,18 @@ const buildPresentations_PreparePresentations = async (path) => {
                 };
                 focusLevel1Config.folders.push(focusLevel2Config);
                 const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
-                console.log(1111);
                 for (const presentationPath of presentationPaths) {
-                    console.log(2222, presentationPath);
                     const presentationId = presentationPath.slice(0, -5);
                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
-                    console.log(3333, `dist/${presentationId}.json`, presentationData);
-                    try {
-                        fs.writeFile(`dist/${presentationId}.json`, JSON.stringify(presentationData));
-                    } catch (error) {
-                        console.log(error);
-                    }
-                    fs.writeFile('dist/datapos-presentations-default.json', JSON.stringify(presentationsConfig));
-                    console.log(4444);
+                    fs.writeFile(`dist/${presentationId}.json`, JSON.stringify(presentationData));
                     focusLevel2Config.presentations.push({ id: presentationId });
-                    console.log(5555);
                 }
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
             }
         }
     }
-    // fs.writeFile('dist/datapos-presentations-default.json', JSON.stringify(presentationsConfig));
+    fs.writeFile('dist/datapos-presentations-default.json', JSON.stringify(presentationsConfig));
 };
 
 // Helpers - Build Presentations - Output Presentations

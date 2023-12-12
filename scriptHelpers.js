@@ -276,7 +276,9 @@ const buildPresentations_PreparePresentations = async (path) => {
                 };
                 focusLevel1Config.folders.push(focusLevel2Config);
                 const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
+                console.log(1111);
                 for (const presentationPath of presentationPaths) {
+                    console.log(2222, presentationPath);
                     const presentationId = presentationPath.slice(0, -5);
                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
                     fs.writeFile(`dist/${presentationId}.json`, JSON.stringify(presentationData));

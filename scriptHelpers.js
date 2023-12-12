@@ -234,8 +234,6 @@ async function buildPresentations() {
     await buildPresentations_PreparePresentations('src');
     await buildPresentations_OutputPresentations();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
-
-    console.log('PRESENTATION CONFIG', JSON.stringify(presentationsConfig));
 }
 
 // Helpers - Build Presentations - Prepare Presentations
@@ -278,18 +276,18 @@ const buildPresentations_PreparePresentations = async (path) => {
                 focusLevel1Config.folders.push(focusLevel2Config);
                 const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
                 for (const presentationPath of presentationPaths) {
-                    console.log('presentationPath', presentationPath);
                     const presentationId = presentationPath.slice(0, -5);
-                    console.log('presentationId', presentationId);
                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
-                    console.log('presentationData', presentationData);
-                    focusLevel2Config.presentations.push({ id: presentationId, data: presentationData });
+                    fs.writeFile(`dist/${presentationId}.json`, JSON.stringify(presentationData));
+                    focusLevel2Config.presentations.push({ id: presentationId });
                 }
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
             }
         }
     }
+    await clearDirectory('dist');
+    fs.writeFile('dist/datapos-presentations-default.json', JSON.stringify(presentationsConfig));
 };
 
 // Helpers - Build Presentations - Output Presentations

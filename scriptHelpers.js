@@ -281,8 +281,11 @@ const buildPresentations_PreparePresentations = async (path) => {
                     console.log(2222, presentationPath);
                     const presentationId = presentationPath.slice(0, -5);
                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
+                    console.log(3333);
                     fs.writeFile(`dist/${presentationId}.json`, JSON.stringify(presentationData));
+                    console.log(4444);
                     focusLevel2Config.presentations.push({ id: presentationId });
+                    console.log(5555);
                 }
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);

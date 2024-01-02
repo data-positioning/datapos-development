@@ -2,7 +2,7 @@
     "name": "@datapos/datapos-operations",
     "license": "ISC",
     "private": false,
-    "version": "0.1.393",
+    "version": "0.1.394",
     "dependencies": {
         "dotenv": "^16.3.1",
         "firebase": "^10.7.1",

@@ -176,7 +176,7 @@ const buildContext_OutputContext = async () => {
                     typeId: dimension.typeId,
                     levels: dimension.levels
                 };
-                fs.writeFile(`dist/datapos-context-default-${dimensionId}.json`, JSON.stringify(dimensionConfig));
+                fs.writeFile(`dist/datapos-context-default-dimension-${dimensionId}.json`, JSON.stringify(dimensionConfig));
                 const dimensionReference = { id: dimensionId, label: dimension.label };
                 modelConfig.dimensions.push(dimensionReference);
                 dimensions.push({ ...dimensionReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
@@ -193,7 +193,7 @@ const buildContext_OutputContext = async () => {
                     computations: entity.computations,
                     events: entity.events
                 };
-                fs.writeFile(`dist/datapos-context-default-${entityId}.json`, JSON.stringify(entityConfig));
+                fs.writeFile(`dist/datapos-context-default-entity-${entityId}.json`, JSON.stringify(entityConfig));
                 const entityReference = { id: entityId, label: entity.label };
                 modelConfig.entities.push(entityReference);
                 entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
@@ -207,12 +207,12 @@ const buildContext_OutputContext = async () => {
                     description: view.description,
                     typeId: view.typeId
                 };
-                fs.writeFile(`dist/datapos-context-default-${viewId}.json`, JSON.stringify(viewConfig));
+                fs.writeFile(`dist/datapos-context-default-view-${viewId}.json`, JSON.stringify(viewConfig));
                 const viewReference = { id: viewId, label: view.label };
                 modelConfig.views.push(viewReference);
                 views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
             }
-            fs.writeFile(`dist/datapos-context-default-${modelId}.json`, JSON.stringify(modelConfig));
+            fs.writeFile(`dist/datapos-context-default-model-${modelId}.json`, JSON.stringify(modelConfig));
             const modelReference = { id: modelId, label: model.label };
             focusReference.models.push(modelReference);
             models.push({ ...modelReference, focusId: focusId, focusLabel: focus.label });
@@ -349,16 +349,13 @@ async function downloadContext(contextId, outDir) {
     const contextIndex = await getDoc(doc(db, 'components', contextId));
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
 
-    var strSearch = contextId;
-    var strLength = strSearch.length;
-    var strFrontCode = strSearch.slice(0, strLength - 1);
-    var strEndCode = strSearch.slice(strLength - 1, strSearch.length);
+    const contextIdLength = contextId.length;
+    var contextIdLeadingChars = contextId.slice(0, contextIdLength - 1);
+    var contextIdLastChar = contextId.slice(contextIdLength - 1, contextId.length);
+    var nextContextId = contextIdLeadingChars + String.fromCharCode(contextIdLastChar.charCodeAt(0) + 1);
+    console.log(contextId, contextIdLength, contextIdLeadingChars, contextIdLastChar, contextId, nextContextId);
 
-    var startCode = strSearch;
-    var endCode = strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1);
-    console.log(strSearch, strLength, strFrontCode, strEndCode, startCode, endCode);
-
-    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', startCode), where(documentId(), '<', endCode)));
+    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
     querySnapshot.forEach((doc) => {
         console.log(8888, doc.id);
     });

@@ -349,10 +349,10 @@ async function downloadContext(contextId, outDir) {
     const contextIndex = await getDoc(doc(db, 'components', contextId));
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
 
-    const querySnapshot = await getDocs(collection(db, 'components'));
-    querySnapshot.forEach((doc) => {
-        console.log(doc.id);
-    });
+    // const querySnapshot = await getDocs(collection(db, 'components'));
+    // querySnapshot.forEach((doc) => {
+    //     console.log(doc.id);
+    // });
 }
 
 // Helpers - Sync with Github

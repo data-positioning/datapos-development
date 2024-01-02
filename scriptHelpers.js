@@ -348,7 +348,7 @@ async function downloadContext(contextId, outDir) {
 
     clearDirectory(outDir);
 
-    await fs.writeFile(`${outDir}/whatAreContexts.md`, '# What are Contexts?\n\n...');
+    await fs.writeFile(`${outDir}/whatIsContext.md`, '# What is a Context?\n\n...');
 
     const contextIndex = (await getDoc(doc(db, 'components', contextId))).data();
     await fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));

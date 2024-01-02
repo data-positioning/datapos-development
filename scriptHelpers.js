@@ -151,7 +151,7 @@ const buildContext_OutputContext = async () => {
 
     await clearDirectory('dist');
 
-    const context = { id: 'efault', label: contextConfig.label, typeId: contextConfig.typeId, focuses: [] };
+    const context = { id: 'default', label: contextConfig.label, typeId: contextConfig.typeId, focuses: [] };
     for (const focus of contextConfig.focuses) {
         const focusId = `${focus.id}`;
         const focusReference = { id: focusId, label: focus.label, models: [] };

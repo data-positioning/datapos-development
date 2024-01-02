@@ -328,6 +328,11 @@ async function bumpVersion() {
     fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
 }
 
+// Helpers - Download Context
+async function downloadContext() {
+    console.log('Download context...');
+}
+
 // Helpers - Sync with Github
 async function syncWithGitHub() {
     const packageData = await fs.readFile('package.json', 'utf8');
@@ -459,4 +464,15 @@ const readTextFile = async (path) => {
 const renderMarkdown = (markdownIt, content) => (content && content.en ? markdownIt.render(content.en) : '');
 
 /// Exports
-module.exports = { buildConfig, buildContext, buildPresentations, buildPublicDirectoryIndex, bumpVersion, syncWithGitHub, uploadConnector, uploadContext, uploadPresentations };
+module.exports = {
+    buildConfig,
+    buildContext,
+    buildPresentations,
+    buildPublicDirectoryIndex,
+    bumpVersion,
+    downloadContext,
+    syncWithGitHub,
+    uploadConnector,
+    uploadContext,
+    uploadPresentations
+};

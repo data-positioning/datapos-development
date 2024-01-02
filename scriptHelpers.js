@@ -333,10 +333,26 @@ async function bumpVersion() {
 // Helpers - Download Context
 async function downloadContext(contextId, outDir) {
     console.log('Download context...', contextId, outDir);
+
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
-    console.log('env', result);
-    fs.writeFile(`${outDir}/test.json`, JSON.stringify({ id: 1, text: 'abcde' }));
+    const env = result.parsed;
+    console.log('env', env);
+
+    const app = initializeApp({
+        apiKey: env.VITE_FIREBASE_API_KEY,
+        authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+        projectId: env.VITE_FIREBASE_PROJECT_ID,
+        storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+        appId: env.VITE_FIREBASE_APP_ID
+    });
+    const db = getFirestore(app);
+
+    const document = await getDoc(doc(db, 'components', 'datapos-context-default'));
+    console.log('documentData', document.data());
+
+    fs.writeFile(`${outDir}/context.json`, JSON.stringify(document.data()));
 }
 
 // Helpers - Sync with Github

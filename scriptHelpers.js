@@ -352,7 +352,7 @@ async function downloadContext(contextId, outDir) {
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));
 
     for (const contextFocus of contextIndex.focuses) {
-        const contextId = contextFocus.substring(contextIdLength + 1);
+        const contextId = contextFocus.id.substring(contextIdLength + 1);
         fs.writeFile(`${outDir}/${contextId}/index.md`, `## ${contextFocus.label.en} Context`);
     }
 

@@ -6,7 +6,7 @@ const MarkdownIt = require('markdown-it');
 const path = require('path');
 const { collection, doc, getDoc, getDocs, getFirestore, query, where } = require('firebase/firestore');
 const fStore = require('firebase/firestore');
-console.log(fStore);
+console.log(fStore.FieldPath);
 
 // Dependencies - Promisify Exec
 const util = require('util');

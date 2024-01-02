@@ -351,7 +351,7 @@ async function downloadContext(contextId, outDir) {
 
     for (const contextFocus of contextIndex.focuses) {
         const dirName = `${outDir}/${contextFocus.id}`;
-        if (!fs.existsSync(dirName)) await fs.mkdir(dirName);
+        if (!fs.exists(dirName)) await fs.mkdir(dirName);
         await fs.writeFile(`${outDir}/${contextFocus.id}/index.md`, `## ${contextFocus.label.en} Context`);
     }
 

@@ -176,7 +176,7 @@ const buildContext_OutputContext = async () => {
                     typeId: dimension.typeId,
                     levels: dimension.levels
                 };
-                fs.writeFile(`dist/${dimensionId}.json`, JSON.stringify(dimensionConfig));
+                fs.writeFile(`dist/datapos-context-default-${dimensionId}.json`, JSON.stringify(dimensionConfig));
                 const dimensionReference = { id: dimensionId, label: dimension.label };
                 modelConfig.dimensions.push(dimensionReference);
                 dimensions.push({ ...dimensionReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
@@ -193,7 +193,7 @@ const buildContext_OutputContext = async () => {
                     computations: entity.computations,
                     events: entity.events
                 };
-                fs.writeFile(`dist/${entityId}.json`, JSON.stringify(entityConfig));
+                fs.writeFile(`dist/datapos-context-default-${entityId}.json`, JSON.stringify(entityConfig));
                 const entityReference = { id: entityId, label: entity.label };
                 modelConfig.entities.push(entityReference);
                 entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
@@ -207,12 +207,12 @@ const buildContext_OutputContext = async () => {
                     description: view.description,
                     typeId: view.typeId
                 };
-                fs.writeFile(`dist/${viewId}.json`, JSON.stringify(viewConfig));
+                fs.writeFile(`dist/datapos-context-default-${viewId}.json`, JSON.stringify(viewConfig));
                 const viewReference = { id: viewId, label: view.label };
                 modelConfig.views.push(viewReference);
                 views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
             }
-            fs.writeFile(`dist/${modelId}.json`, JSON.stringify(modelConfig));
+            fs.writeFile(`dist/datapos-context-default-${modelId}.json`, JSON.stringify(modelConfig));
             const modelReference = { id: modelId, label: model.label };
             focusReference.models.push(modelReference);
             models.push({ ...modelReference, focusId: focusId, focusLabel: focus.label });
@@ -349,15 +349,10 @@ async function downloadContext(contextId, outDir) {
     const contextIndex = await getDoc(doc(db, 'components', contextId));
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
 
-    // const querySnapshot = await getDocs(collection(db, 'components'));
-    // querySnapshot.forEach((doc) => {
-    //     console.log(doc.id);
-    // });
-
-    // return document.data().focuses.map((context) => ({
-    //     params: { context: `${context.id}/index` },
-    //     content: `# ${context.label} Context`
-    // }));
+    const querySnapshot = await getDocs(collection(db, 'components'));
+    querySnapshot.forEach((doc) => {
+        console.log(doc.id);
+    });
 }
 
 // Helpers - Sync with Github

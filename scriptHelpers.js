@@ -345,7 +345,6 @@ async function downloadContext(contextId, outDir) {
         appId: env.VITE_FIREBASE_APP_ID
     });
     const db = getFirestore(app);
-    console.log('db', db);
 
     const contextIndex = await getDoc(doc(db, 'components', contextId));
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
@@ -354,9 +353,12 @@ async function downloadContext(contextId, outDir) {
     var strLength = strSearch.length;
     var strFrontCode = strSearch.slice(0, strLength - 1);
     var strEndCode = strSearch.slice(strLength - 1, strSearch.length);
-    console.log(strSearch, strLength, strFrontCode, strEndCode);
 
-    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', strFrontCode), where(documentId(), '<', strEndCode)));
+    var startCode = strSearch;
+    var endCode = strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1);
+    console.log(strSearch, strLength, strFrontCode, strEndCode, startCode, endCode);
+
+    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', startCode), where(documentId(), '<', endCode)));
     querySnapshot.forEach((doc) => {
         console.log(8888, doc.id);
     });

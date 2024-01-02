@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 const { initializeApp } = require('firebase/app');
 const MarkdownIt = require('markdown-it');
 const path = require('path');
-const { collection, doc, getDoc, getDocs, getFirestore } = require('firebase/firestore');
+const { collection, doc, getDoc, getDocs, getFirestore, query, where } = require('firebase/firestore');
 
 // Dependencies - Promisify Exec
 const util = require('util');
@@ -332,39 +332,28 @@ async function bumpVersion() {
 
 // Helpers - Download Context
 async function downloadContext(contextId, outDir) {
-    try {
-        console.log(1111, contextId, outDir);
-        const result = dotenv.config({ path: '.env.local' });
-        if (result.error) throw result.error;
-        const env = result.parsed;
-        console.log(2222, env);
+    const result = dotenv.config({ path: '.env.local' });
+    if (result.error) throw result.error;
+    const env = result.parsed;
 
-        const app = initializeApp({
-            apiKey: env.VITE_FIREBASE_API_KEY,
-            authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
-            projectId: env.VITE_FIREBASE_PROJECT_ID,
-            storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
-            messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-            appId: env.VITE_FIREBASE_APP_ID
-        });
-        console.log(3333, app);
-        const db = getFirestore(app);
-        console.log(4444, db);
+    const app = initializeApp({
+        apiKey: env.VITE_FIREBASE_API_KEY,
+        authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+        projectId: env.VITE_FIREBASE_PROJECT_ID,
+        storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+        appId: env.VITE_FIREBASE_APP_ID
+    });
+    const db = getFirestore(app);
 
-        const contextIndex = await getDoc(doc(db, 'components', contextId));
-        console.log(5555, contextIndex.data());
-        fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
-        console.log(7777);
+    const contextIndex = await getDoc(doc(db, 'components', contextId));
+    fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
 
-        const querySnapshot = await getDocs(collection(db, 'componentItems'));
-        querySnapshot.forEach((doc) => {
-            console.log(8888, doc.id);
-        });
-
-        console.log(9999);
-    } catch (error) {
-        console.log(9999, error);
-    }
+    const q = query(collection(db, 'cities'), where('capital', '==', true));
+    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(db.firestore.FieldPath.documentId(), '==', 'datapos-context-default-workforce')));
+    querySnapshot.forEach((doc) => {
+        console.log(8888, doc.id);
+    });
 }
 
 // Helpers - Sync with Github

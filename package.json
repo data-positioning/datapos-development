@@ -2,15 +2,15 @@
     "name": "@datapos/datapos-operations",
     "license": "ISC",
     "private": false,
-    "version": "0.1.383",
+    "version": "0.1.384",
     "dependencies": {
         "dotenv": "^16.3.1",
         "firebase": "^10.7.1",
-        "markdown-it": "^13.0.1"
+        "markdown-it": "^14.0.0"
     },
     "devDependencies": {
-        "eslint": "^8.49.0",
-        "prettier": "^3.0.3"
+        "eslint": "^8.56.0",
+        "prettier": "^3.1.1"
     },
     "scripts": {
         "audit": "npm audit",

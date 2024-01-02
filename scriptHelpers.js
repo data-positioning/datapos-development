@@ -349,7 +349,6 @@ async function downloadContext(contextId, outDir) {
     const contextIndex = await getDoc(doc(db, 'components', contextId));
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
 
-    const q = query(collection(db, 'cities'), where('capital', '==', true));
     const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(db.firestore.FieldPath.documentId(), '==', 'datapos-context-default-workforce')));
     querySnapshot.forEach((doc) => {
         console.log(8888, doc.id);

@@ -1,14 +1,10 @@
 // Dependencies
 const dotenv = require('dotenv');
 const fs = require('fs').promises;
+const { initializeApp } = require('firebase/app');
 const MarkdownIt = require('markdown-it');
 const path = require('path');
-
-// import { initializeApp } from 'firebase/app';
-// import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
-
-const { initializeApp } = require('firebase/app');
-console.log('initializeApp', initializeApp);
+const { collection, doc, getDoc, getDocs, getFirestore } = require('firebase/firestore');
 
 // Dependencies - Promisify Exec
 const util = require('util');
@@ -337,6 +333,9 @@ async function bumpVersion() {
 // Helpers - Download Context
 async function downloadContext(contextId, outDir) {
     console.log('Download context...', contextId, outDir);
+    const result = dotenv.config({ path: '.env.local' });
+    if (result.error) throw result.error;
+    console.log('env', result);
     fs.writeFile(`${outDir}/test.json`, JSON.stringify({ id: 1, text: 'abcde' }));
 }
 
@@ -353,8 +352,8 @@ async function syncWithGitHub() {
 async function uploadConnector() {
     const configJSON = JSON.parse(await fs.readFile('src/config.json', 'utf8'));
     const descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
-    const result = dotenv.config({ path: '.env.local' });
-    if (result.error) throw result.error;
+    // const result = dotenv.config({ path: '.env.local' });
+    // if (result.error) throw result.error;
     const logo = await fs.readFile('src/logo.svg', 'utf8');
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
 

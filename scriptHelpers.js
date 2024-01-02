@@ -349,7 +349,7 @@ async function downloadContext(contextId, outDir) {
     const contextIndex = await getDoc(doc(db, 'components', contextId));
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
 
-    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(FieldPath.documentId(), '==', 'datapos-context-default-workforce')));
+    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(db.FieldPath.documentId(), '==', 'datapos-context-default-workforce')));
     querySnapshot.forEach((doc) => {
         console.log(8888, doc.id);
     });

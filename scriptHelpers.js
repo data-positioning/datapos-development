@@ -351,9 +351,7 @@ async function downloadContext(contextId, outDir) {
 
     for (const contextFocus of contextIndex.focuses) {
         const dirName = `${outDir}/${contextFocus.id}`;
-        // if (!fs.exists(dirName)) await fs.mkdir(dirName);
-        const stat = await fs.stat(dirName);
-        console.log('stat', stat);
+        if (!(await checkDirectoryExists(dirName))) await fs.mkdir(dirName);
         await fs.writeFile(`${outDir}/${contextFocus.id}/index.md`, `## ${contextFocus.label.en} Context`);
     }
 
@@ -448,6 +446,16 @@ async function uploadPresentations() {
         if (!response.ok) throw new Error(await response.text());
     }
 }
+
+// Utility - Check Directory Exists
+const checkDirectoryExists = async (directoryPath) => {
+    try {
+        await fs.stat(directoryPath);
+        return true;
+    } catch (err) {
+        return false;
+    }
+};
 
 // Utilities - Clear Directory
 const clearDirectory = async (directoryPath) => {

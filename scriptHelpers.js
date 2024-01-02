@@ -349,7 +349,7 @@ async function downloadContext(contextId, outDir) {
         });
         console.log(3333, app);
         const db = getFirestore(app);
-        console.log(4444, app);
+        console.log(4444, db);
 
         const contextIndex = await getDoc(doc(db, 'components', contextId));
         console.log(5555, contextIndex.data());

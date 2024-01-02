@@ -213,7 +213,7 @@ const buildContext_OutputContext = async () => {
                 views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: area.label });
             }
             fs.writeFile(`dist/datapos-context-default-model-${modelId}.json`, JSON.stringify(modelConfig));
-            const modelReference = { id: modelId, label: model.label };
+            const modelReference = { id: modelId, label: model.label, sequence: model.sequence };
             areaReference.models.push(modelReference);
             models.push({ ...modelReference, areaId: areaId, areaLabel: area.label });
         }

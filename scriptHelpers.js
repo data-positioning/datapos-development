@@ -332,6 +332,8 @@ async function bumpVersion() {
 
 // Helpers - Download Context
 async function downloadContext(contextId, outDir) {
+    const contextIdLength = contextId.length;
+
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
     const env = result.parsed;
@@ -349,16 +351,21 @@ async function downloadContext(contextId, outDir) {
     const contextIndex = await getDoc(doc(db, 'components', contextId));
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
 
-    const contextIdLength = contextId.length;
+    for (const contextFocus of contextIndex.focuses) {
+        const contextId = contextFocus.substring(contextIdLength + 1);
+        fs.writeFile(`${outDir}/${contextId}/index.md`, `## ${contextFocus.label.en} Context`);
+    }
+
     var contextIdLeadingChars = contextId.slice(0, contextIdLength - 1);
     var contextIdLastChar = contextId.slice(contextIdLength - 1, contextId.length);
     var nextContextId = contextIdLeadingChars + String.fromCharCode(contextIdLastChar.charCodeAt(0) + 1);
     console.log(contextId, contextIdLength, contextIdLeadingChars, contextIdLastChar, contextId, nextContextId);
 
-    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
+    let querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
     querySnapshot.forEach((doc) => {
         console.log(8888, doc.id);
     });
+    querySnapshot = null;
 }
 
 // Helpers - Sync with Github

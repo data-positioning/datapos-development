@@ -450,15 +450,15 @@ async function uploadPresentations() {
     }
 }
 
-// Utility - Check Directory Exists
-const checkDirectoryExists = async (directoryPath) => {
-    try {
-        await fs.stat(directoryPath);
-        return true;
-    } catch (err) {
-        return false;
-    }
-};
+// // Utility - Check Directory Exists
+// const checkDirectoryExists = async (directoryPath) => {
+//     try {
+//         await fs.stat(directoryPath);
+//         return true;
+//     } catch (err) {
+//         return false;
+//     }
+// };
 
 // Utilities - Clear Directory
 const clearDirectory = async (directoryPath) => {
@@ -466,7 +466,7 @@ const clearDirectory = async (directoryPath) => {
         const itemPath = `${directoryPath}/${itemName}`;
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
-            await fs.rmdir(itemPath, { recursive: true, force: true });
+            await fs.rm(itemPath, { recursive: true, force: true });
         } else {
             await fs.unlink(itemPath);
         }

@@ -350,6 +350,7 @@ async function downloadContext(contextId, outDir) {
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));
 
     for (const contextFocus of contextIndex.focuses) {
+        fs.mkdir(`${outDir}/${contextFocus.id}`);
         fs.writeFile(`${outDir}/${contextFocus.id}/index.md`, `## ${contextFocus.label.en} Context`);
     }
 

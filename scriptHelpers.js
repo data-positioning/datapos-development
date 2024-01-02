@@ -5,10 +5,6 @@ const { initializeApp } = require('firebase/app');
 const MarkdownIt = require('markdown-it');
 const path = require('path');
 const { collection, doc, documentId, getDoc, getDocs, getFirestore, query, where } = require('firebase/firestore');
-const fStore = require('firebase/firestore');
-console.log(1111, fStore.FieldPath);
-console.log(2222, fStore.documentId);
-console.log(3333, fStore.FieldPath.documentId);
 
 // Dependencies - Promisify Exec
 const util = require('util');
@@ -354,7 +350,13 @@ async function downloadContext(contextId, outDir) {
     const contextIndex = await getDoc(doc(db, 'components', contextId));
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
 
-    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '==', 'datapos-context-default-workforce')));
+    var strSearch = contextId;
+    var strLength = strSearch.length;
+    var strFrontCode = strSearch.slice(0, strLength - 1);
+    var strEndCode = strSearch.slice(strLength - 1, strSearch.length);
+    console.log(strSearch, strLength, strFrontCode, strEndCode);
+
+    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', strFrontCode), where(documentId(), '<', strEndCode)));
     querySnapshot.forEach((doc) => {
         console.log(8888, doc.id);
     });

@@ -348,8 +348,8 @@ async function downloadContext(contextId, outDir) {
     });
     const db = getFirestore(app);
 
-    const contextIndex = await getDoc(doc(db, 'components', contextId));
-    fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
+    const contextIndex = (await getDoc(doc(db, 'components', contextId))).data();
+    fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));
 
     for (const contextFocus of contextIndex.focuses) {
         const contextId = contextFocus.substring(contextIdLength + 1);

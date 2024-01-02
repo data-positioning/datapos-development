@@ -151,12 +151,12 @@ const buildContext_OutputContext = async () => {
 
     await clearDirectory('dist');
 
-    const context = { id: 'datapos-context-default', label: contextConfig.label, typeId: contextConfig.typeId, focuses: [] };
+    const context = { id: 'efault', label: contextConfig.label, typeId: contextConfig.typeId, focuses: [] };
     for (const focus of contextConfig.focuses) {
-        const focusId = `datapos-context-default-focus-${focus.id}`;
+        const focusId = `${focus.id}`;
         const focusReference = { id: focusId, label: focus.label, models: [] };
         for (const model of focus.models) {
-            const modelId = `datapos-context-default-model-${model.id}`;
+            const modelId = `${model.id}`;
             const modelConfig = {
                 id: modelId,
                 label: model.label,
@@ -168,7 +168,7 @@ const buildContext_OutputContext = async () => {
             };
 
             for (const dimension of model.dimensions) {
-                const dimensionId = `datapos-context-default-dimension-${dimension.id}`;
+                const dimensionId = `${dimension.id}`;
                 const dimensionConfig = {
                     id: dimensionId,
                     label: dimension.label,
@@ -183,7 +183,7 @@ const buildContext_OutputContext = async () => {
             }
 
             for (const entity of model.entities) {
-                const entityId = `datapos-context-default-entity-${entity.id}`;
+                const entityId = `${entity.id}`;
                 const entityConfig = {
                     id: entityId,
                     label: entity.label,
@@ -200,7 +200,7 @@ const buildContext_OutputContext = async () => {
             }
 
             for (const view of model.views) {
-                const viewId = `datapos-context-default-view-${view.id}`;
+                const viewId = `${view.id}`;
                 const viewConfig = {
                     id: viewId,
                     label: view.label,
@@ -332,12 +332,9 @@ async function bumpVersion() {
 
 // Helpers - Download Context
 async function downloadContext(contextId, outDir) {
-    console.log('Download context...', contextId, outDir);
-
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
     const env = result.parsed;
-    console.log('env', env);
 
     const app = initializeApp({
         apiKey: env.VITE_FIREBASE_API_KEY,
@@ -349,10 +346,18 @@ async function downloadContext(contextId, outDir) {
     });
     const db = getFirestore(app);
 
-    const document = await getDoc(doc(db, 'components', 'datapos-context-default'));
-    console.log('documentData', document.data());
+    const contextIndex = await getDoc(doc(db, 'components', contextId));
+    fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
 
-    fs.writeFile(`${outDir}/context.json`, JSON.stringify(document.data()));
+    // const querySnapshot = await getDocs(collection(db, 'components'));
+    // querySnapshot.forEach((doc) => {
+    //     console.log(doc.id);
+    // });
+
+    // return document.data().focuses.map((context) => ({
+    //     params: { context: `${context.id}/index` },
+    //     content: `# ${context.label} Context`
+    // }));
 }
 
 // Helpers - Sync with Github

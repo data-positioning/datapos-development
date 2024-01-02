@@ -332,36 +332,39 @@ async function bumpVersion() {
 
 // Helpers - Download Context
 async function downloadContext(contextId, outDir) {
-    console.log(1111, contextId, outDir);
-    const result = dotenv.config({ path: '.env.local' });
-    if (result.error) throw result.error;
-    const env = result.parsed;
-    console.log(2222, env);
+    try {
+        console.log(1111, contextId, outDir);
+        const result = dotenv.config({ path: '.env.local' });
+        if (result.error) throw result.error;
+        const env = result.parsed;
+        console.log(2222, env);
 
-    const app = initializeApp({
-        apiKey: env.VITE_FIREBASE_API_KEY,
-        authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
-        projectId: env.VITE_FIREBASE_PROJECT_ID,
-        storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-        appId: env.VITE_FIREBASE_APP_ID
-    });
-    console.log(3333, app);
-    const db = getFirestore(app);
-    console.log(4444, app);
+        const app = initializeApp({
+            apiKey: env.VITE_FIREBASE_API_KEY,
+            authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+            projectId: env.VITE_FIREBASE_PROJECT_ID,
+            storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+            appId: env.VITE_FIREBASE_APP_ID
+        });
+        console.log(3333, app);
+        const db = getFirestore(app);
+        console.log(4444, app);
 
-    const contextIndex = await getDoc(doc(db, 'components', contextId));
-    console.log(5555, contextIndex.data());
-    fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
-    console.log(7777);
+        const contextIndex = await getDoc(doc(db, 'components', contextId));
+        console.log(5555, contextIndex.data());
+        fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
+        console.log(7777);
 
-    const querySnapshot = await getDocs(collection(db, 'component-Items'));
-    querySnapshot.forEach((doc) => {
-        console.log(8888, doc.id);
-    });
+        const querySnapshot = await getDocs(collection(db, 'componentItems'));
+        querySnapshot.forEach((doc) => {
+            console.log(8888, doc.id);
+        });
 
-    console.log(9999);
-    return;
+        console.log(9999);
+    } catch (error) {
+        console.log(9999, error);
+    }
 }
 
 // Helpers - Sync with Github

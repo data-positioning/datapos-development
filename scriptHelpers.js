@@ -4,7 +4,9 @@ const fs = require('fs').promises;
 const { initializeApp } = require('firebase/app');
 const MarkdownIt = require('markdown-it');
 const path = require('path');
-const { collection, doc, FieldPath, getDoc, getDocs, getFirestore, query, where } = require('firebase/firestore');
+const { collection, doc, getDoc, getDocs, getFirestore, query, where } = require('firebase/firestore');
+const fStore = require('firebase/firestore');
+console.log(fStore);
 
 // Dependencies - Promisify Exec
 const util = require('util');
@@ -345,6 +347,7 @@ async function downloadContext(contextId, outDir) {
         appId: env.VITE_FIREBASE_APP_ID
     });
     const db = getFirestore(app);
+    console.log('db', db);
 
     const contextIndex = await getDoc(doc(db, 'components', contextId));
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));

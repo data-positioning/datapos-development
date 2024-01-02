@@ -4,6 +4,13 @@ const fs = require('fs').promises;
 const MarkdownIt = require('markdown-it');
 const path = require('path');
 
+// import { initializeApp } from 'firebase/app';
+// import { loadEnv } from 'vitepress';
+// import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
+
+const firebaseApp = require('firebase/app');
+console.log('firebaseApp', firebaseApp);
+
 // Dependencies - Promisify Exec
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -329,8 +336,8 @@ async function bumpVersion() {
 }
 
 // Helpers - Download Context
-async function downloadContext() {
-    console.log('Download context...');
+async function downloadContext(contextId, outDir) {
+    console.log('Download context...', contextId, outDir);
 }
 
 // Helpers - Sync with Github

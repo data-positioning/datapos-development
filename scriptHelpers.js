@@ -357,7 +357,7 @@ async function downloadContext(contextId, outDir) {
 
     for (const contextArea of contextIndex.areas) {
         await fs.mkdir(`${outDir}/${contextArea.id}`);
-        await fs.writeFile(`${outDir}/${contextArea.id}/index.md`, `# ${contextArea.label.en} Context\n\n...`);
+        await fs.writeFile(`${outDir}/${contextArea.id}/index.md`, `# ${contextArea.label.en}\n\n...`);
     }
 
     const contextIdLength = contextId.length;

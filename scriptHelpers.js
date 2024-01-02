@@ -357,7 +357,7 @@ async function downloadContext(contextId, outDir) {
 
     for (const contextArea of contextIndex.areas) {
         await fs.mkdir(`${outDir}/${contextArea.id}`);
-        await fs.writeFile(`${outDir}/${contextArea.id}/index.md`, `# ${contextArea.label.en}\n\n...`);
+        await fs.writeFile(`${outDir}/${contextArea.id}/index.md`, `# ${contextArea.label.en} Context Area\n\n...`);
         for (const model of contextArea.models) {
             await fs.mkdir(`${outDir}/${contextArea.id}/${model.id}`);
             await fs.writeFile(`${outDir}/${contextArea.id}/${model.id}/index.md`, `# ${model.label.en} Model\n\n...`);

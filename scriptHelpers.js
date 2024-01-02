@@ -352,8 +352,8 @@ async function downloadContext(contextId, outDir) {
     for (const contextFocus of contextIndex.focuses) {
         const dirName = `${outDir}/${contextFocus.id}`;
         // if (!fs.exists(dirName)) await fs.mkdir(dirName);
-        const xxxx = fs.stat(dirName);
-        console.log('xxxx', xxxx);
+        const stat = await fs.stat(dirName);
+        console.log('stat', stat);
         await fs.writeFile(`${outDir}/${contextFocus.id}/index.md`, `## ${contextFocus.label.en} Context`);
     }
 
@@ -362,11 +362,10 @@ async function downloadContext(contextId, outDir) {
     const contextIdLastChar = contextId.slice(contextIdLength - 1, contextId.length);
     const nextContextId = contextIdLeadingChars + String.fromCharCode(contextIdLastChar.charCodeAt(0) + 1);
 
-    let querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
+    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
     querySnapshot.forEach((doc) => {
         console.log(8888, doc.id);
     });
-    querySnapshot = null;
 }
 
 // Helpers - Sync with Github

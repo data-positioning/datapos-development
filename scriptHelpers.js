@@ -332,9 +332,11 @@ async function bumpVersion() {
 
 // Helpers - Download Context
 async function downloadContext(contextId, outDir) {
+    console.log(1111, contextId, outDir);
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
     const env = result.parsed;
+    console.log(2222, env);
 
     const app = initializeApp({
         apiKey: env.VITE_FIREBASE_API_KEY,
@@ -344,10 +346,14 @@ async function downloadContext(contextId, outDir) {
         messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
         appId: env.VITE_FIREBASE_APP_ID
     });
+    console.log(3333, app);
     const db = getFirestore(app);
+    console.log(4444, app);
 
     const contextIndex = await getDoc(doc(db, 'components', contextId));
+    console.log(5555, contextIndex.data());
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex.data()));
+    console.log(6666);
 
     // const querySnapshot = await getDocs(collection(db, 'components'));
     // querySnapshot.forEach((doc) => {

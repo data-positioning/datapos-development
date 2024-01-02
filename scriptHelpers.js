@@ -346,7 +346,7 @@ async function downloadContext(contextId, outDir) {
     });
     const db = getFirestore(app);
 
-    clearDirectory(outDir);
+    await clearDirectory(outDir);
 
     await fs.writeFile(`${outDir}/whatIsContext.md`, '# What is a Context?\n\n...');
 

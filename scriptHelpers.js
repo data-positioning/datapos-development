@@ -12,9 +12,9 @@ const exec = util.promisify(require('child_process').exec);
 
 // Module Variables
 let contextConfig;
-let focusConfig;
-let focusLevel1Config;
-let focusLevel2Config;
+let areaConfig;
+let areaLevel1Config;
+let areaLevel2Config;
 let issueCount = 0;
 let modelConfig;
 let presentationsConfig;
@@ -30,7 +30,7 @@ async function buildConfig(env) {
 // Helpers - Build Context
 async function buildContext() {
     const contextData = await readJSONFile('src/data.json', 'utf8');
-    contextConfig = { label: contextData.label, typeId: 'context', focuses: [] };
+    contextConfig = { label: contextData.label, typeId: 'context', areas: [] };
     await buildContext_PrepareContext('src');
     await buildContext_OutputContext();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
@@ -46,17 +46,17 @@ const buildContext_PrepareContext = async (path) => {
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
             if (itemPathSegments.length === 2) {
-                const focusId = itemPathSegments[1];
-                const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                focusData.description = { en: await readTextFile(`${itemPath}/description.en.md`) };
-                focusConfig = {
-                    id: focusId,
-                    label: focusData.label || { en: focusId },
-                    description: { en: renderMarkdown(markdownIt, focusData.description) },
-                    typeId: 'focus',
+                const areaId = itemPathSegments[1];
+                const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                areaData.description = { en: await readTextFile(`${itemPath}/description.en.md`) };
+                areaConfig = {
+                    id: areaId,
+                    label: areaData.label || { en: areaId },
+                    description: { en: renderMarkdown(markdownIt, areaData.description) },
+                    typeId: 'area',
                     models: []
                 };
-                contextConfig.focuses.push(focusConfig);
+                contextConfig.areas.push(areaConfig);
                 await buildContext_PrepareContext(itemPath);
             } else if (itemPathSegments.length === 3) {
                 const modelId = itemPathSegments[2];
@@ -131,7 +131,7 @@ const buildContext_PrepareContext = async (path) => {
                     }
                     modelConfig.entities.push(entityConfig);
                 }
-                focusConfig.models.push(modelConfig);
+                areaConfig.models.push(modelConfig);
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
             }
@@ -151,11 +151,11 @@ const buildContext_OutputContext = async () => {
 
     await clearDirectory('dist');
 
-    const context = { id: 'default', label: contextConfig.label, typeId: contextConfig.typeId, focuses: [] };
-    for (const focus of contextConfig.focuses) {
-        const focusId = `${focus.id}`;
-        const focusReference = { id: focusId, label: focus.label, models: [] };
-        for (const model of focus.models) {
+    const context = { id: 'default', label: contextConfig.label, typeId: contextConfig.typeId, areas: [] };
+    for (const area of contextConfig.areas) {
+        const areaId = `${area.id}`;
+        const areaReference = { id: areaId, label: area.label, models: [] };
+        for (const model of area.models) {
             const modelId = `${model.id}`;
             const modelConfig = {
                 id: modelId,
@@ -179,7 +179,7 @@ const buildContext_OutputContext = async () => {
                 fs.writeFile(`dist/datapos-context-default-dimension-${dimensionId}.json`, JSON.stringify(dimensionConfig));
                 const dimensionReference = { id: dimensionId, label: dimension.label };
                 modelConfig.dimensions.push(dimensionReference);
-                dimensions.push({ ...dimensionReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
+                dimensions.push({ ...dimensionReference, modelId: modelId, modelLabel: model.label, areaId: area.Id, areaLabel: area.label });
             }
 
             for (const entity of model.entities) {
@@ -196,7 +196,7 @@ const buildContext_OutputContext = async () => {
                 fs.writeFile(`dist/datapos-context-default-entity-${entityId}.json`, JSON.stringify(entityConfig));
                 const entityReference = { id: entityId, label: entity.label };
                 modelConfig.entities.push(entityReference);
-                entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
+                entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: area.label });
             }
 
             for (const view of model.views) {
@@ -210,14 +210,14 @@ const buildContext_OutputContext = async () => {
                 fs.writeFile(`dist/datapos-context-default-view-${viewId}.json`, JSON.stringify(viewConfig));
                 const viewReference = { id: viewId, label: view.label };
                 modelConfig.views.push(viewReference);
-                views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, focusId: focusId, focusLabel: focus.label });
+                views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: area.label });
             }
             fs.writeFile(`dist/datapos-context-default-model-${modelId}.json`, JSON.stringify(modelConfig));
             const modelReference = { id: modelId, label: model.label };
-            focusReference.models.push(modelReference);
-            models.push({ ...modelReference, focusId: focusId, focusLabel: focus.label });
+            areaReference.models.push(modelReference);
+            models.push({ ...modelReference, areaId: areaId, areaLabel: area.label });
         }
-        context.focuses.push(focusReference);
+        context.areas.push(areaReference);
     }
     fs.writeFile('dist/datapos-context-default.json', JSON.stringify(context));
     fs.writeFile('dist/datapos-context-default-models.json', JSON.stringify(models));
@@ -232,7 +232,7 @@ const buildContext_OutputContext = async () => {
 // Helpers - Build Presentations
 async function buildPresentations() {
     const presentationsData = await readJSONFile('src/data.json', 'utf8');
-    presentationsConfig = { label: presentationsData.label, focuses: [] };
+    presentationsConfig = { label: presentationsData.label, areas: [] };
     await clearDirectory('dist');
     await buildPresentations_PreparePresentations('src');
     await buildPresentations_OutputPresentations();
@@ -248,41 +248,41 @@ const buildPresentations_PreparePresentations = async (path) => {
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
             if (itemPathSegments.length === 2) {
-                const focusId = itemPathSegments[1];
-                const focusData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                focusConfig = {
-                    id: focusId,
-                    label: focusData.label || { en: focusId },
+                const areaId = itemPathSegments[1];
+                const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                areaConfig = {
+                    id: areaId,
+                    label: areaData.label || { en: areaId },
                     folders: []
                 };
-                presentationsConfig.focuses.push(focusConfig);
+                presentationsConfig.areas.push(areaConfig);
                 await buildPresentations_PreparePresentations(itemPath);
             } else if (itemPathSegments.length === 3) {
-                const focusLevel2Id = itemPathSegments[2];
-                const focusLevel2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                focusLevel1Config = {
-                    id: focusLevel2Id,
-                    label: focusLevel2Data.label || { en: focusLevel2Id },
+                const areaLevel2Id = itemPathSegments[2];
+                const areaLevel2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                areaLevel1Config = {
+                    id: areaLevel2Id,
+                    label: areaLevel2Data.label || { en: areaLevel2Id },
                     folders: []
                 };
-                focusConfig.folders.push(focusLevel1Config);
+                areaConfig.folders.push(areaLevel1Config);
                 await buildPresentations_PreparePresentations(itemPath);
             } else if (itemPathSegments.length === 4) {
-                const focusLevel3Id = itemPathSegments[3];
-                const focusLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                focusLevel2Config = {
-                    id: focusLevel3Id,
-                    label: focusLevel3Data.label || { en: focusLevel3Id },
+                const areaLevel3Id = itemPathSegments[3];
+                const areaLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+                areaLevel2Config = {
+                    id: areaLevel3Id,
+                    label: areaLevel3Data.label || { en: areaLevel3Id },
                     folders: [],
                     presentations: []
                 };
-                focusLevel1Config.folders.push(focusLevel2Config);
+                areaLevel1Config.folders.push(areaLevel2Config);
                 const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
                 for (const presentationPath of presentationPaths) {
                     const presentationId = presentationPath.slice(0, -5);
                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
                     fs.writeFile(`dist/datapos-presentations-default-${presentationId}.json`, JSON.stringify(presentationData));
-                    focusLevel2Config.presentations.push({ id: presentationId });
+                    areaLevel2Config.presentations.push({ id: presentationId });
                 }
             } else {
                 throw new Error(`Unexpected directory level: ${itemPath}.`);
@@ -353,9 +353,9 @@ async function downloadContext(contextId, outDir) {
     const contextIndex = (await getDoc(doc(db, 'components', contextId))).data();
     await fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));
 
-    for (const contextFocus of contextIndex.focuses) {
-        await fs.mkdir(`${outDir}/${contextFocus.id}`);
-        await fs.writeFile(`${outDir}/${contextFocus.id}/index.md`, `# ${contextFocus.label.en} Context\n\n...`);
+    for (const contextArea of contextIndex.areas) {
+        await fs.mkdir(`${outDir}/${contextArea.id}`);
+        await fs.writeFile(`${outDir}/${contextArea.id}/index.md`, `# ${contextArea.label.en} Context\n\n...`);
     }
 
     const contextIdLength = contextId.length;

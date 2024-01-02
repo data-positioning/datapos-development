@@ -332,8 +332,6 @@ async function bumpVersion() {
 
 // Helpers - Download Context
 async function downloadContext(contextId, outDir) {
-    const contextIdLength = contextId.length;
-
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
     const env = result.parsed;
@@ -352,14 +350,13 @@ async function downloadContext(contextId, outDir) {
     fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));
 
     for (const contextFocus of contextIndex.focuses) {
-        const contextId = contextFocus.id.substring(contextIdLength + 1);
-        fs.writeFile(`${outDir}/${contextId}/index.md`, `## ${contextFocus.label.en} Context`);
+        fs.writeFile(`${outDir}/${contextFocus.id}/index.md`, `## ${contextFocus.label.en} Context`);
     }
 
-    var contextIdLeadingChars = contextId.slice(0, contextIdLength - 1);
-    var contextIdLastChar = contextId.slice(contextIdLength - 1, contextId.length);
-    var nextContextId = contextIdLeadingChars + String.fromCharCode(contextIdLastChar.charCodeAt(0) + 1);
-    console.log(contextId, contextIdLength, contextIdLeadingChars, contextIdLastChar, contextId, nextContextId);
+    const contextIdLength = contextId.length;
+    const contextIdLeadingChars = contextId.slice(0, contextIdLength - 1);
+    const contextIdLastChar = contextId.slice(contextIdLength - 1, contextId.length);
+    const nextContextId = contextIdLeadingChars + String.fromCharCode(contextIdLastChar.charCodeAt(0) + 1);
 
     let querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
     querySnapshot.forEach((doc) => {

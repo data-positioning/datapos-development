@@ -358,25 +358,25 @@ async function downloadContext(contextId, outDir) {
 
     await clearDirectory(outDir);
 
-    await fs.writeFile(`${outDir}/whatIsContext.md`, '# What is a Context?\n\n...');
+    await fs.writeFile(`${outDir}/whatIsContext.md`, '# What is a Context?\n...');
 
     const contextIndex = (await getDoc(doc(db, 'components', contextId))).data();
     await fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));
 
     for (const areaConfig of contextIndex.areas) {
         await fs.mkdir(`${outDir}/${areaConfig.id}`);
-        await fs.writeFile(`${outDir}/${areaConfig.id}/index.md`, `# ${areaConfig.label.en} Context Area\n\n...`);
+        await fs.writeFile(`${outDir}/${areaConfig.id}/index.md`, `# ${areaConfig.label.en} Context Area\n...`);
         for (const modelConfig of areaConfig.models) {
             await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
-            await fs.writeFile(`${outDir}/${areaConfig.id}/${modelConfig.id}/index.md`, `# ${modelConfig.label.en} Model\n\n...`);
+            await fs.writeFile(`${outDir}/${areaConfig.id}/${modelConfig.id}/index.md`, `# ${modelConfig.label.en} Model\n...`);
         }
     }
 
-    let modelIndexMarkdown = '# ModelIndex';
+    let modelIndexMarkdown = '# Model Index\n';
     const modelIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-models`))).data();
     console.log('modelIndex', modelIndex);
-    for (const modelConfig of modelIndex.models) {
-        modelIndexMarkdown += `### ${modelConfig.label.en}`;
+    for (const modelConfig of modelIndex.models.sort((left, right) => left.areaSequence - right.areaSequence || left.sequence - right.sequence)) {
+        modelIndexMarkdown += `- ${modelConfig.label.en}\n`;
     }
     await fs.writeFile(`${outDir}/modelIndex.md`, modelIndexMarkdown);
 

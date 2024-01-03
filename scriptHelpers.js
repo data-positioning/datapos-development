@@ -53,6 +53,7 @@ const buildContext_PrepareContext = async (path) => {
                     id: areaId,
                     label: areaData.label || { en: areaId },
                     description: { en: renderMarkdown(markdownIt, areaData.description) },
+                    sequence: areaData.sequence,
                     typeId: 'area',
                     models: []
                 };

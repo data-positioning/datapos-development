@@ -378,13 +378,13 @@ async function downloadContext(contextId, outDir) {
                 for (const eventConfig of entityConfig2.events.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                     modelMarkdown += `- ${eventConfig.label.en}\n`;
                 }
-                modelMarkdown += '#### Characteristics\n';
-                for (const characteristicConfig of entityConfig2.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                    modelMarkdown += `- ${characteristicConfig.label.en}\n`;
-                }
                 modelMarkdown += '#### Computations\n';
                 for (const computationConfig of entityConfig2.computations.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                     modelMarkdown += `- ${computationConfig.label.en}\n`;
+                }
+                modelMarkdown += '#### Characteristics\n';
+                for (const characteristicConfig of entityConfig2.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+                    modelMarkdown += `- ${characteristicConfig.label.en}\n`;
                 }
             }
             modelMarkdown += '## Dimensions\n';

@@ -390,8 +390,8 @@ async function downloadContext(contextId, outDir) {
 
     // Generate dimension index page.
     let dimensionIndexMarkdown = '# Dimension Index\n';
-    const dimensionIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-entities`))).data();
-    for (const dimensionConfig of dimensionIndex.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+    const dimensionIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-dimensions`))).data();
+    for (const dimensionConfig of dimensionIndex.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
         dimensionIndexMarkdown += `- ${dimensionConfig.label.en}\n`;
     }
     await fs.writeFile(`${outDir}/dimensionIndex.md`, dimensionIndexMarkdown);
@@ -406,8 +406,8 @@ async function downloadContext(contextId, outDir) {
 
     // Generate event index page.
     let eventIndexMarkdown = '# Event Index\n';
-    const eventIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-entities`))).data();
-    for (const eventConfig of eventIndex.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+    const eventIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-events`))).data();
+    for (const eventConfig of eventIndex.events.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
         eventIndexMarkdown += `- ${eventConfig.label.en}\n`;
     }
     await fs.writeFile(`${outDir}/eventIndex.md`, eventIndexMarkdown);

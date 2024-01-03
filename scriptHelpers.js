@@ -155,6 +155,7 @@ const buildContext_OutputContext = async () => {
 
     const contextIndex = { id: 'default', label: contextConfig.label, typeId: contextConfig.typeId, areas: [] };
     for (const areaConfig of contextConfig.areas) {
+        console.log('areaConfig', areaConfig);
         const areaId = `${areaConfig.id}`;
         const areaReference = { id: areaId, label: areaConfig.label, areaSequence: areaConfig.sequence, models: [] };
         for (const model of areaConfig.models) {

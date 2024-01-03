@@ -48,7 +48,7 @@ const buildContext_PrepareContext = async (path) => {
             if (itemPathSegments.length === 2) {
                 const areaId = itemPathSegments[1];
                 const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                areaData.description = { en: await readTextFile(`${itemPath}/description.en.md`) };
+                areaData.description = { en: (await readTextFile(`${itemPath}/description.en.md`)) || '' };
                 areaConfig = {
                     id: areaId,
                     label: areaData.label || { en: areaId },
@@ -62,7 +62,7 @@ const buildContext_PrepareContext = async (path) => {
             } else if (itemPathSegments.length === 3) {
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                modelData.description = { en: await readTextFile(`${itemPath}/description.en.md`) };
+                modelData.description = { en: (await readTextFile(`${itemPath}/description.en.md`)) || '' };
                 modelConfig = {
                     id: modelId,
                     label: modelData.label || { en: modelId },
@@ -77,7 +77,7 @@ const buildContext_PrepareContext = async (path) => {
                 for (const dimensionPath of dimensionPaths) {
                     const dimensionId = dimensionPath.split('.')[0];
                     const dimensionData = await readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
-                    dimensionData.description = { en: await readTextFile(`${itemPath}/dimensions/${dimensionId}.en.md`) };
+                    dimensionData.description = { en: (await readTextFile(`${itemPath}/dimensions/${dimensionId}.en.md`)) || '' };
                     const dimensionConfig = {
                         id: dimensionId,
                         label: dimensionData.label || { en: dimensionId },
@@ -91,7 +91,7 @@ const buildContext_PrepareContext = async (path) => {
                 for (const entityPath of entityPaths) {
                     const entityId = entityPath.split('.')[0];
                     const entityData = await readJSONFile(`${itemPath}/entities/${entityId}.json`);
-                    entityData.description = { en: await readTextFile(`${itemPath}/entities/${entityId}.en.md`) };
+                    entityData.description = { en: (await readTextFile(`${itemPath}/entities/${entityId}.en.md`)) || '' };
                     const entityConfig = {
                         id: entityId,
                         label: entityData.label || { en: entityId },
@@ -106,7 +106,7 @@ const buildContext_PrepareContext = async (path) => {
                             entityTypeId: characteristic.entityTypeId,
                             id: characteristic.id,
                             label: characteristic.label || { en: characteristic.id },
-                            description: { en: renderMarkdown(markdownIt, characteristic.description) },
+                            description: { en: renderMarkdown(markdownIt, characteristic.description || '') },
                             typeId: 'characteristic',
                             type: characteristic.type
                         };
@@ -116,7 +116,7 @@ const buildContext_PrepareContext = async (path) => {
                         const computationConfig = {
                             id: computation.id,
                             label: computation.label || { en: computation.id },
-                            description: { en: renderMarkdown(markdownIt, computation.description) },
+                            description: { en: renderMarkdown(markdownIt, computation.description || '') },
                             typeId: 'computation',
                             formula: computation.formula
                         };
@@ -126,7 +126,7 @@ const buildContext_PrepareContext = async (path) => {
                         const eventConfig = {
                             id: event.id,
                             label: event.label || { en: event.id },
-                            description: { en: renderMarkdown(markdownIt, event.description) },
+                            description: { en: renderMarkdown(markdownIt, event.description || '') },
                             typeId: 'event'
                         };
                         entityConfig.events.push(eventConfig);

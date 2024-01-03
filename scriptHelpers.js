@@ -372,6 +372,13 @@ async function downloadContext(contextId, outDir) {
         }
     }
 
+    let characteristicIndexMarkdown = '# Characteristic Index\n';
+    const characteristicIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-characteristics`))).data();
+    for (const characteristicConfig of characteristicIndex.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+        characteristicIndexMarkdown += `- ${characteristicConfig.label.en}\n`;
+    }
+    await fs.writeFile(`${outDir}/characteristicIndex.md`, characteristicIndexMarkdown);
+
     let modelIndexMarkdown = '# Model Index\n';
     const modelIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-models`))).data();
     for (const modelConfig of modelIndex.models.sort((left, right) => left.label.en.localeCompare(right.label.en))) {

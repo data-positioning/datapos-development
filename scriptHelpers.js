@@ -372,9 +372,14 @@ async function downloadContext(contextId, outDir) {
             let modelMarkdown = `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}\n`;
             modelMarkdown += '## Entities\n';
             for (const entityConfig of modelConfig2.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                modelMarkdown += `- ${entityConfig.label.en}\n`;
+                const entityConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-entity-${entityConfig.id}`))).data();
+                modelMarkdown += `- ${entityConfig.label.en} Entity\n${entityConfig2.description.en}\n`;
+                modelMarkdown += '### Computations\n';
+                for (const computationConfig of entityConfig2.computations.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+                    modelMarkdown += `- ${computationConfig.label.en}\n`;
+                }
             }
-            modelMarkdown += '## Dimension\n';
+            modelMarkdown += '## Dimensions\n';
             for (const dimensionConfig of modelConfig2.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                 modelMarkdown += `- ${dimensionConfig.label.en}\n`;
             }

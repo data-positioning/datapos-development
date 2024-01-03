@@ -368,7 +368,20 @@ async function downloadContext(contextId, outDir) {
         await fs.writeFile(`${outDir}/${areaConfig.id}/index.md`, `# ${areaConfig.label.en} Context Area\n...`);
         for (const modelConfig of areaConfig.models) {
             await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
-            await fs.writeFile(`${outDir}/${areaConfig.id}/${modelConfig.id}/index.md`, `# ${modelConfig.label.en} Model\n...`);
+            let modelMarkdown = `# ${modelConfig.label.en} Model\n${modelConfig.description.en}`;
+            modelMarkdown += '## Entities\n';
+            for (const entityConfig of modelConfig.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+                modelMarkdown += `- ${entityConfig.label.en}\n`;
+            }
+            modelMarkdown += '## Dimension\n';
+            for (const dimensionConfig of modelConfig.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+                modelMarkdown += `- ${dimensionConfig.label.en}\n`;
+            }
+            modelMarkdown += '## Views\n';
+            for (const viewConfig of modelConfig.views.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+                modelMarkdown += `- ${viewConfig.label.en}\n`;
+            }
+            await fs.writeFile(`${outDir}/${areaConfig.id}/${modelConfig.id}/index.md`, modelMarkdown);
         }
     }
 

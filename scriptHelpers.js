@@ -355,24 +355,31 @@ async function downloadContext(contextId, outDir) {
     const contextIndex = (await getDoc(doc(db, 'components', contextId))).data();
     await fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));
 
-    for (const contextArea of contextIndex.areas) {
-        await fs.mkdir(`${outDir}/${contextArea.id}`);
-        await fs.writeFile(`${outDir}/${contextArea.id}/index.md`, `# ${contextArea.label.en} Context Area\n\n...`);
-        for (const model of contextArea.models) {
-            await fs.mkdir(`${outDir}/${contextArea.id}/${model.id}`);
-            await fs.writeFile(`${outDir}/${contextArea.id}/${model.id}/index.md`, `# ${model.label.en} Model\n\n...`);
+    for (const areaConfig of contextIndex.areas) {
+        await fs.mkdir(`${outDir}/${areaConfig.id}`);
+        await fs.writeFile(`${outDir}/${areaConfig.id}/index.md`, `# ${areaConfig.label.en} Context Area\n\n...`);
+        for (const modelConfig of areaConfig.models) {
+            await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
+            await fs.writeFile(`${outDir}/${areaConfig.id}/${modelConfig.id}/index.md`, `# ${modelConfig.label.en} Model\n\n...`);
         }
     }
 
-    const contextIdLength = contextId.length;
-    const contextIdLeadingChars = contextId.slice(0, contextIdLength - 1);
-    const contextIdLastChar = contextId.slice(contextIdLength - 1, contextId.length);
-    const nextContextId = contextIdLeadingChars + String.fromCharCode(contextIdLastChar.charCodeAt(0) + 1);
+    let modelIndexMarkdown = '# ModelIndex';
+    const modelIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-models`))).data();
+    for (const modelConfig of modelIndex) {
+        modelIndexMarkdown += `### ${modelConfig.label.en}`;
+    }
+    await fs.writeFile(`${outDir}/modelIndex.md`, modelIndexMarkdown);
 
-    const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
-    querySnapshot.forEach((doc) => {
-        console.log(8888, doc.id);
-    });
+    // const contextIdLength = contextId.length;
+    // const contextIdLeadingChars = contextId.slice(0, contextIdLength - 1);
+    // const contextIdLastChar = contextId.slice(contextIdLength - 1, contextId.length);
+    // const nextContextId = contextIdLeadingChars + String.fromCharCode(contextIdLastChar.charCodeAt(0) + 1);
+
+    // const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
+    // querySnapshot.forEach((doc) => {
+    //     console.log(8888, doc.id);
+    // });
 }
 
 // Helpers - Sync with Github

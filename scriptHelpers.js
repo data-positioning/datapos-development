@@ -366,6 +366,7 @@ async function downloadContext(contextId, outDir) {
 
     let modelIndexMarkdown = '# ModelIndex';
     const modelIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-models`))).data();
+    console.log('modelIndex', modelIndex);
     for (const modelConfig of modelIndex) {
         modelIndexMarkdown += `### ${modelConfig.label.en}`;
     }

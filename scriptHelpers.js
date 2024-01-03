@@ -372,6 +372,7 @@ async function downloadContext(contextId, outDir) {
         }
     }
 
+    // Generate characteristics index page.
     let characteristicIndexMarkdown = '# Characteristic Index\n';
     const characteristicIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-characteristics`))).data();
     for (const characteristicConfig of characteristicIndex.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
@@ -379,6 +380,39 @@ async function downloadContext(contextId, outDir) {
     }
     await fs.writeFile(`${outDir}/characteristicIndex.md`, characteristicIndexMarkdown);
 
+    // Generate computations index page.
+    let computationIndexMarkdown = '# Computations Index\n';
+    const computationsIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-computations`))).data();
+    for (const computationConfig of computationsIndex.computations.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+        computationIndexMarkdown += `- ${computationConfig.label.en}\n`;
+    }
+    await fs.writeFile(`${outDir}/computationIndex.md`, computationIndexMarkdown);
+
+    // Generate dimension index page.
+    let dimensionIndexMarkdown = '# Dimension Index\n';
+    const dimensionIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-entities`))).data();
+    for (const dimensionConfig of dimensionIndex.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+        dimensionIndexMarkdown += `- ${dimensionConfig.label.en}\n`;
+    }
+    await fs.writeFile(`${outDir}/dimensionIndex.md`, dimensionIndexMarkdown);
+
+    // Generate entity index page.
+    let entityIndexMarkdown = '# Entity Index\n';
+    const entityIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-entities`))).data();
+    for (const entityConfig of entityIndex.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+        entityIndexMarkdown += `- ${entityConfig.label.en}\n`;
+    }
+    await fs.writeFile(`${outDir}/entityIndex.md`, entityIndexMarkdown);
+
+    // Generate event index page.
+    let eventIndexMarkdown = '# Event Index\n';
+    const eventIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-entities`))).data();
+    for (const eventConfig of eventIndex.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+        eventIndexMarkdown += `- ${eventConfig.label.en}\n`;
+    }
+    await fs.writeFile(`${outDir}/eventIndex.md`, eventIndexMarkdown);
+
+    // Generate model index page.
     let modelIndexMarkdown = '# Model Index\n';
     const modelIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-models`))).data();
     for (const modelConfig of modelIndex.models.sort((left, right) => left.label.en.localeCompare(right.label.en))) {

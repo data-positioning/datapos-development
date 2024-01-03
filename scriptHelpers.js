@@ -156,80 +156,73 @@ const buildContext_OutputContext = async () => {
     for (const areaConfig of contextConfig.areas) {
         const areaId = `${areaConfig.id}`;
         const areaReference = { id: areaId, label: areaConfig.label, areaSequence: areaConfig.sequence, models: [] };
-        for (const modelConfig of areaConfig.models) {
-            const modelId = `${modelConfig.id}`;
+        for (const model of areaConfig.models) {
+            const modelId = `${model.id}`;
             const modelConfig = {
                 id: modelId,
-                label: modelConfig.label,
-                description: modelConfig.description,
-                sequence: modelConfig.sequence,
-                typeId: modelConfig.typeId,
+                label: model.label,
+                description: model.description,
+                sequence: model.sequence,
+                typeId: model.typeId,
                 dimensions: [],
                 entities: [],
                 views: []
             };
 
-            for (const dimensionConfig of modelConfig.dimensions) {
-                const dimensionId = `${dimensionConfig.id}`;
+            for (const dimension of model.dimensions) {
+                const dimensionId = `${dimension.id}`;
                 const dimensionConfig = {
                     id: dimensionId,
-                    label: dimensionConfig.label,
-                    description: dimensionConfig.description,
-                    typeId: dimensionConfig.typeId,
-                    levels: dimensionConfig.levels
+                    label: dimension.label,
+                    description: dimension.description,
+                    typeId: dimension.typeId,
+                    levels: dimension.levels
                 };
                 fs.writeFile(`dist/datapos-context-default-dimension-${dimensionId}.json`, JSON.stringify(dimensionConfig));
-                const dimensionReference = { id: dimensionId, label: dimensionConfig.label };
+                const dimensionReference = { id: dimensionId, label: dimension.label };
                 modelConfig.dimensions.push(dimensionReference);
                 dimensions.push({
                     ...dimensionReference,
                     modelId: modelId,
-                    modelLabel: modelConfig.label,
+                    modelLabel: model.label,
                     areaId: areaConfig.Id,
                     areaLabel: areaConfig.label,
                     areaSequence: areaConfig.sequence
                 });
             }
 
-            for (const entityConfig of modelConfig.entities) {
-                const entityId = `${entityConfig.id}`;
+            for (const entity of model.entities) {
+                const entityId = `${entity.id}`;
                 const entityConfig = {
                     id: entityId,
-                    label: entityConfig.label,
-                    description: entityConfig.description,
-                    typeId: entityConfig.typeId,
-                    characteristics: entityConfig.characteristics,
-                    computations: entityConfig.computations,
-                    events: entityConfig.events
+                    label: entity.label,
+                    description: entity.description,
+                    typeId: entity.typeId,
+                    characteristics: entity.characteristics,
+                    computations: entity.computations,
+                    events: entity.events
                 };
                 fs.writeFile(`dist/datapos-context-default-entity-${entityId}.json`, JSON.stringify(entityConfig));
-                const entityReference = { id: entityId, label: entityConfig.label };
+                const entityReference = { id: entityId, label: entity.label };
                 modelConfig.entities.push(entityReference);
-                entities.push({
-                    ...entityReference,
-                    modelId: modelId,
-                    modelLabel: modelConfig.label,
-                    areaId: areaId,
-                    areaLabel: areaConfig.label,
-                    areaSequence: areaConfig.sequence
-                });
+                entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
             }
 
-            for (const viewConfig of modelConfig.views) {
-                const viewId = `${viewConfig.id}`;
+            for (const view of model.views) {
+                const viewId = `${view.id}`;
                 const viewConfig = {
                     id: viewId,
-                    label: viewConfig.label,
-                    description: viewConfig.description,
-                    typeId: viewConfig.typeId
+                    label: view.label,
+                    description: view.description,
+                    typeId: view.typeId
                 };
                 fs.writeFile(`dist/datapos-context-default-view-${viewId}.json`, JSON.stringify(viewConfig));
-                const viewReference = { id: viewId, label: viewConfig.label };
+                const viewReference = { id: viewId, label: view.label };
                 modelConfig.views.push(viewReference);
-                views.push({ ...viewReference, modelId: modelId, modelLabel: modelConfig.label, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
+                views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
             }
             fs.writeFile(`dist/datapos-context-default-model-${modelId}.json`, JSON.stringify(modelConfig));
-            const modelReference = { id: modelId, label: modelConfig.label, sequence: modelConfig.sequence };
+            const modelReference = { id: modelId, label: model.label, sequence: model.sequence };
             areaReference.models.push(modelReference);
             models.push({ ...modelReference, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
         }

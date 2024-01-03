@@ -375,7 +375,7 @@ async function downloadContext(contextId, outDir) {
     let modelIndexMarkdown = '# ModelIndex';
     const modelIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-models`))).data();
     console.log('modelIndex', modelIndex);
-    for (const modelConfig of modelIndex) {
+    for (const modelConfig of modelIndex.models) {
         modelIndexMarkdown += `### ${modelConfig.label.en}`;
     }
     await fs.writeFile(`${outDir}/modelIndex.md`, modelIndexMarkdown);

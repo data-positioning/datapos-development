@@ -367,21 +367,22 @@ async function downloadContext(contextId, outDir) {
         await fs.mkdir(`${outDir}/${areaConfig.id}`);
         await fs.writeFile(`${outDir}/${areaConfig.id}/index.md`, `# ${areaConfig.label.en} Context Area\n...`);
         for (const modelConfig of areaConfig.models) {
+            const modelConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-model-${modelConfig.id}`))).data();
             await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
-            let modelMarkdown = `# ${modelConfig.label.en} Model\n${modelConfig.description.en}`;
+            let modelMarkdown = `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}`;
             modelMarkdown += '## Entities\n';
-            for (const entityConfig of modelConfig.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+            for (const entityConfig of modelConfig2.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                 modelMarkdown += `- ${entityConfig.label.en}\n`;
             }
             modelMarkdown += '## Dimension\n';
-            for (const dimensionConfig of modelConfig.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+            for (const dimensionConfig of modelConfig2.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                 modelMarkdown += `- ${dimensionConfig.label.en}\n`;
             }
             modelMarkdown += '## Views\n';
-            for (const viewConfig of modelConfig.views.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+            for (const viewConfig of modelConfig2.views.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                 modelMarkdown += `- ${viewConfig.label.en}\n`;
             }
-            await fs.writeFile(`${outDir}/${areaConfig.id}/${modelConfig.id}/index.md`, modelMarkdown);
+            await fs.writeFile(`${outDir}/${areaConfig.id}/${modelConfig2.id}/index.md`, modelMarkdown);
         }
     }
 

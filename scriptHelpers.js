@@ -152,83 +152,97 @@ const buildContext_OutputContext = async () => {
 
     await clearDirectory('dist');
 
-    const context = { id: 'default', label: contextConfig.label, typeId: contextConfig.typeId, areas: [] };
-    for (const area of contextConfig.areas) {
-        const areaId = `${area.id}`;
-        const areaReference = { id: areaId, label: area.label, models: [] };
-        for (const model of area.models) {
-            const modelId = `${model.id}`;
+    const contextIndex = { id: 'default', label: contextConfig.label, typeId: contextConfig.typeId, areas: [] };
+    for (const areaConfig of contextConfig.areas) {
+        const areaId = `${areaConfig.id}`;
+        const areaReference = { id: areaId, label: areaConfig.label, areaSequence: areaConfig.sequence, models: [] };
+        for (const modelConfig of areaConfig.models) {
+            const modelId = `${modelConfig.id}`;
             const modelConfig = {
                 id: modelId,
-                label: model.label,
-                description: model.description,
-                sequence: model.sequence,
-                typeId: model.typeId,
+                label: modelConfig.label,
+                description: modelConfig.description,
+                sequence: modelConfig.sequence,
+                typeId: modelConfig.typeId,
                 dimensions: [],
                 entities: [],
                 views: []
             };
 
-            for (const dimension of model.dimensions) {
-                const dimensionId = `${dimension.id}`;
+            for (const dimensionConfig of modelConfig.dimensions) {
+                const dimensionId = `${dimensionConfig.id}`;
                 const dimensionConfig = {
                     id: dimensionId,
-                    label: dimension.label,
-                    description: dimension.description,
-                    typeId: dimension.typeId,
-                    levels: dimension.levels
+                    label: dimensionConfig.label,
+                    description: dimensionConfig.description,
+                    typeId: dimensionConfig.typeId,
+                    levels: dimensionConfig.levels
                 };
                 fs.writeFile(`dist/datapos-context-default-dimension-${dimensionId}.json`, JSON.stringify(dimensionConfig));
-                const dimensionReference = { id: dimensionId, label: dimension.label };
+                const dimensionReference = { id: dimensionId, label: dimensionConfig.label };
                 modelConfig.dimensions.push(dimensionReference);
-                dimensions.push({ ...dimensionReference, modelId: modelId, modelLabel: model.label, areaId: area.Id, areaLabel: area.label });
+                dimensions.push({
+                    ...dimensionReference,
+                    modelId: modelId,
+                    modelLabel: modelConfig.label,
+                    areaId: areaConfig.Id,
+                    areaLabel: areaConfig.label,
+                    areaSequence: areaConfig.sequence
+                });
             }
 
-            for (const entity of model.entities) {
-                const entityId = `${entity.id}`;
+            for (const entityConfig of modelConfig.entities) {
+                const entityId = `${entityConfig.id}`;
                 const entityConfig = {
                     id: entityId,
-                    label: entity.label,
-                    description: entity.description,
-                    typeId: entity.typeId,
-                    characteristics: entity.characteristics,
-                    computations: entity.computations,
-                    events: entity.events
+                    label: entityConfig.label,
+                    description: entityConfig.description,
+                    typeId: entityConfig.typeId,
+                    characteristics: entityConfig.characteristics,
+                    computations: entityConfig.computations,
+                    events: entityConfig.events
                 };
                 fs.writeFile(`dist/datapos-context-default-entity-${entityId}.json`, JSON.stringify(entityConfig));
-                const entityReference = { id: entityId, label: entity.label };
+                const entityReference = { id: entityId, label: entityConfig.label };
                 modelConfig.entities.push(entityReference);
-                entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: area.label });
+                entities.push({
+                    ...entityReference,
+                    modelId: modelId,
+                    modelLabel: modelConfig.label,
+                    areaId: areaId,
+                    areaLabel: areaConfig.label,
+                    areaSequence: areaConfig.sequence
+                });
             }
 
-            for (const view of model.views) {
-                const viewId = `${view.id}`;
+            for (const viewConfig of modelConfig.views) {
+                const viewId = `${viewConfig.id}`;
                 const viewConfig = {
                     id: viewId,
-                    label: view.label,
-                    description: view.description,
-                    typeId: view.typeId
+                    label: viewConfig.label,
+                    description: viewConfig.description,
+                    typeId: viewConfig.typeId
                 };
                 fs.writeFile(`dist/datapos-context-default-view-${viewId}.json`, JSON.stringify(viewConfig));
-                const viewReference = { id: viewId, label: view.label };
+                const viewReference = { id: viewId, label: viewConfig.label };
                 modelConfig.views.push(viewReference);
-                views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: area.label });
+                views.push({ ...viewReference, modelId: modelId, modelLabel: modelConfig.label, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
             }
             fs.writeFile(`dist/datapos-context-default-model-${modelId}.json`, JSON.stringify(modelConfig));
-            const modelReference = { id: modelId, label: model.label, sequence: model.sequence };
+            const modelReference = { id: modelId, label: modelConfig.label, sequence: modelConfig.sequence };
             areaReference.models.push(modelReference);
-            models.push({ ...modelReference, areaId: areaId, areaLabel: area.label });
+            models.push({ ...modelReference, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
         }
-        context.areas.push(areaReference);
+        contextIndex.areas.push(areaReference);
     }
-    fs.writeFile('dist/datapos-context-default.json', JSON.stringify(context));
-    fs.writeFile('dist/datapos-context-default-models.json', JSON.stringify(models));
-    fs.writeFile('dist/datapos-context-default-dimensions.json', JSON.stringify(dimensions));
-    fs.writeFile('dist/datapos-context-default-entities.json', JSON.stringify(entities));
-    fs.writeFile('dist/datapos-context-default-characteristics.json', JSON.stringify(characteristics));
-    fs.writeFile('dist/datapos-context-default-computations.json', JSON.stringify(computations));
-    fs.writeFile('dist/datapos-context-default-events.json', JSON.stringify(events));
-    fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify(views));
+    fs.writeFile('dist/datapos-context-default.json', JSON.stringify(contextIndex));
+    fs.writeFile('dist/datapos-context-default-models.json', JSON.stringify({ models: models }));
+    fs.writeFile('dist/datapos-context-default-dimensions.json', JSON.stringify({ dimensions: dimensions }));
+    fs.writeFile('dist/datapos-context-default-entities.json', JSON.stringify({ entities: entities }));
+    fs.writeFile('dist/datapos-context-default-characteristics.json', JSON.stringify({ characteristics: characteristics }));
+    fs.writeFile('dist/datapos-context-default-computations.json', JSON.stringify({ computations: computations }));
+    fs.writeFile('dist/datapos-context-default-events.json', JSON.stringify({ events: events }));
+    fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify({ views: views }));
 };
 
 // Helpers - Build Presentations

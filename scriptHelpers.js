@@ -369,7 +369,7 @@ async function downloadContext(contextId, outDir) {
         for (const modelConfig of areaConfig.models) {
             const modelConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-model-${modelConfig.id}`))).data();
             await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
-            let modelMarkdown = `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}`;
+            let modelMarkdown = `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}\n`;
             modelMarkdown += '## Entities\n';
             for (const entityConfig of modelConfig2.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                 modelMarkdown += `- ${entityConfig.label.en}\n`;

@@ -372,7 +372,7 @@ async function downloadContext(contextId, outDir) {
             await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
             let modelMarkdown = '';
             modelMarkdown += `<script setup lang="ts">\n`;
-            modelMarkdown += `import EventTable from '/.vitePress/theme/components/EventTable.vue';\n\n`;
+            modelMarkdown += `import EventTable from '/.vitePress/theme/components/EventTable.vue';\n`;
             modelMarkdown += `</script>\n\n`;
             modelMarkdown += `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}\n`;
             modelMarkdown += '## Entities\n';

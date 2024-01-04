@@ -107,7 +107,7 @@ const buildContext_PrepareContext = async (path) => {
                             entityTypeId: characteristic.entityTypeId,
                             id: characteristic.id,
                             label: characteristic.label || { en: characteristic.id },
-                            description: { en: characteristic.description.en || '' },
+                            description: characteristic.description || { en: '' },
                             typeId: 'characteristic',
                             type: characteristic.type
                         };
@@ -117,7 +117,7 @@ const buildContext_PrepareContext = async (path) => {
                         const computationConfig = {
                             id: computation.id,
                             label: computation.label || { en: computation.id },
-                            description: { en: computation.description.en || '' },
+                            description: computation.description || { en: '' },
                             typeId: 'computation',
                             formula: computation.formula
                         };
@@ -127,7 +127,7 @@ const buildContext_PrepareContext = async (path) => {
                         const eventConfig = {
                             id: event.id,
                             label: event.label || { en: event.id },
-                            description: { en: event.description.en || '' },
+                            description: event.description || { en: '' },
                             typeId: 'event'
                         };
                         entityConfig.events.push(eventConfig);

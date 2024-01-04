@@ -385,13 +385,13 @@ async function downloadContext(contextId, outDir) {
                 modelMarkdown += '| Label | Description |\n';
                 modelMarkdown += '| ----- | ----------- |\n';
                 for (const computationConfig of entityConfig2.computations) {
-                    modelMarkdown += `| ${computationConfig.label.en} | |\n`;
+                    modelMarkdown += `| ${computationConfig.label.en} | ${computationConfig.description.en} |\n`;
                 }
                 modelMarkdown += '#### Characteristics\n';
                 modelMarkdown += '| Label | Description |\n';
                 modelMarkdown += '| ----- | ----------- |\n';
                 for (const characteristicConfig of entityConfig2.characteristics) {
-                    modelMarkdown += `| ${characteristicConfig.label.en} | |\n`;
+                    modelMarkdown += `| ${characteristicConfig.label.en} | ${characteristicConfig.description.en} |\n`;
                 }
             }
             modelMarkdown += '## Dimensions\n';

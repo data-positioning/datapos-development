@@ -370,14 +370,21 @@ async function downloadContext(contextId, outDir) {
         for (const modelConfig of areaConfig.models) {
             const modelConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-model-${modelConfig.id}`))).data();
             await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
-            let modelMarkdown = `<script setup lang="ts">\nimport EventTable from '/.vitePress/theme/components/EventTable.vue';\n</script>\n\n`;
+            let modelMarkdown = '';
+            modelMarkdown += `<script setup lang="ts">\n`;
+            modelMarkdown += `import EventTable from '/.vitePress/theme/components/EventTable.vue';\n\n`;
+            modelMarkdown += `</script>\n\n`;
             modelMarkdown += `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}\n`;
             modelMarkdown += '## Entities\n';
             for (const entityConfig of modelConfig2.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                 const entityConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-entity-${entityConfig.id}`))).data();
                 modelMarkdown += `### ${entityConfig.label.en} Entity\n${entityConfig2.description.en}\n`;
                 modelMarkdown += '#### Events\n';
-                modelMarkdown += `<EventTable :eventConfigs="[{label: 'Label 1', description: 'Description 1'}]"/>\n\n`;
+                modelMarkdown += `<EventTable :eventConfigs="[\n`;
+                for (const eventConfig of entityConfig2.events) {
+                    modelMarkdown += `    {label: '${eventConfig.label.en}', description: '${eventConfig.description.en}'},\n`;
+                }
+                modelMarkdown += `]"/>\n\n`;
                 modelMarkdown += '| Label | Description |\n';
                 modelMarkdown += '| ----- | ----------- |\n';
                 for (const eventConfig of entityConfig2.events) {

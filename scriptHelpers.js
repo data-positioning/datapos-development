@@ -372,6 +372,8 @@ async function downloadContext(contextId, outDir) {
             await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
             let modelMarkdown = '';
             modelMarkdown += `<script setup lang="ts">\n`;
+            modelMarkdown += `import CharacteristicsTable from '/.vitePress/theme/components/CharacteristicsTable.vue';\n`;
+            modelMarkdown += `import ComputationsTable from '/.vitePress/theme/components/ComputationsTable.vue';\n`;
             modelMarkdown += `import EventTable from '/.vitePress/theme/components/EventTable.vue';\n`;
             modelMarkdown += `</script>\n\n`;
             modelMarkdown += `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}\n`;
@@ -385,23 +387,36 @@ async function downloadContext(contextId, outDir) {
                     modelMarkdown += `    {label: '${eventConfig.label.en.replace("'", "\\'")}', description: '${eventConfig.description.en.replace("'", "\\'")}'},\n`;
                 }
                 modelMarkdown += `]"/>\n\n`;
-                modelMarkdown += '| Label | Description |\n';
-                modelMarkdown += '| ----- | ----------- |\n';
-                for (const eventConfig of entityConfig2.events) {
-                    modelMarkdown += `| ${eventConfig.label.en} | ${eventConfig.description.en} |\n`;
-                }
-                modelMarkdown += '#### Computations\n';
-                modelMarkdown += '| Label | Description |\n';
-                modelMarkdown += '| ----- | ----------- |\n';
+                // modelMarkdown += '| Label | Description |\n';
+                // modelMarkdown += '| ----- | ----------- |\n';
+                // for (const eventConfig of entityConfig2.events) {
+                //     modelMarkdown += `| ${eventConfig.label.en} | ${eventConfig.description.en} |\n`;
+                // }
+                modelMarkdown += `<ComputationTable :computationConfigs="[\n`;
                 for (const computationConfig of entityConfig2.computations) {
-                    modelMarkdown += `| ${computationConfig.label.en} | ${computationConfig.description.en} |\n`;
+                    modelMarkdown += `    {label: '${computationConfig.label.en.replace("'", "\\'")}', description: '${computationConfig.description.en.replace("'", "\\'")}'},\n`;
                 }
-                modelMarkdown += '#### Characteristics\n';
-                modelMarkdown += '| Label | Description |\n';
-                modelMarkdown += '| ----- | ----------- |\n';
+                modelMarkdown += `]"/>\n\n`;
+                // modelMarkdown += '#### Computations\n';
+                // modelMarkdown += '| Label | Description |\n';
+                // modelMarkdown += '| ----- | ----------- |\n';
+                // for (const computationConfig of entityConfig2.computations) {
+                //     modelMarkdown += `| ${computationConfig.label.en} | ${computationConfig.description.en} |\n`;
+                // }
+                modelMarkdown += `<CharacteristicTable :characteristicConfigs="[\n`;
                 for (const characteristicConfig of entityConfig2.characteristics) {
-                    modelMarkdown += `| ${characteristicConfig.label.en} | ${characteristicConfig.description.en} |\n`;
+                    modelMarkdown += `    {label: '${characteristicConfig.label.en.replace("'", "\\'")}', description: '${characteristicConfig.description.en.replace(
+                        "'",
+                        "\\'"
+                    )}'},\n`;
                 }
+                modelMarkdown += `]"/>\n\n`;
+                // modelMarkdown += '#### Characteristics\n';
+                // modelMarkdown += '| Label | Description |\n';
+                // modelMarkdown += '| ----- | ----------- |\n';
+                // for (const characteristicConfig of entityConfig2.characteristics) {
+                //     modelMarkdown += `| ${characteristicConfig.label.en} | ${characteristicConfig.description.en} |\n`;
+                // }
             }
             modelMarkdown += '## Dimensions\n';
             for (const dimensionConfig of modelConfig2.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {

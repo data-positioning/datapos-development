@@ -4,7 +4,8 @@ const fs = require('fs').promises;
 const { initializeApp } = require('firebase/app');
 const MarkdownIt = require('markdown-it');
 const path = require('path');
-const { collection, doc, documentId, getDoc, getDocs, getFirestore, query, where } = require('firebase/firestore');
+// const { collection, documentId, getDocs, query, where } = require('firebase/firestore');
+const { doc, getDoc, getFirestore } = require('firebase/firestore');
 
 // Dependencies - Promisify Exec
 const util = require('util');
@@ -375,21 +376,27 @@ async function downloadContext(contextId, outDir) {
                 const entityConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-entity-${entityConfig.id}`))).data();
                 modelMarkdown += `### ${entityConfig.label.en} Entity\n${entityConfig2.description.en}\n`;
                 modelMarkdown += '#### Events\n';
+                modelMarkdown += '| Label | Description |';
+                modelMarkdown += '| ----- | ----------- |';
                 for (const eventConfig of entityConfig2.events.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                    modelMarkdown += `- ${eventConfig.label.en}\n`;
+                    modelMarkdown += `| ${eventConfig.label.en} | ${eventConfig.description.en} |\n`;
                 }
                 modelMarkdown += '#### Computations\n';
+                modelMarkdown += '| Label | Description |';
+                modelMarkdown += '| ----- | ----------- |';
                 for (const computationConfig of entityConfig2.computations.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                     modelMarkdown += `- ${computationConfig.label.en}\n`;
                 }
                 modelMarkdown += '#### Characteristics\n';
+                modelMarkdown += '| Label | Description |';
+                modelMarkdown += '| ----- | ----------- |';
                 for (const characteristicConfig of entityConfig2.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                    modelMarkdown += `- ${characteristicConfig.label.en}\n`;
+                    modelMarkdown += `| ${characteristicConfig.label.en} |\n`;
                 }
             }
             modelMarkdown += '## Dimensions\n';
             for (const dimensionConfig of modelConfig2.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                modelMarkdown += `- ${dimensionConfig.label.en}\n`;
+                modelMarkdown += `| ${dimensionConfig.label.en} |\n`;
             }
             modelMarkdown += '## Views\n';
             for (const viewConfig of modelConfig2.views.sort((left, right) => left.label.en.localeCompare(right.label.en))) {

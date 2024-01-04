@@ -107,7 +107,7 @@ const buildContext_PrepareContext = async (path) => {
                             entityTypeId: characteristic.entityTypeId,
                             id: characteristic.id,
                             label: characteristic.label || { en: characteristic.id },
-                            description: { en: renderMarkdown(markdownIt, characteristic.description || '') },
+                            description: { en: characteristic.description || '' },
                             typeId: 'characteristic',
                             type: characteristic.type
                         };
@@ -117,7 +117,7 @@ const buildContext_PrepareContext = async (path) => {
                         const computationConfig = {
                             id: computation.id,
                             label: computation.label || { en: computation.id },
-                            description: { en: renderMarkdown(markdownIt, computation.description || '') },
+                            description: { en: computation.description || '' },
                             typeId: 'computation',
                             formula: computation.formula
                         };
@@ -127,7 +127,7 @@ const buildContext_PrepareContext = async (path) => {
                         const eventConfig = {
                             id: event.id,
                             label: event.label || { en: event.id },
-                            description: { en: renderMarkdown(markdownIt, event.description || '') },
+                            description: { en: event.description || '' },
                             typeId: 'event'
                         };
                         entityConfig.events.push(eventConfig);
@@ -385,13 +385,13 @@ async function downloadContext(contextId, outDir) {
                 modelMarkdown += '| Label | Description |\n';
                 modelMarkdown += '| ----- | ----------- |\n';
                 for (const computationConfig of entityConfig2.computations.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                    modelMarkdown += `- ${computationConfig.label.en}\n`;
+                    modelMarkdown += `| ${computationConfig.label.en} | |\n`;
                 }
                 modelMarkdown += '#### Characteristics\n';
                 modelMarkdown += '| Label | Description |\n';
                 modelMarkdown += '| ----- | ----------- |\n';
                 for (const characteristicConfig of entityConfig2.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                    modelMarkdown += `| ${characteristicConfig.label.en} |\n`;
+                    modelMarkdown += `| ${characteristicConfig.label.en} | |\n`;
                 }
             }
             modelMarkdown += '## Dimensions\n';

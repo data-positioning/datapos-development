@@ -376,20 +376,20 @@ async function downloadContext(contextId, outDir) {
                 const entityConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-entity-${entityConfig.id}`))).data();
                 modelMarkdown += `### ${entityConfig.label.en} Entity\n${entityConfig2.description.en}\n`;
                 modelMarkdown += '#### Events\n';
-                modelMarkdown += '| Label | Description |';
-                modelMarkdown += '| ----- | ----------- |';
+                modelMarkdown += '| Label | Description |\n';
+                modelMarkdown += '| ----- | ----------- |\n';
                 for (const eventConfig of entityConfig2.events.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                     modelMarkdown += `| ${eventConfig.label.en} | ${eventConfig.description.en} |\n`;
                 }
                 modelMarkdown += '#### Computations\n';
-                modelMarkdown += '| Label | Description |';
-                modelMarkdown += '| ----- | ----------- |';
+                modelMarkdown += '| Label | Description |\n';
+                modelMarkdown += '| ----- | ----------- |\n';
                 for (const computationConfig of entityConfig2.computations.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                     modelMarkdown += `- ${computationConfig.label.en}\n`;
                 }
                 modelMarkdown += '#### Characteristics\n';
-                modelMarkdown += '| Label | Description |';
-                modelMarkdown += '| ----- | ----------- |';
+                modelMarkdown += '| Label | Description |\n';
+                modelMarkdown += '| ----- | ----------- |\n';
                 for (const characteristicConfig of entityConfig2.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                     modelMarkdown += `| ${characteristicConfig.label.en} |\n`;
                 }

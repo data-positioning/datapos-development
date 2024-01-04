@@ -372,8 +372,8 @@ async function downloadContext(contextId, outDir) {
             await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
             let modelMarkdown = '';
             modelMarkdown += `<script setup lang="ts">\n`;
-            modelMarkdown += `import CharacteristicsTable from '/.vitePress/theme/components/CharacteristicsTable.vue';\n`;
-            modelMarkdown += `import ComputationsTable from '/.vitePress/theme/components/ComputationsTable.vue';\n`;
+            modelMarkdown += `import CharacteristicTable from '/.vitePress/theme/components/CharacteristicTable.vue';\n`;
+            modelMarkdown += `import ComputationTable from '/.vitePress/theme/components/ComputationTable.vue';\n`;
             modelMarkdown += `import EventTable from '/.vitePress/theme/components/EventTable.vue';\n`;
             modelMarkdown += `</script>\n\n`;
             modelMarkdown += `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}\n`;

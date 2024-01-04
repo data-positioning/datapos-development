@@ -377,7 +377,7 @@ async function downloadContext(contextId, outDir) {
                 const entityConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-entity-${entityConfig.id}`))).data();
                 modelMarkdown += `### ${entityConfig.label.en} Entity\n${entityConfig2.description.en}\n`;
                 modelMarkdown += '#### Events\n';
-                modelMarkdown += `<EventTable :eventConfigs="[{label: 'Label 1', description: 'Description 1'}]"/>\n`;
+                modelMarkdown += `<EventTable :eventConfigs="[{label: 'Label 1', description: 'Description 1'}]"/>\n\n`;
                 modelMarkdown += '| Label | Description |\n';
                 modelMarkdown += '| ----- | ----------- |\n';
                 for (const eventConfig of entityConfig2.events) {

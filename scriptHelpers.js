@@ -403,14 +403,14 @@ async function downloadContext(contextId, outDir) {
                 // for (const computationConfig of entityConfig2.computations) {
                 //     modelMarkdown += `| ${computationConfig.label.en} | ${computationConfig.description.en} |\n`;
                 // }
-                modelMarkdown += `<CharacteristicTable :characteristicConfigs="[\n`;
-                for (const characteristicConfig of entityConfig2.characteristics) {
-                    modelMarkdown += `    {label: '${characteristicConfig.label.en.replace("'", "\\'")}', description: '${characteristicConfig.description.en.replace(
-                        "'",
-                        "\\'"
-                    )}'},\n`;
-                }
-                modelMarkdown += `]"/>\n\n`;
+                // modelMarkdown += `<CharacteristicTable :characteristicConfigs="[\n`;
+                // for (const characteristicConfig of entityConfig2.characteristics) {
+                //     modelMarkdown += `    {label: '${characteristicConfig.label.en.replace("'", "\\'")}', description: '${characteristicConfig.description.en.replace(
+                //         "'",
+                //         "\\'"
+                //     )}'},\n`;
+                // }
+                // modelMarkdown += `]"/>\n\n`;
                 // modelMarkdown += '#### Characteristics\n';
                 // modelMarkdown += '| Label | Description |\n';
                 // modelMarkdown += '| ----- | ----------- |\n';

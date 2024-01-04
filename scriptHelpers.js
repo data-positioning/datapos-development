@@ -384,7 +384,7 @@ async function downloadContext(contextId, outDir) {
                 modelMarkdown += '#### Events\n';
                 modelMarkdown += `<EventTable :eventConfigs="[\n`;
                 for (const eventConfig of entityConfig2.events) {
-                    modelMarkdown += `    {label: '${eventConfig.label.en.replace("'", "\\'")}', description: '${eventConfig.description.en.replace("'", "\\'")}'},\n`;
+                    modelMarkdown += `    {label: '${eventConfig.label.en}', description: '${eventConfig.description.en.replace("'", "\\'")}'},\n`;
                 }
                 modelMarkdown += `]"/>\n\n`;
                 // modelMarkdown += '| Label | Description |\n';
@@ -394,7 +394,7 @@ async function downloadContext(contextId, outDir) {
                 // }
                 modelMarkdown += `<ComputationTable :computationConfigs="[\n`;
                 for (const computationConfig of entityConfig2.computations) {
-                    modelMarkdown += `    {label: '${computationConfig.label.en.replace("'", "\\'")}', description: '${computationConfig.description.en.replace("'", "\\'")}'},\n`;
+                    modelMarkdown += `    {label: '${computationConfig.label.en}', description: '${computationConfig.description.en.replace("'", "\\'")}'},\n`;
                 }
                 modelMarkdown += `]"/>\n\n`;
                 // modelMarkdown += '#### Computations\n';
@@ -403,14 +403,11 @@ async function downloadContext(contextId, outDir) {
                 // for (const computationConfig of entityConfig2.computations) {
                 //     modelMarkdown += `| ${computationConfig.label.en} | ${computationConfig.description.en} |\n`;
                 // }
-                // modelMarkdown += `<CharacteristicTable :characteristicConfigs="[\n`;
-                // for (const characteristicConfig of entityConfig2.characteristics) {
-                //     modelMarkdown += `    {label: '${characteristicConfig.label.en.replace("'", "\\'")}', description: '${characteristicConfig.description.en.replace(
-                //         "'",
-                //         "\\'"
-                //     )}'},\n`;
-                // }
-                // modelMarkdown += `]"/>\n\n`;
+                modelMarkdown += `<CharacteristicTable :characteristicConfigs="[\n`;
+                for (const characteristicConfig of entityConfig2.characteristics) {
+                    modelMarkdown += `    {label: '${characteristicConfig.label.en}', description: '${characteristicConfig.description.en.replace("'", "\\'")}'},\n`;
+                }
+                modelMarkdown += `]"/>\n\n`;
                 // modelMarkdown += '#### Characteristics\n';
                 // modelMarkdown += '| Label | Description |\n';
                 // modelMarkdown += '| ----- | ----------- |\n';

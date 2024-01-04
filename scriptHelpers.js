@@ -382,7 +382,7 @@ async function downloadContext(contextId, outDir) {
                 modelMarkdown += '#### Events\n';
                 modelMarkdown += `<EventTable :eventConfigs="[\n`;
                 for (const eventConfig of entityConfig2.events) {
-                    modelMarkdown += `    {label: '${eventConfig.label.en}', description: '${eventConfig.description.en}'},\n`;
+                    modelMarkdown += `    {label: "${eventConfig.label.en}", description: "${eventConfig.description.en}"},\n`;
                 }
                 modelMarkdown += `]"/>\n\n`;
                 modelMarkdown += '| Label | Description |\n';

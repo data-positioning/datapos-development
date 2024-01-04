@@ -378,19 +378,19 @@ async function downloadContext(contextId, outDir) {
                 modelMarkdown += '#### Events\n';
                 modelMarkdown += '| Label | Description |\n';
                 modelMarkdown += '| ----- | ----------- |\n';
-                for (const eventConfig of entityConfig2.events.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+                for (const eventConfig of entityConfig2.events) {
                     modelMarkdown += `| ${eventConfig.label.en} | ${eventConfig.description.en} |\n`;
                 }
                 modelMarkdown += '#### Computations\n';
                 modelMarkdown += '| Label | Description |\n';
                 modelMarkdown += '| ----- | ----------- |\n';
-                for (const computationConfig of entityConfig2.computations.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+                for (const computationConfig of entityConfig2.computations) {
                     modelMarkdown += `| ${computationConfig.label.en} | |\n`;
                 }
                 modelMarkdown += '#### Characteristics\n';
                 modelMarkdown += '| Label | Description |\n';
                 modelMarkdown += '| ----- | ----------- |\n';
-                for (const characteristicConfig of entityConfig2.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+                for (const characteristicConfig of entityConfig2.characteristics) {
                     modelMarkdown += `| ${characteristicConfig.label.en} | |\n`;
                 }
             }

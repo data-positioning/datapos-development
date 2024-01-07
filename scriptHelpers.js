@@ -98,7 +98,7 @@ const buildContext_PrepareContext = async (path) => {
                     const entityConfig = {
                         id: entityId,
                         label: entityData.label || { en: entityId },
-                        description: { en: renderMarkdown(markdownIt, entityData.description.en || '...') },
+                        description: { en: renderMarkdown(markdownIt, entityData.description.en ? entityData.description : { en: '...' }) },
                         typeId: 'entity',
                         characteristics: [],
                         computations: [],

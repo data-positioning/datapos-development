@@ -64,10 +64,12 @@ const buildContext_PrepareContext = async (path) => {
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 modelData.description = { en: (await readTextFile(`${itemPath}/description.en.md`)) || '' };
+                modelData.entityDiagram = { en: (await readTextFile(`${itemPath}/entities/diagram.svg`)) || '' };
                 modelConfig = {
                     id: modelId,
                     label: modelData.label || { en: modelId },
                     description: { en: renderMarkdown(markdownIt, modelData.description) },
+                    entityDiagram: modelData.entityDiagram,
                     sequence: modelData.sequence,
                     typeId: 'model',
                     dimensions: [],
@@ -164,6 +166,7 @@ const buildContext_OutputContext = async () => {
                 id: modelId,
                 label: model.label,
                 description: model.description,
+                entityDiagram: model.entityDiagram,
                 sequence: model.sequence,
                 typeId: model.typeId,
                 dimensions: [],
@@ -383,6 +386,9 @@ async function downloadContext(contextId, outDir) {
                 modelMarkdown += `### ${entityConfig.label.en} Entity\n${entityConfig2.description.en}\n`;
 
                 modelMarkdown += '#### Events\n';
+
+                modelMarkdown += `${modelConfig2.entityDiagram}\n\n`;
+
                 modelMarkdown += `<EventTable :eventConfigs="[\n`;
                 for (const eventConfig of entityConfig2.events) {
                     modelMarkdown += `    {label: '${eventConfig.label.en}', description: '${eventConfig.description.en.replace("'", "\\'")}'},\n`;

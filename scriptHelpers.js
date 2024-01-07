@@ -64,7 +64,7 @@ const buildContext_PrepareContext = async (path) => {
                 const modelId = itemPathSegments[2];
                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 modelData.description = { en: (await readTextFile(`${itemPath}/description.en.md`)) || '' };
-                modelData.entityDiagram = { en: (await readTextFile(`${itemPath}/entities/diagram.svg`)) || '' };
+                modelData.entityDiagram = (await readTextFile(`${itemPath}/entities/diagram.svg`)) || '';
                 modelConfig = {
                     id: modelId,
                     label: modelData.label || { en: modelId },

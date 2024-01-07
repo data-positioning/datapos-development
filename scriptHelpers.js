@@ -380,15 +380,15 @@ async function downloadContext(contextId, outDir) {
             modelMarkdown += `import EventTable from '/.vitePress/theme/components/EventTable.vue';\n`;
             modelMarkdown += `</script>\n\n`;
             modelMarkdown += `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}\n`;
-            modelMarkdown += '## Entities\n';
+            modelMarkdown += '## Entities\n\n';
+
+            modelMarkdown += `${modelConfig2.entityDiagram}\n\n`;
+
             for (const entityConfig of modelConfig2.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
                 const entityConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-entity-${entityConfig.id}`))).data();
                 modelMarkdown += `### ${entityConfig.label.en} Entity\n${entityConfig2.description.en}\n`;
 
                 modelMarkdown += '#### Events\n';
-
-                modelMarkdown += `${modelConfig2.entityDiagram}\n\n`;
-
                 modelMarkdown += `<EventTable :eventConfigs="[\n`;
                 for (const eventConfig of entityConfig2.events) {
                     modelMarkdown += `    {label: '${eventConfig.label.en}', description: '${eventConfig.description.en.replace("'", "\\'")}'},\n`;

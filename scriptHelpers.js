@@ -620,6 +620,8 @@ const readTextFile = async (path) => {
 // Utilities - Render Markdown
 const renderMarkdown = (markdownIt, content) => (content && content.en ? markdownIt.render(content.en) : '');
 
+const test = (id) => `Param: ${id}`;
+
 /// Exports
 module.exports = {
     buildConfig,
@@ -629,6 +631,7 @@ module.exports = {
     bumpVersion,
     downloadContext,
     syncWithGitHub,
+    test,
     uploadConnector,
     uploadContext,
     uploadPresentations

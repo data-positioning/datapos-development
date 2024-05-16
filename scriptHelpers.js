@@ -325,6 +325,7 @@ async function buildPublicDirectoryIndex(id) {
                 entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
             }
         }
+        entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
     }
 
     const index = {};

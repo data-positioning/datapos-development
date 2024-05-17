@@ -319,7 +319,7 @@ async function buildPublicDirectoryIndex(id) {
             const stats = await fs.stat(itemPath);
             if (stats.isDirectory()) {
                 const nextLevelChildren = await fs.readdir(itemPath);
-                entries.push({ childCount: nextLevelChildren.length, name, typeId: 'folder' });
+                entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
                 await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
             } else {
                 entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });

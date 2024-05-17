@@ -313,7 +313,7 @@ const buildPresentations_OutputPresentations = async () => {};
 async function buildPublicDirectoryIndex(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
         const entries = [];
-        index[directoryPath.substring(`public/${id}`.length)] = entries;
+        index[`${directoryPath.substring(`public/${id}`.length)}/`] = entries;
         for (const name of names) {
             const itemPath = path.join(directoryPath, name);
             const stats = await fs.stat(itemPath);

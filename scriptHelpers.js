@@ -347,6 +347,7 @@ async function bumpVersion() {
     const versionSegments = packageJSON.version.split('.');
     packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
     fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
+    console.log(`Bumped to version ${packageJSON.version}.`);
 }
 
 // Helpers - Download Context

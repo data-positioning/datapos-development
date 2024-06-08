@@ -21,11 +21,14 @@ let modelConfig;
 let presentationsConfig;
 
 // Helpers - Build Configuration
-async function buildConfig(env, outDir = '/') {
+async function buildConfig(env) {
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
     const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
     const engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
-    fs.writeFile(`${outDir}config.json`, JSON.stringify({ id: packageJSON.name, engineVersion, env, version: packageJSON.version }, undefined, 4));
+    fs.writeFile(
+        'src/config.json',
+        JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, engineVersion, env, version: packageJSON.version }, undefined, 4)
+    );
 }
 
 // Helpers - Build Context

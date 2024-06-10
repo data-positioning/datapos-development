@@ -14,7 +14,8 @@
             "http://localhost:5173",
             "http://localhost:5174",
             "http://localhost:5175",
-            "https://springbrook.static.observableusercontent.com"
+            "https://springbrook.static.observableusercontent.com",
+            "https://workbench.datapositioning.app"
         ],
         "method": ["GET"],
         "maxAgeSeconds": 3600

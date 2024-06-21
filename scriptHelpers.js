@@ -565,13 +565,11 @@ async function uploadPresenter() {
 
     const itemNames2 = await fs.readdir('dist');
     for (const itemName of itemNames2) {
-        console.log(1111, itemName);
         const itemPath = path.join('dist', itemName);
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) continue;
 
-        const url = `https://api.github.com/repos/data-positioning/datapos-test/contents/presenters/${packageJSON.name}/${itemName}`;
-        console.log(1111, url);
+        const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/presenters/${packageJSON.name}/${itemName}`;
 
         const response1 = await fetch(url, {
             headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },

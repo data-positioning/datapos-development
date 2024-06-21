@@ -71,9 +71,7 @@ async function uploadPlugin() {
         configJSON.logo = await fs.readFile('src/logo.svg', 'utf8');
     } catch (error) {}
 
-    console.log('configJSON', configJSON);
-
-    await pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
+    await pushContentToGithub(packageJSON, env, JSON.stringify({ id: 1234 }), 'config.json');
 
     for (const itemName of await fs.readdir('dist')) {
         const itemPath = path.join('dist', itemName);

@@ -1,11 +1,11 @@
 // Dependencies
 const dotenv = require('dotenv');
 const fs = require('fs').promises;
-const { initializeApp } = require('firebase/app');
+// const { initializeApp } = require('firebase/app');
 const MarkdownIt = require('markdown-it');
 const path = require('path');
 // const { collection, documentId, getDocs, query, where } = require('firebase/firestore');
-const { doc, getDoc, getFirestore } = require('firebase/firestore');
+// const { doc, getDoc, getFirestore } = require('firebase/firestore');
 
 // Dependencies - Promisify Exec
 const util = require('util');
@@ -350,141 +350,141 @@ async function bumpVersion() {
     console.log(`Bumped to version ${packageJSON.version}.`);
 }
 
-// Helpers - Download Context
-async function downloadContext(contextId, outDir) {
-    const result = dotenv.config({ path: '.env.local' });
-    if (result.error) throw result.error;
-    const env = result.parsed;
+// // Helpers - Download Context
+// async function downloadContext(contextId, outDir) {
+//     const result = dotenv.config({ path: '.env.local' });
+//     if (result.error) throw result.error;
+//     const env = result.parsed;
 
-    const app = initializeApp({
-        apiKey: env.VITE_FIREBASE_API_KEY,
-        authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
-        projectId: env.VITE_FIREBASE_PROJECT_ID,
-        storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-        appId: env.VITE_FIREBASE_APP_ID
-    });
-    const db = getFirestore(app);
+//     const app = initializeApp({
+//         apiKey: env.VITE_FIREBASE_API_KEY,
+//         authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+//         projectId: env.VITE_FIREBASE_PROJECT_ID,
+//         storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+//         messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+//         appId: env.VITE_FIREBASE_APP_ID
+//     });
+//     const db = getFirestore(app);
 
-    await clearDirectory(outDir);
+//     await clearDirectory(outDir);
 
-    await fs.writeFile(`${outDir}/overview.md`, '# Context\n\n...');
+//     await fs.writeFile(`${outDir}/overview.md`, '# Context\n\n...');
 
-    const contextIndex = (await getDoc(doc(db, 'components', contextId))).data();
-    await fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));
+//     const contextIndex = (await getDoc(doc(db, 'components', contextId))).data();
+//     await fs.writeFile(`${outDir}/contextIndex.json`, JSON.stringify(contextIndex));
 
-    for (const areaConfig of contextIndex.areas) {
-        await fs.mkdir(`${outDir}/${areaConfig.id}`);
-        await fs.writeFile(`${outDir}/${areaConfig.id}/index.md`, `# ${areaConfig.label.en} Context\n...`);
-        for (const modelConfig of areaConfig.models) {
-            const modelConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-model-${modelConfig.id}`))).data();
-            await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
-            let modelMarkdown = '';
-            modelMarkdown += `<script setup lang="ts">\n`;
-            modelMarkdown += `import CharacteristicTable from '/.vitePress/theme/components/CharacteristicTable.vue';\n`;
-            modelMarkdown += `import ComputationTable from '/.vitePress/theme/components/ComputationTable.vue';\n`;
-            modelMarkdown += `import EventTable from '/.vitePress/theme/components/EventTable.vue';\n`;
-            modelMarkdown += `</script>\n\n`;
-            modelMarkdown += `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}\n`;
-            modelMarkdown += '## Entities\n\n';
+//     for (const areaConfig of contextIndex.areas) {
+//         await fs.mkdir(`${outDir}/${areaConfig.id}`);
+//         await fs.writeFile(`${outDir}/${areaConfig.id}/index.md`, `# ${areaConfig.label.en} Context\n...`);
+//         for (const modelConfig of areaConfig.models) {
+//             const modelConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-model-${modelConfig.id}`))).data();
+//             await fs.mkdir(`${outDir}/${areaConfig.id}/${modelConfig.id}`);
+//             let modelMarkdown = '';
+//             modelMarkdown += `<script setup lang="ts">\n`;
+//             modelMarkdown += `import CharacteristicTable from '/.vitePress/theme/components/CharacteristicTable.vue';\n`;
+//             modelMarkdown += `import ComputationTable from '/.vitePress/theme/components/ComputationTable.vue';\n`;
+//             modelMarkdown += `import EventTable from '/.vitePress/theme/components/EventTable.vue';\n`;
+//             modelMarkdown += `</script>\n\n`;
+//             modelMarkdown += `# ${modelConfig.label.en} Model\n${modelConfig2.description.en}\n`;
+//             modelMarkdown += '## Entities\n\n';
 
-            modelMarkdown += `${modelConfig2.entityDiagram}\n\n`;
+//             modelMarkdown += `${modelConfig2.entityDiagram}\n\n`;
 
-            for (const entityConfig of modelConfig2.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                const entityConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-entity-${entityConfig.id}`))).data();
-                modelMarkdown += `### ${entityConfig.label.en} Entity\n${entityConfig2.description.en}\n`;
+//             for (const entityConfig of modelConfig2.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+//                 const entityConfig2 = (await getDoc(doc(db, 'componentItems', `${contextId}-entity-${entityConfig.id}`))).data();
+//                 modelMarkdown += `### ${entityConfig.label.en} Entity\n${entityConfig2.description.en}\n`;
 
-                modelMarkdown += '#### Events\n';
-                modelMarkdown += `<EventTable :eventConfigs="[\n`;
-                for (const eventConfig of entityConfig2.events) {
-                    modelMarkdown += `    {label: '${eventConfig.label.en}', description: '${eventConfig.description.en.replace("'", "\\'")}'},\n`;
-                }
-                modelMarkdown += `]"/>\n\n`;
+//                 modelMarkdown += '#### Events\n';
+//                 modelMarkdown += `<EventTable :eventConfigs="[\n`;
+//                 for (const eventConfig of entityConfig2.events) {
+//                     modelMarkdown += `    {label: '${eventConfig.label.en}', description: '${eventConfig.description.en.replace("'", "\\'")}'},\n`;
+//                 }
+//                 modelMarkdown += `]"/>\n\n`;
 
-                modelMarkdown += '#### Computations\n';
-                modelMarkdown += `<ComputationTable :computationConfigs="[\n`;
-                for (const computationConfig of entityConfig2.computations) {
-                    modelMarkdown += `    {label: '${computationConfig.label.en}', description: '${computationConfig.description.en.replace("'", "\\'")}'},\n`;
-                }
-                modelMarkdown += `]"/>\n\n`;
+//                 modelMarkdown += '#### Computations\n';
+//                 modelMarkdown += `<ComputationTable :computationConfigs="[\n`;
+//                 for (const computationConfig of entityConfig2.computations) {
+//                     modelMarkdown += `    {label: '${computationConfig.label.en}', description: '${computationConfig.description.en.replace("'", "\\'")}'},\n`;
+//                 }
+//                 modelMarkdown += `]"/>\n\n`;
 
-                modelMarkdown += '#### Characteristics\n';
-                modelMarkdown += `<CharacteristicTable :characteristicConfigs="[\n`;
-                for (const characteristicConfig of entityConfig2.characteristics) {
-                    modelMarkdown += `    {label: '${characteristicConfig.label.en}', description: '${characteristicConfig.description.en.replace("'", "\\'")}'},\n`;
-                }
-                modelMarkdown += `]"/>\n\n`;
-            }
-            modelMarkdown += '## Dimensions\n';
-            for (const dimensionConfig of modelConfig2.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                modelMarkdown += `| ${dimensionConfig.label.en} |\n`;
-            }
-            modelMarkdown += '## Views\n';
-            for (const viewConfig of modelConfig2.views.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-                modelMarkdown += `- ${viewConfig.label.en}\n`;
-            }
-            await fs.writeFile(`${outDir}/${areaConfig.id}/${modelConfig2.id}/index.md`, modelMarkdown);
-        }
-    }
+//                 modelMarkdown += '#### Characteristics\n';
+//                 modelMarkdown += `<CharacteristicTable :characteristicConfigs="[\n`;
+//                 for (const characteristicConfig of entityConfig2.characteristics) {
+//                     modelMarkdown += `    {label: '${characteristicConfig.label.en}', description: '${characteristicConfig.description.en.replace("'", "\\'")}'},\n`;
+//                 }
+//                 modelMarkdown += `]"/>\n\n`;
+//             }
+//             modelMarkdown += '## Dimensions\n';
+//             for (const dimensionConfig of modelConfig2.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+//                 modelMarkdown += `| ${dimensionConfig.label.en} |\n`;
+//             }
+//             modelMarkdown += '## Views\n';
+//             for (const viewConfig of modelConfig2.views.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+//                 modelMarkdown += `- ${viewConfig.label.en}\n`;
+//             }
+//             await fs.writeFile(`${outDir}/${areaConfig.id}/${modelConfig2.id}/index.md`, modelMarkdown);
+//         }
+//     }
 
-    // Generate characteristics index page.
-    let characteristicIndexMarkdown = '# Characteristic Index\n';
-    const characteristicIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-characteristics`))).data();
-    for (const characteristicConfig of characteristicIndex.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-        characteristicIndexMarkdown += `- ${characteristicConfig.label.en}\n`;
-    }
-    await fs.writeFile(`${outDir}/characteristicIndex.md`, characteristicIndexMarkdown);
+//     // Generate characteristics index page.
+//     let characteristicIndexMarkdown = '# Characteristic Index\n';
+//     const characteristicIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-characteristics`))).data();
+//     for (const characteristicConfig of characteristicIndex.characteristics.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+//         characteristicIndexMarkdown += `- ${characteristicConfig.label.en}\n`;
+//     }
+//     await fs.writeFile(`${outDir}/characteristicIndex.md`, characteristicIndexMarkdown);
 
-    // Generate computations index page.
-    let computationIndexMarkdown = '# Computations Index\n';
-    const computationsIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-computations`))).data();
-    for (const computationConfig of computationsIndex.computations.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-        computationIndexMarkdown += `- ${computationConfig.label.en}\n`;
-    }
-    await fs.writeFile(`${outDir}/computationIndex.md`, computationIndexMarkdown);
+//     // Generate computations index page.
+//     let computationIndexMarkdown = '# Computations Index\n';
+//     const computationsIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-computations`))).data();
+//     for (const computationConfig of computationsIndex.computations.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+//         computationIndexMarkdown += `- ${computationConfig.label.en}\n`;
+//     }
+//     await fs.writeFile(`${outDir}/computationIndex.md`, computationIndexMarkdown);
 
-    // Generate dimension index page.
-    let dimensionIndexMarkdown = '# Dimension Index\n';
-    const dimensionIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-dimensions`))).data();
-    for (const dimensionConfig of dimensionIndex.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-        dimensionIndexMarkdown += `- ${dimensionConfig.label.en}\n`;
-    }
-    await fs.writeFile(`${outDir}/dimensionIndex.md`, dimensionIndexMarkdown);
+//     // Generate dimension index page.
+//     let dimensionIndexMarkdown = '# Dimension Index\n';
+//     const dimensionIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-dimensions`))).data();
+//     for (const dimensionConfig of dimensionIndex.dimensions.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+//         dimensionIndexMarkdown += `- ${dimensionConfig.label.en}\n`;
+//     }
+//     await fs.writeFile(`${outDir}/dimensionIndex.md`, dimensionIndexMarkdown);
 
-    // Generate entity index page.
-    let entityIndexMarkdown = '# Entity Index\n';
-    const entityIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-entities`))).data();
-    for (const entityConfig of entityIndex.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-        entityIndexMarkdown += `- ${entityConfig.label.en}\n`;
-    }
-    await fs.writeFile(`${outDir}/entityIndex.md`, entityIndexMarkdown);
+//     // Generate entity index page.
+//     let entityIndexMarkdown = '# Entity Index\n';
+//     const entityIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-entities`))).data();
+//     for (const entityConfig of entityIndex.entities.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+//         entityIndexMarkdown += `- ${entityConfig.label.en}\n`;
+//     }
+//     await fs.writeFile(`${outDir}/entityIndex.md`, entityIndexMarkdown);
 
-    // Generate event index page.
-    let eventIndexMarkdown = '# Event Index\n';
-    const eventIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-events`))).data();
-    for (const eventConfig of eventIndex.events.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-        eventIndexMarkdown += `- ${eventConfig.label.en}\n`;
-    }
-    await fs.writeFile(`${outDir}/eventIndex.md`, eventIndexMarkdown);
+//     // Generate event index page.
+//     let eventIndexMarkdown = '# Event Index\n';
+//     const eventIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-events`))).data();
+//     for (const eventConfig of eventIndex.events.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+//         eventIndexMarkdown += `- ${eventConfig.label.en}\n`;
+//     }
+//     await fs.writeFile(`${outDir}/eventIndex.md`, eventIndexMarkdown);
 
-    // Generate model index page.
-    let modelIndexMarkdown = '# Model Index\n';
-    const modelIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-models`))).data();
-    for (const modelConfig of modelIndex.models.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
-        modelIndexMarkdown += `- ${modelConfig.label.en}\n`;
-    }
-    await fs.writeFile(`${outDir}/modelIndex.md`, modelIndexMarkdown);
+//     // Generate model index page.
+//     let modelIndexMarkdown = '# Model Index\n';
+//     const modelIndex = (await getDoc(doc(db, 'componentItems', `${contextId}-models`))).data();
+//     for (const modelConfig of modelIndex.models.sort((left, right) => left.label.en.localeCompare(right.label.en))) {
+//         modelIndexMarkdown += `- ${modelConfig.label.en}\n`;
+//     }
+//     await fs.writeFile(`${outDir}/modelIndex.md`, modelIndexMarkdown);
 
-    // const contextIdLength = contextId.length;
-    // const contextIdLeadingChars = contextId.slice(0, contextIdLength - 1);
-    // const contextIdLastChar = contextId.slice(contextIdLength - 1, contextId.length);
-    // const nextContextId = contextIdLeadingChars + String.fromCharCode(contextIdLastChar.charCodeAt(0) + 1);
+//     // const contextIdLength = contextId.length;
+//     // const contextIdLeadingChars = contextId.slice(0, contextIdLength - 1);
+//     // const contextIdLastChar = contextId.slice(contextIdLength - 1, contextId.length);
+//     // const nextContextId = contextIdLeadingChars + String.fromCharCode(contextIdLastChar.charCodeAt(0) + 1);
 
-    // const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
-    // querySnapshot.forEach((doc) => {
-    //     console.log(8888, doc.id);
-    // });
-}
+//     // const querySnapshot = await getDocs(query(collection(db, 'componentItems'), where(documentId(), '>=', contextId), where(documentId(), '<', nextContextId)));
+//     // querySnapshot.forEach((doc) => {
+//     //     console.log(8888, doc.id);
+//     // });
+// }
 
 // Helpers - Sync with Github
 async function syncWithGitHub() {
@@ -495,79 +495,79 @@ async function syncWithGitHub() {
     await exec('git push origin main:main');
 }
 
-// Helpers - Upload Connector
-async function uploadConnector() {
-    const input = await fs.readFile('src/config.json', 'utf8');
+// // Helpers - Upload Connector
+// async function uploadConnector() {
+//     const input = await fs.readFile('src/config.json', 'utf8');
 
-    const configJSON = JSON.parse(input);
-    const descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
-    // const result = dotenv.config({ path: '.env.local' });
-    // if (result.error) throw result.error;
-    const logo = await fs.readFile('src/logo.svg', 'utf8');
+//     const configJSON = JSON.parse(input);
+//     const descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
+//     // const result = dotenv.config({ path: '.env.local' });
+//     // if (result.error) throw result.error;
+//     const logo = await fs.readFile('src/logo.svg', 'utf8');
+//     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+
+//     const formData = new FormData();
+//     formData.append('config', JSON.stringify({ ...configJSON, description: { en: descriptionEN }, logo, version: packageJSON.version }));
+//     const itemNames = await fs.readdir('dist');
+//     for (const itemName of itemNames) {
+//         const itemPath = path.join('dist', itemName);
+//         const stats = await fs.stat(itemPath);
+//         if (stats.isDirectory()) continue;
+//         const contentBlob = new Blob([await fs.readFile(itemPath, 'utf8')], { type: 'text/plain' });
+//         formData.append(itemName, contentBlob, itemName);
+//     }
+
+//     // TODO: Need to get 'api-dwizkzi4ga-ew.a.run.app' or portion of it from token.
+//     const url = 'https://api-dwizkzi4ga-ew.a.run.app/connectors';
+//     const response = await fetch(url, { method: 'POST', headers: { Authorization: process.env.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
+//     if (!response.ok) throw new Error(await response.text());
+
+//     // ...
+//     const result = dotenv.config({ path: '.env.local' });
+//     if (result.error) throw result.error;
+//     const env = result.parsed;
+
+//     const itemNames2 = await fs.readdir('dist');
+//     for (const itemName of itemNames2) {
+//         console.log(1111, itemName);
+//         const itemPath = path.join('dist', itemName);
+//         const stats = await fs.stat(itemPath);
+//         if (stats.isDirectory()) continue;
+
+//         const response1 = await fetch(`https://api.github.com/repos/data-positioning/datapos-test/contents/${itemName}`, {
+//             method: 'GET',
+//             headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` }
+//         });
+//         const sha = response1.ok ? (await response1.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
+
+//         const response2 = await fetch(`https://api.github.com/repos/data-positioning/datapos-test/contents/${itemName}`, {
+//             method: 'PUT',
+//             body: JSON.stringify({ content: btoa(input), message: `v${packageJSON.version}`, sha }),
+//             headers: {
+//                 Accept: 'application/vnd.github.v3+json',
+//                 Authorization: `token ${env.GITHUB_API_TOKEN}`,
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+//         if (!response2.ok) console.log(await response2.text());
+//     }
+// }
+
+// Helpers - Upload Plugin
+async function uploadPlugin() {
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
 
-    const formData = new FormData();
-    formData.append('config', JSON.stringify({ ...configJSON, description: { en: descriptionEN }, logo, version: packageJSON.version }));
-    const itemNames = await fs.readdir('dist');
-    for (const itemName of itemNames) {
-        const itemPath = path.join('dist', itemName);
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) continue;
-        const contentBlob = new Blob([await fs.readFile(itemPath, 'utf8')], { type: 'text/plain' });
-        formData.append(itemName, contentBlob, itemName);
-    }
-
-    // TODO: Need to get 'api-dwizkzi4ga-ew.a.run.app' or portion of it from token.
-    const url = 'https://api-dwizkzi4ga-ew.a.run.app/connectors';
-    const response = await fetch(url, { method: 'POST', headers: { Authorization: process.env.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
-    if (!response.ok) throw new Error(await response.text());
-
-    // ...
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
     const env = result.parsed;
 
     const itemNames2 = await fs.readdir('dist');
     for (const itemName of itemNames2) {
-        console.log(1111, itemName);
         const itemPath = path.join('dist', itemName);
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) continue;
 
-        const response1 = await fetch(`https://api.github.com/repos/data-positioning/datapos-test/contents/${itemName}`, {
-            method: 'GET',
-            headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` }
-        });
-        const sha = response1.ok ? (await response1.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
-
-        const response2 = await fetch(`https://api.github.com/repos/data-positioning/datapos-test/contents/${itemName}`, {
-            method: 'PUT',
-            body: JSON.stringify({ content: btoa(input), message: `v${packageJSON.version}`, sha }),
-            headers: {
-                Accept: 'application/vnd.github.v3+json',
-                Authorization: `token ${env.GITHUB_API_TOKEN}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        if (!response2.ok) console.log(await response2.text());
-    }
-}
-
-// Helpers - Upload Presenter
-async function uploadPresenter() {
-    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
-
-    const result = dotenv.config({ path: '.env.local' });
-    if (result.error) throw result.error;
-    const env = result.parsed;
-
-    const itemNames2 = await fs.readdir('dist');
-    for (const itemName of itemNames2) {
-        const itemPath = path.join('dist', itemName);
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) continue;
-
-        const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/presenters/${packageJSON.name}/${itemName}`;
+        const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/${packageJSON.name}/${itemName}`;
 
         const response1 = await fetch(url, {
             headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
@@ -576,13 +576,8 @@ async function uploadPresenter() {
         const sha = response1.ok ? (await response1.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
 
         const fileContent = await fs.readFile(itemPath, 'utf8');
-
         const encodedContent = Buffer.from(fileContent).toString('base64');
-
-        // let binaryString = String.fromCharCode.apply(null, new Uint8Array(content));
-        // let encodedData = btoa(binaryString);
         const response2 = await fetch(url, {
-            // body: JSON.stringify({ content: btoa(content), message: `v${packageJSON.version}`, sha }),
             body: JSON.stringify({ content: encodedContent, message: `v${packageJSON.version}`, sha }),
             headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}`, 'Content-Type': 'application/json' },
             method: 'PUT'
@@ -703,8 +698,7 @@ module.exports = {
     buildPresentations,
     buildPublicDirectoryIndex,
     bumpVersion,
-    downloadContext,
+    // downloadContext,
     syncWithGitHub,
-    uploadConnector,
-    uploadPresenter
+    uploadPlugin
 };

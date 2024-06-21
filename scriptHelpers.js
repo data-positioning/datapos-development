@@ -527,11 +527,12 @@ async function uploadConnector() {
     if (result.error) throw result.error;
     const env = result.parsed;
 
-    const itemNames2 = await fs.readdir('.');
+    const itemNames2 = await fs.readdir('dist');
     for (const itemName of itemNames2) {
         console.log(1111, itemName);
-        const stats = await fs.stat(itemName);
-        if (stats.isDirectory()) console.log(222('Is a directory...'));
+        const itemPath = path.join('dist', itemName);
+        const stats = await fs.stat(itemPath);
+        if (stats.isDirectory()) console.log(2222, 'Is a directory...');
     }
 
     const response1 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {

@@ -497,7 +497,9 @@ async function syncWithGitHub() {
 
 // Helpers - Upload Connector
 async function uploadConnector() {
-    const configJSON = JSON.parse(await fs.readFile('src/config.json', 'utf8'));
+    const xxxx = await fs.readFile('src/config.json', 'utf8');
+    console.log('xxxx', xxxx);
+    const configJSON = JSON.parse(xxxx);
     const descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
     // const result = dotenv.config({ path: '.env.local' });
     // if (result.error) throw result.error;
@@ -526,7 +528,8 @@ async function uploadConnector() {
     const env = result.parsed;
     console.log('token', env);
     console.log('token', env.GITHUB_API_TOKEN);
-    const content = btoa(await fs.readFile('src/config.json', 'utf8'));
+    const content = btoa(xxxx);
+    console.log(content);
     const response2 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
         method: 'PUT',
         body: { message: 'Updating...', content },

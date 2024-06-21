@@ -553,51 +553,86 @@ async function uploadConnector() {
     }
 }
 
-// Helpers - Upload Context
-async function uploadContext() {
-    const items = [];
-    const itemNames = await fs.readdir('dist');
-    for (const itemName of itemNames) {
+// Helpers - Upload Presenter
+async function uploadPresenter() {
+    const input = await fs.readFile('src/config.json', 'utf8');
+
+    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+
+    const result = dotenv.config({ path: '.env.local' });
+    if (result.error) throw result.error;
+    const env = result.parsed;
+
+    const itemNames2 = await fs.readdir('dist');
+    for (const itemName of itemNames2) {
+        console.log(1111, itemName);
         const itemPath = path.join('dist', itemName);
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) continue;
-        items.push({ itemPath, itemName });
-    }
 
-    for (const item of items) {
-        const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
-        const url = 'https://api-dwizkzi4ga-ew.a.run.app/contexts';
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: item.itemName.slice(0, -5), config: data })
+        const url = `https://api.github.com/repos/data-positioning/datapos-test/contents/presenters/${packageJSON.name}/${itemName}`;
+        console.log(1111, url);
+
+        const response1 = await fetch(url, {
+            headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
+            method: 'GET'
         });
-        if (!response.ok) throw new Error(await response.text());
+        const sha = response1.ok ? (await response1.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
+
+        const response2 = await fetch(url, {
+            body: JSON.stringify({ content: btoa(input), message: `v${packageJSON.version}`, sha }),
+            headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}`, 'Content-Type': 'application/json' },
+            method: 'PUT'
+        });
+        if (!response2.ok) console.log(await response2.text());
     }
 }
 
-// Helpers - Upload Presentation
-async function uploadPresentations() {
-    const items = [];
-    const itemNames = await fs.readdir('dist');
-    for (const itemName of itemNames) {
-        const itemPath = path.join('dist', itemName);
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) continue;
-        items.push({ itemPath, itemName });
-    }
+// // Helpers - Upload Context
+// async function uploadContext() {
+//     const items = [];
+//     const itemNames = await fs.readdir('dist');
+//     for (const itemName of itemNames) {
+//         const itemPath = path.join('dist', itemName);
+//         const stats = await fs.stat(itemPath);
+//         if (stats.isDirectory()) continue;
+//         items.push({ itemPath, itemName });
+//     }
 
-    for (const item of items) {
-        const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
-        const url = 'https://api-dwizkzi4ga-ew.a.run.app/presentations';
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: item.itemName.slice(0, -5), config: data })
-        });
-        if (!response.ok) throw new Error(await response.text());
-    }
-}
+//     for (const item of items) {
+//         const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
+//         const url = 'https://api-dwizkzi4ga-ew.a.run.app/contexts';
+//         const response = await fetch(url, {
+//             method: 'POST',
+//             headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ name: item.itemName.slice(0, -5), config: data })
+//         });
+//         if (!response.ok) throw new Error(await response.text());
+//     }
+// }
+
+// // Helpers - Upload Presentation
+// async function uploadPresentations() {
+//     const items = [];
+//     const itemNames = await fs.readdir('dist');
+//     for (const itemName of itemNames) {
+//         const itemPath = path.join('dist', itemName);
+//         const stats = await fs.stat(itemPath);
+//         if (stats.isDirectory()) continue;
+//         items.push({ itemPath, itemName });
+//     }
+
+//     for (const item of items) {
+//         const data = JSON.parse(await fs.readFile(item.itemPath, 'utf8'));
+//         const url = 'https://api-dwizkzi4ga-ew.a.run.app/presentations';
+//         const response = await fetch(url, {
+//             method: 'POST',
+//             headers: { Authorization: process.env.DATAPOS_CONTEXT_UPLOAD_TOKEN, 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ name: item.itemName.slice(0, -5), config: data })
+//         });
+//         if (!response.ok) throw new Error(await response.text());
+//     }
+// }
 
 // // Utility - Check Directory Exists
 // const checkDirectoryExists = async (directoryPath) => {
@@ -668,6 +703,5 @@ module.exports = {
     downloadContext,
     syncWithGitHub,
     uploadConnector,
-    uploadContext,
-    uploadPresentations
+    uploadPresenter
 };

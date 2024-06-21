@@ -519,6 +519,19 @@ async function uploadConnector() {
     const url = 'https://api-dwizkzi4ga-ew.a.run.app/connectors';
     const response = await fetch(url, { method: 'POST', headers: { Authorization: process.env.DATAPOS_CONNECTOR_UPLOAD_TOKEN }, body: formData });
     if (!response.ok) throw new Error(await response.text());
+
+    // ...
+    const content = btoa(await fs.readFile('src/config.json', 'utf8'));
+    const response2 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
+        method: 'PUT',
+        body: { message: 'Updating...', content },
+        headers: {
+            Accept: 'application/vnd.github.v3+json',
+            Authorization: `token ${process.env.GITHUB_API_TOKEN}`,
+            'Content-Type': 'application/json'
+        }
+    });
+    console.log('response', response2);
 }
 
 // Helpers - Upload Context

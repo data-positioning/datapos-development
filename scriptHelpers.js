@@ -73,7 +73,7 @@ async function uploadPlugin() {
 
     console.log('configJSON', configJSON);
 
-    pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
+    await pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
 
     for (const itemName of await fs.readdir('dist')) {
         const itemPath = path.join('dist', itemName);
@@ -164,9 +164,11 @@ const pushContentToGithub = async (packageJSON, env, fileContent, itemName) => {
         headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
         method: 'GET'
     });
-    console.log(2222, itemName, getResponse.ok);
+    console.log(2222, itemName, url, getResponse.ok);
     const sha = getResponse.ok ? (await getResponse.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
 
+    console.log(3333, sha);
+    console.log(4444, { content: encodedContent, message: `v${packageJSON.version}`, sha });
     const encodedContent = Buffer.from(fileContent).toString('base64');
     const putResponse = await fetch(url, {
         body: JSON.stringify({ content: encodedContent, message: `v${packageJSON.version}`, sha }),

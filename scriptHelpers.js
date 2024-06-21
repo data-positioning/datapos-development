@@ -157,12 +157,14 @@ const outputPresenterConfig = async () => {};
 
 // Utilities - Push Content to Github
 const pushContentToGithub = async (packageJSON, env, fileContent, itemName) => {
+    console.log(1111, itemName);
     const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/${packageJSON.name}/${itemName}`;
 
     const getResponse = await fetch(url, {
         headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
         method: 'GET'
     });
+    console.log(2222, itemName, getResponse.ok);
     const sha = getResponse.ok ? (await getResponse.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
 
     const encodedContent = Buffer.from(fileContent).toString('base64');

@@ -527,6 +527,13 @@ async function uploadConnector() {
     if (result.error) throw result.error;
     const env = result.parsed;
 
+    const itemNames2 = await fs.readdir('.');
+    for (const itemName of itemNames2) {
+        console.log(1111, itemName);
+        const stats = await fs.stat(itemName);
+        if (stats.isDirectory()) console.log(222('Is a directory...'));
+    }
+
     const response1 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
         method: 'GET',
         headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` }
@@ -542,8 +549,7 @@ async function uploadConnector() {
             'Content-Type': 'application/json'
         }
     });
-    console.log(4444, response2, packageJSON.version);
-    console.log(5555, await response2.text());
+    if (!response2.ok) console.log(await response2.text());
 }
 
 // Helpers - Upload Context

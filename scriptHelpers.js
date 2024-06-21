@@ -497,9 +497,9 @@ async function syncWithGitHub() {
 
 // Helpers - Upload Connector
 async function uploadConnector() {
-    const xxxx = await fs.readFile('src/config.json', 'utf8');
-    console.log('xxxx', xxxx);
-    const configJSON = JSON.parse(xxxx);
+    const input = await fs.readFile('src/config.json', 'utf8');
+
+    const configJSON = JSON.parse(input);
     const descriptionEN = await fs.readFile('src/description.en.md', 'utf8');
     // const result = dotenv.config({ path: '.env.local' });
     // if (result.error) throw result.error;
@@ -526,30 +526,16 @@ async function uploadConnector() {
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
     const env = result.parsed;
-    console.log('token', env);
-    console.log('token', env.GITHUB_API_TOKEN);
-    const content = btoa(xxxx);
-    console.log(content);
 
-    let sha;
-    let response1 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
+    const response1 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
         method: 'GET',
-        headers: {
-            Accept: 'application/vnd.github.v3+json',
-            Authorization: `token ${env.GITHUB_API_TOKEN}`
-        }
+        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` }
     });
-    console.log(1111, response1.ok);
-    if (response1.ok) {
-        const data = response1.json();
-        console.log(2222, data);
-        sha = data.sha;
-    }
-    console.log(3333, sha);
+    const sha = response1.ok ? response1.json().sha : undefined;
 
     const response2 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
         method: 'PUT',
-        body: JSON.stringify({ content, message: 'Updating...', sha }),
+        body: JSON.stringify({ content: btoa(input), message: `v${packageJSON.version}`, sha }),
         headers: {
             Accept: 'application/vnd.github.v3+json',
             Authorization: `token ${env.GITHUB_API_TOKEN}`,
@@ -557,7 +543,6 @@ async function uploadConnector() {
         }
     });
     console.log(4444, response2);
-    console.log(5555, await response2.text());
 }
 
 // Helpers - Upload Context

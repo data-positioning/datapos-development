@@ -156,7 +156,7 @@ const listDirectoryEntries = async (path) => {
 const outputPresenterConfig = async () => {};
 
 // Utilities - Push Content to Github
-const pushContentToGithub = async (packageJSON, env, fileContent) => {
+const pushContentToGithub = async (packageJSON, env, fileContent, itemName) => {
     const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/${packageJSON.name}/${itemName}`;
 
     const getResponse = await fetch(url, {

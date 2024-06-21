@@ -521,6 +521,7 @@ async function uploadConnector() {
     if (!response.ok) throw new Error(await response.text());
 
     // ...
+    console.log('token', process.env);
     console.log('token', process.env.GITHUB_API_TOKEN);
     const content = btoa(await fs.readFile('src/config.json', 'utf8'));
     const response2 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {

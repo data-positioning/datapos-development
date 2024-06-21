@@ -575,12 +575,15 @@ async function uploadPresenter() {
         });
         const sha = response1.ok ? (await response1.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
 
-        const content = await fs.readFile(itemPath, 'utf8');
-        let binaryString = String.fromCharCode.apply(null, new Uint8Array(content));
-        let encodedData = btoa(binaryString);
+        const fileContent = await fs.readFile(itemPath, 'utf8');
+
+        const encodedContent = Buffer.from(fileContent).toString('base64');
+
+        // let binaryString = String.fromCharCode.apply(null, new Uint8Array(content));
+        // let encodedData = btoa(binaryString);
         const response2 = await fetch(url, {
             // body: JSON.stringify({ content: btoa(content), message: `v${packageJSON.version}`, sha }),
-            body: JSON.stringify({ content: encodedData, message: `v${packageJSON.version}`, sha }),
+            body: JSON.stringify({ content: encodedContent, message: `v${packageJSON.version}`, sha }),
             headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}`, 'Content-Type': 'application/json' },
             method: 'PUT'
         });

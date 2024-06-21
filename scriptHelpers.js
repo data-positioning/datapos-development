@@ -65,10 +65,10 @@ async function uploadPlugin() {
     configJSON.version = packageJSON.version;
 
     try {
-        // configJSON.description = await fs.readFile('src/description.en.md', 'utf8');
+        configJSON.description = await fs.readFile('src/description.en.md', 'utf8');
     } catch (error) {}
     try {
-        // configJSON.logo = await fs.readFile('src/logo.svg', 'utf8');
+        configJSON.logo = await fs.readFile('src/logo.svg', 'utf8');
     } catch (error) {}
 
     await pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');

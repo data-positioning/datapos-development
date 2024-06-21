@@ -549,12 +549,11 @@ async function uploadConnector() {
 
     const response2 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
         method: 'PUT',
-        body: { message: 'Updating...', content },
+        body: { content, message: 'Updating...', sha },
         headers: {
             Accept: 'application/vnd.github.v3+json',
             Authorization: `token ${env.GITHUB_API_TOKEN}`,
-            'Content-Type': 'application/json',
-            sha
+            'Content-Type': 'application/json'
         }
     });
     console.log(4444, response2);

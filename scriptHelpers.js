@@ -532,25 +532,25 @@ async function uploadConnector() {
         console.log(1111, itemName);
         const itemPath = path.join('dist', itemName);
         const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) console.log(2222, 'Is a directory...');
+        if (stats.isDirectory()) continue;
+
+        const response1 = await fetch(`https://api.github.com/repos/data-positioning/datapos-test/contents/${itemName}`, {
+            method: 'GET',
+            headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` }
+        });
+        const sha = response1.ok ? (await response1.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
+
+        const response2 = await fetch(`https://api.github.com/repos/data-positioning/datapos-test/contents/${itemName}`, {
+            method: 'PUT',
+            body: JSON.stringify({ content: btoa(input), message: `v${packageJSON.version}`, sha }),
+            headers: {
+                Accept: 'application/vnd.github.v3+json',
+                Authorization: `token ${env.GITHUB_API_TOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response2.ok) console.log(await response2.text());
     }
-
-    const response1 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
-        method: 'GET',
-        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` }
-    });
-    const sha = response1.ok ? (await response1.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
-
-    const response2 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
-        method: 'PUT',
-        body: JSON.stringify({ content: btoa(input), message: `v${packageJSON.version}`, sha }),
-        headers: {
-            Accept: 'application/vnd.github.v3+json',
-            Authorization: `token ${env.GITHUB_API_TOKEN}`,
-            'Content-Type': 'application/json'
-        }
-    });
-    if (!response2.ok) console.log(await response2.text());
 }
 
 // Helpers - Upload Context

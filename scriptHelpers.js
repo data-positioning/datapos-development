@@ -168,7 +168,7 @@ const pushContentToGithub = async (packageJSON, env, fileContent, itemName) => {
     const sha = getResponse.ok ? (await getResponse.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
 
     console.log(3333, sha);
-    console.log(4444, { content: encodedContent, message: `v${packageJSON.version}`, sha });
+    console.log(4444, { message: `v${packageJSON.version}`, sha });
     const encodedContent = Buffer.from(fileContent).toString('base64');
     const putResponse = await fetch(url, {
         body: JSON.stringify({ content: encodedContent, message: `v${packageJSON.version}`, sha }),

@@ -530,17 +530,35 @@ async function uploadConnector() {
     console.log('token', env.GITHUB_API_TOKEN);
     const content = btoa(xxxx);
     console.log(content);
+
+    let sha;
+    let response1 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
+        method: 'GET',
+        headers: {
+            Accept: 'application/vnd.github.v3+json',
+            Authorization: `token ${env.GITHUB_API_TOKEN}`
+        }
+    });
+    console.log(1111, response1.ok);
+    if (response1.ok) {
+        const data = response1.json();
+        console.log(2222, data);
+        sha = data.sha;
+    }
+    console.log(3333, sha);
+
     const response2 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
         method: 'PUT',
         body: { message: 'Updating...', content },
         headers: {
             Accept: 'application/vnd.github.v3+json',
             Authorization: `token ${env.GITHUB_API_TOKEN}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            sha
         }
     });
-    console.log('response', response2);
-    console.log('body', await response2.text());
+    console.log(4444, response2);
+    console.log(5555, await response2.text());
 }
 
 // Helpers - Upload Context

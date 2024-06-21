@@ -2,10 +2,9 @@
     "name": "@datapos/datapos-operations",
     "license": "ISC",
     "private": false,
-    "version": "0.1.510",
+    "version": "0.1.511",
     "dependencies": {
         "dotenv": "^16.4.5",
-        "markdown-it": "^14.1.0",
         "run": "^1.5.0"
     },
     "devDependencies": {

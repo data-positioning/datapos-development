@@ -1,48 +1,108 @@
-// Dependencies
+// Dependencies - Vendor
 const dotenv = require('dotenv');
 const fs = require('fs').promises;
-// const { initializeApp } = require('firebase/app');
-const MarkdownIt = require('markdown-it');
 const path = require('path');
-// const { collection, documentId, getDocs, query, where } = require('firebase/firestore');
-// const { doc, getDoc, getFirestore } = require('firebase/firestore');
 
-// Dependencies - Promisify Exec
+// Dependencies - Vendor (Promisify Exec)
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 // Module Variables
-let contextConfig;
 let areaConfig;
 let areaLevel1Config;
 let areaLevel2Config;
 let issueCount = 0;
-let modelConfig;
-let presentationsConfig;
+let presenterConfig;
 
-// Helpers - Build Configuration
-async function buildConfig(env) {
+// Facilitators - Build Configuration
+async function buildConfig() {
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
     const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
     const engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
-    fs.writeFile(
-        'src/config.json',
-        JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, engineVersion, env, version: packageJSON.version }, undefined, 4)
-    );
+    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, engineVersion, version: packageJSON.version }, undefined, 4));
 }
 
-// Helpers - Build Context
-async function buildContext() {
-    const contextData = await readJSONFile('src/data.json', 'utf8');
-    contextConfig = { label: contextData.label, typeId: 'context', areas: [] };
-    await buildContext_PrepareContext('src');
-    await buildContext_OutputContext();
+// Facilitators - Bump Version
+async function bumpVersion() {
+    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+    const versionSegments = packageJSON.version.split('.');
+    packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+    fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
+    console.log(`Bumped to version ${packageJSON.version}.`);
+}
+
+// Facilitators - Compile Presenter
+async function compilePresenter() {
+    const dataJSON = await readJSONFile('src/data.json', 'utf8');
+    presenterConfig = { label: dataJSON.label, areas: [] };
+    await clearDirectory('dist');
+    await compilePresenterFolder('src');
+    await outputPresenterConfig();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
-// Helpers - Build Context - Prepare Context
-const buildContext_PrepareContext = async (path) => {
-    const markdownIt = new MarkdownIt();
+// Facilitators - Sync with Github
+async function syncWithGitHub() {
+    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+    await exec('git add .');
+    await exec(`git commit -m v${packageJSON.version}`);
+    await exec('git push origin main:main');
+}
+
+// Facilitators - Upload Plugin
+async function uploadPlugin() {
+    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+
+    const result = dotenv.config({ path: '.env.local' });
+    if (result.error) throw result.error;
+    const env = result.parsed;
+
+    const configJSON = JSON.parse(await fs.readFile('src/config.json', 'utf8'));
+    configJSON.id = packageJSON.name;
+    configJSON.dependencies = packageJSON.dependencies;
+    const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
+    configJSON.engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
+    configJSON.version = packageJSON.version;
+
+    try {
+        configJSON.description = await fs.readFile('src/description.en.md', 'utf8');
+    } catch (error) {}
+    try {
+        configJSON.logo = await fs.readFile('src/logo.svg', 'utf8');
+    } catch (error) {}
+
+    console.log('configJSON', configJSON);
+
+    pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
+
+    for (const itemName of await fs.readdir('dist')) {
+        const itemPath = path.join('dist', itemName);
+        const stats = await fs.stat(itemPath);
+        if (stats.isDirectory()) continue;
+
+        const fileContent = await fs.readFile(itemPath, 'utf8');
+        pushContentToGithub(packageJSON, env, fileContent, itemName);
+    }
+}
+
+/// Exports
+module.exports = { buildConfig, bumpVersion, compilePresenter, syncWithGitHub, uploadPlugin };
+
+// Utilities - Clear Directory
+const clearDirectory = async (directoryPath) => {
+    for (const itemName of await fs.readdir(directoryPath)) {
+        const itemPath = `${directoryPath}/${itemName}`;
+        const stats = await fs.stat(itemPath);
+        if (stats.isDirectory()) {
+            await fs.rm(itemPath, { recursive: true, force: true });
+        } else {
+            await fs.unlink(itemPath);
+        }
+    }
+};
+
+// Utilities - Compile Presenter Folder
+const compilePresenterFolder = async (path) => {
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
@@ -52,253 +112,25 @@ const buildContext_PrepareContext = async (path) => {
             if (itemPathSegments.length === 2) {
                 const areaId = itemPathSegments[1];
                 const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                areaData.description = { en: (await readTextFile(`${itemPath}/description.en.md`)) || '' };
-                areaConfig = {
-                    id: areaId,
-                    label: areaData.label || { en: areaId },
-                    description: { en: renderMarkdown(markdownIt, areaData.description) },
-                    sequence: areaData.sequence,
-                    typeId: 'area',
-                    models: []
-                };
-                contextConfig.areas.push(areaConfig);
-                await buildContext_PrepareContext(itemPath);
-            } else if (itemPathSegments.length === 3) {
-                const modelId = itemPathSegments[2];
-                const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                modelData.description = { en: (await readTextFile(`${itemPath}/description.en.md`)) || '' };
-                modelData.entityDiagram = (await readTextFile(`${itemPath}/entities/diagram.svg`)) || '';
-                modelConfig = {
-                    id: modelId,
-                    label: modelData.label || { en: modelId },
-                    description: { en: renderMarkdown(markdownIt, modelData.description) },
-                    entityDiagram: modelData.entityDiagram,
-                    sequence: modelData.sequence,
-                    typeId: 'model',
-                    dimensions: [],
-                    entities: [],
-                    views: []
-                };
-                const dimensionPaths = (await listDirectoryEntries(`${itemPath}/dimensions`)).filter((name) => name.endsWith('.json'));
-                for (const dimensionPath of dimensionPaths) {
-                    const dimensionId = dimensionPath.split('.')[0];
-                    const dimensionData = await readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
-                    dimensionData.description = { en: (await readTextFile(`${itemPath}/dimensions/${dimensionId}.en.md`)) || '' };
-                    const dimensionConfig = {
-                        id: dimensionId,
-                        label: dimensionData.label || { en: dimensionId },
-                        description: { en: renderMarkdown(markdownIt, dimensionData.description) },
-                        typeId: 'dimension',
-                        levels: []
-                    };
-                    modelConfig.dimensions.push(dimensionConfig);
-                }
-                const entityPaths = (await listDirectoryEntries(`${itemPath}/entities`)).filter((name) => name.endsWith('.json'));
-                for (const entityPath of entityPaths) {
-                    const entityId = entityPath.split('.')[0];
-                    const entityData = await readJSONFile(`${itemPath}/entities/${entityId}.json`);
-                    entityData.description = { en: (await readTextFile(`${itemPath}/entities/${entityId}.en.md`)) || '...' };
-                    const entityConfig = {
-                        id: entityId,
-                        label: entityData.label || { en: entityId },
-                        description: { en: renderMarkdown(markdownIt, entityData.description) },
-                        typeId: 'entity',
-                        characteristics: [],
-                        computations: [],
-                        events: []
-                    };
-                    for (const characteristic of entityData.characteristics || []) {
-                        const characteristicConfig = {
-                            entityTypeId: characteristic.entityTypeId,
-                            id: characteristic.id,
-                            label: characteristic.label || { en: characteristic.id },
-                            description: characteristic.description || { en: '' },
-                            typeId: 'characteristic',
-                            type: characteristic.type
-                        };
-                        entityConfig.characteristics.push(characteristicConfig);
-                    }
-                    for (const computation of entityData.computations || []) {
-                        const computationConfig = {
-                            id: computation.id,
-                            label: computation.label || { en: computation.id },
-                            description: computation.description || { en: '' },
-                            typeId: 'computation',
-                            formula: computation.formula
-                        };
-                        entityConfig.computations.push(computationConfig);
-                    }
-                    for (const event of entityData.events || []) {
-                        const eventConfig = {
-                            id: event.id,
-                            label: event.label || { en: event.id },
-                            description: event.description || { en: '' },
-                            typeId: 'event'
-                        };
-                        entityConfig.events.push(eventConfig);
-                    }
-                    modelConfig.entities.push(entityConfig);
-                }
-                areaConfig.models.push(modelConfig);
-            } else {
-                throw new Error(`Unexpected directory level: ${itemPath}.`);
-            }
-        }
-    }
-};
-
-// Helpers - Build Context - Output Context
-const buildContext_OutputContext = async () => {
-    const characteristics = [];
-    const computations = [];
-    const dimensions = [];
-    const entities = [];
-    const events = [];
-    const models = [];
-    const views = [];
-
-    await clearDirectory('dist');
-
-    const contextIndex = { id: 'default', label: contextConfig.label, typeId: contextConfig.typeId, areas: [] };
-    for (const areaConfig of contextConfig.areas) {
-        const areaId = `${areaConfig.id}`;
-        const areaReference = { id: areaId, label: areaConfig.label, areaSequence: areaConfig.sequence, models: [] };
-        for (const model of areaConfig.models) {
-            const modelId = `${model.id}`;
-            const modelConfig = {
-                id: modelId,
-                label: model.label,
-                description: model.description,
-                entityDiagram: model.entityDiagram,
-                sequence: model.sequence,
-                typeId: model.typeId,
-                dimensions: [],
-                entities: [],
-                views: []
-            };
-
-            for (const dimension of model.dimensions) {
-                const dimensionId = `${dimension.id}`;
-                const dimensionConfig = {
-                    id: dimensionId,
-                    label: dimension.label,
-                    description: dimension.description,
-                    typeId: dimension.typeId,
-                    levels: dimension.levels
-                };
-                fs.writeFile(`dist/datapos-context-default-dimension-${dimensionId}.json`, JSON.stringify(dimensionConfig));
-                const dimensionReference = { id: dimensionId, label: dimension.label };
-                modelConfig.dimensions.push(dimensionReference);
-                dimensions.push({
-                    ...dimensionReference,
-                    modelId: modelId,
-                    modelLabel: model.label,
-                    areaId: areaConfig.Id,
-                    areaLabel: areaConfig.label,
-                    areaSequence: areaConfig.sequence
-                });
-            }
-
-            for (const entity of model.entities) {
-                const entityId = `${entity.id}`;
-                const entityConfig = {
-                    id: entityId,
-                    label: entity.label,
-                    description: entity.description,
-                    typeId: entity.typeId,
-                    characteristics: entity.characteristics,
-                    computations: entity.computations,
-                    events: entity.events
-                };
-                fs.writeFile(`dist/datapos-context-default-entity-${entityId}.json`, JSON.stringify(entityConfig));
-                const entityReference = { id: entityId, label: entity.label };
-                modelConfig.entities.push(entityReference);
-                entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
-            }
-
-            for (const view of model.views) {
-                const viewId = `${view.id}`;
-                const viewConfig = {
-                    id: viewId,
-                    label: view.label,
-                    description: view.description,
-                    typeId: view.typeId
-                };
-                fs.writeFile(`dist/datapos-context-default-view-${viewId}.json`, JSON.stringify(viewConfig));
-                const viewReference = { id: viewId, label: view.label };
-                modelConfig.views.push(viewReference);
-                views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
-            }
-            fs.writeFile(`dist/datapos-context-default-model-${modelId}.json`, JSON.stringify(modelConfig));
-            const modelReference = { id: modelId, label: model.label, sequence: model.sequence };
-            areaReference.models.push(modelReference);
-            models.push({ ...modelReference, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
-        }
-        contextIndex.areas.push(areaReference);
-    }
-    fs.writeFile('dist/datapos-context-default.json', JSON.stringify(contextIndex));
-    fs.writeFile('dist/datapos-context-default-models.json', JSON.stringify({ models: models }));
-    fs.writeFile('dist/datapos-context-default-dimensions.json', JSON.stringify({ dimensions: dimensions }));
-    fs.writeFile('dist/datapos-context-default-entities.json', JSON.stringify({ entities: entities }));
-    fs.writeFile('dist/datapos-context-default-characteristics.json', JSON.stringify({ characteristics: characteristics }));
-    fs.writeFile('dist/datapos-context-default-computations.json', JSON.stringify({ computations: computations }));
-    fs.writeFile('dist/datapos-context-default-events.json', JSON.stringify({ events: events }));
-    fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify({ views: views }));
-};
-
-// Helpers - Build Presentations
-async function buildPresentations() {
-    const presentationsData = await readJSONFile('src/data.json', 'utf8');
-    presentationsConfig = { label: presentationsData.label, areas: [] };
-    await clearDirectory('dist');
-    await buildPresentations_PreparePresentations('src');
-    await buildPresentations_OutputPresentations();
-    if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
-}
-
-// Helpers - Build Presentations - Prepare Presentations
-const buildPresentations_PreparePresentations = async (path) => {
-    const itemNames = await fs.readdir(path);
-    for (const itemName of itemNames) {
-        const itemPath = `${path}/${itemName}`;
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) {
-            const itemPathSegments = itemPath.split('/');
-            if (itemPathSegments.length === 2) {
-                const areaId = itemPathSegments[1];
-                const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                areaConfig = {
-                    id: areaId,
-                    label: areaData.label || { en: areaId },
-                    folders: []
-                };
-                presentationsConfig.areas.push(areaConfig);
-                await buildPresentations_PreparePresentations(itemPath);
+                areaConfig = { id: areaId, label: areaData.label || { en: areaId }, folders: [] };
+                presenterConfig.areas.push(areaConfig);
+                await compilePresenterFolder(itemPath);
             } else if (itemPathSegments.length === 3) {
                 const areaLevel2Id = itemPathSegments[2];
                 const areaLevel2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                areaLevel1Config = {
-                    id: areaLevel2Id,
-                    label: areaLevel2Data.label || { en: areaLevel2Id },
-                    folders: []
-                };
+                areaLevel1Config = { id: areaLevel2Id, label: areaLevel2Data.label || { en: areaLevel2Id }, folders: [] };
                 areaConfig.folders.push(areaLevel1Config);
-                await buildPresentations_PreparePresentations(itemPath);
+                await compilePresenterFolder(itemPath);
             } else if (itemPathSegments.length === 4) {
                 const areaLevel3Id = itemPathSegments[3];
                 const areaLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                areaLevel2Config = {
-                    id: areaLevel3Id,
-                    label: areaLevel3Data.label || { en: areaLevel3Id },
-                    folders: [],
-                    presentations: []
-                };
+                areaLevel2Config = { id: areaLevel3Id, label: areaLevel3Data.label || { en: areaLevel3Id }, folders: [], presentations: [] };
                 areaLevel1Config.folders.push(areaLevel2Config);
                 const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
                 for (const presentationPath of presentationPaths) {
                     const presentationId = presentationPath.slice(0, -5);
                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
-                    fs.writeFile(`dist/datapos-presentations-default-${presentationId}.json`, JSON.stringify(presentationData));
+                    fs.writeFile(`dist/datapos-presenter-default-${presentationId}.json`, JSON.stringify(presentationData));
                     areaLevel2Config.presentations.push({ id: presentationId });
                 }
             } else {
@@ -306,49 +138,295 @@ const buildPresentations_PreparePresentations = async (path) => {
             }
         }
     }
-    fs.writeFile('dist/datapos-presentations-default.json', JSON.stringify(presentationsConfig));
+    fs.writeFile('dist/datapos-presenter-default.json', JSON.stringify(presenterConfig));
 };
 
-// Helpers - Build Presentations - Output Presentations
-const buildPresentations_OutputPresentations = async () => {};
-
-// Helpers - Build Public Directory Index
-async function buildPublicDirectoryIndex(id) {
-    async function listDirectoryEntriesRecursively(directoryPath, names) {
-        const entries = [];
-        const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
-        index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
-        for (const name of names) {
-            const itemPath = path.join(directoryPath, name);
-            const stats = await fs.stat(itemPath);
-            if (stats.isDirectory()) {
-                const nextLevelChildren = await fs.readdir(itemPath);
-                entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
-                await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
-            } else {
-                entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
-            }
-        }
-        entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
+// Utilities - List Directory Entries
+const listDirectoryEntries = async (path) => {
+    try {
+        return await fs.readdir(`${path}`);
+    } catch (error) {
+        issueCount++;
+        console.warn(`WARN: Directory '${path}' not found or invalid.`);
+        return [];
     }
+};
 
-    const index = {};
-    const toplevelNames = await fs.readdir(`public/${id}/`);
-    await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
-    fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
-        if (error) return console.error(error);
+// Utilities - Build Presentations - Output Presentations
+const outputPresenterConfig = async () => {};
+
+// Utilities - Push Content to Github
+const pushContentToGithub = async (packageJSON, env, fileContent) => {
+    const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/${packageJSON.name}/${itemName}`;
+
+    const getResponse = await fetch(url, {
+        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
+        method: 'GET'
     });
-}
+    const sha = getResponse.ok ? (await getResponse.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
 
-// Helpers - Bump Version
-async function bumpVersion() {
-    const packageData = await fs.readFile('package.json', 'utf8');
-    const packageJSON = JSON.parse(packageData);
-    const versionSegments = packageJSON.version.split('.');
-    packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-    fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
-    console.log(`Bumped to version ${packageJSON.version}.`);
-}
+    const encodedContent = Buffer.from(fileContent).toString('base64');
+    const putResponse = await fetch(url, {
+        body: JSON.stringify({ content: encodedContent, message: `v${packageJSON.version}`, sha }),
+        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}`, 'Content-Type': 'application/json' },
+        method: 'PUT'
+    });
+    if (!putResponse.ok) console.log(await putResponse.text());
+};
+
+// Utilities - Read JSON File
+const readJSONFile = async (path) => {
+    try {
+        return JSON.parse(await fs.readFile(path, 'utf8'));
+    } catch (error) {
+        issueCount++;
+        console.warn(`WARN: JSON file '${path}' not found or invalid.`);
+        return {};
+    }
+};
+
+// // Helpers - Build Context
+// async function buildContext() {
+//     const contextData = await readJSONFile('src/data.json', 'utf8');
+//     contextConfig = { label: contextData.label, typeId: 'context', areas: [] };
+//     await buildContext_PrepareContext('src');
+//     await buildContext_OutputContext();
+//     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
+// }
+
+// // Helpers - Build Context - Prepare Context
+// const buildContext_PrepareContext = async (path) => {
+//     const markdownIt = new MarkdownIt();
+//     const itemNames = await fs.readdir(path);
+//     for (const itemName of itemNames) {
+//         const itemPath = `${path}/${itemName}`;
+//         const stats = await fs.stat(itemPath);
+//         if (stats.isDirectory()) {
+//             const itemPathSegments = itemPath.split('/');
+//             if (itemPathSegments.length === 2) {
+//                 const areaId = itemPathSegments[1];
+//                 const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+//                 areaData.description = { en: (await readTextFile(`${itemPath}/description.en.md`)) || '' };
+//                 areaConfig = {
+//                     id: areaId,
+//                     label: areaData.label || { en: areaId },
+//                     description: { en: renderMarkdown(markdownIt, areaData.description) },
+//                     sequence: areaData.sequence,
+//                     typeId: 'area',
+//                     models: []
+//                 };
+//                 contextConfig.areas.push(areaConfig);
+//                 await buildContext_PrepareContext(itemPath);
+//             } else if (itemPathSegments.length === 3) {
+//                 const modelId = itemPathSegments[2];
+//                 const modelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+//                 modelData.description = { en: (await readTextFile(`${itemPath}/description.en.md`)) || '' };
+//                 modelData.entityDiagram = (await readTextFile(`${itemPath}/entities/diagram.svg`)) || '';
+//                 modelConfig = {
+//                     id: modelId,
+//                     label: modelData.label || { en: modelId },
+//                     description: { en: renderMarkdown(markdownIt, modelData.description) },
+//                     entityDiagram: modelData.entityDiagram,
+//                     sequence: modelData.sequence,
+//                     typeId: 'model',
+//                     dimensions: [],
+//                     entities: [],
+//                     views: []
+//                 };
+//                 const dimensionPaths = (await listDirectoryEntries(`${itemPath}/dimensions`)).filter((name) => name.endsWith('.json'));
+//                 for (const dimensionPath of dimensionPaths) {
+//                     const dimensionId = dimensionPath.split('.')[0];
+//                     const dimensionData = await readJSONFile(`${itemPath}/dimensions/${dimensionId}.json`);
+//                     dimensionData.description = { en: (await readTextFile(`${itemPath}/dimensions/${dimensionId}.en.md`)) || '' };
+//                     const dimensionConfig = {
+//                         id: dimensionId,
+//                         label: dimensionData.label || { en: dimensionId },
+//                         description: { en: renderMarkdown(markdownIt, dimensionData.description) },
+//                         typeId: 'dimension',
+//                         levels: []
+//                     };
+//                     modelConfig.dimensions.push(dimensionConfig);
+//                 }
+//                 const entityPaths = (await listDirectoryEntries(`${itemPath}/entities`)).filter((name) => name.endsWith('.json'));
+//                 for (const entityPath of entityPaths) {
+//                     const entityId = entityPath.split('.')[0];
+//                     const entityData = await readJSONFile(`${itemPath}/entities/${entityId}.json`);
+//                     entityData.description = { en: (await readTextFile(`${itemPath}/entities/${entityId}.en.md`)) || '...' };
+//                     const entityConfig = {
+//                         id: entityId,
+//                         label: entityData.label || { en: entityId },
+//                         description: { en: renderMarkdown(markdownIt, entityData.description) },
+//                         typeId: 'entity',
+//                         characteristics: [],
+//                         computations: [],
+//                         events: []
+//                     };
+//                     for (const characteristic of entityData.characteristics || []) {
+//                         const characteristicConfig = {
+//                             entityTypeId: characteristic.entityTypeId,
+//                             id: characteristic.id,
+//                             label: characteristic.label || { en: characteristic.id },
+//                             description: characteristic.description || { en: '' },
+//                             typeId: 'characteristic',
+//                             type: characteristic.type
+//                         };
+//                         entityConfig.characteristics.push(characteristicConfig);
+//                     }
+//                     for (const computation of entityData.computations || []) {
+//                         const computationConfig = {
+//                             id: computation.id,
+//                             label: computation.label || { en: computation.id },
+//                             description: computation.description || { en: '' },
+//                             typeId: 'computation',
+//                             formula: computation.formula
+//                         };
+//                         entityConfig.computations.push(computationConfig);
+//                     }
+//                     for (const event of entityData.events || []) {
+//                         const eventConfig = {
+//                             id: event.id,
+//                             label: event.label || { en: event.id },
+//                             description: event.description || { en: '' },
+//                             typeId: 'event'
+//                         };
+//                         entityConfig.events.push(eventConfig);
+//                     }
+//                     modelConfig.entities.push(entityConfig);
+//                 }
+//                 areaConfig.models.push(modelConfig);
+//             } else {
+//                 throw new Error(`Unexpected directory level: ${itemPath}.`);
+//             }
+//         }
+//     }
+// };
+
+// // Helpers - Build Context - Output Context
+// const buildContext_OutputContext = async () => {
+//     const characteristics = [];
+//     const computations = [];
+//     const dimensions = [];
+//     const entities = [];
+//     const events = [];
+//     const models = [];
+//     const views = [];
+
+//     await clearDirectory('dist');
+
+//     const contextIndex = { id: 'default', label: contextConfig.label, typeId: contextConfig.typeId, areas: [] };
+//     for (const areaConfig of contextConfig.areas) {
+//         const areaId = `${areaConfig.id}`;
+//         const areaReference = { id: areaId, label: areaConfig.label, areaSequence: areaConfig.sequence, models: [] };
+//         for (const model of areaConfig.models) {
+//             const modelId = `${model.id}`;
+//             const modelConfig = {
+//                 id: modelId,
+//                 label: model.label,
+//                 description: model.description,
+//                 entityDiagram: model.entityDiagram,
+//                 sequence: model.sequence,
+//                 typeId: model.typeId,
+//                 dimensions: [],
+//                 entities: [],
+//                 views: []
+//             };
+
+//             for (const dimension of model.dimensions) {
+//                 const dimensionId = `${dimension.id}`;
+//                 const dimensionConfig = {
+//                     id: dimensionId,
+//                     label: dimension.label,
+//                     description: dimension.description,
+//                     typeId: dimension.typeId,
+//                     levels: dimension.levels
+//                 };
+//                 fs.writeFile(`dist/datapos-context-default-dimension-${dimensionId}.json`, JSON.stringify(dimensionConfig));
+//                 const dimensionReference = { id: dimensionId, label: dimension.label };
+//                 modelConfig.dimensions.push(dimensionReference);
+//                 dimensions.push({
+//                     ...dimensionReference,
+//                     modelId: modelId,
+//                     modelLabel: model.label,
+//                     areaId: areaConfig.Id,
+//                     areaLabel: areaConfig.label,
+//                     areaSequence: areaConfig.sequence
+//                 });
+//             }
+
+//             for (const entity of model.entities) {
+//                 const entityId = `${entity.id}`;
+//                 const entityConfig = {
+//                     id: entityId,
+//                     label: entity.label,
+//                     description: entity.description,
+//                     typeId: entity.typeId,
+//                     characteristics: entity.characteristics,
+//                     computations: entity.computations,
+//                     events: entity.events
+//                 };
+//                 fs.writeFile(`dist/datapos-context-default-entity-${entityId}.json`, JSON.stringify(entityConfig));
+//                 const entityReference = { id: entityId, label: entity.label };
+//                 modelConfig.entities.push(entityReference);
+//                 entities.push({ ...entityReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
+//             }
+
+//             for (const view of model.views) {
+//                 const viewId = `${view.id}`;
+//                 const viewConfig = {
+//                     id: viewId,
+//                     label: view.label,
+//                     description: view.description,
+//                     typeId: view.typeId
+//                 };
+//                 fs.writeFile(`dist/datapos-context-default-view-${viewId}.json`, JSON.stringify(viewConfig));
+//                 const viewReference = { id: viewId, label: view.label };
+//                 modelConfig.views.push(viewReference);
+//                 views.push({ ...viewReference, modelId: modelId, modelLabel: model.label, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
+//             }
+//             fs.writeFile(`dist/datapos-context-default-model-${modelId}.json`, JSON.stringify(modelConfig));
+//             const modelReference = { id: modelId, label: model.label, sequence: model.sequence };
+//             areaReference.models.push(modelReference);
+//             models.push({ ...modelReference, areaId: areaId, areaLabel: areaConfig.label, areaSequence: areaConfig.sequence });
+//         }
+//         contextIndex.areas.push(areaReference);
+//     }
+//     fs.writeFile('dist/datapos-context-default.json', JSON.stringify(contextIndex));
+//     fs.writeFile('dist/datapos-context-default-models.json', JSON.stringify({ models: models }));
+//     fs.writeFile('dist/datapos-context-default-dimensions.json', JSON.stringify({ dimensions: dimensions }));
+//     fs.writeFile('dist/datapos-context-default-entities.json', JSON.stringify({ entities: entities }));
+//     fs.writeFile('dist/datapos-context-default-characteristics.json', JSON.stringify({ characteristics: characteristics }));
+//     fs.writeFile('dist/datapos-context-default-computations.json', JSON.stringify({ computations: computations }));
+//     fs.writeFile('dist/datapos-context-default-events.json', JSON.stringify({ events: events }));
+//     fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify({ views: views }));
+// };
+
+// // Helpers - Build Public Directory Index
+// async function buildPublicDirectoryIndex(id) {
+//     async function listDirectoryEntriesRecursively(directoryPath, names) {
+//         const entries = [];
+//         const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
+//         index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
+//         for (const name of names) {
+//             const itemPath = path.join(directoryPath, name);
+//             const stats = await fs.stat(itemPath);
+//             if (stats.isDirectory()) {
+//                 const nextLevelChildren = await fs.readdir(itemPath);
+//                 entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
+//                 await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
+//             } else {
+//                 entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
+//             }
+//         }
+//         entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
+//     }
+
+//     const index = {};
+//     const toplevelNames = await fs.readdir(`public/${id}/`);
+//     await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
+//     fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
+//         if (error) return console.error(error);
+//     });
+// }
 
 // // Helpers - Download Context
 // async function downloadContext(contextId, outDir) {
@@ -486,15 +564,6 @@ async function bumpVersion() {
 //     // });
 // }
 
-// Helpers - Sync with Github
-async function syncWithGitHub() {
-    const packageData = await fs.readFile('package.json', 'utf8');
-    const packageJSON = JSON.parse(packageData);
-    await exec('git add .');
-    await exec(`git commit -m v${packageJSON.version}`);
-    await exec('git push origin main:main');
-}
-
 // // Helpers - Upload Connector
 // async function uploadConnector() {
 //     const input = await fs.readFile('src/config.json', 'utf8');
@@ -553,39 +622,6 @@ async function syncWithGitHub() {
 //     }
 // }
 
-// Helpers - Upload Plugin
-async function uploadPlugin() {
-    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
-
-    const result = dotenv.config({ path: '.env.local' });
-    if (result.error) throw result.error;
-    const env = result.parsed;
-
-    const itemNames2 = await fs.readdir('dist');
-    for (const itemName of itemNames2) {
-        const itemPath = path.join('dist', itemName);
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) continue;
-
-        const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/${packageJSON.name}/${itemName}`;
-
-        const response1 = await fetch(url, {
-            headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
-            method: 'GET'
-        });
-        const sha = response1.ok ? (await response1.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
-
-        const fileContent = await fs.readFile(itemPath, 'utf8');
-        const encodedContent = Buffer.from(fileContent).toString('base64');
-        const response2 = await fetch(url, {
-            body: JSON.stringify({ content: encodedContent, message: `v${packageJSON.version}`, sha }),
-            headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}`, 'Content-Type': 'application/json' },
-            method: 'PUT'
-        });
-        if (!response2.ok) console.log(await response2.text());
-    }
-}
-
 // // Helpers - Upload Context
 // async function uploadContext() {
 //     const items = [];
@@ -642,63 +678,16 @@ async function uploadPlugin() {
 //     }
 // };
 
-// Utilities - Clear Directory
-const clearDirectory = async (directoryPath) => {
-    for (const itemName of await fs.readdir(directoryPath)) {
-        const itemPath = `${directoryPath}/${itemName}`;
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) {
-            await fs.rm(itemPath, { recursive: true, force: true });
-        } else {
-            await fs.unlink(itemPath);
-        }
-    }
-};
+// // Utilities - Read Text File
+// const readTextFile = async (path) => {
+//     try {
+//         return await fs.readFile(path, 'utf8');
+//     } catch (error) {
+//         issueCount++;
+//         console.warn(`WARN: Markdown file '${path}' not found or invalid.`);
+//         return '';
+//     }
+// };
 
-// Utilities - List Directory Entries
-const listDirectoryEntries = async (path) => {
-    try {
-        return await fs.readdir(`${path}`);
-    } catch (error) {
-        issueCount++;
-        console.warn(`WARN: Directory '${path}' not found or invalid.`);
-        return [];
-    }
-};
-
-// Utilities - Read JSON File
-const readJSONFile = async (path) => {
-    try {
-        return JSON.parse(await fs.readFile(path, 'utf8'));
-    } catch (error) {
-        issueCount++;
-        console.warn(`WARN: JSON file '${path}' not found or invalid.`);
-        return {};
-    }
-};
-
-// Utilities - Read Text File
-const readTextFile = async (path) => {
-    try {
-        return await fs.readFile(path, 'utf8');
-    } catch (error) {
-        issueCount++;
-        console.warn(`WARN: Markdown file '${path}' not found or invalid.`);
-        return '';
-    }
-};
-
-// Utilities - Render Markdown
-const renderMarkdown = (markdownIt, content) => (content && content.en ? markdownIt.render(content.en) : '');
-
-/// Exports
-module.exports = {
-    buildConfig,
-    buildContext,
-    buildPresentations,
-    buildPublicDirectoryIndex,
-    bumpVersion,
-    // downloadContext,
-    syncWithGitHub,
-    uploadPlugin
-};
+// // Utilities - Render Markdown
+// const renderMarkdown = (markdownIt, content) => (content && content.en ? markdownIt.render(content.en) : '');

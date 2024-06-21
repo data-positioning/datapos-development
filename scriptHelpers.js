@@ -73,7 +73,7 @@ async function uploadPlugin() {
 
     console.log('configJSON', configJSON);
 
-    // pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
+    pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
 
     for (const itemName of await fs.readdir('dist')) {
         const itemPath = path.join('dist', itemName);
@@ -81,7 +81,7 @@ async function uploadPlugin() {
         if (stats.isDirectory()) continue;
 
         const fileContent = await fs.readFile(itemPath, 'utf8');
-        pushContentToGithub(packageJSON, env, fileContent, itemName);
+        await pushContentToGithub(packageJSON, env, fileContent, itemName);
     }
 }
 

@@ -526,6 +526,7 @@ async function uploadConnector() {
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
     const env = result.parsed;
+    const content = btoa(input);
 
     const response1 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
         method: 'GET',
@@ -535,14 +536,15 @@ async function uploadConnector() {
 
     const response2 = await fetch('https://api.github.com/repos/data-positioning/datapos-test/contents/config.json', {
         method: 'PUT',
-        body: JSON.stringify({ content: btoa(input), message: `v${packageJSON.version}`, sha }),
+        body: JSON.stringify({ content, message: 'Updating...', sha }),
         headers: {
             Accept: 'application/vnd.github.v3+json',
             Authorization: `token ${env.GITHUB_API_TOKEN}`,
             'Content-Type': 'application/json'
         }
     });
-    console.log(4444, response2);
+    console.log(4444, response2, packageJSON.version);
+    console.log(5555, await response2.text());
 }
 
 // Helpers - Upload Context

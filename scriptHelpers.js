@@ -100,17 +100,26 @@ const clearDirectory = async (directoryPath) => {
 };
 
 // Utilities - Compile Presenter Folder
-const compilePresenterFolder = async (path, levelName, items) => {
+const compilePresenterFolder = async (path, levelTypeId, items) => {
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
-            const id = itemPathSegments[itemPathSegments.length - 1];
-            console.log(levelName, 'folder', id, itemPathSegments);
+            const levelId = itemPathSegments[itemPathSegments.length - 1];
+            const levelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+            if (levelTypeId === 'area') {
+                const areaConfig = { id: levelId, label: levelData.label || { en: levelData.id }, topics: [] };
+                console.log(levelTypeId, levelId, 'folder', areaConfig, itemPathSegments);
+                await compilePresenterFolder(itemPath, 'topics', areaConfig.topics);
+            } else if (levelTypeId === 'topic') {
+                const areaConfig = { id: levelId, label: levelData.label || { en: levelData.id }, topics: [] };
+                console.log(levelTypeId, levelId, 'folder', areaConfig, itemPathSegments);
+            } else {
+            }
         } else {
-            console.log(levelName, 'presentation', itemPath);
+            console.log(levelTypeId, 'presentation', itemPath);
         }
     }
 };

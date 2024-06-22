@@ -33,10 +33,10 @@ async function bumpVersion() {
 
 // Facilitators - Compile Presenter
 async function compilePresenter() {
-    const dataJSON = await readJSONFile('presentations/data.json', 'utf8');
+    const dataJSON = await readJSONFile('src/presentations/data.json', 'utf8');
     presenterConfig = { label: dataJSON.label, areas: [] };
     await clearDirectory('dist');
-    await compilePresenterFolder('src');
+    await compilePresenterFolder('src/presentations');
     await outputPresenterConfig();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }

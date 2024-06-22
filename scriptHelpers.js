@@ -100,16 +100,17 @@ const clearDirectory = async (directoryPath) => {
 };
 
 // Utilities - Compile Presenter Folder
-const compilePresenterFolder = async (path, levelId, items) => {
+const compilePresenterFolder = async (path, levelName, items) => {
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
-            console.log(levelId, 'folder', itemPathSegments);
+            const id = itemPathSegments[itemPathSegments.length - 1];
+            console.log(levelName, 'folder', id, itemPathSegments);
         } else {
-            console.log(levelId, 'presentation', itemPath);
+            console.log(levelName, 'presentation', itemPath);
         }
     }
 };

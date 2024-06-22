@@ -204,7 +204,7 @@ const uploadPluginFolder = async (packageJSON, env, folderPath) => {
             await uploadPluginFolder(packageJSON, env, itemPath);
         } else {
             const fileContent = await readTextFile(itemPath);
-            await pushContentToGithub(packageJSON, env, fileContent, itemPath);
+            await pushContentToGithub(packageJSON, env, fileContent, itemPath.substring(5));
         }
     }
 };

@@ -118,7 +118,8 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
                 console.log(levelTypeId, levelId, 'folder', areaConfig, itemPathSegments);
                 await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
             } else {
-                throw new Error(`Unexpected directory level: ${itemPath}.`);
+                // throw new Error(`Unexpected directory level: ${itemPath}.`);
+                console.log(levelTypeId, 'IGNORING DIRECTORY', itemPath);
             }
         } else {
             console.log(levelTypeId, 'presentation', itemPath);

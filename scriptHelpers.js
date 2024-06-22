@@ -34,9 +34,10 @@ async function bumpVersion() {
 // Facilitators - Compile Presenter
 async function compilePresenter() {
     const dataJSON = await readJSONFile('src/presentations/data.json', 'utf8');
-    presenterConfig = { label: dataJSON.label, areas: [] };
+    presenterConfig = { label: dataJSON.label, children: [], presentations: [] };
     await clearDirectory('dist');
-    await compilePresenterFolder('src/presentations', 'areas', presenterConfig.areas);
+    await compilePresenterFolder('src/presentations', 'areas', presenterConfig.children, presenterConfig.presentations);
+    console.log('presenterConfig', presenterConfig);
     await outputPresenterConfig();
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
@@ -103,26 +104,26 @@ const clearDirectory = async (directoryPath) => {
 const compilePresenterFolder = async (path, levelTypeId, children, presentations) => {
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
+        const levelId = itemName;
         const itemPath = `${path}/${itemName}`;
+        // const itemPathSegments = itemPath.split('/');
+        const levelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
-            const itemPathSegments = itemPath.split('/');
-            const levelId = itemPathSegments[itemPathSegments.length - 1];
-            const levelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
             if (levelTypeId === 'areas') {
-                const areaConfig = { id: levelId, label: levelData.label || { en: levelData.id }, topics: [], presentations: [] };
-                console.log(levelTypeId, levelId, 'folder', areaConfig);
-                await compilePresenterFolder(itemPath, 'topics', areaConfig.topics, areaConfig.presentations);
+                const areaConfig = { id: levelId, label: levelData.label || { en: levelId }, children: [], presentations: [] };
+                console.log(levelTypeId, levelId, 'folder', JSON.stringify(areaConfig));
+                children.push(areaConfig);
+                await compilePresenterFolder(itemPath, 'topics', areaConfig.children, areaConfig.presentations);
             } else if (levelTypeId === 'topics') {
-                const topicConfig = { id: levelId, label: levelData.label || { en: levelData.id }, presentations: [] };
-                console.log(levelTypeId, levelId, 'folder', areaConfig);
+                const topicConfig = { id: levelId, label: levelData.label || { en: levelId }, presentations: [] };
+                console.log(levelTypeId, levelId, 'folder', JSON.stringify(areaConfig));
+                children.push(topicConfig);
                 await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
-            } else {
-                // throw new Error(`Unexpected directory level: ${itemPath}.`);
-                console.log(levelTypeId, 'IGNORING DIRECTORY', itemPath);
             }
         } else {
             console.log(levelTypeId, 'presentation', itemPath);
+            presentations.push({ id: levelId });
         }
     }
 };

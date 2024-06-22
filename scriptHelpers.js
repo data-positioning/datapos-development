@@ -55,15 +55,28 @@ async function bumpVersion() {
     console.log(`Bumped to version ${packageJSON.version}.`);
 }
 
+// Facilitators - Clear Directory
+const clearDirectory = async (directoryPath) => {
+    for (const itemName of await fs.readdir(directoryPath)) {
+        const itemPath = `${directoryPath}/${itemName}`;
+        const stats = await fs.stat(itemPath);
+        if (stats.isDirectory()) {
+            await fs.rm(itemPath, { recursive: true, force: true });
+        } else {
+            await fs.unlink(itemPath);
+        }
+    }
+};
+
 // Facilitators - Compile Presenter
 async function compilePresenter() {
     const packageJSON = await readJSONFile('package.json');
     const packageName = packageJSON.name;
     const dataJSON = await readJSONFile('src/presentations/data.json');
     const presenterConfig = { label: dataJSON.label || packageName, children: [], presentations: [] };
-    await clearDirectory('dist');
+    // await clearDirectory('dist');
     await compilePresenterFolder('src/presentations', 'areas', presenterConfig.children, presenterConfig.presentations);
-    fs.writeFile(`${packageName}.json`, JSON.stringify(presenterConfig));
+    fs.writeFile(`dist/${packageName}.json`, JSON.stringify(presenterConfig));
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
@@ -106,20 +119,7 @@ async function uploadPlugin() {
 }
 
 /// Exports
-module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, compilePresenter, syncWithGitHub, uploadPlugin };
-
-// Utilities - Clear Directory
-const clearDirectory = async (directoryPath) => {
-    for (const itemName of await fs.readdir(directoryPath)) {
-        const itemPath = `${directoryPath}/${itemName}`;
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) {
-            await fs.rm(itemPath, { recursive: true, force: true });
-        } else {
-            await fs.unlink(itemPath);
-        }
-    }
-};
+module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, syncWithGitHub, uploadPlugin };
 
 // Utilities - Compile Presenter Folder
 const compilePresenterFolder = async (path, levelTypeId, children, presentations) => {

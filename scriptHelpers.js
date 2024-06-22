@@ -18,6 +18,34 @@ async function buildConfig() {
     fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, engineVersion, version: packageJSON.version }, undefined, 4));
 }
 
+// Facilitators - Build Public Directory Index
+async function buildPublicDirectoryIndex(id) {
+    async function listDirectoryEntriesRecursively(directoryPath, names) {
+        const entries = [];
+        const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
+        index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
+        for (const name of names) {
+            const itemPath = path.join(directoryPath, name);
+            const stats = await fs.stat(itemPath);
+            if (stats.isDirectory()) {
+                const nextLevelChildren = await fs.readdir(itemPath);
+                entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
+                await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
+            } else {
+                entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
+            }
+        }
+        entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
+    }
+
+    const index = {};
+    const toplevelNames = await fs.readdir(`public/${id}/`);
+    await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
+    fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
+        if (error) return console.error(error);
+    });
+}
+
 // Facilitators - Bump Version
 async function bumpVersion() {
     const packageJSON = await readJSONFile('package.json');
@@ -78,7 +106,7 @@ async function uploadPlugin() {
 }
 
 /// Exports
-module.exports = { buildConfig, bumpVersion, compilePresenter, syncWithGitHub, uploadPlugin };
+module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, compilePresenter, syncWithGitHub, uploadPlugin };
 
 // Utilities - Clear Directory
 const clearDirectory = async (directoryPath) => {
@@ -173,48 +201,6 @@ const readTextFile = async (path) => {
     }
 };
 
-// // Utilities - Compile Presenter Folder
-// const compilePresenterFolder2 = async (path) => {
-//     console.log(1111, path);
-//     const itemNames = await fs.readdir(path);
-//     console.log(2222, itemNames);
-//     for (const itemName of itemNames) {
-//         const itemPath = `${path}/${itemName}`;
-//         const stats = await fs.stat(itemPath);
-//         if (stats.isDirectory()) {
-//             const itemPathSegments = itemPath.split('/');
-//             if (itemPathSegments.length === 3) {
-//                 const areaId = itemPathSegments[2];
-//                 const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-//                 areaConfig = { id: areaId, label: areaData.label || { en: areaId }, folders: [] };
-//                 presenterConfig.areas.push(areaConfig);
-//                 await compilePresenterFolder(itemPath);
-//             } else if (itemPathSegments.length === 4) {
-//                 const areaLevel2Id = itemPathSegments[3];
-//                 const areaLevel2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-//                 areaLevel1Config = { id: areaLevel2Id, label: areaLevel2Data.label || { en: areaLevel2Id }, folders: [] };
-//                 areaConfig.folders.push(areaLevel1Config);
-//                 await compilePresenterFolder(itemPath);
-//             } else if (itemPathSegments.length === 5) {
-//                 const areaLevel3Id = itemPathSegments[4];
-//                 const areaLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-//                 areaLevel2Config = { id: areaLevel3Id, label: areaLevel3Data.label || { en: areaLevel3Id }, folders: [], presentations: [] };
-//                 areaLevel1Config.folders.push(areaLevel2Config);
-//                 const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
-//                 for (const presentationPath of presentationPaths) {
-//                     const presentationId = presentationPath.slice(0, -5);
-//                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
-//                     fs.writeFile(`dist/datapos-presenter-default-${presentationId}.json`, JSON.stringify(presentationData));
-//                     areaLevel2Config.presentations.push({ id: presentationId });
-//                 }
-//             } else {
-//                 throw new Error(`Unexpected directory level: ${itemPath}.`);
-//             }
-//         }
-//     }
-//     fs.writeFile('dist/datapos-presenter-default.json', JSON.stringify(presenterConfig));
-// };
-
 // // Utilities - List Directory Entries
 // const listDirectoryEntries = async (path) => {
 //     try {
@@ -225,18 +211,6 @@ const readTextFile = async (path) => {
 //         return [];
 //     }
 // };
-
-// // Utilities - Build Presentations - Output Presentations
-// const outputPresenterConfig = async () => {};
-
-// // Helpers - Build Context
-// async function buildContext() {
-//     const contextData = await readJSONFile('src/data.json', 'utf8');
-//     contextConfig = { label: contextData.label, typeId: 'context', areas: [] };
-//     await buildContext_PrepareContext('src');
-//     await buildContext_OutputContext();
-//     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
-// }
 
 // // Helpers - Build Context - Prepare Context
 // const buildContext_PrepareContext = async (path) => {
@@ -443,34 +417,6 @@ const readTextFile = async (path) => {
 //     fs.writeFile('dist/datapos-context-default-events.json', JSON.stringify({ events: events }));
 //     fs.writeFile('dist/datapos-context-default-views.json', JSON.stringify({ views: views }));
 // };
-
-// // Helpers - Build Public Directory Index
-// async function buildPublicDirectoryIndex(id) {
-//     async function listDirectoryEntriesRecursively(directoryPath, names) {
-//         const entries = [];
-//         const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
-//         index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
-//         for (const name of names) {
-//             const itemPath = path.join(directoryPath, name);
-//             const stats = await fs.stat(itemPath);
-//             if (stats.isDirectory()) {
-//                 const nextLevelChildren = await fs.readdir(itemPath);
-//                 entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
-//                 await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
-//             } else {
-//                 entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
-//             }
-//         }
-//         entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
-//     }
-
-//     const index = {};
-//     const toplevelNames = await fs.readdir(`public/${id}/`);
-//     await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
-//     fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
-//         if (error) return console.error(error);
-//     });
-// }
 
 // // Helpers - Download Context
 // async function downloadContext(contextId, outDir) {

@@ -111,7 +111,8 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
                 children.push(topicConfig);
                 await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
             } else {
-                console.warn(`WARN: Ignoring sub directory '${path}'.`);
+                issueCount++;
+                console.warn(`WARN: Ignoring sub directory '${itemPath}'.`);
             }
         } else {
             if (itemName.endsWith('.js')) {
@@ -119,7 +120,8 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
             } else if (itemName.endsWith('.json')) {
                 presentations.push({ id: itemName, typeId: 'json' });
             } else {
-                console.warn(`WARN: Ignoring file '${path}'.`);
+                issueCount++;
+                console.warn(`WARN: Ignoring file '${itemPath}'.`);
             }
         }
     }

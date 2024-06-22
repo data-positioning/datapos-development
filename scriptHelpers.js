@@ -111,7 +111,14 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
                 await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
             }
         } else {
-            presentations.push({ id: itemName });
+            if (itemName === 'data.json') continue;
+            if (itemName.endsWith('.js')) {
+                presentations.push({ id: itemName, typeId: 'javascript' });
+            } else if (itemName.endsWith('.json')) {
+                presentations.push({ id: itemName, typeId: 'json' });
+                // } else if (itemName.endsWith('.md')) {
+                //     presentations.push({ id: itemName, typeId: 'markdown' });
+            }
         }
     }
 };

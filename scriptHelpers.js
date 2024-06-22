@@ -148,6 +148,7 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
                 console.warn(`WARN: Ignoring sub directory '${itemPath}'.`);
             }
         } else {
+            if (itemName.name === 'data.json') continue;
             if (itemName.endsWith('.js')) {
                 presentations.push({ id: itemName, typeId: 'javascript' });
             } else if (itemName.endsWith('.json')) {

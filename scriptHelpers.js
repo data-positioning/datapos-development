@@ -98,7 +98,6 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
-        console.log(1111, path, itemName, itemPath);
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
             const levelData = await readJSONFile(`${itemPath}/data.json`);
@@ -112,7 +111,7 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
                 await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
             }
         } else {
-            if (itemName === 'data.json') continue;
+            // if (itemName === 'data.json') continue;
             if (itemName.endsWith('.js')) {
                 presentations.push({ id: itemName, typeId: 'javascript' });
             } else if (itemName.endsWith('.json')) {

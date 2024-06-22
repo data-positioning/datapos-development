@@ -1,7 +1,6 @@
 // Dependencies - Vendor
 const dotenv = require('dotenv');
 const fs = require('fs').promises;
-const path = require('path');
 
 // Dependencies - Vendor (Promisify Exec)
 const util = require('util');
@@ -25,7 +24,7 @@ async function buildPublicDirectoryIndex(id) {
         const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
         index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
         for (const name of names) {
-            const itemPath = path.join(directoryPath, name);
+            const itemPath = `${directoryPath}/${name}`;
             const stats = await fs.stat(itemPath);
             if (stats.isDirectory()) {
                 const nextLevelChildren = await fs.readdir(itemPath);
@@ -119,10 +118,10 @@ async function uploadPlugin() {
 }
 
 // Utilities - Upload Plugin Folder
-const uploadPluginFolder = async (packageJSON, env, path) => {
-    console.log(1111, path);
-    for (const itemName of await fs.readdir(path)) {
-        const itemPath = path.join(path, itemName);
+const uploadPluginFolder = async (packageJSON, env, folderPath) => {
+    console.log(1111, folderPath);
+    for (const itemName of await fs.readdir(folderPath)) {
+        const itemPath = `${folderPath}/${itemName}`;
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) await uploadPluginFolder(packageJSON, env, itemPath);
         const fileContent = await readTextFile(itemPath);
@@ -134,10 +133,10 @@ const uploadPluginFolder = async (packageJSON, env, path) => {
 module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, syncWithGitHub, uploadPlugin };
 
 // Utilities - Compile Presenter Folder
-const compilePresenterFolder = async (path, levelTypeId, children, presentations) => {
-    const itemNames = await fs.readdir(path);
+const compilePresenterFolder = async (folderPath, levelTypeId, children, presentations) => {
+    const itemNames = await fs.readdir(folderPath);
     for (const itemName of itemNames) {
-        const itemPath = `${path}/${itemName}`;
+        const itemPath = `${folderPath}/${itemName}`;
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
             if (levelTypeId === 'areas') {

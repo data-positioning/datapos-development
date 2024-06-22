@@ -120,6 +120,7 @@ async function uploadPlugin() {
 
 // Utilities - Upload Plugin Folder
 const uploadPluginFolder = async (packageJSON, env, path) => {
+    console.log(1111, path);
     for (const itemName of await fs.readdir(path)) {
         const itemPath = path.join(path, itemName);
         const stats = await fs.stat(itemPath);

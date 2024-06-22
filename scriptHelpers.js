@@ -109,7 +109,12 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
                 const levelData = await readJSONFile(`${itemPath}/data.json`);
                 const topicConfig = { id: itemName, label: levelData.label || { en: itemName }, presentations: [] };
                 children.push(topicConfig);
-                await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
+                await compilePresenterFolder(itemPath, 'subTopics', topicConfig.children, topicConfig.presentations);
+            } else if (levelTypeId === 'subTopics') {
+                const levelData = await readJSONFile(`${itemPath}/data.json`);
+                const subTopicConfig = { id: itemName, label: levelData.label || { en: itemName }, presentations: [] };
+                children.push(subTopicConfig);
+                await compilePresenterFolder(itemPath, 'presentations', undefined, subTopicConfig.presentations);
             } else {
                 issueCount++;
                 console.warn(`WARN: Ignoring sub directory '${itemPath}'.`);

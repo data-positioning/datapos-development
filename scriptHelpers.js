@@ -107,33 +107,8 @@ async function uploadPlugin() {
 
     await pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
 
-    // for (const itemName of await fs.readdir('dist')) {
-    //     const itemPath = path.join('dist', itemName);
-    //     const stats = await fs.stat(itemPath);
-    //     if (stats.isDirectory()) continue;
-    //     const fileContent = await readTextFile(itemPath);
-    //     await pushContentToGithub(packageJSON, env, fileContent, itemName);
-    // }
     await uploadPluginFolder(packageJSON, env, 'dist');
 }
-
-// Utilities - Upload Plugin Folder
-const uploadPluginFolder = async (packageJSON, env, folderPath) => {
-    console.log(1111, folderPath);
-    for (const itemName of await fs.readdir(folderPath)) {
-        const itemPath = `${folderPath}/${itemName}`;
-        console.log(2222, itemPath);
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) {
-            console.log(3333, itemPath);
-            await uploadPluginFolder(packageJSON, env, itemPath);
-        } else {
-            console.log(4444, itemPath);
-            const fileContent = await readTextFile(itemPath);
-            await pushContentToGithub(packageJSON, env, fileContent, itemName);
-        }
-    }
-};
 
 /// Exports
 module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, syncWithGitHub, uploadPlugin };
@@ -179,8 +154,8 @@ const compilePresenterFolder = async (folderPath, levelTypeId, children, present
 };
 
 // Utilities - Push Content to Github
-const pushContentToGithub = async (packageJSON, env, fileContent, itemName) => {
-    const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/${packageJSON.name}/${itemName}`;
+const pushContentToGithub = async (packageJSON, env, fileContent, itemPath) => {
+    const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/${packageJSON.name}/${itemPath}`;
 
     const getResponse = await fetch(url, {
         headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
@@ -195,6 +170,7 @@ const pushContentToGithub = async (packageJSON, env, fileContent, itemName) => {
         method: 'PUT'
     });
     if (!putResponse.ok) console.log(await putResponse.text());
+    console.log(`Pushed '${itemPath}' to Github.`);
 };
 
 // Utilities - Read JSON File
@@ -219,16 +195,19 @@ const readTextFile = async (path) => {
     }
 };
 
-// // Utilities - List Directory Entries
-// const listDirectoryEntries = async (path) => {
-//     try {
-//         return await fs.readdir(`${path}`);
-//     } catch (error) {
-//         issueCount++;
-//         console.warn(`WARN: Directory '${path}' not found or invalid.`);
-//         return [];
-//     }
-// };
+// Utilities - Upload Plugin Folder
+const uploadPluginFolder = async (packageJSON, env, folderPath) => {
+    for (const itemName of await fs.readdir(folderPath)) {
+        const itemPath = `${folderPath}/${itemName}`;
+        const stats = await fs.stat(itemPath);
+        if (stats.isDirectory()) {
+            await uploadPluginFolder(packageJSON, env, itemPath);
+        } else {
+            const fileContent = await readTextFile(itemPath);
+            await pushContentToGithub(packageJSON, env, fileContent, itemPath);
+        }
+    }
+};
 
 // // Helpers - Build Context - Prepare Context
 // const buildContext_PrepareContext = async (path) => {

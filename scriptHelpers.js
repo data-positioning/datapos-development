@@ -111,11 +111,11 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
             const levelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
             if (levelTypeId === 'areas') {
                 const areaConfig = { id: levelId, label: levelData.label || { en: levelData.id }, topics: [], presentations: [] };
-                console.log(levelTypeId, levelId, 'folder', areaConfig, itemPathSegments);
+                console.log(levelTypeId, levelId, 'folder', areaConfig);
                 await compilePresenterFolder(itemPath, 'topics', areaConfig.topics, areaConfig.presentations);
             } else if (levelTypeId === 'topics') {
                 const topicConfig = { id: levelId, label: levelData.label || { en: levelData.id }, presentations: [] };
-                console.log(levelTypeId, levelId, 'folder', areaConfig, itemPathSegments);
+                console.log(levelTypeId, levelId, 'folder', areaConfig);
                 await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
             } else {
                 // throw new Error(`Unexpected directory level: ${itemPath}.`);

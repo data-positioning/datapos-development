@@ -101,7 +101,9 @@ const clearDirectory = async (directoryPath) => {
 
 // Utilities - Compile Presenter Folder
 const compilePresenterFolder = async (path) => {
+    console.log(1111, path);
     const itemNames = await fs.readdir(path);
+    console.log(2222, itemNames);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
         const stats = await fs.stat(itemPath);

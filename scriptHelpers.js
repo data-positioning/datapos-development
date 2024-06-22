@@ -99,6 +99,7 @@ async function uploadPlugin() {
     configJSON.id = packageJSON.name;
     configJSON.dependencies = packageJSON.dependencies;
     const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
+    console.log(1234, engineDependency, configJSON.dependencies);
     configJSON.engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
     configJSON.version = packageJSON.version;
 

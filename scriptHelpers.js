@@ -12,7 +12,7 @@ let issueCount = 0;
 // Facilitators - Build Configuration
 async function buildConfig() {
     const packageJSON = await readJSONFile('package.json');
-    const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
+    const engineDependency = (packageJSON.dependencies || {})['@datapos/datapos-engine'];
     console.log(5678, engineDependency, packageJSON.dependencies);
     const engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
     fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, engineVersion, version: packageJSON.version }, undefined, 4));
@@ -98,9 +98,9 @@ async function uploadPlugin() {
 
     const configJSON = await readJSONFile('src/config.json');
     configJSON.id = packageJSON.name;
-    configJSON.dependencies = packageJSON.dependencies;
-    const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
-    console.log(1234, engineDependency, packageJSON.dependencies);
+    configJSON.dependencies = packageJSON.dependencies || {};
+    console.log(1234, configJSON.dependencies || {});
+    const engineDependency = configJSON.dependencies['@datapos/datapos-engine'];
     configJSON.engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
     configJSON.version = packageJSON.version;
 

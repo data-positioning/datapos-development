@@ -118,6 +118,8 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
                 presentations.push({ id: itemName, typeId: 'javascript' });
             } else if (itemName.endsWith('.json')) {
                 presentations.push({ id: itemName, typeId: 'json' });
+            } else {
+                console.warn(`WARN: Ignoring file '${path}'.`);
             }
         }
     }

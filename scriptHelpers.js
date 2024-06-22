@@ -197,7 +197,8 @@ const uploadPluginFolder = async (packageJSON, env, folderPath) => {
         const itemPath = `${folderPath}/${itemName}`;
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
-            if (!itemPath.startsWith('types/')) await uploadPluginFolder(packageJSON, env, itemPath);
+            console.log(1111, itemPath);
+            if (!itemPath.startsWith('dist/types/')) await uploadPluginFolder(packageJSON, env, itemPath);
         } else {
             const fileContent = await readTextFile(itemPath);
             await pushContentToGithub(packageJSON, env, fileContent, itemPath.substring(5));

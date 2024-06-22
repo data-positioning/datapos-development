@@ -100,24 +100,24 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
         const itemPath = `${path}/${itemName}`;
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
-            const levelData = await readJSONFile(`${itemPath}/data.json`);
             if (levelTypeId === 'areas') {
+                const levelData = await readJSONFile(`${itemPath}/data.json`);
                 const areaConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
                 children.push(areaConfig);
                 await compilePresenterFolder(itemPath, 'topics', areaConfig.children, areaConfig.presentations);
             } else if (levelTypeId === 'topics') {
+                const levelData = await readJSONFile(`${itemPath}/data.json`);
                 const topicConfig = { id: itemName, label: levelData.label || { en: itemName }, presentations: [] };
                 children.push(topicConfig);
                 await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
+            } else {
+                console.warn(`WARN: Ignoring sub directory '${path}'.`);
             }
         } else {
-            // if (itemName === 'data.json') continue;
             if (itemName.endsWith('.js')) {
                 presentations.push({ id: itemName, typeId: 'javascript' });
             } else if (itemName.endsWith('.json')) {
                 presentations.push({ id: itemName, typeId: 'json' });
-                // } else if (itemName.endsWith('.md')) {
-                //     presentations.push({ id: itemName, typeId: 'markdown' });
             }
         }
     }

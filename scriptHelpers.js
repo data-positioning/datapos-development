@@ -107,7 +107,7 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
                 await compilePresenterFolder(itemPath, 'topics', areaConfig.children, areaConfig.presentations);
             } else if (levelTypeId === 'topics') {
                 const levelData = await readJSONFile(`${itemPath}/data.json`);
-                const topicConfig = { id: itemName, label: levelData.label || { en: itemName }, presentations: [] };
+                const topicConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
                 children.push(topicConfig);
                 await compilePresenterFolder(itemPath, 'subTopics', topicConfig.children, topicConfig.presentations);
             } else if (levelTypeId === 'subTopics') {

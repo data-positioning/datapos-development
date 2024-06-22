@@ -120,8 +120,8 @@ async function uploadPlugin() {
 
 // Utilities - Upload Plugin Folder
 const uploadPluginFolder = async (packageJSON, env, path) => {
-    for (const itemName of await fs.readdir('dist')) {
-        const itemPath = path.join('dist', itemName);
+    for (const itemName of await fs.readdir(path)) {
+        const itemPath = path.join(path, itemName);
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) await uploadPluginFolder(packageJSON, env, itemPath);
         const fileContent = await readTextFile(itemPath);

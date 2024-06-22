@@ -112,11 +112,10 @@ async function uploadPlugin() {
     //     const itemPath = path.join('dist', itemName);
     //     const stats = await fs.stat(itemPath);
     //     if (stats.isDirectory()) continue;
-
     //     const fileContent = await readTextFile(itemPath);
     //     await pushContentToGithub(packageJSON, env, fileContent, itemName);
     // }
-    uploadPluginFolder(packageJSON, env, 'dist');
+    await uploadPluginFolder(packageJSON, env, 'dist');
 }
 
 // Utilities - Upload Plugin Folder
@@ -124,8 +123,7 @@ const uploadPluginFolder = async (packageJSON, env, path) => {
     for (const itemName of await fs.readdir('dist')) {
         const itemPath = path.join('dist', itemName);
         const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) uploadPluginFolder(packageJSON, env, itemPath);
-
+        if (stats.isDirectory()) await uploadPluginFolder(packageJSON, env, itemPath);
         const fileContent = await readTextFile(itemPath);
         await pushContentToGithub(packageJSON, env, fileContent, itemName);
     }

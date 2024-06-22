@@ -109,19 +109,19 @@ const compilePresenterFolder = async (path) => {
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
             const itemPathSegments = itemPath.split('/');
-            if (itemPathSegments.length === 2) {
+            if (itemPathSegments.length === 3) {
                 const areaId = itemPathSegments[1];
                 const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 areaConfig = { id: areaId, label: areaData.label || { en: areaId }, folders: [] };
                 presenterConfig.areas.push(areaConfig);
                 await compilePresenterFolder(itemPath);
-            } else if (itemPathSegments.length === 3) {
+            } else if (itemPathSegments.length === 4) {
                 const areaLevel2Id = itemPathSegments[2];
                 const areaLevel2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 areaLevel1Config = { id: areaLevel2Id, label: areaLevel2Data.label || { en: areaLevel2Id }, folders: [] };
                 areaConfig.folders.push(areaLevel1Config);
                 await compilePresenterFolder(itemPath);
-            } else if (itemPathSegments.length === 4) {
+            } else if (itemPathSegments.length === 5) {
                 const areaLevel3Id = itemPathSegments[3];
                 const areaLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
                 areaLevel2Config = { id: areaLevel3Id, label: areaLevel3Data.label || { en: areaLevel3Id }, folders: [], presentations: [] };

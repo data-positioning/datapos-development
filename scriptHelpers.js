@@ -100,7 +100,7 @@ const clearDirectory = async (directoryPath) => {
 };
 
 // Utilities - Compile Presenter Folder
-const compilePresenterFolder = async (path, levelTypeId, items) => {
+const compilePresenterFolder = async (path, levelTypeId, children, presentations) => {
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
@@ -110,13 +110,15 @@ const compilePresenterFolder = async (path, levelTypeId, items) => {
             const levelId = itemPathSegments[itemPathSegments.length - 1];
             const levelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
             if (levelTypeId === 'areas') {
-                const areaConfig = { id: levelId, label: levelData.label || { en: levelData.id }, topics: [] };
+                const areaConfig = { id: levelId, label: levelData.label || { en: levelData.id }, topics: [], presentations: [] };
                 console.log(levelTypeId, levelId, 'folder', areaConfig, itemPathSegments);
-                await compilePresenterFolder(itemPath, 'topics', areaConfig.topics);
+                await compilePresenterFolder(itemPath, 'topics', areaConfig.topics, areaConfig.presentations);
             } else if (levelTypeId === 'topics') {
-                const areaConfig = { id: levelId, label: levelData.label || { en: levelData.id }, topics: [] };
+                const topicConfig = { id: levelId, label: levelData.label || { en: levelData.id }, presentations: [] };
                 console.log(levelTypeId, levelId, 'folder', areaConfig, itemPathSegments);
+                await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
             } else {
+                throw new Error(`Unexpected directory level: ${itemPath}.`);
             }
         } else {
             console.log(levelTypeId, 'presentation', itemPath);
@@ -205,7 +207,7 @@ const readJSONFile = async (path) => {
         return JSON.parse(await fs.readFile(path, 'utf8'));
     } catch (error) {
         issueCount++;
-        console.warn(`WARN: JSON file '${path}' not found or invalid.`);
+        // console.warn(`WARN: JSON file '${path}' not found or invalid.`);
         return {};
     }
 };

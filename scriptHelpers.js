@@ -8,15 +8,11 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 // Module Variables
-let areaConfig;
-let areaLevel1Config;
-let areaLevel2Config;
 let issueCount = 0;
-let presenterConfig;
 
 // Facilitators - Build Configuration
 async function buildConfig() {
-    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+    const packageJSON = await readJSONFile('package.json');
     const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
     const engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
     fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, engineVersion, version: packageJSON.version }, undefined, 4));
@@ -24,7 +20,7 @@ async function buildConfig() {
 
 // Facilitators - Bump Version
 async function bumpVersion() {
-    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+    const packageJSON = await readJSONFile('package.json');
     const versionSegments = packageJSON.version.split('.');
     packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
     fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
@@ -33,18 +29,19 @@ async function bumpVersion() {
 
 // Facilitators - Compile Presenter
 async function compilePresenter() {
-    const dataJSON = await readJSONFile('src/presentations/data.json', 'utf8');
-    presenterConfig = { label: dataJSON.label, children: [], presentations: [] };
+    const packageJSON = await readJSONFile('package.json');
+    const packageName = packageJSON.name;
+    const dataJSON = await readJSONFile('src/presentations/data.json');
+    const presenterConfig = { label: dataJSON.label || packageName, children: [], presentations: [] };
     await clearDirectory('dist');
     await compilePresenterFolder('src/presentations', 'areas', presenterConfig.children, presenterConfig.presentations);
-    console.log('presenterConfig', presenterConfig);
-    await outputPresenterConfig();
+    fs.writeFile(`${packageName}.json`, JSON.stringify(presenterConfig));
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
 // Facilitators - Sync with Github
 async function syncWithGitHub() {
-    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+    const packageJSON = await readJSONFile('package.json');
     await exec('git add .');
     await exec(`git commit -m v${packageJSON.version}`);
     await exec('git push origin main:main');
@@ -52,25 +49,21 @@ async function syncWithGitHub() {
 
 // Facilitators - Upload Plugin
 async function uploadPlugin() {
-    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8'));
+    const packageJSON = await readJSONFile('package.json');
 
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
     const env = result.parsed;
 
-    const configJSON = JSON.parse(await fs.readFile('src/config.json', 'utf8'));
+    const configJSON = await readJSONFile('src/config.json');
     configJSON.id = packageJSON.name;
     configJSON.dependencies = packageJSON.dependencies;
     const engineDependency = packageJSON.dependencies['@datapos/datapos-engine'];
     configJSON.engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
     configJSON.version = packageJSON.version;
 
-    try {
-        configJSON.description = await fs.readFile('src/description.en.md', 'utf8');
-    } catch (error) {}
-    try {
-        configJSON.logo = await fs.readFile('src/logo.svg', 'utf8');
-    } catch (error) {}
+    configJSON.description = await readTextFile('src/description.en.md');
+    configJSON.logo = await readTextFile('src/logo.svg');
 
     await pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
 
@@ -79,7 +72,7 @@ async function uploadPlugin() {
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) continue;
 
-        const fileContent = await fs.readFile(itemPath, 'utf8');
+        const fileContent = await readTextFile(itemPath);
         await pushContentToGithub(packageJSON, env, fileContent, itemName);
     }
 }
@@ -104,85 +97,24 @@ const clearDirectory = async (directoryPath) => {
 const compilePresenterFolder = async (path, levelTypeId, children, presentations) => {
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
-        const levelId = itemName;
         const itemPath = `${path}/${itemName}`;
-        // const itemPathSegments = itemPath.split('/');
-        const levelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+        const levelData = await readJSONFile(`${itemPath}/data.json`);
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {
             if (levelTypeId === 'areas') {
-                const areaConfig = { id: levelId, label: levelData.label || { en: levelId }, children: [], presentations: [] };
-                console.log(levelTypeId, levelId, 'folder', JSON.stringify(areaConfig));
+                const areaConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
                 children.push(areaConfig);
                 await compilePresenterFolder(itemPath, 'topics', areaConfig.children, areaConfig.presentations);
             } else if (levelTypeId === 'topics') {
-                const topicConfig = { id: levelId, label: levelData.label || { en: levelId }, presentations: [] };
-                console.log(levelTypeId, levelId, 'folder', JSON.stringify(areaConfig));
+                const topicConfig = { id: itemName, label: levelData.label || { en: itemName }, presentations: [] };
                 children.push(topicConfig);
                 await compilePresenterFolder(itemPath, 'presentations', undefined, topicConfig.presentations);
             }
         } else {
-            console.log(levelTypeId, 'presentation', itemPath);
-            presentations.push({ id: levelId });
+            presentations.push({ id: itemName });
         }
     }
 };
-
-// Utilities - Compile Presenter Folder
-const compilePresenterFolder2 = async (path) => {
-    console.log(1111, path);
-    const itemNames = await fs.readdir(path);
-    console.log(2222, itemNames);
-    for (const itemName of itemNames) {
-        const itemPath = `${path}/${itemName}`;
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) {
-            const itemPathSegments = itemPath.split('/');
-            if (itemPathSegments.length === 3) {
-                const areaId = itemPathSegments[2];
-                const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                areaConfig = { id: areaId, label: areaData.label || { en: areaId }, folders: [] };
-                presenterConfig.areas.push(areaConfig);
-                await compilePresenterFolder(itemPath);
-            } else if (itemPathSegments.length === 4) {
-                const areaLevel2Id = itemPathSegments[3];
-                const areaLevel2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                areaLevel1Config = { id: areaLevel2Id, label: areaLevel2Data.label || { en: areaLevel2Id }, folders: [] };
-                areaConfig.folders.push(areaLevel1Config);
-                await compilePresenterFolder(itemPath);
-            } else if (itemPathSegments.length === 5) {
-                const areaLevel3Id = itemPathSegments[4];
-                const areaLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-                areaLevel2Config = { id: areaLevel3Id, label: areaLevel3Data.label || { en: areaLevel3Id }, folders: [], presentations: [] };
-                areaLevel1Config.folders.push(areaLevel2Config);
-                const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
-                for (const presentationPath of presentationPaths) {
-                    const presentationId = presentationPath.slice(0, -5);
-                    const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
-                    fs.writeFile(`dist/datapos-presenter-default-${presentationId}.json`, JSON.stringify(presentationData));
-                    areaLevel2Config.presentations.push({ id: presentationId });
-                }
-            } else {
-                throw new Error(`Unexpected directory level: ${itemPath}.`);
-            }
-        }
-    }
-    fs.writeFile('dist/datapos-presenter-default.json', JSON.stringify(presenterConfig));
-};
-
-// Utilities - List Directory Entries
-const listDirectoryEntries = async (path) => {
-    try {
-        return await fs.readdir(`${path}`);
-    } catch (error) {
-        issueCount++;
-        console.warn(`WARN: Directory '${path}' not found or invalid.`);
-        return [];
-    }
-};
-
-// Utilities - Build Presentations - Output Presentations
-const outputPresenterConfig = async () => {};
 
 // Utilities - Push Content to Github
 const pushContentToGithub = async (packageJSON, env, fileContent, itemName) => {
@@ -209,10 +141,77 @@ const readJSONFile = async (path) => {
         return JSON.parse(await fs.readFile(path, 'utf8'));
     } catch (error) {
         issueCount++;
-        // console.warn(`WARN: JSON file '${path}' not found or invalid.`);
+        console.warn(`WARN: JSON file '${path}' not found or invalid.`);
         return {};
     }
 };
+
+// Utilities - Read Text File
+const readTextFile = async (path) => {
+    try {
+        return await fs.readFile(path, 'utf8');
+    } catch (error) {
+        issueCount++;
+        console.warn(`WARN: Text file '${path}' not found or invalid.`);
+        return undefined;
+    }
+};
+
+// // Utilities - Compile Presenter Folder
+// const compilePresenterFolder2 = async (path) => {
+//     console.log(1111, path);
+//     const itemNames = await fs.readdir(path);
+//     console.log(2222, itemNames);
+//     for (const itemName of itemNames) {
+//         const itemPath = `${path}/${itemName}`;
+//         const stats = await fs.stat(itemPath);
+//         if (stats.isDirectory()) {
+//             const itemPathSegments = itemPath.split('/');
+//             if (itemPathSegments.length === 3) {
+//                 const areaId = itemPathSegments[2];
+//                 const areaData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+//                 areaConfig = { id: areaId, label: areaData.label || { en: areaId }, folders: [] };
+//                 presenterConfig.areas.push(areaConfig);
+//                 await compilePresenterFolder(itemPath);
+//             } else if (itemPathSegments.length === 4) {
+//                 const areaLevel2Id = itemPathSegments[3];
+//                 const areaLevel2Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+//                 areaLevel1Config = { id: areaLevel2Id, label: areaLevel2Data.label || { en: areaLevel2Id }, folders: [] };
+//                 areaConfig.folders.push(areaLevel1Config);
+//                 await compilePresenterFolder(itemPath);
+//             } else if (itemPathSegments.length === 5) {
+//                 const areaLevel3Id = itemPathSegments[4];
+//                 const areaLevel3Data = await readJSONFile(`${itemPath}/data.json`, 'utf8');
+//                 areaLevel2Config = { id: areaLevel3Id, label: areaLevel3Data.label || { en: areaLevel3Id }, folders: [], presentations: [] };
+//                 areaLevel1Config.folders.push(areaLevel2Config);
+//                 const presentationPaths = (await listDirectoryEntries(`${itemPath}`)).filter((name) => !name.endsWith('data.json'));
+//                 for (const presentationPath of presentationPaths) {
+//                     const presentationId = presentationPath.slice(0, -5);
+//                     const presentationData = await readJSONFile(`${itemPath}/${presentationPath}`, 'utf8');
+//                     fs.writeFile(`dist/datapos-presenter-default-${presentationId}.json`, JSON.stringify(presentationData));
+//                     areaLevel2Config.presentations.push({ id: presentationId });
+//                 }
+//             } else {
+//                 throw new Error(`Unexpected directory level: ${itemPath}.`);
+//             }
+//         }
+//     }
+//     fs.writeFile('dist/datapos-presenter-default.json', JSON.stringify(presenterConfig));
+// };
+
+// // Utilities - List Directory Entries
+// const listDirectoryEntries = async (path) => {
+//     try {
+//         return await fs.readdir(`${path}`);
+//     } catch (error) {
+//         issueCount++;
+//         console.warn(`WARN: Directory '${path}' not found or invalid.`);
+//         return [];
+//     }
+// };
+
+// // Utilities - Build Presentations - Output Presentations
+// const outputPresenterConfig = async () => {};
 
 // // Helpers - Build Context
 // async function buildContext() {
@@ -704,17 +703,6 @@ const readJSONFile = async (path) => {
 //         return true;
 //     } catch (err) {
 //         return false;
-//     }
-// };
-
-// // Utilities - Read Text File
-// const readTextFile = async (path) => {
-//     try {
-//         return await fs.readFile(path, 'utf8');
-//     } catch (error) {
-//         issueCount++;
-//         console.warn(`WARN: Markdown file '${path}' not found or invalid.`);
-//         return '';
 //     }
 // };
 

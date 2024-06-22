@@ -12,9 +12,7 @@ let issueCount = 0;
 // Facilitators - Build Configuration
 async function buildConfig() {
     const packageJSON = await readJSONFile('package.json');
-    const engineDependency = (packageJSON.dependencies || {})['@datapos/datapos-engine'];
-    const engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
-    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, engineVersion, version: packageJSON.version }, undefined, 4));
+    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, version: packageJSON.version }, undefined, 4));
 }
 
 // Facilitators - Build Public Directory Index
@@ -98,8 +96,6 @@ async function uploadPlugin() {
     const configJSON = await readJSONFile('src/config.json');
     configJSON.id = packageJSON.name;
     configJSON.dependencies = packageJSON.dependencies || {};
-    const engineDependency = configJSON.dependencies['@datapos/datapos-engine'];
-    configJSON.engineVersion = engineDependency ? engineDependency.substring(1) : undefined;
     configJSON.version = packageJSON.version;
 
     configJSON.description = await readTextFile('src/description.en.md');

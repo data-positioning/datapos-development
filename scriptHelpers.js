@@ -109,11 +109,11 @@ const compilePresenterFolder = async (path, levelTypeId, items) => {
             const itemPathSegments = itemPath.split('/');
             const levelId = itemPathSegments[itemPathSegments.length - 1];
             const levelData = await readJSONFile(`${itemPath}/data.json`, 'utf8');
-            if (levelTypeId === 'area') {
+            if (levelTypeId === 'areas') {
                 const areaConfig = { id: levelId, label: levelData.label || { en: levelData.id }, topics: [] };
                 console.log(levelTypeId, levelId, 'folder', areaConfig, itemPathSegments);
                 await compilePresenterFolder(itemPath, 'topics', areaConfig.topics);
-            } else if (levelTypeId === 'topic') {
+            } else if (levelTypeId === 'topics') {
                 const areaConfig = { id: levelId, label: levelData.label || { en: levelData.id }, topics: [] };
                 console.log(levelTypeId, levelId, 'folder', areaConfig, itemPathSegments);
             } else {

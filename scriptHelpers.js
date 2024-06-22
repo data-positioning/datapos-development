@@ -122,10 +122,16 @@ const uploadPluginFolder = async (packageJSON, env, folderPath) => {
     console.log(1111, folderPath);
     for (const itemName of await fs.readdir(folderPath)) {
         const itemPath = `${folderPath}/${itemName}`;
+        console.log(2222, itemPath);
         const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) await uploadPluginFolder(packageJSON, env, itemPath);
-        const fileContent = await readTextFile(itemPath);
-        await pushContentToGithub(packageJSON, env, fileContent, itemName);
+        if (stats.isDirectory()) {
+            console.log(3333, itemPath);
+            await uploadPluginFolder(packageJSON, env, itemPath);
+        } else {
+            console.log(4444, itemPath);
+            const fileContent = await readTextFile(itemPath);
+            await pushContentToGithub(packageJSON, env, fileContent, itemName);
+        }
     }
 };
 

@@ -98,6 +98,7 @@ const compilePresenterFolder = async (path, levelTypeId, children, presentations
     const itemNames = await fs.readdir(path);
     for (const itemName of itemNames) {
         const itemPath = `${path}/${itemName}`;
+        console.log(1111, path, itemName, itemPath);
         const levelData = await readJSONFile(`${itemPath}`);
         const stats = await fs.stat(itemPath);
         if (stats.isDirectory()) {

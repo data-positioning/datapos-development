@@ -1,9 +1,16 @@
 {
-    "dotenv@16.3.1": {
+    "dotenv@16.4.5": {
         "licenses": "BSD-2-Clause",
         "repository": "https://github.com/motdotla/dotenv",
         "licenseFile": "node_modules/dotenv/LICENSE",
         "licenseUrl": "https://github.com/motdotla/dotenv/raw/master/LICENSE",
-        "parents": "@datapos/datapos-operations"
+        "parents": "@datapos/datapos-dev-operations"
+    },
+    "run@1.5.0": {
+        "licenses": "UNKNOWN",
+        "repository": "https://github.com/DTrejo/run.js",
+        "licenseFile": "node_modules/run/LICENSE",
+        "licenseUrl": "https://github.com/DTrejo/run.js/raw/master/LICENSE",
+        "parents": "@datapos/datapos-dev-operations"
     }
 }

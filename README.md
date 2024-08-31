@@ -12,10 +12,9 @@ npm install --save-dev @datapos-dev-operations
 
 The following packages are included in the production release. Please refer to 'package.json' and 'LICENSES.json' for version and license details.
 
-| Name        | References                                                                               |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| dotenv      | [GitHub](https://github.com/motdotla/dotenv) [NPM](https://www.npmjs.com/package/dotenv) |
-| markdown-it |                                                                                          |
+| Name   | References                                                                               |
+| ------ | ---------------------------------------------------------------------------------------- |
+| dotenv | [GitHub](https://github.com/motdotla/dotenv) [NPM](https://www.npmjs.com/package/dotenv) |
 
 ## Helpers
 
@@ -24,12 +23,12 @@ The 'scriptHelpers.js' file exports the following helper functions.
 | Name                      | Notes |
 | ------------------------- | ----- |
 | buildConfig               |       |
-| buildContext              |       |
 | buildPublicDirectoryIndex |       |
 | bumpVersion               |       |
+| clearDirectory            |       |
+| compilePresenter          |       |
 | syncWithGitHub            |       |
-| UploadConnector           |       |
-| UploadContext             |       |
+| uploadPlugin              |       |
 
 ## Repository Management Commands
 

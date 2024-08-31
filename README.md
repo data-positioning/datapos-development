@@ -1,11 +1,11 @@
 # DataPos - Development Operations Library
 
-A Javascript library of functions used to manage Datapos repositories.
+A Javascript library of functions used to manage Data Positioning repositories.
 
 ## Installation
 
 ```
-npm install --save-dev @datapos-operations
+npm install --save-dev @datapos-dev-operations
 ```
 
 ## Production Dependencies

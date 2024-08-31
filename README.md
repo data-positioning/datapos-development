@@ -1,4 +1,4 @@
-# Datapos - Operations Library
+# DataPos - Development Operations Library
 
 A Javascript library of functions used to manage Datapos repositories.
 

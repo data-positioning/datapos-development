@@ -12,6 +12,13 @@ let issueCount = 0;
 // Facilitators - Build Configuration
 async function buildConfig() {
     const packageJSON = await readJSONFile('package.json');
+
+    for (const package of packageJSON.dependencies) {
+        console.log(package);
+        if (package.startsWith('@datapos/datapos-')) console.log('DATAPOS Package');
+        else console.log(package);
+    }
+
     fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, version: packageJSON.version }, undefined, 4));
 }
 
@@ -77,7 +84,7 @@ async function compilePresenter() {
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
-// Facilitators - Get JSON FIle From Github
+// Utilities - Get JSON File From Github
 const getJSONFileFromGithub = async (repoName, filePath) => {
     const result = dotenv.config({ path: '.env.local' });
     if (result.error) throw result.error;
@@ -128,7 +135,7 @@ async function uploadPlugin() {
 }
 
 /// Exports
-module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, getJSONFileFromGithub, syncWithGitHub, uploadPlugin };
+module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, syncWithGitHub, uploadPlugin };
 
 // Utilities - Compile Presenter Folder
 const compilePresenterFolder = async (folderPath, levelTypeId, children, presentations) => {

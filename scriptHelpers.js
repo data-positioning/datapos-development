@@ -16,9 +16,12 @@ async function buildConfig() {
     for (const package of Object.keys(packageJSON.dependencies)) {
         if (package.startsWith('@datapos/datapos-')) {
             const segments = package.split('/');
-            console.log('DATAPOS', package, segments[1]);
-            const xxxx = await getJSONFileFromGithub(segments[1], 'package.json');
-            console.log(xxxx);
+            const childPackageJSON = await getJSONFileFromGithub(segments[1], 'package.json');
+            for (const childPackage of Object.entries(childPackageJSON.dependencies)) {
+                // if (package.startsWith('@datapos/datapos-')) continue;
+                // const childSegments = childPackage.split('/');
+                console.log(1111, childPackage);
+            }
         }
     }
 

@@ -15,11 +15,11 @@ async function buildConfig() {
 
     const dependencies = packageJSON.dependencies;
 
-    for (const package of Object.keys(packageJSON.dependencies)) {
+    for (const package of Object.keys(packageJSON.dependencies || {})) {
         if (package.startsWith('@datapos/datapos-')) {
             const segments = package.split('/');
             const childPackageJSON = await getJSONFileFromGithub(segments[1], 'package.json');
-            for (const childPackage of Object.entries(childPackageJSON.dependencies)) {
+            for (const childPackage of Object.entries(childPackageJSON.dependencies || {})) {
                 if (childPackage[0].startsWith('@datapos/datapos-')) continue;
                 // const childSegments = childPackage.split('/');
                 console.log(1111, childPackage);

@@ -13,7 +13,7 @@ let issueCount = 0;
 async function buildConfig() {
     const packageJSON = await readJSONFile('package.json');
 
-    for (const package of packageJSON.dependencies) {
+    for (const package of Object.keys(packageJSON.dependencies)) {
         console.log(package);
         if (package.startsWith('@datapos/datapos-')) console.log('DATAPOS Package');
         else console.log(package);

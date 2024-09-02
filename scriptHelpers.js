@@ -16,7 +16,7 @@ async function buildConfig() {
     for (const package of Object.keys(packageJSON.dependencies)) {
         if (package.startsWith('@datapos/datapos-')) {
             console.log('DATAPOS', package);
-            const xxxx = getJSONFileFromGithub(package, 'package.json');
+            const xxxx = await getJSONFileFromGithub(package, 'package.json');
             console.log(xxxx);
         }
     }

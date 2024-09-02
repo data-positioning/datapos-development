@@ -14,26 +14,26 @@ async function buildConfig() {
     const packageJSON = await readJSONFile('package.json');
 
     const dependencies = packageJSON.dependencies;
+    const dependencyArray = [];
 
-    for (const package of Object.keys(packageJSON.dependencies || {})) {
-        if (package.startsWith('@datapos/datapos-')) {
-            const segments = package.split('/');
+    for (const package of Object.entries(packageJSON.dependencies || {})) {
+        if (package[0].startsWith('@datapos/datapos-')) {
+            const segments = package[0].split('/');
             const childPackageJSON = await getJSONFileFromGithub(segments[1], 'package.json');
             for (const childPackage of Object.entries(childPackageJSON.dependencies || {})) {
                 if (childPackage[0].startsWith('@datapos/datapos-')) continue;
-                // const childSegments = childPackage.split('/');
-                console.log(1111, childPackage);
-                if (dependencies[childPackage[0]]) {
-                    console.log('All ready exists...');
-                } else {
-                    console.log('Adding...');
-                    dependencies[childPackage[0]] = childPackage[1];
-                }
+                if (dependencies[childPackage[0]]) continue;
+                dependencies[childPackage[0]] = childPackage[1];
+                const childSegments = package[0].split('/');
+                dependencyArray.push({ name: childPackage[0], repo: childSegments[1], version: childPackage[1] });
             }
+        } else {
+            dependencyArray.push({ name: package[0], repo: 'datapos-workbench', version: package[1] });
         }
     }
+    dependencyArray.sort((left, right) => left.name.localeCompare(right.name));
 
-    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies, version: packageJSON.version }, undefined, 4));
+    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies, dependencyArray, version: packageJSON.version }, undefined, 4));
 }
 
 // Facilitators - Build Public Directory Index

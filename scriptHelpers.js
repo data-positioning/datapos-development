@@ -14,9 +14,11 @@ async function buildConfig() {
     const packageJSON = await readJSONFile('package.json');
 
     for (const package of Object.keys(packageJSON.dependencies)) {
-        console.log(package);
-        if (package.startsWith('@datapos/datapos-')) console.log('DATAPOS Package');
-        else console.log(package);
+        if (package.startsWith('@datapos/datapos-')) {
+            console.log('DATAPOS', package);
+            const xxxx = getJSONFileFromGithub(package, 'package.json');
+            console.log(xxxx);
+        }
     }
 
     fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies: packageJSON.dependencies, version: packageJSON.version }, undefined, 4));
@@ -83,27 +85,6 @@ async function compilePresenter() {
     fs.writeFile(`dist/${packageName}.json`, JSON.stringify(presenterConfig));
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
-
-// Utilities - Get JSON File From Github
-const getJSONFileFromGithub = async (repoName, filePath) => {
-    const result = dotenv.config({ path: '.env.local' });
-    if (result.error) throw result.error;
-    const env = result.parsed;
-
-    const url = `https://api.github.com/repos/data-positioning/${repoName}/contents/${filePath}?ref=main`;
-    console.log('URL', url);
-    const getResponse = await fetch(url, {
-        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
-        method: 'GET'
-    });
-    if (!getResponse.ok) throw new Error(`HTTP error! status: ${getResponse.status}`);
-    const data = await getResponse.json();
-    if (data.type !== 'file') throw new Error('The content type is not a file');
-    const base64Content = data.content;
-    const jsonContent = Buffer.from(base64Content, 'base64').toString('utf8');
-    const packageJson = JSON.parse(jsonContent);
-    return packageJson;
-};
 
 // Facilitators - Sync with Github
 async function syncWithGitHub() {
@@ -175,6 +156,27 @@ const compilePresenterFolder = async (folderPath, levelTypeId, children, present
             }
         }
     }
+};
+
+// Utilities - Get JSON File From Github
+const getJSONFileFromGithub = async (repoName, filePath) => {
+    const result = dotenv.config({ path: '.env.local' });
+    if (result.error) throw result.error;
+    const env = result.parsed;
+
+    const url = `https://api.github.com/repos/data-positioning/${repoName}/contents/${filePath}?ref=main`;
+    console.log('URL', url);
+    const getResponse = await fetch(url, {
+        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
+        method: 'GET'
+    });
+    if (!getResponse.ok) throw new Error(`HTTP error! status: ${getResponse.status}`);
+    const data = await getResponse.json();
+    if (data.type !== 'file') throw new Error('The content type is not a file');
+    const base64Content = data.content;
+    const jsonContent = Buffer.from(base64Content, 'base64').toString('utf8');
+    const packageJson = JSON.parse(jsonContent);
+    return packageJson;
 };
 
 // Utilities - Push Content to Github

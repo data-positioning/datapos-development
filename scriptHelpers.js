@@ -53,7 +53,7 @@ async function bumpVersion() {
 }
 
 // Facilitators - Clear Directory
-const clearDirectory = async (directoryPath) => {
+async function clearDirectory(directoryPath) {
     for (const itemName of await fs.readdir(directoryPath)) {
         const itemPath = `${directoryPath}/${itemName}`;
         const stats = await fs.stat(itemPath);
@@ -63,7 +63,7 @@ const clearDirectory = async (directoryPath) => {
             await fs.unlink(itemPath);
         }
     }
-};
+}
 
 // Facilitators - Compile Presenter
 async function compilePresenter() {
@@ -76,6 +76,26 @@ async function compilePresenter() {
     fs.writeFile(`dist/${packageName}.json`, JSON.stringify(presenterConfig));
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
+
+// Facilitators - Get JSON FIle From Github
+const getJSONFileFromGithub = async (repoName, filePath) => {
+    const result = dotenv.config({ path: '.env.local' });
+    if (result.error) throw result.error;
+    const env = result.parsed;
+
+    const url = `https://api.github.com/repos/data-positioning/${repoName}/contents/${filePath}?ref=main`;
+    const getResponse = await fetch(url, {
+        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
+        method: 'GET'
+    });
+    if (!getResponse.ok) throw new Error(`HTTP error! status: ${getResponse.status}`);
+    const data = await getResponse.json();
+    if (data.type !== 'file') throw new Error('The content type is not a file');
+    const base64Content = data.content;
+    const jsonContent = Buffer.from(base64Content, 'base64').toString('utf8');
+    const packageJson = JSON.parse(jsonContent);
+    return packageJson;
+};
 
 // Facilitators - Sync with Github
 async function syncWithGitHub() {
@@ -107,7 +127,7 @@ async function uploadPlugin() {
 }
 
 /// Exports
-module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, syncWithGitHub, uploadPlugin };
+module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, getJSONFileFromGithub, syncWithGitHub, uploadPlugin };
 
 // Utilities - Compile Presenter Folder
 const compilePresenterFolder = async (folderPath, levelTypeId, children, presentations) => {

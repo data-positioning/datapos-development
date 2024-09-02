@@ -84,6 +84,7 @@ const getJSONFileFromGithub = async (repoName, filePath) => {
     const env = result.parsed;
 
     const url = `https://api.github.com/repos/data-positioning/${repoName}/contents/${filePath}?ref=main`;
+    console.log('URL', url);
     const getResponse = await fetch(url, {
         headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
         method: 'GET'

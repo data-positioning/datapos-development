@@ -10,7 +10,7 @@ const exec = util.promisify(require('child_process').exec);
 let issueCount = 0;
 
 // Facilitators - Build Configuration
-async function buildConfig(regionId) {
+async function buildConfig() {
     const packageJSON = await readJSONFile('package.json');
 
     const dependencyMap = packageJSON.dependencies;
@@ -33,7 +33,7 @@ async function buildConfig(regionId) {
     }
     dependencyArray.sort((left, right) => left.name.localeCompare(right.name));
 
-    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencyMap, dependencyArray, regionId, version: packageJSON.version }, undefined, 4));
+    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencyMap, dependencyArray, version: packageJSON.version }, undefined, 4));
 }
 
 // Facilitators - Build Public Directory Index

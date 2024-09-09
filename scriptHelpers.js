@@ -13,7 +13,7 @@ let issueCount = 0;
 async function buildConfig(regionId) {
     const packageJSON = await readJSONFile('package.json');
 
-    const dependencies = packageJSON.dependencies;
+    const dependencyMap = packageJSON.dependencies;
     const dependencyArray = [];
 
     for (const package of Object.entries(packageJSON.dependencies || {})) {
@@ -22,8 +22,8 @@ async function buildConfig(regionId) {
             const childPackageJSON = await getJSONFileFromGithub(segments[1], 'package.json');
             for (const childPackage of Object.entries(childPackageJSON.dependencies || {})) {
                 if (childPackage[0].startsWith('@datapos/datapos-')) continue;
-                if (dependencies[childPackage[0]]) continue;
-                dependencies[childPackage[0]] = childPackage[1];
+                if (dependencyMap[childPackage[0]]) continue;
+                dependencyMap[childPackage[0]] = childPackage[1];
                 const childSegments = package[0].split('/');
                 dependencyArray.push({ name: childPackage[0], repo: childSegments[1], version: childPackage[1] });
             }
@@ -33,7 +33,7 @@ async function buildConfig(regionId) {
     }
     dependencyArray.sort((left, right) => left.name.localeCompare(right.name));
 
-    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencies, dependencyArray, regionId, version: packageJSON.version }, undefined, 4));
+    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencyMap, dependencyArray, regionId, version: packageJSON.version }, undefined, 4));
 }
 
 // Facilitators - Build Public Directory Index

@@ -98,6 +98,18 @@ async function compilePresenter() {
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
+// Facilitators - Send Deployment Notice
+async function sendDeploymentNotice(serviceId, regionId) {
+    const packageJSON = await readJSONFile('package.json');
+    const options = {
+        body: JSON.stringify({ regionId, version: packageJSON.version }),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST'
+    };
+    const response = await fetch(`https://operations.datapositioning.app/deploymentNotices/${serviceId}`, options);
+    if (!response.ok) console.log(await response.text());
+}
+
 // Facilitators - Sync with Github
 async function syncWithGitHub() {
     const packageJSON = await readJSONFile('package.json');
@@ -128,7 +140,7 @@ async function uploadPlugin() {
 }
 
 /// Exports
-module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, syncWithGitHub, uploadPlugin };
+module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadPlugin };
 
 // Utilities - Compile Presenter Folder
 const compilePresenterFolder = async (folderPath, levelTypeId, children, presentations) => {

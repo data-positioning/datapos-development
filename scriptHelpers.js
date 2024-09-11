@@ -100,7 +100,9 @@ async function compilePresenter() {
 
 // Facilitators - Send Deployment Notice
 async function sendDeploymentNotice(serviceId, regionId) {
+    console.log(1111, serviceId, regionId);
     const packageJSON = await readJSONFile('package.json');
+    console.log(2222, packageJSON.version);
     const options = {
         body: JSON.stringify({ regionId, version: packageJSON.version }),
         headers: { 'Content-Type': 'application/json' },
@@ -108,6 +110,7 @@ async function sendDeploymentNotice(serviceId, regionId) {
     };
     const response = await fetch(`https://operations.datapositioning.app/deploymentNotices/${serviceId}`, options);
     if (!response.ok) console.log(await response.text());
+    console.log(9999, await response.json());
 }
 
 // Facilitators - Sync with Github

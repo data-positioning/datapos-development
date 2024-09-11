@@ -99,14 +99,14 @@ async function compilePresenter() {
 }
 
 // Facilitators - Send Deployment Notice
-async function sendDeploymentNotice(serviceId, regionId) {
+async function sendDeploymentNotice(serviceId) {
     const packageJSON = await readJSONFile('package.json');
     const options = {
-        body: JSON.stringify({ regionId, version: packageJSON.version }),
+        body: JSON.stringify({ version: packageJSON.version }),
         headers: { 'Content-Type': 'application/json' },
-        method: 'POST'
+        method: 'PUT'
     };
-    const response = await fetch(`https://operations.datapositioning.app/deploymentNotices/${serviceId}`, options);
+    const response = await fetch(`https://operations.datapositioning.app/services/${serviceId}/deploymentNotice`, options);
     if (!response.ok) console.log(await response.text());
 }
 

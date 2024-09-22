@@ -14,7 +14,7 @@ async function buildConfig() {
     const packageJSON = await readJSONFile('package.json');
 
     const dependencyMap = packageJSON.dependencies;
-    const dependencyArray = [];
+    const dependencies = [];
 
     for (const package of Object.entries(packageJSON.dependencies || {})) {
         if (package[0].startsWith('@datapos/datapos-')) {
@@ -25,15 +25,15 @@ async function buildConfig() {
                 if (dependencyMap[childPackage[0]]) continue;
                 dependencyMap[childPackage[0]] = childPackage[1];
                 const childSegments = package[0].split('/');
-                dependencyArray.push({ name: childPackage[0], repo: childSegments[1], version: childPackage[1] });
+                dependencies.push({ name: childPackage[0], repo: childSegments[1], version: childPackage[1].replace(/^\^/, '') });
             }
         } else {
-            dependencyArray.push({ name: package[0], repo: 'datapos-workbench', version: package[1] });
+            dependencies.push({ name: package[0], repo: 'datapos-workbench', version: package[1].replace(/^\^/, '') });
         }
     }
-    dependencyArray.sort((left, right) => left.name.localeCompare(right.name));
+    dependencies.sort((left, right) => left.name.localeCompare(right.name));
 
-    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencyMap, dependencyArray, version: packageJSON.version }, undefined, 4));
+    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencyMap, dependencies, version: packageJSON.version }, undefined, 4));
 }
 
 // Facilitators - Build Public Directory Index

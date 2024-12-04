@@ -44,13 +44,17 @@ async function buildPublicDirectoryIndex(id) {
         index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
         for (const name of names) {
             const itemPath = `${directoryPath}/${name}`;
-            const stats = await fs.stat(itemPath);
-            if (stats.isDirectory()) {
-                const nextLevelChildren = await fs.readdir(itemPath);
-                entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
-                await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
-            } else {
-                entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
+            try {
+                const stats = await fs.stat(itemPath);
+                if (stats.isDirectory()) {
+                    const nextLevelChildren = await fs.readdir(itemPath);
+                    entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
+                    await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
+                } else {
+                    entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
+                }
+            } catch (error) {
+                console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`);
             }
         }
         entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
@@ -77,11 +81,15 @@ async function bumpVersion() {
 async function clearDirectory(directoryPath) {
     for (const itemName of await fs.readdir(directoryPath)) {
         const itemPath = `${directoryPath}/${itemName}`;
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) {
-            await fs.rm(itemPath, { recursive: true, force: true });
-        } else {
-            await fs.unlink(itemPath);
+        try {
+            const stats = await fs.stat(itemPath);
+            if (stats.isDirectory()) {
+                await fs.rm(itemPath, { recursive: true, force: true });
+            } else {
+                await fs.unlink(itemPath);
+            }
+        } catch (error) {
+            console.log(`Unable to state '${itemPath}' in 'clearDirectory'.`);
         }
     }
 }
@@ -147,37 +155,41 @@ const compilePresenterFolder = async (folderPath, levelTypeId, children, present
     const itemNames = await fs.readdir(folderPath);
     for (const itemName of itemNames) {
         const itemPath = `${folderPath}/${itemName}`;
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) {
-            if (levelTypeId === 'areas') {
-                const levelData = await readJSONFile(`${itemPath}/data.json`);
-                const areaConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
-                children.push(areaConfig);
-                await compilePresenterFolder(itemPath, 'topics', areaConfig.children, areaConfig.presentations);
-            } else if (levelTypeId === 'topics') {
-                const levelData = await readJSONFile(`${itemPath}/data.json`);
-                const topicConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
-                children.push(topicConfig);
-                await compilePresenterFolder(itemPath, 'subTopics', topicConfig.children, topicConfig.presentations);
-            } else if (levelTypeId === 'subTopics') {
-                const levelData = await readJSONFile(`${itemPath}/data.json`);
-                const subTopicConfig = { id: itemName, label: levelData.label || { en: itemName }, presentations: [] };
-                children.push(subTopicConfig);
-                await compilePresenterFolder(itemPath, 'presentations', undefined, subTopicConfig.presentations);
+        try {
+            const stats = await fs.stat(itemPath);
+            if (stats.isDirectory()) {
+                if (levelTypeId === 'areas') {
+                    const levelData = await readJSONFile(`${itemPath}/data.json`);
+                    const areaConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
+                    children.push(areaConfig);
+                    await compilePresenterFolder(itemPath, 'topics', areaConfig.children, areaConfig.presentations);
+                } else if (levelTypeId === 'topics') {
+                    const levelData = await readJSONFile(`${itemPath}/data.json`);
+                    const topicConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
+                    children.push(topicConfig);
+                    await compilePresenterFolder(itemPath, 'subTopics', topicConfig.children, topicConfig.presentations);
+                } else if (levelTypeId === 'subTopics') {
+                    const levelData = await readJSONFile(`${itemPath}/data.json`);
+                    const subTopicConfig = { id: itemName, label: levelData.label || { en: itemName }, presentations: [] };
+                    children.push(subTopicConfig);
+                    await compilePresenterFolder(itemPath, 'presentations', undefined, subTopicConfig.presentations);
+                } else {
+                    issueCount++;
+                    console.warn(`WARN: Ignoring sub directory '${itemPath}'.`);
+                }
             } else {
-                issueCount++;
-                console.warn(`WARN: Ignoring sub directory '${itemPath}'.`);
+                if (itemName === 'data.json') continue;
+                if (itemName.endsWith('.js')) {
+                    presentations.push({ id: itemName, typeId: 'javascript' });
+                } else if (itemName.endsWith('.json')) {
+                    presentations.push({ id: itemName, typeId: 'json' });
+                } else {
+                    issueCount++;
+                    console.warn(`WARN: Ignoring file '${itemPath}'.`);
+                }
             }
-        } else {
-            if (itemName === 'data.json') continue;
-            if (itemName.endsWith('.js')) {
-                presentations.push({ id: itemName, typeId: 'javascript' });
-            } else if (itemName.endsWith('.json')) {
-                presentations.push({ id: itemName, typeId: 'json' });
-            } else {
-                issueCount++;
-                console.warn(`WARN: Ignoring file '${itemPath}'.`);
-            }
+        } catch (error) {
+            console.log(`Unable to state '${itemPath}' in 'compilePresenterFolder'.`);
         }
     }
 };
@@ -249,12 +261,16 @@ const readTextFile = async (path) => {
 const uploadPluginFolder = async (packageJSON, env, folderPath) => {
     for (const itemName of await fs.readdir(folderPath)) {
         const itemPath = `${folderPath}/${itemName}`;
-        const stats = await fs.stat(itemPath);
-        if (stats.isDirectory()) {
-            if (!itemPath.startsWith('dist/types')) await uploadPluginFolder(packageJSON, env, itemPath);
-        } else {
-            const fileContent = await readTextFile(itemPath);
-            await pushContentToGithub(packageJSON, env, fileContent, itemPath.substring(5));
+        try {
+            const stats = await fs.stat(itemPath);
+            if (stats.isDirectory()) {
+                if (!itemPath.startsWith('dist/types')) await uploadPluginFolder(packageJSON, env, itemPath);
+            } else {
+                const fileContent = await readTextFile(itemPath);
+                await pushContentToGithub(packageJSON, env, fileContent, itemPath.substring(5));
+            }
+        } catch (error) {
+            console.log(`Unable to state '${itemPath}' in 'uploadPluginFolder'.`);
         }
     }
 };

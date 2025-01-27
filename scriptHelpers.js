@@ -147,7 +147,7 @@ async function uploadPlugin() {
     await uploadPluginFolder(packageJSON, env, 'dist');
 }
 
-/// Exports
+// Exports
 module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadPlugin };
 
 // Utilities - Compile Presenter Folder

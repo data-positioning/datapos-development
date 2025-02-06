@@ -114,7 +114,7 @@ async function sendDeploymentNotice(serviceId) {
         headers: { 'Content-Type': 'application/json' },
         method: 'PUT'
     };
-    const response = await fetch(`https://operations.datapositioning.app/services/${serviceId}/deploymentNotice`, options);
+    const response = await fetch(`https://operations.datapos.app/services/${serviceId}/deploymentNotice`, options);
     if (!response.ok) console.log(await response.text());
 }
 

@@ -13,10 +13,10 @@ let issueCount = 0;
 async function buildConfig() {
     const configJSON = await readJSONFile('src/config.json');
 
-    let description = {};
+    const description = {};
     const enDescription = await readTextFile('src/description.en.md');
     if (enDescription) description.en = enDescription;
-    if (Object.keys(description).length === 0) description = undefined;
+    // if (Object.keys(description).length === 0) description = undefined;
 
     const logo = await readTextFile('src/logo.svg');
 
@@ -33,7 +33,7 @@ async function buildConfig() {
     peerDependencies.sort((left, right) => left.name.localeCompare(right.name));
 
     fs.writeFile(
-        'src/config2.json',
+        'src/config.json',
         JSON.stringify({ ...configJSON, id: packageJSON.name, description, dependencies, logo, peerDependencies, version: packageJSON.version }, undefined, 4)
     );
 }

@@ -2,7 +2,8 @@
     "name": "@datapos/datapos-dev-operations",
     "license": "ISC",
     "private": false,
-    "version": "0.1.606",
+    "type": "module",
+    "version": "0.1.608",
     "dependencies": {
         "dotenv": "^16.4.7"
     },
@@ -14,14 +15,14 @@
     "scripts": {
         "audit": "npm audit",
         "build": "echo \"***** BUILD SCRIPT NOT IMPLEMENTED. *****\"",
-        "bumpVersion": "node -e \"require('./scriptHelpers').bumpVersion()\"",
+        "bumpVersion": "node -e \"import('./scriptHelpers.js').then(m => m.bumpVersion())\"",
         "check": "npx npm-check-updates && npm outdated",
         "document": "npx npm-license-crawler --onlyDirectDependencies --production --relativeLicensePath --json LICENSES.json",
         "format": "prettier --write *.js",
         "lint": "npx eslint *.js",
         "publishToNPM": "npm publish",
         "release": "npm run syncWithGitHub && npm run publishToNPM",
-        "syncWithGitHub": "npm run bumpVersion && node -e \"require('./scriptHelpers').syncWithGitHub()\"",
+        "syncWithGitHub": "npm run bumpVersion && node -e \"import('./scriptHelpers.js').then(m => m.syncWithGitHub())\"",
         "test": "echo \"***** TEST SCRIPT NOT IMPLEMENTED. *****\"",
         "updateDependencies": "echo \"***** UPDATE DEPENDENCIES SCRIPT NOT IMPLEMENTED. *****\""
     }

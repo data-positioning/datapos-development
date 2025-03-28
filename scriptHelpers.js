@@ -148,7 +148,8 @@ async function uploadPlugin() {
 }
 
 // Exports
-module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadPlugin };
+// module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadPlugin };
+export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadPlugin };
 
 // Utilities - Compile Presenter Folder
 const compilePresenterFolder = async (folderPath, levelTypeId, children, presentations) => {

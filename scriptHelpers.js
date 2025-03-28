@@ -16,19 +16,19 @@ async function buildConfig() {
     const dependencyMap = packageJSON.dependencies;
     const dependencies = [];
 
-    for (const package of Object.entries(packageJSON.dependencies || {})) {
-        if (package[0].startsWith('@datapos/datapos-')) {
-            const segments = package[0].split('/');
+    for (const pkg of Object.entries(packageJSON.dependencies || {})) {
+        if (pkg[0].startsWith('@datapos/datapos-')) {
+            const segments = pkg[0].split('/');
             const childPackageJSON = await getJSONFileFromGithub(segments[1], 'package.json');
             for (const childPackage of Object.entries(childPackageJSON.dependencies || {})) {
                 if (childPackage[0].startsWith('@datapos/datapos-')) continue;
                 if (dependencyMap[childPackage[0]]) continue;
                 dependencyMap[childPackage[0]] = childPackage[1];
-                const childSegments = package[0].split('/');
+                const childSegments = pkg[0].split('/');
                 dependencies.push({ name: childPackage[0], repo: childSegments[1], version: childPackage[1].replace(/^\^/, '') });
             }
         } else {
-            dependencies.push({ name: package[0], repo: 'datapos-workbench', version: package[1].replace(/^\^/, '') });
+            dependencies.push({ name: pkg[0], repo: 'datapos-workbench', version: pkg[1].replace(/^\^/, '') });
         }
     }
     dependencies.sort((left, right) => left.name.localeCompare(right.name));

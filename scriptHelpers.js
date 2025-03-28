@@ -14,9 +14,15 @@ async function buildConfig() {
     const configJSON = await readJSONFile('src/config.json');
     const packageJSON = await readJSONFile('package.json');
 
+    let description = {};
+    const enDescription = await readTextFile('src/description.en.md');
+    if (enDescription) description.en = enDescription;
+    if (Object.keys(description).length === 0) description = undefined;
+
+    const logo = await readTextFile('src/logo.svg');
+
     const dependencyMap = packageJSON.dependencies;
     const dependencies = [];
-
     for (const pkg of Object.entries(packageJSON.dependencies || {})) {
         if (pkg[0].startsWith('@datapos/datapos-')) {
             const segments = pkg[0].split('/');
@@ -34,7 +40,33 @@ async function buildConfig() {
     }
     dependencies.sort((left, right) => left.name.localeCompare(right.name));
 
-    fs.writeFile('src/config2.json', JSON.stringify({ ...configJSON, id: packageJSON.name, dependencyMap, dependencies, version: packageJSON.version }, undefined, 4));
+    const peerDependencyMap = packageJSON.peerDependencies;
+    const peerDependencies = [];
+    for (const pkg of Object.entries(packageJSON.peerDependencies || {})) {
+        if (pkg[0].startsWith('@datapos/datapos-')) {
+            const segments = pkg[0].split('/');
+            const childPackageJSON = await getJSONFileFromGithub(segments[1], 'package.json');
+            for (const childPackage of Object.entries(childPackageJSON.dependencies || {})) {
+                if (childPackage[0].startsWith('@datapos/datapos-')) continue;
+                if (dependencyMap[childPackage[0]]) continue;
+                dependencyMap[childPackage[0]] = childPackage[1];
+                const childSegments = pkg[0].split('/');
+                peerDependencies.push({ name: childPackage[0], repo: childSegments[1], version: childPackage[1].replace(/^\^/, '') });
+            }
+        } else {
+            peerDependencies.push({ name: pkg[0], repo: 'datapos-workbench', version: pkg[1].replace(/^\^/, '') });
+        }
+    }
+    peerDependencies.sort((left, right) => left.name.localeCompare(right.name));
+
+    fs.writeFile(
+        'src/config2.json',
+        JSON.stringify(
+            { ...configJSON, id: packageJSON.name, description, dependencyMap, dependencies, logo, peerDependencyMap, peerDependencies, version: packageJSON.version },
+            undefined,
+            4
+        )
+    );
 }
 
 // Facilitators - Build Public Directory Index

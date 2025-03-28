@@ -6,10 +6,10 @@ const fs = require('fs').promises;
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-// Module Variables
+// Variables
 let issueCount = 0;
 
-// Facilitators - Build Configuration
+// Utilities - Build Configuration
 async function buildConfig() {
     const configJSON = await readJSONFile('src/config.json');
 
@@ -34,7 +34,7 @@ async function buildConfig() {
     );
 }
 
-// Facilitators - Build Public Directory Index
+// Utilities - Build Public Directory Index
 async function buildPublicDirectoryIndex(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
         const entries = [];
@@ -66,7 +66,7 @@ async function buildPublicDirectoryIndex(id) {
     });
 }
 
-// Facilitators - Bump Version
+// Utilities - Bump Version
 async function bumpVersion() {
     const packageJSON = await readJSONFile('package.json');
     const versionSegments = packageJSON.version.split('.');
@@ -75,7 +75,7 @@ async function bumpVersion() {
     console.log(`Bumped to version ${packageJSON.version}.`);
 }
 
-// Facilitators - Clear Directory
+// Utilities - Clear Directory
 async function clearDirectory(directoryPath) {
     for (const itemName of await fs.readdir(directoryPath)) {
         const itemPath = `${directoryPath}/${itemName}`;
@@ -92,7 +92,7 @@ async function clearDirectory(directoryPath) {
     }
 }
 
-// Facilitators - Compile Presenter
+// Utilities - Compile Presenter
 async function compilePresenter() {
     const packageJSON = await readJSONFile('package.json');
     const packageName = packageJSON.name;
@@ -104,7 +104,7 @@ async function compilePresenter() {
     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
 }
 
-// Facilitators - Send Deployment Notice
+// Utilities - Send Deployment Notice
 async function sendDeploymentNotice(serviceId) {
     const packageJSON = await readJSONFile('package.json');
     const options = {
@@ -116,7 +116,7 @@ async function sendDeploymentNotice(serviceId) {
     if (!response.ok) console.log(await response.text());
 }
 
-// Facilitators - Sync with Github
+// Utilities - Sync with Github
 async function syncWithGitHub() {
     const packageJSON = await readJSONFile('package.json');
     await exec('git add .');
@@ -124,29 +124,43 @@ async function syncWithGitHub() {
     await exec('git push origin main:main');
 }
 
-// Facilitators - Upload Plugin
-async function uploadPlugin() {
-    const packageJSON = await readJSONFile('package.json');
-
-    const result = dotenv.config({ path: '.env.local' });
-    if (result.error) throw result.error;
-    const env = result.parsed;
-
+// Utilities - Upload Connector
+async function uploadConnector() {
     const configJSON = await readJSONFile('src/config.json');
-    configJSON.id = packageJSON.name;
-    configJSON.dependencies = packageJSON.dependencies || {};
-    configJSON.version = packageJSON.version;
-
-    configJSON.description = await readTextFile('src/description.en.md');
-    configJSON.logo = await readTextFile('src/logo.svg');
-
-    await pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
-
-    await uploadPluginFolder(packageJSON, env, 'dist');
+    connectorId = configJSON.id;
+    const code = JSON.parse(await fs.readFile(`dist/${connectorId}-es.js`, 'utf8'));
+    const options = {
+        body: JSON.stringify({ code, config: configJSON }),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT'
+    };
+    const response = await fetch(`https://operations.datapos.app/connectors/${connectorId}`, options);
+    if (!response.ok) console.log(await response.text());
 }
 
 // Exports
-export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadPlugin };
+export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadConnector };
+
+// // Facilitators - Upload Plugin
+// async function uploadPlugin() {
+//     const packageJSON = await readJSONFile('package.json');
+
+//     const result = dotenv.config({ path: '.env.local' });
+//     if (result.error) throw result.error;
+//     const env = result.parsed;
+
+//     const configJSON = await readJSONFile('src/config.json');
+//     configJSON.id = packageJSON.name;
+//     configJSON.dependencies = packageJSON.dependencies || {};
+//     configJSON.version = packageJSON.version;
+
+//     configJSON.description = await readTextFile('src/description.en.md');
+//     configJSON.logo = await readTextFile('src/logo.svg');
+
+//     await pushContentToGithub(packageJSON, env, JSON.stringify(configJSON), 'config.json');
+
+//     await uploadPluginFolder(packageJSON, env, 'dist');
+// }
 
 // Utilities - Compile Presenter Folder
 const compilePresenterFolder = async (folderPath, levelTypeId, children, presentations) => {

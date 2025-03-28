@@ -12,9 +12,6 @@ let issueCount = 0;
 // Facilitators - Build Configuration
 async function buildConfig() {
     const configJSON = await readJSONFile('src/config.json');
-    console.log(1234, configJSON);
-
-    const packageJSON = await readJSONFile('package.json');
 
     let description = {};
     const enDescription = await readTextFile('src/description.en.md');
@@ -23,51 +20,21 @@ async function buildConfig() {
 
     const logo = await readTextFile('src/logo.svg');
 
-    const dependencyMap = packageJSON.dependencies;
+    const packageJSON = await readJSONFile('package.json');
     const dependencies = [];
     for (const pkg of Object.entries(packageJSON.dependencies || {})) {
-        // if (pkg[0].startsWith('@datapos/datapos-')) {
-        //     const segments = pkg[0].split('/');
-        //     const childPackageJSON = await getJSONFileFromGithub(segments[1], 'package.json');
-        //     for (const childPackage of Object.entries(childPackageJSON.dependencies || {})) {
-        //         if (childPackage[0].startsWith('@datapos/datapos-')) continue;
-        //         if (dependencyMap[childPackage[0]]) continue;
-        //         dependencyMap[childPackage[0]] = childPackage[1];
-        //         const childSegments = pkg[0].split('/');
-        //         dependencies.push({ name: childPackage[0], repo: childSegments[1], version: childPackage[1].replace(/^\^/, '') });
-        //     }
-        // } else {
         dependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
-        // }
     }
     dependencies.sort((left, right) => left.name.localeCompare(right.name));
-
-    const peerDependencyMap = packageJSON.peerDependencies;
     const peerDependencies = [];
     for (const pkg of Object.entries(packageJSON.peerDependencies || {})) {
-        // if (pkg[0].startsWith('@datapos/datapos-')) {
-        //     const segments = pkg[0].split('/');
-        //     const childPackageJSON = await getJSONFileFromGithub(segments[1], 'package.json');
-        //     for (const childPackage of Object.entries(childPackageJSON.dependencies || {})) {
-        //         if (childPackage[0].startsWith('@datapos/datapos-')) continue;
-        //         if (dependencyMap[childPackage[0]]) continue;
-        //         dependencyMap[childPackage[0]] = childPackage[1];
-        //         const childSegments = pkg[0].split('/');
-        //         peerDependencies.push({ name: childPackage[0], repo: childSegments[1], version: childPackage[1].replace(/^\^/, '') });
-        //     }
-        // } else {
         peerDependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
-        // }
     }
     peerDependencies.sort((left, right) => left.name.localeCompare(right.name));
 
     fs.writeFile(
         'src/config2.json',
-        JSON.stringify(
-            { ...configJSON, id: packageJSON.name, description, dependencyMap, dependencies, logo, peerDependencyMap, peerDependencies, version: packageJSON.version },
-            undefined,
-            4
-        )
+        JSON.stringify({ ...configJSON, id: packageJSON.name, description, dependencies, logo, peerDependencies, version: packageJSON.version }, undefined, 4)
     );
 }
 

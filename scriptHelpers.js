@@ -128,7 +128,7 @@ async function syncWithGitHub() {
 async function uploadConnector() {
     const configJSON = await readJSONFile('src/config.json');
     const connectorId = configJSON.id;
-    const code = JSON.parse(await fs.readFile(`dist/${connectorId}-es.js`, 'utf8'));
+    const code = await readTextFile(`dist/${connectorId}-es.js`);
     const options = {
         body: JSON.stringify({ code, config: configJSON }),
         headers: { 'Content-Type': 'application/json' },

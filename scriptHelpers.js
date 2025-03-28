@@ -61,7 +61,10 @@ async function buildConfig() {
     // }
     // peerDependencies.sort((left, right) => left.name.localeCompare(right.name));
 
-    fs.writeFile('src/config2.json', JSON.stringify({ ...configJSON, id: packageJSON.name, dependencyMap, dependencies, version: packageJSON.version }, undefined, 4));
+    fs.writeFile(
+        'src/config2.json',
+        JSON.stringify({ ...configJSON, id: packageJSON.name, description, dependencyMap, dependencies, logo, version: packageJSON.version }, undefined, 4)
+    );
 }
 
 // Facilitators - Build Public Directory Index

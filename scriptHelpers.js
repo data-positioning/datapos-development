@@ -11,7 +11,7 @@ let issueCount = 0;
 
 // Facilitators - Build Configuration
 async function buildConfig() {
-    const configJSON = await readJSONFile('src/config.json');
+    // const configJSON = await readJSONFile('src/config.json');
     const packageJSON = await readJSONFile('package.json');
 
     // let description = {};

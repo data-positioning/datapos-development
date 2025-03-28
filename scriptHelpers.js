@@ -16,12 +16,12 @@ async function buildConfig() {
 
     const packageJSON = await readJSONFile('package.json');
 
-    // let description = {};
-    // const enDescription = await readTextFile('src/description.en.md');
-    // if (enDescription) description.en = enDescription;
-    // if (Object.keys(description).length === 0) description = undefined;
+    let description = {};
+    const enDescription = await readTextFile('src/description.en.md');
+    if (enDescription) description.en = enDescription;
+    if (Object.keys(description).length === 0) description = undefined;
 
-    // const logo = await readTextFile('src/logo.svg');
+    const logo = await readTextFile('src/logo.svg');
 
     const dependencyMap = packageJSON.dependencies;
     const dependencies = [];

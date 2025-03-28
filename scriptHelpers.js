@@ -14,12 +14,12 @@ async function buildConfig() {
     const configJSON = await readJSONFile('src/config.json');
     const packageJSON = await readJSONFile('package.json');
 
-    let description = {};
-    const enDescription = await readTextFile('src/description.en.md');
-    if (enDescription) description.en = enDescription;
-    if (Object.keys(description).length === 0) description = undefined;
+    // let description = {};
+    // const enDescription = await readTextFile('src/description.en.md');
+    // if (enDescription) description.en = enDescription;
+    // if (Object.keys(description).length === 0) description = undefined;
 
-    const logo = await readTextFile('src/logo.svg');
+    // const logo = await readTextFile('src/logo.svg');
 
     const dependencyMap = packageJSON.dependencies;
     const dependencies = [];
@@ -61,11 +61,7 @@ async function buildConfig() {
 
     fs.writeFile(
         'src/config2.json',
-        JSON.stringify(
-            { ...configJSON, id: packageJSON.name, description, dependencyMap, dependencies, logo, peerDependencyMap, peerDependencies, version: packageJSON.version },
-            undefined,
-            4
-        )
+        JSON.stringify({ ...configJSON, id: packageJSON.name, dependencyMap, dependencies, peerDependencyMap, peerDependencies, version: packageJSON.version }, undefined, 4)
     );
 }
 

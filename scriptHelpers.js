@@ -22,14 +22,10 @@ async function buildConfig() {
 
     const packageJSON = await readJSONFile('package.json');
     const dependencies = [];
-    for (const pkg of Object.entries(packageJSON.dependencies || {})) {
-        dependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
-    }
+    for (const pkg of Object.entries(packageJSON.dependencies || {})) dependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
     dependencies.sort((left, right) => left.name.localeCompare(right.name));
     const peerDependencies = [];
-    for (const pkg of Object.entries(packageJSON.peerDependencies || {})) {
-        peerDependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
-    }
+    for (const pkg of Object.entries(packageJSON.peerDependencies || {})) peerDependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
     peerDependencies.sort((left, right) => left.name.localeCompare(right.name));
 
     fs.writeFile(
@@ -150,7 +146,6 @@ async function uploadPlugin() {
 }
 
 // Exports
-// module.exports = { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadPlugin };
 export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadPlugin };
 
 // Utilities - Compile Presenter Folder

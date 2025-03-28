@@ -11,6 +11,7 @@ let issueCount = 0;
 
 // Facilitators - Build Configuration
 async function buildConfig() {
+    const configJSON = await readJSONFile('src/config.json');
     const packageJSON = await readJSONFile('package.json');
 
     const dependencyMap = packageJSON.dependencies;
@@ -33,7 +34,7 @@ async function buildConfig() {
     }
     dependencies.sort((left, right) => left.name.localeCompare(right.name));
 
-    fs.writeFile('src/config.json', JSON.stringify({ id: packageJSON.name, dependencyMap, dependencies, version: packageJSON.version }, undefined, 4));
+    fs.writeFile('src/config2.json', JSON.stringify({ ...configJSON, id: packageJSON.name, dependencyMap, dependencies, version: packageJSON.version }, undefined, 4));
 }
 
 // Facilitators - Build Public Directory Index

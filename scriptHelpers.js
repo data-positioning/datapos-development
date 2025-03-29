@@ -107,7 +107,6 @@ async function compilePresenter() {
 // Utilities - Send Deployment Notice
 async function sendDeploymentNotice() {
     const configJSON = await readJSONFile('src/config.json');
-    console.log(1111, configJSON);
     const options = {
         body: JSON.stringify(configJSON),
         headers: { 'Content-Type': 'application/json' },

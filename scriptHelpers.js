@@ -105,14 +105,14 @@ async function compilePresenter() {
 }
 
 // Utilities - Send Deployment Notice
-async function sendDeploymentNotice(stateId) {
-    const packageJSON = await readJSONFile('package.json');
+async function sendDeploymentNotice() {
+    const configJSON = await readJSONFile('src/config.json');
     const options = {
-        body: JSON.stringify({ version: packageJSON.version }),
+        body: JSON.stringify(configJSON),
         headers: { 'Content-Type': 'application/json' },
         method: 'PUT'
     };
-    const response = await fetch(`https://operations.datapos.app/states/${stateId}/deploymentNotice`, options);
+    const response = await fetch(`https://operations.datapos.app/states/${configJSON.id}/deploymentNotice`, options);
     if (!response.ok) console.log(await response.text());
 }
 

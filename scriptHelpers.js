@@ -13,25 +13,22 @@ let issueCount = 0;
 async function buildConfig() {
     const configJSON = await readJSONFile('src/config.json');
 
-    const description = {};
-    const enDescription = await readTextFile('src/description.en.md');
-    if (enDescription) description.en = enDescription;
-    // if (Object.keys(description).length === 0) description = undefined;
+    // const description = {};
+    // const enDescription = await readTextFile('src/description.en.md');
+    // if (enDescription) description.en = enDescription;
+    // // if (Object.keys(description).length === 0) description = undefined;
 
-    const logo = await readTextFile('src/logo.svg');
+    // const logo = await readTextFile('src/logo.svg');
 
     const packageJSON = await readJSONFile('package.json');
-    const dependencies = [];
-    for (const pkg of Object.entries(packageJSON.dependencies || {})) dependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
-    dependencies.sort((left, right) => left.name.localeCompare(right.name));
-    const peerDependencies = [];
-    for (const pkg of Object.entries(packageJSON.peerDependencies || {})) peerDependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
-    peerDependencies.sort((left, right) => left.name.localeCompare(right.name));
+    // const dependencies = [];
+    // for (const pkg of Object.entries(packageJSON.dependencies || {})) dependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
+    // dependencies.sort((left, right) => left.name.localeCompare(right.name));
+    // const peerDependencies = [];
+    // for (const pkg of Object.entries(packageJSON.peerDependencies || {})) peerDependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
+    // peerDependencies.sort((left, right) => left.name.localeCompare(right.name));
 
-    fs.writeFile(
-        'src/config.json',
-        JSON.stringify({ ...configJSON, id: packageJSON.name, description, dependencies, logo, peerDependencies, version: packageJSON.version }, undefined, 4)
-    );
+    fs.writeFile('src/config.json', JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }
 
 // Utilities - Build Public Directory Index

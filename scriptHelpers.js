@@ -110,7 +110,7 @@ async function uploadConnectorConfig() {
 // Utilities - Upload Directory To R2
 async function uploadDirectoryToR2(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
-        console.log('DIRECTORY', directoryPath, names);
+        console.log('DIRECTORY', directoryPath);
         // const entries = [];
         // const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
         // index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
@@ -123,7 +123,7 @@ async function uploadDirectoryToR2(id) {
                     // entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
                     await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                 } else {
-                    console.log('FILE', names, stats);
+                    console.log('FILE', names);
                     // entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
                 }
             } catch (error) {

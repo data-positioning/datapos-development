@@ -112,7 +112,7 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
     async function listDirectoryEntriesRecursively(currentSourceDirectory, names) {
         console.log('DIRECTORY', currentSourceDirectory, uploadDirectory);
         for (const name of names) {
-            const itemPath = `${currentSourceDirectory}/${uploadDirectory}/${name}`;
+            const itemPath = `${currentSourceDirectory}/${name}`;
             try {
                 console.log(1111, sourceDirectory, uploadDirectory, itemPath);
                 const stats = await fs.stat(itemPath);
@@ -135,7 +135,7 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
     }
     const toplevelNames = await fs.readdir(`${sourceDirectory}/${uploadDirectory}/`);
     console.log('aaaa', toplevelNames);
-    await listDirectoryEntriesRecursively(`${sourceDirectory}`, toplevelNames);
+    await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}`, toplevelNames);
 }
 
 // Utilities - Read JSON File

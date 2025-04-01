@@ -111,34 +111,25 @@ async function uploadConnectorConfig() {
 async function uploadDirectoryToR2(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
         console.log('DIRECTORY', directoryPath);
-        // const entries = [];
-        // const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
-        // index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
         for (const name of names) {
             const itemPath = `${directoryPath}/${name}`;
             try {
                 const stats = await fs.stat(itemPath);
                 if (stats.isDirectory()) {
                     const nextLevelChildren = await fs.readdir(itemPath);
-                    // entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
                     await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                 } else {
-                    console.log('FILE', name);
-                    // entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
+                    console.log('FILE', directoryPath, name, `${directoryPath}/${name}`);
+                    // "uploadConnectorToR2": "npx wrangler r2 object put plugins-eu/connectors/datapos-connector-file-store-emulator-es.js --file=dist/datapos-connector-file-store-emulator-es.js --jurisdiction=eu --remote"
+                    exec('wrangler r2 --help');
                 }
             } catch (error) {
                 console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`, error);
             }
         }
-        // entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
     }
-
-    // const index = {};
     const toplevelNames = await fs.readdir(`public/${id}/`);
     await listDirectoryEntriesRecursively(`public/${id}`, toplevelNames);
-    // fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
-    //     if (error) return console.error(error);
-    // });
 }
 
 // Utilities - Read JSON File

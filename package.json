@@ -3,7 +3,7 @@
     "license": "ISC",
     "private": false,
     "type": "module",
-    "version": "0.1.649",
+    "version": "0.1.650",
     "dependencies": {
         "dotenv": "^16.4.7"
     },

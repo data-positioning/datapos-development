@@ -110,9 +110,9 @@ async function uploadConnectorConfig() {
 // Utilities - Upload Directory To R2
 async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
     async function listDirectoryEntriesRecursively(currentSourceDirectory, names) {
-        console.log('DIRECTORY', currentSourceDirectory);
+        console.log('DIRECTORY', currentSourceDirectory, uploadDirectory);
         for (const name of names) {
-            const itemPath = `${currentSourceDirectory}/${name}`;
+            const itemPath = `${currentSourceDirectory}/${uploadDirectory}/${name}`;
             try {
                 const stats = await fs.stat(itemPath);
                 if (stats.isDirectory()) {

@@ -108,19 +108,20 @@ async function uploadConnectorConfig() {
 }
 
 // Utilities - Upload Directory To R2
-async function uploadDirectoryToR2(id) {
-    async function listDirectoryEntriesRecursively(directoryPath, names) {
-        console.log('DIRECTORY', directoryPath);
+async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
+    async function listDirectoryEntriesRecursively(currentSourceDirectory, names) {
+        console.log('DIRECTORY', currentSourceDirectory);
         for (const name of names) {
-            const itemPath = `public/${directoryPath}/${name}`;
+            const itemPath = `${currentSourceDirectory}/${name}`;
             try {
                 const stats = await fs.stat(itemPath);
                 if (stats.isDirectory()) {
                     const nextLevelChildren = await fs.readdir(itemPath);
                     await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                 } else {
-                    const path = `${directoryPath}/${name}`;
-                    console.log('FILE', `wrangler r2 object put sample-data-eu/${path} --file=public/${path} --jurisdiction=eu --remote`);
+                    const sourcePath = `${currentSourceDirectory}/${uploadDirectory}/${name}`;
+                    const destinationPath = `${uploadDirectory}/${name}`;
+                    console.log('FILE', currentSourceDirectory, name, `wrangler r2 object put sample-data-eu/${destinationPath} --file=${sourcePath} --jurisdiction=eu --remote`);
                     // "uploadConnectorToR2": "npx wrangler r2 object put plugins-eu/connectors/datapos-connector-file-store-emulator-es.js --file=dist/datapos-connector-file-store-emulator-es.js --jurisdiction=eu --remote"
                     // const xxxx = await exec(`wrangler r2 object put sample-data-eu/${path} --file=${path} --jurisdiction=eu --remote`);
                     // console.log('xxxx', xxxx);
@@ -130,8 +131,8 @@ async function uploadDirectoryToR2(id) {
             }
         }
     }
-    const toplevelNames = await fs.readdir(`public/${id}/`);
-    await listDirectoryEntriesRecursively(id, toplevelNames);
+    const toplevelNames = await fs.readdir(`${sourceDirectory}/${uploadDirectory}/`);
+    await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}/`, uploadDirectory, toplevelNames);
 }
 
 // Utilities - Read JSON File

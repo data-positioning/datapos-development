@@ -133,7 +133,7 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
         }
     }
     const toplevelNames = await fs.readdir(`${sourceDirectory}/${uploadDirectory}/`);
-    await listDirectoryEntriesRecursively(`${sourceDirectory}`, uploadDirectory, toplevelNames);
+    await listDirectoryEntriesRecursively(`${sourceDirectory}`, toplevelNames);
 }
 
 // Utilities - Read JSON File

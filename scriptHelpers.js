@@ -124,14 +124,13 @@ async function syncWithGitHub() {
 // Utilities - Upload Connector
 async function uploadConnector() {
     const configJSON = await readJSONFile('src/config.json');
-    const connectorId = configJSON.id;
-    const code = await readTextFile(`dist/${connectorId}-es.js`);
+    const stateId = configJSON.id;
     const options = {
-        body: JSON.stringify({ code, config: configJSON }),
+        body: JSON.stringify(configJSON),
         headers: { 'Content-Type': 'application/json' },
         method: 'PUT'
     };
-    const response = await fetch(`https://operations.datapos.app/connectors/${connectorId}`, options);
+    const response = await fetch(`https://operations.datapos.app/states/${stateId}`, options);
     if (!response.ok) console.log(await response.text());
 }
 

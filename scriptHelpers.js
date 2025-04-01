@@ -1,5 +1,5 @@
 // Dependencies - Vendor
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
 const fs = require('fs').promises;
 
 // Dependencies - Vendor (Promisify Exec)
@@ -7,7 +7,7 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 // Variables
-let issueCount = 0;
+// let issueCount = 0;
 
 // Utilities - Build Configuration
 async function buildConfig() {
@@ -34,38 +34,7 @@ async function buildPublicDirectoryIndex(id) {
                     entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
                 }
             } catch (error) {
-                console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`);
-            }
-        }
-        entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
-    }
-
-    const index = {};
-    const toplevelNames = await fs.readdir(`public/${id}/`);
-    await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
-    fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
-        if (error) return console.error(error);
-    });
-}
-// Utilities - Upload Directory To R2
-async function uploadDirectoryToR2(id) {
-    async function listDirectoryEntriesRecursively(directoryPath, names) {
-        const entries = [];
-        const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
-        index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
-        for (const name of names) {
-            const itemPath = `${directoryPath}/${name}`;
-            try {
-                const stats = await fs.stat(itemPath);
-                if (stats.isDirectory()) {
-                    const nextLevelChildren = await fs.readdir(itemPath);
-                    entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
-                    await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
-                } else {
-                    entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
-                }
-            } catch (error) {
-                console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`);
+                console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`, error);
             }
         }
         entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
@@ -100,7 +69,7 @@ async function clearDirectory(directoryPath) {
                 await fs.unlink(itemPath);
             }
         } catch (error) {
-            console.log(`Unable to state '${itemPath}' in 'clearDirectory'.`);
+            console.log(`Unable to state '${itemPath}' in 'clearDirectory'.`, error);
         }
     }
 }
@@ -138,19 +107,52 @@ async function uploadConnectorConfig() {
     if (!response.ok) console.log(await response.text());
 }
 
+// Utilities - Upload Directory To R2
+async function uploadDirectoryToR2(id) {
+    async function listDirectoryEntriesRecursively(directoryPath, names) {
+        console.log('DIRECTORY', directoryPath, names);
+        // const entries = [];
+        // const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
+        // index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
+        for (const name of names) {
+            const itemPath = `${directoryPath}/${name}`;
+            try {
+                const stats = await fs.stat(itemPath);
+                if (stats.isDirectory()) {
+                    const nextLevelChildren = await fs.readdir(itemPath);
+                    // entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
+                    await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
+                } else {
+                    console.log('FILE', names, stats);
+                    // entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
+                }
+            } catch (error) {
+                console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`, error);
+            }
+        }
+        // entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
+    }
+
+    // const index = {};
+    const toplevelNames = await fs.readdir(`public/${id}/`);
+    await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
+    // fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
+    //     if (error) return console.error(error);
+    // });
+}
+
 // Utilities - Read JSON File
 const readJSONFile = async (path) => {
     try {
         return JSON.parse(await fs.readFile(path, 'utf8'));
-        // eslint-disable-next-line no-unused-vars
     } catch (error) {
         issueCount++;
-        console.warn(`WARN: JSON file '${path}' not found or invalid.`);
+        console.warn(`WARN: JSON file '${path}' not found or invalid.`, error);
         return {};
     }
 };
 
-// Exports
+// Exposures
 export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, sendDeploymentNotice, syncWithGitHub, uploadConnectorConfig, uploadDirectoryToR2 };
 
 // // Facilitators - Upload Plugin

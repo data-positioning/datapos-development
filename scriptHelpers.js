@@ -112,7 +112,7 @@ async function uploadDirectoryToR2(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
         console.log('DIRECTORY', directoryPath);
         for (const name of names) {
-            const itemPath = `${directoryPath}/${name}`;
+            const itemPath = `public/${directoryPath}/${name}`;
             try {
                 const stats = await fs.stat(itemPath);
                 if (stats.isDirectory()) {
@@ -120,7 +120,7 @@ async function uploadDirectoryToR2(id) {
                     await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                 } else {
                     const path = `${directoryPath}/${name}`;
-                    console.log('FILE', directoryPath, name, `wrangler r2 object put sample-data-eu/${path} --file=${path} --jurisdiction=eu --remote`);
+                    console.log('FILE', `wrangler r2 object put sample-data-eu/${path} --file=public/${path} --jurisdiction=eu --remote`);
                     // "uploadConnectorToR2": "npx wrangler r2 object put plugins-eu/connectors/datapos-connector-file-store-emulator-es.js --file=dist/datapos-connector-file-store-emulator-es.js --jurisdiction=eu --remote"
                     // const xxxx = await exec(`wrangler r2 object put sample-data-eu/${path} --file=${path} --jurisdiction=eu --remote`);
                     // console.log('xxxx', xxxx);
@@ -131,7 +131,7 @@ async function uploadDirectoryToR2(id) {
         }
     }
     const toplevelNames = await fs.readdir(`public/${id}/`);
-    await listDirectoryEntriesRecursively(`public/${id}`, toplevelNames);
+    await listDirectoryEntriesRecursively(id, toplevelNames);
 }
 
 // Utilities - Read JSON File

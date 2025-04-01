@@ -115,7 +115,7 @@ async function uploadDirectoryToR2(id) {
         // const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
         // index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
         for (const name of names) {
-            const itemPath = `${directoryPath}${name}`;
+            const itemPath = `${directoryPath}/${name}`;
             try {
                 const stats = await fs.stat(itemPath);
                 if (stats.isDirectory()) {
@@ -135,7 +135,7 @@ async function uploadDirectoryToR2(id) {
 
     // const index = {};
     const toplevelNames = await fs.readdir(`public/${id}/`);
-    await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
+    await listDirectoryEntriesRecursively(`public/${id}`, toplevelNames);
     // fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
     //     if (error) return console.error(error);
     // });

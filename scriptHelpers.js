@@ -115,7 +115,7 @@ async function uploadDirectoryToR2(id) {
         // const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
         // index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
         for (const name of names) {
-            const itemPath = `${directoryPath}/${name}`;
+            const itemPath = `${directoryPath}${name}`;
             try {
                 const stats = await fs.stat(itemPath);
                 if (stats.isDirectory()) {

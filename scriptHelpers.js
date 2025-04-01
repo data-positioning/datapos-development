@@ -121,7 +121,8 @@ async function uploadDirectoryToR2(id) {
                 } else {
                     console.log('FILE', directoryPath, name, `${directoryPath}/${name}`);
                     // "uploadConnectorToR2": "npx wrangler r2 object put plugins-eu/connectors/datapos-connector-file-store-emulator-es.js --file=dist/datapos-connector-file-store-emulator-es.js --jurisdiction=eu --remote"
-                    exec('wrangler r2 --help');
+                    const xxxx = await exec('wrangler r2 --help');
+                    console.log('xxxx', xxxx);
                 }
             } catch (error) {
                 console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`, error);

@@ -117,7 +117,7 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
                 } else {
                     const command = `wrangler r2 object put "sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
                     const response = await exec(command);
-                    console.log('Uploading:'`${currentSourceDirectory}/${name}`);
+                    console.log('Uploading:', `${currentSourceDirectory}/${name}`);
                     if (response.stderr) {
                         console.log('Command___:', command);
                         console.log('Error_____:', response.stderr);

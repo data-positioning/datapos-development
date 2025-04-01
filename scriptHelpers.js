@@ -112,7 +112,7 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
     async function listDirectoryEntriesRecursively(currentSourceDirectory, names) {
         console.log('DIRECTORY', currentSourceDirectory, uploadDirectory);
         for (const name of names) {
-            const itemPath = `${currentSourceDirectory}/${uploadDirectory}/${name}`;
+            const itemPath = `${currentSourceDirectory}/${name}`;
             try {
                 console.log(1111, itemPath);
                 const stats = await fs.stat(itemPath);

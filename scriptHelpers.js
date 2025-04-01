@@ -120,8 +120,9 @@ async function uploadDirectoryToR2(id) {
                     await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                 } else {
                     console.log('FILE', directoryPath, name, `${directoryPath}/${name}`);
+                    const path = `${directoryPath}/${name}`;
                     // "uploadConnectorToR2": "npx wrangler r2 object put plugins-eu/connectors/datapos-connector-file-store-emulator-es.js --file=dist/datapos-connector-file-store-emulator-es.js --jurisdiction=eu --remote"
-                    const xxxx = await exec('wrangler r2 --help');
+                    const xxxx = await exec(`wrangler r2 object put plugins-eu/sampleData/${path} --file=public/${path}`);
                     console.log('xxxx', xxxx);
                 }
             } catch (error) {

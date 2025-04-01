@@ -123,7 +123,7 @@ async function uploadDirectoryToR2(id) {
                     // entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
                     await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                 } else {
-                    console.log('FILE', names);
+                    console.log('FILE', name);
                     // entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
                 }
             } catch (error) {

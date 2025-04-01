@@ -114,16 +114,14 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
             const sourceItemPath = `${currentSourceDirectory}/${name}`;
             const destinationItemPath = `${currentDestinationDirectory}/${name}`;
             try {
-                console.log(1111, currentSourceDirectory, currentDestinationDirectory, sourceItemPath, destinationItemPath);
                 const stats = await fs.stat(sourceItemPath);
                 if (stats.isDirectory()) {
                     const nextLevelChildren = await fs.readdir(sourceItemPath);
-                    console.log('bbbb', sourceItemPath, nextLevelChildren);
                     await listDirectoryEntriesRecursively(sourceItemPath, destinationItemPath, nextLevelChildren);
                 } else {
                     const sourcePath = `${currentSourceDirectory}/${name}`;
                     const destinationPath = `${currentDestinationDirectory}/${name}`;
-                    console.log(2222, currentSourceDirectory, name, `wrangler r2 object put sample-data-eu/${destinationPath} --file=${sourcePath} --jurisdiction=eu --remote`);
+                    console.log(`wrangler r2 object put sample-data-eu/${destinationPath} --file=${sourcePath} --jurisdiction=eu --remote`);
                     // "uploadConnectorToR2": "npx wrangler r2 object put plugins-eu/connectors/datapos-connector-file-store-emulator-es.js --file=dist/datapos-connector-file-store-emulator-es.js --jurisdiction=eu --remote"
                     // const xxxx = await exec(`wrangler r2 object put sample-data-eu/${path} --file=${path} --jurisdiction=eu --remote`);
                     // console.log('xxxx', xxxx);
@@ -134,7 +132,6 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
         }
     }
     const toplevelNames = await fs.readdir(`${sourceDirectory}/${uploadDirectory}/`);
-    console.log('aaaa', toplevelNames);
     await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}`, uploadDirectory, toplevelNames);
 }
 

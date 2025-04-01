@@ -121,8 +121,8 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
                 } else {
                     const command = `wrangler r2 object put "sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
                     console.log(command);
-                    // const xxxx = await exec(command);
-                    // console.log('xxxx', xxxx);
+                    const xxxx = await exec(command);
+                    console.log('xxxx', xxxx);
                 }
             } catch (error) {
                 console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`, error);

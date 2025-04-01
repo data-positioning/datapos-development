@@ -119,11 +119,9 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
                     const nextLevelChildren = await fs.readdir(sourceItemPath);
                     await listDirectoryEntriesRecursively(sourceItemPath, destinationItemPath, nextLevelChildren);
                 } else {
-                    const sourcePath = `${currentSourceDirectory}/${name}`;
-                    const destinationPath = `${currentDestinationDirectory}/${name}`;
-                    console.log(`wrangler r2 object put sample-data-eu/${destinationPath} --file=${sourcePath} --jurisdiction=eu --remote`);
-                    // "uploadConnectorToR2": "npx wrangler r2 object put plugins-eu/connectors/datapos-connector-file-store-emulator-es.js --file=dist/datapos-connector-file-store-emulator-es.js --jurisdiction=eu --remote"
-                    // const xxxx = await exec(`wrangler r2 object put sample-data-eu/${path} --file=${path} --jurisdiction=eu --remote`);
+                    const command = `wrangler r2 object put "sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
+                    console.log(command);
+                    // const xxxx = await exec(command);
                     // console.log('xxxx', xxxx);
                 }
             } catch (error) {

@@ -12,27 +12,43 @@ let issueCount = 0;
 // Utilities - Build Configuration
 async function buildConfig() {
     const configJSON = await readJSONFile('src/config.json');
-
-    // const description = {};
-    // const enDescription = await readTextFile('src/description.en.md');
-    // if (enDescription) description.en = enDescription;
-    // // if (Object.keys(description).length === 0) description = undefined;
-
-    // const logo = await readTextFile('src/logo.svg');
-
     const packageJSON = await readJSONFile('package.json');
-    // const dependencies = [];
-    // for (const pkg of Object.entries(packageJSON.dependencies || {})) dependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
-    // dependencies.sort((left, right) => left.name.localeCompare(right.name));
-    // const peerDependencies = [];
-    // for (const pkg of Object.entries(packageJSON.peerDependencies || {})) peerDependencies.push({ name: pkg[0], version: pkg[1].replace(/^\^/, '') });
-    // peerDependencies.sort((left, right) => left.name.localeCompare(right.name));
-
     fs.writeFile('src/config.json', JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }
 
 // Utilities - Build Public Directory Index
 async function buildPublicDirectoryIndex(id) {
+    async function listDirectoryEntriesRecursively(directoryPath, names) {
+        const entries = [];
+        const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
+        index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
+        for (const name of names) {
+            const itemPath = `${directoryPath}/${name}`;
+            try {
+                const stats = await fs.stat(itemPath);
+                if (stats.isDirectory()) {
+                    const nextLevelChildren = await fs.readdir(itemPath);
+                    entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
+                    await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
+                } else {
+                    entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
+                }
+            } catch (error) {
+                console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`);
+            }
+        }
+        entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
+    }
+
+    const index = {};
+    const toplevelNames = await fs.readdir(`public/${id}/`);
+    await listDirectoryEntriesRecursively(`public/${id}/`, toplevelNames);
+    fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
+        if (error) return console.error(error);
+    });
+}
+// Utilities - Upload Directory To R2
+async function uploadDirectoryToR2(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
         const entries = [];
         const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
@@ -89,18 +105,6 @@ async function clearDirectory(directoryPath) {
     }
 }
 
-// Utilities - Compile Presenter
-async function compilePresenter() {
-    const packageJSON = await readJSONFile('package.json');
-    const packageName = packageJSON.name;
-    const dataJSON = await readJSONFile('src/presentations/data.json');
-    const presenterConfig = { label: dataJSON.label || packageName, children: [], presentations: [] };
-    // await clearDirectory('dist');
-    await compilePresenterFolder('src/presentations', 'areas', presenterConfig.children, presenterConfig.presentations);
-    fs.writeFile(`dist/${packageName}.json`, JSON.stringify(presenterConfig));
-    if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
-}
-
 // Utilities - Send Deployment Notice
 async function sendDeploymentNotice() {
     const configJSON = await readJSONFile('src/config.json');
@@ -121,8 +125,8 @@ async function syncWithGitHub() {
     await exec('git push origin main:main');
 }
 
-// Utilities - Upload Connector
-async function uploadConnector() {
+// Utilities - Upload Connector Configuration
+async function uploadConnectorConfig() {
     const configJSON = await readJSONFile('src/config.json');
     const stateId = configJSON.id;
     const options = {
@@ -134,8 +138,20 @@ async function uploadConnector() {
     if (!response.ok) console.log(await response.text());
 }
 
+// Utilities - Read JSON File
+const readJSONFile = async (path) => {
+    try {
+        return JSON.parse(await fs.readFile(path, 'utf8'));
+        // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+        issueCount++;
+        console.warn(`WARN: JSON file '${path}' not found or invalid.`);
+        return {};
+    }
+};
+
 // Exports
-export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, compilePresenter, sendDeploymentNotice, syncWithGitHub, uploadConnector };
+export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, sendDeploymentNotice, syncWithGitHub, uploadConnectorConfig, uploadDirectoryToR2 };
 
 // // Facilitators - Upload Plugin
 // async function uploadPlugin() {
@@ -158,130 +174,131 @@ export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, co
 //     await uploadPluginFolder(packageJSON, env, 'dist');
 // }
 
-// Utilities - Compile Presenter Folder
-const compilePresenterFolder = async (folderPath, levelTypeId, children, presentations) => {
-    const itemNames = await fs.readdir(folderPath);
-    for (const itemName of itemNames) {
-        const itemPath = `${folderPath}/${itemName}`;
-        try {
-            const stats = await fs.stat(itemPath);
-            if (stats.isDirectory()) {
-                if (levelTypeId === 'areas') {
-                    const levelData = await readJSONFile(`${itemPath}/data.json`);
-                    const areaConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
-                    children.push(areaConfig);
-                    await compilePresenterFolder(itemPath, 'topics', areaConfig.children, areaConfig.presentations);
-                } else if (levelTypeId === 'topics') {
-                    const levelData = await readJSONFile(`${itemPath}/data.json`);
-                    const topicConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
-                    children.push(topicConfig);
-                    await compilePresenterFolder(itemPath, 'subTopics', topicConfig.children, topicConfig.presentations);
-                } else if (levelTypeId === 'subTopics') {
-                    const levelData = await readJSONFile(`${itemPath}/data.json`);
-                    const subTopicConfig = { id: itemName, label: levelData.label || { en: itemName }, presentations: [] };
-                    children.push(subTopicConfig);
-                    await compilePresenterFolder(itemPath, 'presentations', undefined, subTopicConfig.presentations);
-                } else {
-                    issueCount++;
-                    console.warn(`WARN: Ignoring sub directory '${itemPath}'.`);
-                }
-            } else {
-                if (itemName === 'data.json') continue;
-                if (itemName.endsWith('.js')) {
-                    presentations.push({ id: itemName, typeId: 'javascript' });
-                } else if (itemName.endsWith('.json')) {
-                    presentations.push({ id: itemName, typeId: 'json' });
-                } else {
-                    issueCount++;
-                    console.warn(`WARN: Ignoring file '${itemPath}'.`);
-                }
-            }
-        } catch (error) {
-            console.log(`Unable to state '${itemPath}' in 'compilePresenterFolder'.`);
-        }
-    }
-};
+// // Utilities - Compile Presenter
+// async function compilePresenter() {
+//     const packageJSON = await readJSONFile('package.json');
+//     const packageName = packageJSON.name;
+//     const dataJSON = await readJSONFile('src/presentations/data.json');
+//     const presenterConfig = { label: dataJSON.label || packageName, children: [], presentations: [] };
+//     // await clearDirectory('dist');
+//     await compilePresenterFolder('src/presentations', 'areas', presenterConfig.children, presenterConfig.presentations);
+//     fs.writeFile(`dist/${packageName}.json`, JSON.stringify(presenterConfig));
+//     if (issueCount > 0) console.warn(`WARNING: ${issueCount} issues(s) encountered.`);
+// }
 
-// Utilities - Get JSON File From Github
-const getJSONFileFromGithub = async (repoName, filePath) => {
-    const result = dotenv.config({ path: '.env.local' });
-    if (result.error) throw result.error;
-    const env = result.parsed;
+// // Utilities - Compile Presenter Folder
+// const compilePresenterFolder = async (folderPath, levelTypeId, children, presentations) => {
+//     const itemNames = await fs.readdir(folderPath);
+//     for (const itemName of itemNames) {
+//         const itemPath = `${folderPath}/${itemName}`;
+//         try {
+//             const stats = await fs.stat(itemPath);
+//             if (stats.isDirectory()) {
+//                 if (levelTypeId === 'areas') {
+//                     const levelData = await readJSONFile(`${itemPath}/data.json`);
+//                     const areaConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
+//                     children.push(areaConfig);
+//                     await compilePresenterFolder(itemPath, 'topics', areaConfig.children, areaConfig.presentations);
+//                 } else if (levelTypeId === 'topics') {
+//                     const levelData = await readJSONFile(`${itemPath}/data.json`);
+//                     const topicConfig = { id: itemName, label: levelData.label || { en: itemName }, children: [], presentations: [] };
+//                     children.push(topicConfig);
+//                     await compilePresenterFolder(itemPath, 'subTopics', topicConfig.children, topicConfig.presentations);
+//                 } else if (levelTypeId === 'subTopics') {
+//                     const levelData = await readJSONFile(`${itemPath}/data.json`);
+//                     const subTopicConfig = { id: itemName, label: levelData.label || { en: itemName }, presentations: [] };
+//                     children.push(subTopicConfig);
+//                     await compilePresenterFolder(itemPath, 'presentations', undefined, subTopicConfig.presentations);
+//                 } else {
+//                     issueCount++;
+//                     console.warn(`WARN: Ignoring sub directory '${itemPath}'.`);
+//                 }
+//             } else {
+//                 if (itemName === 'data.json') continue;
+//                 if (itemName.endsWith('.js')) {
+//                     presentations.push({ id: itemName, typeId: 'javascript' });
+//                 } else if (itemName.endsWith('.json')) {
+//                     presentations.push({ id: itemName, typeId: 'json' });
+//                 } else {
+//                     issueCount++;
+//                     console.warn(`WARN: Ignoring file '${itemPath}'.`);
+//                 }
+//             }
+//         } catch (error) {
+//             console.log(`Unable to state '${itemPath}' in 'compilePresenterFolder'.`);
+//         }
+//     }
+// };
 
-    const url = `https://api.github.com/repos/data-positioning/${repoName}/contents/${filePath}?ref=main`;
-    console.log('URL', url);
-    const getResponse = await fetch(url, {
-        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
-        method: 'GET'
-    });
-    if (!getResponse.ok) throw new Error(`HTTP error! status: ${getResponse.status}`);
-    const data = await getResponse.json();
-    if (data.type !== 'file') throw new Error('The content type is not a file');
-    const base64Content = data.content;
-    const jsonContent = Buffer.from(base64Content, 'base64').toString('utf8');
-    const packageJson = JSON.parse(jsonContent);
-    return packageJson;
-};
+// // Utilities - Get JSON File From Github
+// const getJSONFileFromGithub = async (repoName, filePath) => {
+//     const result = dotenv.config({ path: '.env.local' });
+//     if (result.error) throw result.error;
+//     const env = result.parsed;
 
-// Utilities - Push Content to Github
-const pushContentToGithub = async (packageJSON, env, fileContent, itemPath) => {
-    const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/${packageJSON.name}/${itemPath}`;
+//     const url = `https://api.github.com/repos/data-positioning/${repoName}/contents/${filePath}?ref=main`;
+//     console.log('URL', url);
+//     const getResponse = await fetch(url, {
+//         headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
+//         method: 'GET'
+//     });
+//     if (!getResponse.ok) throw new Error(`HTTP error! status: ${getResponse.status}`);
+//     const data = await getResponse.json();
+//     if (data.type !== 'file') throw new Error('The content type is not a file');
+//     const base64Content = data.content;
+//     const jsonContent = Buffer.from(base64Content, 'base64').toString('utf8');
+//     const packageJson = JSON.parse(jsonContent);
+//     return packageJson;
+// };
 
-    const getResponse = await fetch(url, {
-        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
-        method: 'GET'
-    });
-    const sha = getResponse.ok ? (await getResponse.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
+// // Utilities - Push Content to Github
+// const pushContentToGithub = async (packageJSON, env, fileContent, itemPath) => {
+//     const url = `https://api.github.com/repos/data-positioning/datapos-plugins/contents/${packageJSON.name}/${itemPath}`;
 
-    const encodedContent = Buffer.from(fileContent).toString('base64');
-    const putResponse = await fetch(url, {
-        body: JSON.stringify({ content: encodedContent, message: `v${packageJSON.version}`, sha }),
-        headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}`, 'Content-Type': 'application/json' },
-        method: 'PUT'
-    });
-    if (!putResponse.ok) console.log(await putResponse.text());
-    console.log(`Pushed '${itemPath}' to Github.`);
-};
+//     const getResponse = await fetch(url, {
+//         headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}` },
+//         method: 'GET'
+//     });
+//     const sha = getResponse.ok ? (await getResponse.json()).sha : undefined; // The SHA-1 hash (Secure Hash Algorithm) of the Git object.
 
-// Utilities - Read JSON File
-const readJSONFile = async (path) => {
-    try {
-        return JSON.parse(await fs.readFile(path, 'utf8'));
-    } catch (error) {
-        issueCount++;
-        console.warn(`WARN: JSON file '${path}' not found or invalid.`);
-        return {};
-    }
-};
+//     const encodedContent = Buffer.from(fileContent).toString('base64');
+//     const putResponse = await fetch(url, {
+//         body: JSON.stringify({ content: encodedContent, message: `v${packageJSON.version}`, sha }),
+//         headers: { Accept: 'application/vnd.github.v3+json', Authorization: `token ${env.GITHUB_API_TOKEN}`, 'Content-Type': 'application/json' },
+//         method: 'PUT'
+//     });
+//     if (!putResponse.ok) console.log(await putResponse.text());
+//     console.log(`Pushed '${itemPath}' to Github.`);
+// };
 
-// Utilities - Read Text File
-const readTextFile = async (path) => {
-    try {
-        return await fs.readFile(path, 'utf8');
-    } catch (error) {
-        issueCount++;
-        console.warn(`WARN: Text file '${path}' not found or invalid.`);
-        return undefined;
-    }
-};
+// // Utilities - Read Text File
+// const readTextFile = async (path) => {
+//     try {
+//         return await fs.readFile(path, 'utf8');
+//     } catch (error) {
+//         issueCount++;
+//         console.warn(`WARN: Text file '${path}' not found or invalid.`);
+//         return undefined;
+//     }
+// };
 
-// Utilities - Upload Plugin Folder
-const uploadPluginFolder = async (packageJSON, env, folderPath) => {
-    for (const itemName of await fs.readdir(folderPath)) {
-        const itemPath = `${folderPath}/${itemName}`;
-        try {
-            const stats = await fs.stat(itemPath);
-            if (stats.isDirectory()) {
-                if (!itemPath.startsWith('dist/types')) await uploadPluginFolder(packageJSON, env, itemPath);
-            } else {
-                const fileContent = await readTextFile(itemPath);
-                await pushContentToGithub(packageJSON, env, fileContent, itemPath.substring(5));
-            }
-        } catch (error) {
-            console.log(`Unable to state '${itemPath}' in 'uploadPluginFolder'.`);
-        }
-    }
-};
+// // Utilities - Upload Plugin Folder
+// const uploadPluginFolder = async (packageJSON, env, folderPath) => {
+//     for (const itemName of await fs.readdir(folderPath)) {
+//         const itemPath = `${folderPath}/${itemName}`;
+//         try {
+//             const stats = await fs.stat(itemPath);
+//             if (stats.isDirectory()) {
+//                 if (!itemPath.startsWith('dist/types')) await uploadPluginFolder(packageJSON, env, itemPath);
+//             } else {
+//                 const fileContent = await readTextFile(itemPath);
+//                 await pushContentToGithub(packageJSON, env, fileContent, itemPath.substring(5));
+//             }
+//         } catch (error) {
+//             console.log(`Unable to state '${itemPath}' in 'uploadPluginFolder'.`);
+//         }
+//     }
+// };
 
 // // Helpers - Build Context - Prepare Context
 // const buildContext_PrepareContext = async (path) => {

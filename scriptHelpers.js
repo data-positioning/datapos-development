@@ -16,7 +16,8 @@ async function buildConfig() {
 async function buildPublicDirectoryIndex(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
         const entries = [];
-        const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
+        let localDirectoryPath = directoryPath.substring(`public/${id}`.length);
+        localDirectoryPath = localDirectoryPath.startWith('//') ? localDirectoryPath.substring(1) : localDirectoryPath;
         index[localDirectoryPath.endsWith('/') ? localDirectoryPath : `${localDirectoryPath}/`] = entries;
         for (const name of names) {
             const itemPath = `${directoryPath}/${name}`;
@@ -25,7 +26,7 @@ async function buildPublicDirectoryIndex(id) {
                 if (stats.isDirectory()) {
                     const nextLevelChildren = await fs.readdir(itemPath);
                     entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
-                    await listDirectoryEntriesRecursively(itemPath.substring(1), nextLevelChildren);
+                    await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                 } else {
                     entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
                 }

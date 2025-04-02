@@ -137,7 +137,6 @@ async function readJSONFile(path) {
     try {
         return JSON.parse(await fs.readFile(path, 'utf8'));
     } catch (error) {
-        issueCount++;
         console.warn(`WARN: JSON file '${path}' not found or invalid.`, error);
         return {};
     }

@@ -25,12 +25,12 @@ async function buildPublicDirectoryIndex(id) {
                 if (stats.isDirectory()) {
                     const nextLevelChildren = await fs.readdir(itemPath);
                     entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
-                    await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
+                    await listDirectoryEntriesRecursively(itemPath.substring(1), nextLevelChildren);
                 } else {
                     entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
                 }
             } catch (error) {
-                console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`, error);
+                console.error(`Unable to get information for '${name}' in 'buildPublicDirectoryIndex'.`, error);
             }
         }
         entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
@@ -65,7 +65,7 @@ async function clearDirectory(directoryPath) {
                 await fs.unlink(itemPath);
             }
         } catch (error) {
-            console.log(`Unable to state '${itemPath}' in 'clearDirectory'.`, error);
+            console.error(`Unable to get information for '${itemPath}' in 'clearDirectory'.`, error);
         }
     }
 }
@@ -124,7 +124,7 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
                     }
                 }
             } catch (error) {
-                console.log(`Unable to state '${name}' in 'buildPublicDirectoryIndex'.`, error);
+                console.error(`Unable to get information for '${name}' in 'uploadDirectoryToR2'.`, error);
             }
         }
     }

@@ -1,5 +1,6 @@
 // Dependencies - Vendor
 const fs = require('fs').promises;
+const { nanoid } = require('nanoid');
 
 // Dependencies - Vendor (Promisify Exec)
 const util = require('util');
@@ -28,7 +29,7 @@ async function buildPublicDirectoryIndex(id) {
                     entries.push({ childCount: nextLevelChildren.length, name: `${name}/`, typeId: 'folder' });
                     await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                 } else {
-                    entries.push({ lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
+                    entries.push({ id: nanoid(), lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' });
                 }
             } catch (error) {
                 console.error(`Unable to get information for '${name}' in 'buildPublicDirectoryIndex'.`, error);

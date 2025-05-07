@@ -130,7 +130,7 @@ async function uploadModuleConfig() {
         headers: { 'Content-Type': 'application/json' },
         method: 'PUT'
     };
-    console.log(config, stateId, options);
+    console.log(configJSON, stateId, options);
     const response = await fetch(`https://operations.datapos.app/states/${stateId}`, options);
     if (!response.ok) console.log(await response.text());
 }

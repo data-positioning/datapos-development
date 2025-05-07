@@ -130,7 +130,6 @@ async function uploadModuleConfig() {
         headers: { 'Content-Type': 'application/json' },
         method: 'PUT'
     };
-    console.log(configJSON, stateId, options, `https://operations.datapos.app/states/${stateId}`);
     const response = await fetch(`https://operations.datapos.app/states/${stateId}`, options);
     if (!response.ok) console.log(await response.text());
 }
@@ -139,7 +138,6 @@ async function uploadModuleConfig() {
 async function uploadModuleToR2(fromPath, toPath) {
     const packageJSON = await readJSONFile('package.json');
     const toPathWithVersion = toPath.replace(/^(.*?\.)/, `$1v${packageJSON.version}.`);
-    console.log(1111, `wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`);
     exec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`, { stdio: 'inherit' });
 }
 

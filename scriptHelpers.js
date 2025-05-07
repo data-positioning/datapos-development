@@ -6,14 +6,14 @@ const { nanoid } = require('nanoid');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-// Utilities - Build Configuration
+// Operations - Build Configuration
 async function buildConfig() {
     const configJSON = await readJSONFile('src/config.json');
     const packageJSON = await readJSONFile('package.json');
     fs.writeFile('src/config.json', JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }
 
-// Utilities - Build Public Directory Index
+// Operations - Build Public Directory Index
 async function buildPublicDirectoryIndex(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
         const entries = [];
@@ -46,7 +46,7 @@ async function buildPublicDirectoryIndex(id) {
     });
 }
 
-// Utilities - Bump Version
+// Operations - Bump Version
 async function bumpVersion() {
     const packageJSON = await readJSONFile('package.json');
     const versionSegments = packageJSON.version.split('.');
@@ -55,7 +55,7 @@ async function bumpVersion() {
     console.log(`Bumped to version ${packageJSON.version}.`);
 }
 
-// Utilities - Clear Directory
+// Operations - Clear Directory
 async function clearDirectory(directoryPath) {
     for (const itemName of await fs.readdir(directoryPath)) {
         const itemPath = `${directoryPath}/${itemName}`;
@@ -72,7 +72,7 @@ async function clearDirectory(directoryPath) {
     }
 }
 
-// Utilities - Send Deployment Notice
+// Operations - Send Deployment Notice
 async function sendDeploymentNotice() {
     const configJSON = await readJSONFile('src/config.json');
     const options = {
@@ -84,7 +84,7 @@ async function sendDeploymentNotice() {
     if (!response.ok) console.log(await response.text());
 }
 
-// Utilities - Sync with Github
+// UtilitiesOperations - Sync with Github
 async function syncWithGitHub() {
     const packageJSON = await readJSONFile('package.json');
     await exec('git add .');
@@ -92,20 +92,7 @@ async function syncWithGitHub() {
     await exec('git push origin main:main');
 }
 
-// Utilities - Upload Connector Configuration
-async function uploadConnectorConfig() {
-    const configJSON = await readJSONFile('src/config.json');
-    const stateId = configJSON.id;
-    const options = {
-        body: JSON.stringify(configJSON),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'PUT'
-    };
-    const response = await fetch(`https://operations.datapos.app/states/${stateId}`, options);
-    if (!response.ok) console.log(await response.text());
-}
-
-// Utilities - Upload Directory To R2
+// Operations - Upload Directory To R2
 async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
     async function listDirectoryEntriesRecursively(currentSourceDirectory, currentDestinationDirectory, names) {
         for (const name of names) {
@@ -134,6 +121,27 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
     await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}`, uploadDirectory, toplevelNames);
 }
 
+// Operations - Upload Module Configuration
+async function uploadModuleConfig() {
+    const configJSON = await readJSONFile('src/config.json');
+    const stateId = configJSON.id;
+    const options = {
+        body: JSON.stringify(configJSON),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT'
+    };
+    const response = await fetch(`https://operations.datapos.app/states/${stateId}`, options);
+    if (!response.ok) console.log(await response.text());
+}
+
+// Operations - Upload Module To R2
+async function uploadModuleToR2(fromPath, toPath) {
+    const packageJSON = await readJSONFile('package.json');
+    const toPathWithVersion = toPath.replace(/^(.*?\.)/, `$1v${packageJSON.version}.`);
+    console.log(1111, `wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`);
+    exec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`, { stdio: 'inherit' });
+}
+
 // Utilities - Read JSON File
 async function readJSONFile(path) {
     try {
@@ -145,4 +153,4 @@ async function readJSONFile(path) {
 }
 
 // Exposures
-export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, sendDeploymentNotice, syncWithGitHub, uploadConnectorConfig, uploadDirectoryToR2 };
+export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, sendDeploymentNotice, syncWithGitHub, uploadDirectoryToR2, uploadModuleConfig, uploadModuleToR2 };

@@ -104,7 +104,7 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
                     const nextLevelChildren = await fs.readdir(sourceItemPath);
                     await listDirectoryEntriesRecursively(sourceItemPath, destinationItemPath, nextLevelChildren);
                 } else {
-                    const command = `wrangler r2 object put "sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
+                    const command = `wrangler r2 object put "datapos-sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
                     const response = await exec(command);
                     console.log('Uploading:', `${currentSourceDirectory}/${name}`);
                     if (response.stderr) {

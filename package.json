@@ -3,7 +3,7 @@
     "license": "ISC",
     "private": false,
     "type": "module",
-    "version": "0.2.23",
+    "version": "0.2.24",
     "devDependencies": {
         "eslint": "^9.26.0",
         "nanoid": "^5.1.5",

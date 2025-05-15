@@ -18,8 +18,6 @@ async function buildPublicDirectoryIndex(id) {
     async function listDirectoryEntriesRecursively(directoryPath, names) {
         const entries = [];
         const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
-        console.log(4444, localDirectoryPath);
-        // localDirectoryPath = localDirectoryPath.startsWith('//') ? localDirectoryPath.substring(1) : localDirectoryPath;
         index[localDirectoryPath] = entries;
         for (const name of names) {
             const itemPath = `${directoryPath}/${name}`;

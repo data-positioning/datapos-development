@@ -79,7 +79,7 @@ async function sendDeploymentNotice() {
         headers: { 'Content-Type': 'application/json' },
         method: 'PUT'
     };
-    const response = await fetch(`https://operations.datapos.app/states/${configJSON.id}/deploymentNotice`, options);
+    const response = await fetch(`https://operations.datapos.app/states/${configJSON.id}`, options);
     if (!response.ok) console.log(await response.text());
 }
 

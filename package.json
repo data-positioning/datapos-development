@@ -1,11 +1,11 @@
 {
-    "name": "@datapos/datapos-dev-operations",
+    "name": "@datapos/datapos-development",
     "license": "ISC",
     "private": false,
     "type": "module",
-    "version": "0.2.25",
+    "version": "0.2.26",
     "devDependencies": {
-        "eslint": "^9.26.0",
+        "eslint": "^9.28.0",
         "nanoid": "^5.1.5",
         "prettier": "^3.5.3",
         "run": "^1.5.0"

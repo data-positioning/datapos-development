@@ -5,7 +5,7 @@ A Javascript library of functions used to manage Data Positioning repositories.
 ## Installation
 
 ```
-npm install --save-dev @datapos-dev-operations
+npm install --save-dev @datapos-development
 ```
 
 ## Production Dependencies

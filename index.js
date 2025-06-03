@@ -10,7 +10,7 @@ const exec = util.promisify(require('child_process').exec);
 async function buildConfig(directoryPath) {
     const configJSON = await readJSONFile(`${directoryPath || ''}config.json`);
     const packageJSON = await readJSONFile('package.json');
-    await fs.writeFile('src/config.json', JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
+    await fs.writeFile(`${directoryPath || ''}config.json`, JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }
 
 // Operations - Build Public Directory Index

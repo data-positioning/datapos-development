@@ -1,9 +1,9 @@
 {
     "name": "@datapos/datapos-development",
-    "license": "ISC",
+    "license": "MIT",
     "private": false,
     "type": "module",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "devDependencies": {
         "eslint": "^9.28.0",
         "nanoid": "^5.1.5",

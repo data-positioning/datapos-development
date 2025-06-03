@@ -28,7 +28,7 @@ npm install -D @datapos-development
 
 Refer to package.json and LICENSES.json for detailed versions and licenses.
 
-## Helpers
+## Operations
 
 The 'index.js' file exposes the following operations:
 

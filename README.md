@@ -1,24 +1,36 @@
-# DataPos - Development Operations Library
+# DataPos Development Library
 
-A Javascript library of functions used to manage Data Positioning repositories.
+A library of JavaScript utilities for managing the DataPos repositories.
+
+## Requirements
+
+Ensure your environment meets the following prerequisites before using this library:
+
+- **Node.js** version `>=18.0.0`
+- **npm** version `>=9.0.0`
+- A Unix-like shell (for command shortcuts, e.g., `bash`, `zsh`, or Git Bash on Windows)
+- Access to the [npm registry](https://www.npmjs.com/) and [GitHub](https://github.com/) for publishing and syncing
 
 ## Installation
 
 ```
-npm install --save-dev @datapos-development
+npm install -D @datapos-development
 ```
 
-## Production Dependencies
+## Dependencies
 
-The following packages are included in the production release. Please refer to 'package.json' and 'LICENSES.json' for version and license details.
+| Name     | Use | References         |
+| -------- | --- | ------------------ |
+| eslint   | dev | [GitHub]() [NPM]() |
+| nanoid   | dev | [GitHub]() [NPM]() |
+| prettier | dev | [GitHub]() [NPM]() |
+| run      | dev | [GitHub]() [NPM]() |
 
-| Name   | References                                                                               |
-| ------ | ---------------------------------------------------------------------------------------- |
-| dotenv | [GitHub](https://github.com/motdotla/dotenv) [NPM](https://www.npmjs.com/package/dotenv) |
+Refer to package.json and LICENSES.json for detailed versions and licenses.
 
 ## Helpers
 
-The 'scriptHelpers.js' file exports the following helper functions.
+The 'index.js' file exposes the following operations:
 
 | Name                      | Notes |
 | ------------------------- | ----- |
@@ -26,13 +38,15 @@ The 'scriptHelpers.js' file exports the following helper functions.
 | buildPublicDirectoryIndex |       |
 | bumpVersion               |       |
 | clearDirectory            |       |
-| compilePresenter          |       |
+| sendDeploymentNotice      |       |
 | syncWithGitHub            |       |
-| uploadPlugin              |       |
+| uploadDirectoryToR2       |       |
+| uploadModuleConfig        |       |
+| uploadModuleToR2          |       |
 
 ## Repository Management Commands
 
-The following list details the repository management commands implementation by this project. For more details, please refer to the scripts section of the 'package.json' file in this project.
+The following list details the repository management commands implemented by this project:
 
 | Name               | Key Code         | Notes                                                                                                                                                                                                                                                                              |
 | ------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -46,22 +60,7 @@ The following list details the repository management commands implementation by 
 | publishToNPM       | alt+ctrl+shift+n | Use [npm publish](https://docs.npmjs.com/cli/v8/commands/npm-publish) to publish the package to the [npm](https://www.npmjs.com/) registry. This action will publish the last synchronised version. Use the command line command 'npm publish' when publishing for the first time. |
 | release            | alt+ctrl+shift+r | Synchronise the local repository with the main GitHub repository and publish the package to the [npm](https://www.npmjs.com/) registry.                                                                                                                                            |
 | syncWithGitHub     | alt+ctrl+shift+s | Synchronise the local repository with the main GitHub repository.                                                                                                                                                                                                                  |
-| test               | alt+ctrl+shift+l | NOT implemented.                                                                                                                                                                                                                                                                   |
-| updateDependencies | alt+ctrl+shift+l | NOT implemented.                                                                                                                                                                                                                                                                   |
+| test               | alt+ctrl+shift+t | NOT implemented.                                                                                                                                                                                                                                                                   |
+| updateDependencies | alt+ctrl+shift+u | NOT implemented.                                                                                                                                                                                                                                                                   |
 
-## The 'cors.json' File
-
-Set CORS Policy on Firebase Storage Bucket (No-longer publishing to Firebase Storage)
-
-See: https://firebase.google.com/docs/storage/web/download-files#cors_configuration
-See: https://stackoverflow.com/questions/37760695/firebase-storage-and-access-control-allow-origin/37765371
-
-```
-gsutil cors set cors.json gs://datapos-prod.appspot.com
-```
-
-To list:
-
-```
-gsutil cors get gs://datapos-prod.appspot.com
-```
+For more details, please refer to the scripts section of the 'package.json' file in this project.

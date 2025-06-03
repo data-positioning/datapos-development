@@ -10,11 +10,13 @@ const exec = util.promisify(require('child_process').exec);
 async function buildConfig() {
     const configJSON = await readJSONFile('src/config.json');
     const packageJSON = await readJSONFile('package.json');
-    fs.writeFile('src/config.json', JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
+    await fs.writeFile('src/config.json', JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }
 
 // Operations - Build Public Directory Index
 async function buildPublicDirectoryIndex(id) {
+    const index = {};
+
     async function listDirectoryEntriesRecursively(directoryPath, names) {
         const entries = [];
         const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
@@ -34,13 +36,16 @@ async function buildPublicDirectoryIndex(id) {
                 console.error(`Unable to get information for '${name}' in 'buildPublicDirectoryIndex'.`, error);
             }
         }
-        entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
+        // entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
+        entries.sort((left, right) => {
+            const typeComparison = left.typeId.localeCompare(right.typeId);
+            return typeComparison !== 0 ? typeComparison : left.name.localeCompare(right.name);
+        });
     }
 
-    const index = {};
     const toplevelNames = await fs.readdir(`public/${id}`);
     await listDirectoryEntriesRecursively(`public/${id}`, toplevelNames);
-    fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
+    await fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), (error) => {
         if (error) return console.error(error);
     });
 }
@@ -50,7 +55,7 @@ async function bumpVersion() {
     const packageJSON = await readJSONFile('package.json');
     const versionSegments = packageJSON.version.split('.');
     packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-    fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
+    await fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4));
     console.log(`Bumped to version ${packageJSON.version}.`);
 }
 
@@ -137,7 +142,7 @@ async function uploadModuleConfig() {
 async function uploadModuleToR2(fromPath, toPath) {
     const packageJSON = await readJSONFile('package.json');
     const toPathWithVersion = toPath.replace(/^(.*?\.)/, `$1v${packageJSON.version}.`);
-    exec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`, { stdio: 'inherit' });
+    await exec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`, { stdio: 'inherit' });
 }
 
 // Utilities - Read JSON File

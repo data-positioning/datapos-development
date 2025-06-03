@@ -7,8 +7,8 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 // Operations - Build Configuration
-async function buildConfig() {
-    const configJSON = await readJSONFile('src/config.json');
+async function buildConfig(directoryPath) {
+    const configJSON = await readJSONFile(`${directoryPath}config.json`);
     const packageJSON = await readJSONFile('package.json');
     await fs.writeFile('src/config.json', JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }

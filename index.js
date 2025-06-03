@@ -36,7 +36,7 @@ async function buildPublicDirectoryIndex(id) {
                 console.error(`Unable to get information for '${name}' in 'buildPublicDirectoryIndex'.`, error);
             }
         }
-        // entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
+        // TODO: Prior version: entries.sort((left, right) => right.typeId.localeCompare(left.typeId) || left.name.localeCompare(right.name));
         entries.sort((left, right) => {
             const typeComparison = left.typeId.localeCompare(right.typeId);
             return typeComparison !== 0 ? typeComparison : left.name.localeCompare(right.name);

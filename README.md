@@ -1,6 +1,6 @@
 # DataPos Development Library
 
-A library of JavaScript utilities for managing the DataPos repositories.
+A library of JavaScript operations for managing the DataPos repositories.
 
 ## Requirements
 

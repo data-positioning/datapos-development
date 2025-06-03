@@ -32,17 +32,17 @@ Refer to package.json and LICENSES.json for detailed versions and licenses.
 
 The 'index.js' file exposes the following operations:
 
-| Name                      | Notes |
-| ------------------------- | ----- |
-| buildConfig               |       |
-| buildPublicDirectoryIndex |       |
-| bumpVersion               |       |
-| clearDirectory            |       |
-| sendDeploymentNotice      |       |
-| syncWithGitHub            |       |
-| uploadDirectoryToR2       |       |
-| uploadModuleConfig        |       |
-| uploadModuleToR2          |       |
+| Name                      | Notes                                                 |
+| ------------------------- | ----------------------------------------------------- |
+| buildConfig               | Build the config.json file for the repository.        |
+| buildPublicDirectoryIndex | Build an index for the repositories public directory. |
+| bumpVersion               | Bump the repositories version number.                 |
+| clearDirectory            | Clear the specified directory.                        |
+| sendDeploymentNotice      | Send a deployment notice fro the repository.          |
+| syncWithGitHub            | Synchronise the repository with GitHub.               |
+| uploadDirectoryToR2       | Upload a directory to Cloudflare R2 storage.          |
+| uploadModuleConfig        |                                                       |
+| uploadModuleToR2          | Upload a module to Cloudflare R2 storage.             |
 
 ## Repository Management Commands
 

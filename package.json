@@ -3,7 +3,7 @@
     "license": "ISC",
     "private": false,
     "type": "module",
-    "version": "0.2.27",
+    "version": "0.2.28",
     "devDependencies": {
         "eslint": "^9.28.0",
         "nanoid": "^5.1.5",
@@ -18,7 +18,7 @@
         "document": "npx npm-license-crawler --onlyDirectDependencies --production --relativeLicensePath --json LICENSES.json",
         "format": "prettier --write *.js",
         "lint": "npx eslint *.js",
-        "publishToNPM": "npm publish",
+        "publishToNPM": "npm publish --access public",
         "release": "npm run syncWithGitHub && npm run publishToNPM",
         "syncWithGitHub": "npm run bumpVersion && node -e \"import('./scriptHelpers.js').then(m => m.syncWithGitHub())\"",
         "test": "echo \"***** TEST SCRIPT NOT IMPLEMENTED. *****\"",

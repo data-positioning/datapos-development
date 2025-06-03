@@ -14,7 +14,7 @@ Ensure your environment meets the following prerequisites before using this libr
 ## Installation
 
 ```
-npm install -D @datapos-development
+npm install -D @datapos/datapos-development
 ```
 
 ## Dependencies

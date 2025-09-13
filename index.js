@@ -78,7 +78,7 @@ async function clearDirectory(directoryPath) {
 
 // Operations - Send Deployment Notice
 async function sendDeploymentNotice() {
-    const configJSON = await readJSONFile('src/config.json');
+    const configJSON = await readJSONFile('config.json');
     const options = {
         body: JSON.stringify(configJSON),
         headers: { 'Content-Type': 'application/json' },
@@ -127,7 +127,7 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
 
 // Operations - Upload Module Configuration
 async function uploadModuleConfig() {
-    const configJSON = await readJSONFile('src/config.json');
+    const configJSON = await readJSONFile('config.json');
     const stateId = configJSON.id;
     const options = {
         body: JSON.stringify(configJSON),

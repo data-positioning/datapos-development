@@ -1,6 +1,6 @@
-# DataPos Development Library
+# Data Positioning Development Library
 
-A library of JavaScript operations for managing the DataPos repositories.
+A library of JavaScript operations for managing the Data Positioning repositories.
 
 ## Requirements
 
@@ -13,20 +13,11 @@ Ensure your environment meets the following prerequisites before using this libr
 
 ## Installation
 
+Install as a development (dev) dependency:
+
+```bash
+npm install --save-dev @datapos/datapos-development
 ```
-npm install -D @datapos/datapos-development
-```
-
-## Dependencies
-
-| Name     | Use | References         |
-| -------- | --- | ------------------ |
-| eslint   | dev | [GitHub]() [NPM]() |
-| nanoid   | dev | [GitHub]() [NPM]() |
-| prettier | dev | [GitHub]() [NPM]() |
-| run      | dev | [GitHub]() [NPM]() |
-
-Refer to package.json and LICENSES.json for detailed versions and licenses.
 
 ## Operations
 
@@ -63,4 +54,22 @@ The following list details the repository management commands implemented by thi
 | test               | alt+ctrl+shift+t | \*** NOT IMPLEMENTED \***                                                                                                                                                                                      |
 | updateDependencies | alt+ctrl+shift+u | \*** NOT IMPLEMENTED \***                                                                                                                                                                                      |
 
-For more details, please refer to the scripts section of the 'package.json' file in this project.
+The table below lists the repository management commands available in this project.
+For detailed implementation, see the `scripts` section in `package.json`.
+
+| Name               | Key Code         | Notes                                                                                                                           |
+| ------------------ | ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| audit              | alt+ctrl+shift+a | Audit the project's dependencies for known security vulnerabilities.                                                            |
+| build              | alt+ctrl+shift+b | Build the package using Vite.                                                                                                   |
+| check              | alt+ctrl+shift+c | List outdated dependencies.                                                                                                     |
+| document           | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [LICENSES.json](./LICENSES.json).                      |
+| format             | alt+ctrl+shift+f | Enforce formatting style rules.                                                                                                 |
+| lint               | alt+ctrl+shift+l | Check the code for errors and enforce coding style rules.                                                                       |
+| release            | alt+ctrl+shift+r | Bump version, synchronise local repository with the main GitHub repository, build and publish to [npm](https://www.npmjs.com/). |
+| syncWithGitHub     | alt+ctrl+shift+s | Bump version and synchronise local repository with the main GitHub repository.                                                  |
+| test               | alt+ctrl+shift+t | NOT implemented.                                                                                                                |
+| updateDependencies | alt+ctrl+shift+u | Install the latest version of outdated Data Positioning packages.                                                               |
+
+## License
+
+[MIT](./LICENSE) © 2026 Data Positioning Pty Ltd

@@ -1,4 +1,6 @@
 # Data Positioning Development Library
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development?ref=badge_shield)
+
 
 A library of JavaScript operations for managing the Data Positioning repositories.
 
@@ -73,3 +75,6 @@ For detailed implementation, see the `scripts` section in `package.json`.
 ## License
 
 [MIT](./LICENSE) © 2026 Data Positioning Pty Ltd
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development?ref=badge_large)

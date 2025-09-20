@@ -1,19 +1,19 @@
-// Dependencies - Vendor
+// Dependencies
 const fs = require('fs').promises;
 const { nanoid } = require('nanoid');
 
-// Dependencies - Vendor (Promisify Exec)
+// Dependencies - Promisify exec.
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-// Operations - Build Configuration
+// Operations - Build configuration.
 async function buildConfig(directoryPath) {
     const configJSON = await readJSONFile(`${directoryPath || ''}config.json`);
     const packageJSON = await readJSONFile('package.json');
     await fs.writeFile(`${directoryPath || ''}config.json`, JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }
 
-// Operations - Build Public Directory Index
+// Operations - Build public directory index.
 async function buildPublicDirectoryIndex(id) {
     const index = {};
 
@@ -50,7 +50,7 @@ async function buildPublicDirectoryIndex(id) {
     });
 }
 
-// Operations - Bump Version
+// Operations - Bump version.
 async function bumpVersion() {
     const packageJSON = await readJSONFile('package.json');
     const versionSegments = packageJSON.version.split('.');
@@ -59,7 +59,7 @@ async function bumpVersion() {
     console.log(`Bumped to version ${packageJSON.version}.`);
 }
 
-// Operations - Clear Directory
+// Operations - Clear directory.
 async function clearDirectory(directoryPath) {
     for (const itemName of await fs.readdir(directoryPath)) {
         const itemPath = `${directoryPath}/${itemName}`;
@@ -76,7 +76,7 @@ async function clearDirectory(directoryPath) {
     }
 }
 
-// Operations - Send Deployment Notice
+// Operations - Send deployment notice.
 async function sendDeploymentNotice() {
     const configJSON = await readJSONFile('config.json');
     const options = {
@@ -88,7 +88,7 @@ async function sendDeploymentNotice() {
     if (!response.ok) console.log(await response.text());
 }
 
-// UtilitiesOperations - Sync with Github
+// UtilitiesOperations - Sync with GitHub.
 async function syncWithGitHub() {
     const packageJSON = await readJSONFile('package.json');
     await exec('git add .');
@@ -96,7 +96,7 @@ async function syncWithGitHub() {
     await exec('git push origin main:main');
 }
 
-// Operations - Upload Directory To R2
+// Operations - Upload directory to Cloudflare R2.
 async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
     async function listDirectoryEntriesRecursively(currentSourceDirectory, currentDestinationDirectory, names) {
         for (const name of names) {
@@ -125,7 +125,7 @@ async function uploadDirectoryToR2(sourceDirectory, uploadDirectory) {
     await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}`, uploadDirectory, toplevelNames);
 }
 
-// Operations - Upload Module Configuration
+// Operations - Upload module configuration.
 async function uploadModuleConfig() {
     const configJSON = await readJSONFile('config.json');
     const stateId = configJSON.id;
@@ -138,14 +138,14 @@ async function uploadModuleConfig() {
     if (!response.ok) console.log(await response.text());
 }
 
-// Operations - Upload Module To R2
+// Operations - Upload module to Cloudflare R2.
 async function uploadModuleToR2(fromPath, toPath) {
     const packageJSON = await readJSONFile('package.json');
     const toPathWithVersion = toPath.replace(/^(.*?\.)/, `$1v${packageJSON.version}.`);
     await exec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`, { stdio: 'inherit' });
 }
 
-// Utilities - Read JSON File
+// Utilities - Read JSON file.
 async function readJSONFile(path) {
     try {
         return JSON.parse(await fs.readFile(path, 'utf8'));

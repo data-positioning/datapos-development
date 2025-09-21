@@ -39,10 +39,10 @@ The 'index.js' file exposes the following operations:
 | uploadModuleConfig        | Upload a modules configuration to the Cloudflare `state` durable object. |
 | uploadModuleToR2          | Upload a module to Cloudflare R2 storage.                                |
 
-## Repository Management Commands
+## Repository Common Management Commands
 
 The table below lists the repository management commands available in this project.
-For detailed implementation, see the `scripts` section in `package.json`.
+For detailed implementation, see the `scripts` section in the `package.json` file.
 
 | Name               | Key Code         | Notes                                                                                                      |
 | ------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------- |

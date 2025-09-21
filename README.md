@@ -59,7 +59,7 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 
 ## Compliance
 
-This badge reflects FOSSA's assessment of this repository's open-source license compliance.
+The following badge reflects FOSSA's assessment of this repository's open-source license compliance.
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development?ref=badge_large&issueType=license)
 

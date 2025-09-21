@@ -48,7 +48,7 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 | ------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------- |
 | audit              | alt+ctrl+shift+a | Audit the project's dependencies for known security vulnerabilities.                                       |
 | build              | alt+ctrl+shift+b | NOT implemented.                                                                                           |
-| check              | alt+ctrl+shift+c | List outdated dependencies.                                                                                |
+| check              | alt+ctrl+shift+c | List outdated dependencies and run retire scanner.                                                         |
 | document           | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [LICENSES.json](./LICENSES.json). |
 | format             | alt+ctrl+shift+f | Enforce formatting style rules.                                                                            |
 | lint               | alt+ctrl+shift+l | Check the code for errors and enforce coding style rules.                                                  |

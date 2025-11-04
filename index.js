@@ -18,7 +18,13 @@ async function documentInterface(moduleTypeId) {
     const configJSON = await readJSONFile('config.json');
     const indexCode = await fs.readFile('src/index.ts', 'utf8');
     const regex = /^\s{4}(?:async\s+)?(?:private\s+|public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
-    const matches = [...indexCode.matchAll(regex)].map((m) => m[1]);
+    const matches = [...indexCode.matchAll(regex)]
+        .map((m) => m[1])
+        .filter((name) => name !== 'constructor')
+        .filter((_, index, arr) => {
+            const match = [...indexCode.matchAll(regex)][arr.indexOf(_)];
+            return !match[0].includes('private');
+        });
     configJSON.interface = matches;
     await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4));
 }

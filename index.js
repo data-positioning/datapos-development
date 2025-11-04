@@ -14,15 +14,12 @@ async function buildConfig(directoryPath) {
 }
 
 // Operations - Document interface.
-async function documentInterface(directoryPath) {
-    const configJSON = await readJSONFile(`${directoryPath || ''}config.json`);
-    const indexCode = await fs.readFile(`${directoryPath || ''}src/index.ts`, 'utf8');
-    // Match class methods and top-level functions, avoiding control flow
-    const regex = /^\s{4}(?:async\s+)?(?:private\s+|public\s+|protected\s+)?([A-Za-z_]\w*)\s*\([^)]*\)\s*(?::\s*[^{]+)?\s*\{/gm;
+async function documentInterface(moduleTypeId) {
+    const configJSON = await readJSONFile('config.json');
+    const indexCode = await fs.readFile('src/index.ts', 'utf8');
+    const regex = /^\s{4}(?:async\s+)?(?:private\s+|public\s+|protected\s+)?([A-Za-z_]\w*)\s*\([^)]*\)\s*(?::\s*[^{]+)?\s*\{/gm; // Match class methods and top-level functions.
     const matches = [...indexCode.matchAll(regex)].map((m) => m[1]);
-
     configJSON.interface = matches;
-    console.log(matches);
     await fs.writeFile(`${directoryPath || ''}config.json`, JSON.stringify(configJSON, undefined, 4));
 }
 

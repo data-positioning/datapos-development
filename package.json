@@ -4,7 +4,7 @@
     "private": false,
     "type": "module",
     "main": "index.js",
-    "version": "0.3.34",
+    "version": "0.3.35",
     "devDependencies": {
         "eslint": "^9.36.0",
         "license-report": "^6.8.0",

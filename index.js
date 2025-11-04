@@ -17,8 +17,10 @@ async function buildConfig(directoryPath) {
 async function documentInterface(directoryPath) {
     const configJSON = await readJSONFile(`${directoryPath || ''}config.json`);
     const indexCode = await fs.readFile(`${directoryPath || ''}src/index.ts`, 'utf8');
-    const regex = /(?:async\s+)?(?:private\s+)?([A-Za-z_]\w*)\s*\([^)]*\)\s*[:{]/g;
+    // Match class methods and function declarations more precisely
+    const regex = /(?:^|\n)\s*(?:async\s+)?(?:private\s+|public\s+|protected\s+)?([A-Za-z_]\w*)\s*\([^)]*\)\s*(?::\s*[^{]+)?\s*\{/g;
     const matches = [...indexCode.matchAll(regex)].map((m) => m[1]);
+
     console.log(matches);
 }
 

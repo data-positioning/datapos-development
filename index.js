@@ -13,6 +13,15 @@ async function buildConfig(directoryPath) {
     await fs.writeFile(`${directoryPath || ''}config.json`, JSON.stringify({ ...configJSON, id: packageJSON.name, version: packageJSON.version }, undefined, 4));
 }
 
+// Operations - Document interface.
+async function documentInterface(directoryPath) {
+    const configJSON = await readJSONFile(`${directoryPath || ''}config.json`);
+    const indexCode = await fs.readFile(`${directoryPath || ''}src/index.ts`, 'utf8');
+    const regex = /(?:async\s+)?(?:private\s+)?([A-Za-z_]\w*)\s*\([^)]*\)\s*[:{]/g;
+    const matches = [...indexCode.matchAll(regex)].map((m) => m[1]);
+    console.log(matches);
+}
+
 // Operations - Build public directory index.
 async function buildPublicDirectoryIndex(id) {
     const index = {};
@@ -156,4 +165,15 @@ async function readJSONFile(path) {
 }
 
 // Exposures
-export { buildConfig, buildPublicDirectoryIndex, bumpVersion, clearDirectory, sendDeploymentNotice, syncWithGitHub, uploadDirectoryToR2, uploadModuleConfig, uploadModuleToR2 };
+export {
+    buildConfig,
+    buildPublicDirectoryIndex,
+    bumpVersion,
+    clearDirectory,
+    documentInterface,
+    sendDeploymentNotice,
+    syncWithGitHub,
+    uploadDirectoryToR2,
+    uploadModuleConfig,
+    uploadModuleToR2
+};

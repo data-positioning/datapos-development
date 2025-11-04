@@ -21,7 +21,9 @@ async function documentInterface(directoryPath) {
     const regex = /^\s{4}(?:async\s+)?(?:private\s+|public\s+|protected\s+)?([A-Za-z_]\w*)\s*\([^)]*\)\s*(?::\s*[^{]+)?\s*\{/gm;
     const matches = [...indexCode.matchAll(regex)].map((m) => m[1]);
 
+    configJSON.interface = matches;
     console.log(matches);
+    await fs.writeFile(`${directoryPath || ''}config.json`, JSON.stringify(configJSON, undefined, 4));
 }
 
 // Operations - Build public directory index.

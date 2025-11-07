@@ -253,7 +253,7 @@ async function sendDeploymentNotice(): Promise<void> {
         };
         const response = await fetch(`https://api.datapos.app/states/${configJSON.id}`, options);
         if (!response.ok) {
-            console.log(await response.text());
+            console.log('❌', await response.text());
             throw new Error('Fetch error.');
         }
         console.log('✅ Deployment notice sent.');
@@ -277,42 +277,38 @@ async function syncWithGitHub(): Promise<void> {
 }
 
 // Utilities - Upload directory to Cloudflare R2.
-async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string) {
+async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void> {
     try {
         console.log('🚀 Uploading directory to R2....');
         async function listDirectoryEntriesRecursively(currentSourceDirectory: string, currentDestinationDirectory: string, names: string[]) {
             for (const name of names) {
                 const sourceItemPath = `${currentSourceDirectory}/${name}`;
                 const destinationItemPath = `${currentDestinationDirectory}/${name}`;
-                try {
-                    const stats = await fs.stat(sourceItemPath);
-                    if (stats.isDirectory()) {
-                        const nextLevelChildren = await fs.readdir(sourceItemPath);
-                        await listDirectoryEntriesRecursively(sourceItemPath, destinationItemPath, nextLevelChildren);
-                    } else {
-                        const command = `wrangler r2 object put "datapos-sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
-                        const response = await exec(command);
-                        console.log('Uploading:', `${currentSourceDirectory}/${name}`);
-                        if (response.stderr) {
-                            console.log('Command___:', command);
-                            console.log('Error_____:', response.stderr);
-                        }
+                const stats = await fs.stat(sourceItemPath);
+                if (stats.isDirectory()) {
+                    const nextLevelChildren = await fs.readdir(sourceItemPath);
+                    await listDirectoryEntriesRecursively(sourceItemPath, destinationItemPath, nextLevelChildren);
+                } else {
+                    const command = `wrangler r2 object put "datapos-sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
+                    const response = await exec(command);
+                    console.log(`⚙️ Uploading '${currentSourceDirectory}/${name}'.`);
+                    if (response.stderr) {
+                        console.log('❌', response.stderr);
+                        throw new Error('Upload error.');
                     }
-                } catch (error) {
-                    console.error(`Unable to get information for '${name}' in 'uploadDirectoryToR2'.`, error);
                 }
             }
         }
         const toplevelNames = await fs.readdir(`${sourceDirectory}/${uploadDirectory}/`);
         await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}`, uploadDirectory, toplevelNames);
-        console.log('✅ Directory cleared.');
+        console.log('✅ Directory uploaded to R2.');
     } catch (error) {
         console.warn('❌ Error uploading directory to R2.', error);
     }
 }
 
 // Utilities - Upload module configuration.
-async function uploadModuleConfig() {
+async function uploadModuleConfig(): Promise<void> {
     try {
         console.log('🚀 Uploading module configuration....');
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
@@ -324,14 +320,14 @@ async function uploadModuleConfig() {
         };
         const response = await fetch(`https://api.datapos.app/states/${stateId}`, options);
         if (!response.ok) console.log(await response.text());
-        console.log('✅ Directory cleared.');
+        console.log('✅ Module configuration uploaded.');
     } catch (error) {
         console.warn('❌ Error uploading module configuration.', error);
     }
 }
 
 // Utilities - Upload module to Cloudflare R2.
-async function uploadModuleToR2(fromPath: string, toPath: string) {
+async function uploadModuleToR2(fromPath: string, toPath: string): Promise<void> {
     try {
         console.log('🚀 Uploading module to R2....');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
@@ -341,7 +337,7 @@ async function uploadModuleToR2(fromPath: string, toPath: string) {
         );
         if (stdout) console.log(stdout);
         if (stderr) console.error(stderr);
-        console.log('✅ Directory cleared.');
+        console.log('✅ Module uploaded to R2.');
     } catch (error) {
         console.warn('❌ Error uploading module to R2.', error);
     }

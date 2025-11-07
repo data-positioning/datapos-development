@@ -3,7 +3,7 @@
     "license": "MIT",
     "private": false,
     "type": "module",
-    "version": "0.3.59",
+    "version": "0.3.60",
     "files": [
         "dist"
     ],
@@ -44,7 +44,7 @@
         "format": "prettier --write src/",
         "lint": "eslint .",
         "publishToNPM": "npm publish --access public",
-        "release": "npm run syncWithGitHub && npm run publishToNPM",
+        "release": "npm run syncWithGitHub && npm run build && npm run publishToNPM",
         "syncWithGitHub": "npm run bumpVersion && node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",
         "test": "echo \"***** TEST SCRIPT NOT IMPLEMENTED. *****\"",
         "updateDependencies": "npm install -D @datapos/datapos-shared@latest"

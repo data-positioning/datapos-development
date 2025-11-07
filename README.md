@@ -46,15 +46,18 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 | Name               | Key Code         | Notes                                                                                                      |
 | ------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------- |
 | audit              | alt+ctrl+shift+a | Audit the project's dependencies for known security vulnerabilities.                                       |
-| build              | alt+ctrl+shift+b | NOT implemented.                                                                                           |
+| build              | alt+ctrl+shift+b | Build the package using Vite.                                                                              |
+| build...Config     |                  | ❌ Not implemented.                                                                                        |
+| bumpVersion        | alt+ctrl+shift+v |                                                                                                            |
 | check              | alt+ctrl+shift+c | List outdated dependencies and run retire scanner.                                                         |
 | document           | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [LICENSES.json](./LICENSES.json). |
 | format             | alt+ctrl+shift+f | Enforce formatting style rules.                                                                            |
 | lint               | alt+ctrl+shift+l | Check the code for errors and enforce coding style rules.                                                  |
+| publishToNPM       | alt+ctrl+shift+p |                                                                                                            |
 | release            | alt+ctrl+shift+r | Bump version, synchronise local repository with the main GitHub repository and publish to npm.             |
 | syncWithGitHub     | alt+ctrl+shift+s | Bump version and synchronise local repository with the main GitHub repository.                             |
-| test               | alt+ctrl+shift+t | NOT implemented.                                                                                           |
-| updateDependencies | alt+ctrl+shift+u | NOT implemented.                                                                                           |
+| test               | alt+ctrl+shift+t | ❌ Not implemented.                                                                                        |
+| updateDependencies | alt+ctrl+shift+u | ❌ Not implemented.                                                                                        |
 
 ## Compliance
 

@@ -17,16 +17,16 @@ import type { ContextModuleConfig, ContextModuleOperation } from '@datapos/datap
 import type { InformerModuleConfig, InformerModuleOperation } from '@datapos/datapos-shared';
 import type { PresenterModuleConfig, PresenterModuleOperation } from '@datapos/datapos-shared';
 
-// Interfaces/Types - Entry.
-interface Entry {
+// Interfaces/Types - Directory entry.
+interface DirectoryEntry {
     name: string;
     typeId: 'folder' | 'object';
 }
-interface FolderEntry extends Entry {
+interface DirectoryFolderEntry extends DirectoryEntry {
     childCount: number;
     typeId: 'folder';
 }
-interface ObjectEntry extends Entry {
+interface DirectoryObjectEntry extends DirectoryEntry {
     id: string;
     lastModifiedAt: number;
     size: number;
@@ -55,11 +55,11 @@ async function buildConfig(): Promise<void> {
 async function buildPublicDirectoryIndex(id: string): Promise<void> {
     try {
         console.log(`🚀 Building public directory index for identifier '${id}'...`);
-        const index: Record<string, Entry[]> = {};
+        const index: Record<string, DirectoryEntry[]> = {};
 
         async function listDirectoryEntriesRecursively(directoryPath: string, names: string[]) {
             console.log(`⚙️ Processing directory '${directoryPath}'...`);
-            const entries: Entry[] = [];
+            const entries: DirectoryEntry[] = [];
             const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
             index[localDirectoryPath] = entries;
             for (const name of names) {
@@ -68,11 +68,11 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
                     const stats = await fs.stat(itemPath);
                     if (stats.isDirectory()) {
                         const nextLevelChildren = await fs.readdir(itemPath);
-                        const folderEntry: FolderEntry = { childCount: nextLevelChildren.length, name: `${name}`, typeId: 'folder' };
+                        const folderEntry: DirectoryFolderEntry = { childCount: nextLevelChildren.length, name: `${name}`, typeId: 'folder' };
                         entries.push(folderEntry);
                         await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                     } else {
-                        const objectEntry: ObjectEntry = { id: nanoid(), lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' };
+                        const objectEntry: DirectoryObjectEntry = { id: nanoid(), lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' };
                         entries.push(objectEntry);
                     }
                 } catch (error) {

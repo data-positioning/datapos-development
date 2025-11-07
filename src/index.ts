@@ -222,24 +222,24 @@ async function bumpVersion(): Promise<void> {
     }
 }
 
-// Utilities - Clear directory.
-async function clearDirectory(directoryPath: string): Promise<void> {
-    try {
-        console.log('🚀 Clearing directory...');
-        for (const itemName of await fs.readdir(directoryPath)) {
-            const itemPath = `${directoryPath}/${itemName}`;
-            const stats = await fs.stat(itemPath);
-            if (stats.isDirectory()) {
-                await fs.rm(itemPath, { recursive: true, force: true });
-            } else {
-                await fs.unlink(itemPath);
-            }
-        }
-        console.log('✅ Directory cleared.');
-    } catch (error) {
-        console.warn('❌ Error bumping package version.', error);
-    }
-}
+// // Utilities - Clear directory.
+// async function clearDirectory(directoryPath: string): Promise<void> {
+//     try {
+//         console.log('🚀 Clearing directory...');
+//         for (const itemName of await fs.readdir(directoryPath)) {
+//             const itemPath = `${directoryPath}/${itemName}`;
+//             const stats = await fs.stat(itemPath);
+//             if (stats.isDirectory()) {
+//                 await fs.rm(itemPath, { recursive: true, force: true });
+//             } else {
+//                 await fs.unlink(itemPath);
+//             }
+//         }
+//         console.log('✅ Directory cleared.');
+//     } catch (error) {
+//         console.warn('❌ Error bumping package version.', error);
+//     }
+// }
 
 // Utilities - Send deployment notice.
 async function sendDeploymentNotice(): Promise<void> {
@@ -356,7 +356,6 @@ export {
     buildPresenterConfig,
     buildPublicDirectoryIndex,
     bumpVersion,
-    clearDirectory,
     sendDeploymentNotice,
     syncWithGitHub,
     uploadDirectoryToR2,

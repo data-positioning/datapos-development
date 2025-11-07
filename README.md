@@ -3,14 +3,14 @@
 [![npm version](https://img.shields.io/npm/v/@datapos/datapos-development.svg)](https://www.npmjs.com/package/@datapos/datapos-development)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-A library of JavaScript operations for managing the Data Positioning repositories.
+A TypeScript library of utilities for managing the Data Positioning repositories.
 
 ## Requirements
 
 Ensure your environment meets the following prerequisites before using this library:
 
-- **Node.js** version `>=18.0.0`,
-- **npm** version `>=9.0.0`,
+- **Node.js** version `>=22.0.0`,
+- **npm** version `>=11.0.0`,
 - A Unix-like shell (for command shortcuts, e.g., `bash`, `zsh`, or Git Bash on Windows),
 - Access to the [npm registry](https://www.npmjs.com/) and [GitHub](https://github.com/) for publishing and syncing.
 
@@ -22,13 +22,17 @@ Install as a development (dev) dependency:
 npm install --save-dev @datapos/datapos-development
 ```
 
-## Operations
+## Utilities
 
-The 'index.js' file exposes the following operations:
+The `src/index.ts' file exposes the following utilities:
 
 | Name                      | Notes                                                                    |
 | ------------------------- | ------------------------------------------------------------------------ |
 | buildConfig               | Build the config.json file for the repository.                           |
+| buildConnectorConfig      |                                                                          |
+| buildContextConfig        |                                                                          |
+| buildInformerConfig       |                                                                          |
+| buildPresenterConfig      |                                                                          |
 | buildPublicDirectoryIndex | Build an index for the repositories public directory.                    |
 | bumpVersion               | Bump the repositories version number.                                    |
 | clearDirectory            | Clear the specified directory.                                           |

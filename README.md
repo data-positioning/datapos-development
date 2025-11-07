@@ -22,6 +22,13 @@ Install as a development (dev) dependency:
 npm install --save-dev @datapos/datapos-development
 ```
 
+Create `.npmrc` with access token. Access token needs to disable 2FA and allow all access.
+
+```ini
+registry=https://registry.npmjs.org/
+//registry.npmjs.org/:_authToken=<ACCESS TOKEN>
+```
+
 ## Utilities
 
 The `src/index.ts' file exposes the following utilities:

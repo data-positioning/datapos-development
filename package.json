@@ -3,7 +3,7 @@
     "license": "MIT",
     "private": false,
     "type": "module",
-    "version": "0.3.45",
+    "version": "0.3.46",
     "files": [
         "dist"
     ],
@@ -16,7 +16,7 @@
     },
     "types": "./dist/types/src/index.d.ts",
     "devDependencies": {
-        "@datapos/datapos-shared": "^0.3.139",
+        "@datapos/datapos-shared": "^0.3.140",
         "@types/node": "^24.10.0",
         "@typescript-eslint/eslint-plugin": "^8.46.3",
         "@typescript-eslint/parser": "^8.46.3",
@@ -29,7 +29,6 @@
         "npm-check-updates": "^19.1.2",
         "prettier": "^3.6.2",
         "retire": "^5.3.0",
-        "run": "^1.5.0",
         "type-fest": "^5.2.0",
         "typescript": "^5.9.3",
         "vite": "^7.2.2",
@@ -43,11 +42,11 @@
         "check": "npm outdated; npm-check-updates -i && retire",
         "document": "license-report --only=prod,peer > LICENSES.json && license-report-check --source ./LICENSES.json --allowed 'MIT' --allowed 'n/a' --allowed 'Apache-2.0' --output=table",
         "format": "prettier --write src/",
-        "lint": "eslint . --ext .ts --fix --ignore-path .gitignore",
+        "lint": "eslint .",
         "publishToNPM": "npm publish --access public",
         "release": "npm run syncWithGitHub && npm run publishToNPM",
         "syncWithGitHub": "npm run bumpVersion && node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",
         "test": "echo \"***** TEST SCRIPT NOT IMPLEMENTED. *****\"",
-        "updateDependencies": "echo \"***** UPDATE DEPENDENCIES SCRIPT NOT IMPLEMENTED. *****\""
+        "updateDependencies": "npm install -D @datapos/datapos-shared@latest"
     }
 }

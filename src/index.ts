@@ -39,26 +39,26 @@ const exec = promisify(execCallback);
 // Utilities - Build configuration.
 async function buildConfig(): Promise<void> {
     try {
-        console.log('🚀 Building configuration...');
+        console.info('🚀 Building configuration...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
         if (packageJSON.name) configJSON.id = packageJSON.name;
         if (packageJSON.version) configJSON.version = packageJSON.version;
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
-        console.log('✅ Configuration built.');
+        console.info('✅ Configuration built.');
     } catch (error) {
-        console.warn('❌ Error building configuration.', error);
+        console.error('❌ Error building configuration.', error);
     }
 }
 
 // Utilities - Build public directory index.
 async function buildPublicDirectoryIndex(id: string): Promise<void> {
     try {
-        console.log(`🚀 Building public directory index for identifier '${id}'...`);
+        console.info(`🚀 Building public directory index for identifier '${id}'...`);
         const index: Record<string, DirectoryEntry[]> = {};
 
         async function listDirectoryEntriesRecursively(directoryPath: string, names: string[]) {
-            console.log(`⚙️ Processing directory '${directoryPath}'...`);
+            console.info(`⚙️ Processing directory '${directoryPath}'...`);
             const entries: DirectoryEntry[] = [];
             const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
             index[localDirectoryPath] = entries;
@@ -76,7 +76,7 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
                         entries.push(objectEntry);
                     }
                 } catch (error) {
-                    console.error(`Unable to get information for '${name}' in 'buildPublicDirectoryIndex'.`, error);
+                    throw new Error(`Unable to get information for '${name}' in 'buildPublicDirectoryIndex'. ${String(error)}`);
                 }
             }
             entries.sort((left, right) => {
@@ -88,16 +88,16 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
         const toplevelNames = await fs.readdir(`public/${id}`);
         await listDirectoryEntriesRecursively(`public/${id}`, toplevelNames);
         await fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), 'utf8');
-        console.log('✅ Public directory index built.');
+        console.info('✅ Public directory index built.');
     } catch (error) {
-        console.warn('❌ Error building public directory index.', error);
+        console.error('❌ Error building public directory index.', error);
     }
 }
 
 // Utilities - Build connector configuration.
 async function buildConnectorConfig(): Promise<void> {
     try {
-        console.log('🚀 Building connector configuration...');
+        console.info('🚀 Building connector configuration...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorModuleConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
@@ -113,12 +113,12 @@ async function buildConnectorConfig(): Promise<void> {
                 sourceOperations = sourceOperations || CONNECTOR_SOURCE_OPERATIONS.includes(operation);
                 return operation;
             });
-        if (operations.length > 0) console.log(`ℹ️  Implements ${operations.length} operations.`);
-        else console.log('⚠️  Implements no operations.');
+        if (operations.length > 0) console.info(`ℹ️  Implements ${operations.length} operations.`);
+        else console.warn('⚠️  Implements no operations.');
         const usageId: ConnectorModuleUsageId | null =
             sourceOperations && destinationOperations ? 'bidirectional' : sourceOperations ? 'source' : destinationOperations ? 'destination' : null;
-        if (usageId) console.log(`ℹ️  Supports ${usageId} usage.`);
-        else console.log('⚠️  No usage identified.');
+        if (usageId) console.info(`ℹ️  Supports ${usageId} usage.`);
+        else console.warn('⚠️  No usage identified.');
 
         if (packageJSON.name) configJSON.id = packageJSON.name;
         configJSON.operations = operations;
@@ -126,16 +126,16 @@ async function buildConnectorConfig(): Promise<void> {
         if (packageJSON.version) configJSON.version = packageJSON.version;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
-        console.log('✅ Connector configuration built.');
+        console.info('✅ Connector configuration built.');
     } catch (error) {
-        console.warn('❌ Error building connector configuration.', error);
+        console.error('❌ Error building connector configuration.', error);
     }
 }
 
 // Utilities - Build context configuration.
 async function buildContextConfig(): Promise<void> {
     try {
-        console.log('🚀 Building context configuration...');
+        console.info('🚀 Building context configuration...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ContextModuleConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
@@ -150,15 +150,16 @@ async function buildContextConfig(): Promise<void> {
         if (packageJSON.version) configJSON.version = packageJSON.version;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
+        console.info('✅ Context configuration built.');
     } catch (error) {
-        console.warn('❌ Error building context configuration.', error);
+        console.error('❌ Error building context configuration.', error);
     }
 }
 
 // Utilities - Build informer configuration.
 async function buildInformerConfig(): Promise<void> {
     try {
-        console.log('🚀 Building informer configuration...');
+        console.info('🚀 Building informer configuration...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as InformerModuleConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
@@ -173,15 +174,16 @@ async function buildInformerConfig(): Promise<void> {
         if (packageJSON.version) configJSON.version = packageJSON.version;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
+        console.info('✅ Informer configuration built.');
     } catch (error) {
-        console.warn('❌ Error building informer configuration.', error);
+        console.error('❌ Error building informer configuration.', error);
     }
 }
 
 // Utilities - Build presenter configuration.
 async function buildPresenterConfig(): Promise<void> {
     try {
-        console.log('🚀 Building presenter configuration...');
+        console.info('🚀 Building presenter configuration...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as PresenterModuleConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
@@ -196,36 +198,37 @@ async function buildPresenterConfig(): Promise<void> {
         if (packageJSON.version) configJSON.version = packageJSON.version;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
+        console.info('✅ Presenter configuration built.');
     } catch (error) {
-        console.warn('❌ Error building context configuration.', error);
+        console.error('❌ Error building context configuration.', error);
     }
 }
 
 // Utilities - Bump version.
 async function bumpVersion(): Promise<void> {
     try {
-        console.log('🚀 Bumping version...');
+        console.info('🚀 Bumping version...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         if (packageJSON.version) {
             const oldVersion = packageJSON.version;
             const versionSegments = packageJSON.version.split('.');
             packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
             await fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4), 'utf8');
-            console.log(`✅ Version bumped from ${oldVersion} to ${packageJSON.version}.`);
+            console.info(`✅ Version bumped from ${oldVersion} to ${packageJSON.version}.`);
         } else {
             packageJSON.version = '0.0.001';
             await fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4), 'utf8');
-            console.log(`⚠️ Version initialised to ${packageJSON.version}.`);
+            console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
         }
     } catch (error) {
-        console.warn('❌ Error bumping package version.', error);
+        console.error('❌ Error bumping package version.', error);
     }
 }
 
 // // Utilities - Clear directory.
 // async function clearDirectory(directoryPath: string): Promise<void> {
 //     try {
-//         console.log('🚀 Clearing directory...');
+//         console.info('🚀 Clearing directory...');
 //         for (const itemName of await fs.readdir(directoryPath)) {
 //             const itemPath = `${directoryPath}/${itemName}`;
 //             const stats = await fs.stat(itemPath);
@@ -235,16 +238,21 @@ async function bumpVersion(): Promise<void> {
 //                 await fs.unlink(itemPath);
 //             }
 //         }
-//         console.log('✅ Directory cleared.');
+//         console.info('✅ Directory cleared.');
 //     } catch (error) {
-//         console.warn('❌ Error bumping package version.', error);
+//         console.error('❌ Error bumping package version.', error);
 //     }
 // }
+
+// Utilities - Echo error.
+function echoError(message: string): void {
+    console.error(`❌ ${message}`);
+}
 
 // Utilities - Send deployment notice.
 async function sendDeploymentNotice(): Promise<void> {
     try {
-        console.log('🚀 Sending deployment notice...');
+        console.info('🚀 Sending deployment notice...');
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
         const options = {
             body: JSON.stringify(configJSON),
@@ -252,34 +260,31 @@ async function sendDeploymentNotice(): Promise<void> {
             method: 'PUT'
         };
         const response = await fetch(`https://api.datapos.app/states/${configJSON.id}`, options);
-        if (!response.ok) {
-            console.log('❌', await response.text());
-            throw new Error('Fetch error.');
-        }
-        console.log('✅ Deployment notice sent.');
+        if (!response.ok) throw new Error(await response.text());
+        console.info('✅ Deployment notice sent.');
     } catch (error) {
-        console.warn('❌ Error sending deployment notice.', error);
+        console.error('❌ Error sending deployment notice.', error);
     }
 }
 
 // Utilities - Synchronise with GitHub.
 async function syncWithGitHub(): Promise<void> {
     try {
-        console.log('🚀 Synchronising with GitHub....');
+        console.info('🚀 Synchronising with GitHub....');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         await exec('git add .');
         await exec(`git commit -m "v${packageJSON.version}"`);
         await exec('git push origin main:main');
-        console.log(`✅ Synchronised version ${packageJSON.version} with GitHub.`);
+        console.info(`✅ Synchronised version ${packageJSON.version} with GitHub.`);
     } catch (error) {
-        console.warn('❌ Error synchronising with GitHub.', error);
+        console.error('❌ Error synchronising with GitHub.', error);
     }
 }
 
 // Utilities - Upload directory to Cloudflare R2.
 async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void> {
     try {
-        console.log('🚀 Uploading directory to R2....');
+        console.info('🚀 Uploading directory to R2....');
         async function listDirectoryEntriesRecursively(currentSourceDirectory: string, currentDestinationDirectory: string, names: string[]) {
             for (const name of names) {
                 const sourceItemPath = `${currentSourceDirectory}/${name}`;
@@ -289,28 +294,25 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
                     const nextLevelChildren = await fs.readdir(sourceItemPath);
                     await listDirectoryEntriesRecursively(sourceItemPath, destinationItemPath, nextLevelChildren);
                 } else {
+                    console.info(`⚙️ Uploading '${currentSourceDirectory}/${name}'.`);
                     const command = `wrangler r2 object put "datapos-sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
                     const response = await exec(command);
-                    console.log(`⚙️ Uploading '${currentSourceDirectory}/${name}'.`);
-                    if (response.stderr) {
-                        console.log('❌', response.stderr);
-                        throw new Error('Upload error.');
-                    }
+                    if (response.stderr) throw new Error(response.stderr);
                 }
             }
         }
         const toplevelNames = await fs.readdir(`${sourceDirectory}/${uploadDirectory}/`);
         await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}`, uploadDirectory, toplevelNames);
-        console.log('✅ Directory uploaded to R2.');
+        console.info('✅ Directory uploaded to R2.');
     } catch (error) {
-        console.warn('❌ Error uploading directory to R2.', error);
+        console.error('❌ Error uploading directory to R2.', error);
     }
 }
 
 // Utilities - Upload module configuration.
 async function uploadModuleConfig(): Promise<void> {
     try {
-        console.log('🚀 Uploading module configuration....');
+        console.info('🚀 Uploading module configuration....');
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
         const stateId = configJSON.id;
         const options = {
@@ -319,27 +321,24 @@ async function uploadModuleConfig(): Promise<void> {
             method: 'PUT'
         };
         const response = await fetch(`https://api.datapos.app/states/${stateId}`, options);
-        if (!response.ok) console.log(await response.text());
-        console.log('✅ Module configuration uploaded.');
+        if (!response.ok) throw new Error(await response.text());
+        console.info('✅ Module configuration uploaded.');
     } catch (error) {
-        console.warn('❌ Error uploading module configuration.', error);
+        console.error('❌ Error uploading module configuration.', error);
     }
 }
 
 // Utilities - Upload module to Cloudflare R2.
 async function uploadModuleToR2(fromPath: string, toPath: string): Promise<void> {
     try {
-        console.log('🚀 Uploading module to R2....');
+        console.info('🚀 Uploading module to R2....');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const toPathWithVersion = toPath.replace(/^(.*?\.)/, `$1v${packageJSON.version}.`);
-        const { stdout, stderr } = await exec(
-            `wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`
-        );
-        if (stdout) console.log(stdout);
-        if (stderr) console.error(stderr);
-        console.log('✅ Module uploaded to R2.');
+        const { stderr } = await exec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`);
+        if (stderr) throw new Error(stderr);
+        console.info('✅ Module uploaded to R2.');
     } catch (error) {
-        console.warn('❌ Error uploading module to R2.', error);
+        console.error('❌ Error uploading module to R2.', error);
     }
 }
 
@@ -352,6 +351,7 @@ export {
     buildPresenterConfig,
     buildPublicDirectoryIndex,
     bumpVersion,
+    echoError,
     sendDeploymentNotice,
     syncWithGitHub,
     uploadDirectoryToR2,

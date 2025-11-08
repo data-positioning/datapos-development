@@ -3,7 +3,7 @@
     "license": "MIT",
     "private": false,
     "type": "module",
-    "version": "0.3.61",
+    "version": "0.3.62",
     "files": [
         "dist"
     ],
@@ -37,16 +37,16 @@
     "scripts": {
         "audit": "npm audit",
         "build": "vite build",
-        "buildConfig": "echo \"***** BUILD CONFIG SCRIPT NOT IMPLEMENTED. *****\"",
-        "bumpVersion": "node -e \"import('./dist/datapos-development.es.js').then(m => m.bumpVersion())\"",
+        "bump:version": "node -e \"import('./dist/datapos-development.es.js').then(m => m.bumpVersion())\"",
         "check": "npm outdated; npm-check-updates -i && retire",
         "document": "license-report --only=prod,peer > LICENSES.json && license-report-check --source ./LICENSES.json --allowed 'MIT' --allowed 'n/a' --allowed 'Apache-2.0' --output=table",
         "format": "prettier --write src/",
         "lint": "eslint .",
-        "publishToNPM": "npm publish --access public",
-        "release": "npm run syncWithGitHub && npm run build && npm run publishToNPM",
-        "syncWithGitHub": "npm run bumpVersion && node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",
-        "test": "echo \"***** TEST SCRIPT NOT IMPLEMENTED. *****\"",
-        "updateDependencies": "npm install -D @datapos/datapos-shared@latest"
+        "publish:toNPM": "npm publish --access public",
+        "release": "npm run sync:withGitHub && npm run build && npm run publish:toNPM",
+        "sync:withGitHub": "npm run bump:version && node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",
+        "test": "bash -c 'echo \"❌ Test script not implemented.\"'",
+        "update:dataPosDeps": "npm run _update:developDeps",
+        "_update:developDeps": "npm install --save-dev @datapos/datapos-development@latest"
     }
 }

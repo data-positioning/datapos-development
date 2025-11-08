@@ -3,7 +3,7 @@
     "license": "MIT",
     "private": false,
     "type": "module",
-    "version": "0.3.62",
+    "version": "0.3.63",
     "files": [
         "dist"
     ],
@@ -45,7 +45,7 @@
         "publish:toNPM": "npm publish --access public",
         "release": "npm run sync:withGitHub && npm run build && npm run publish:toNPM",
         "sync:withGitHub": "npm run bump:version && node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",
-        "test": "bash -c 'echo \"❌ Test script not implemented.\"'",
+        "test": "node -e \"import('./dist/datapos-development.es.js').then(m => m.echoScriptNotImplemented('Test'))\"",
         "update:dataPosDeps": "npm run _update:developDeps",
         "_update:developDeps": "npm install --save-dev @datapos/datapos-development@latest"
     }

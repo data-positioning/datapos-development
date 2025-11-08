@@ -244,9 +244,9 @@ async function bumpVersion(): Promise<void> {
 //     }
 // }
 
-// Utilities - Echo error.
-function echoError(message: string): void {
-    console.error(`❌ ${message}`);
+// Utilities - Echo not implemented.
+function echoScriptNotImplemented(name: string): void {
+    console.error(`❌ ${name} script not implemented.`);
 }
 
 // Utilities - Send deployment notice.
@@ -351,7 +351,7 @@ export {
     buildPresenterConfig,
     buildPublicDirectoryIndex,
     bumpVersion,
-    echoError,
+    echoScriptNotImplemented,
     sendDeploymentNotice,
     syncWithGitHub,
     uploadDirectoryToR2,

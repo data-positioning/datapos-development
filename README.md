@@ -73,7 +73,7 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 ## TODO
 
 1. Enhance `uploadDirectoryToR2`to batch upload files so more efficient and performant.
-1. Replace regex with TypeScript AST in `buildConnectorConfig`. More accurate.
+1. Replace regex with TypeScript AST in `buildConnectorConfig`. Extracting method names from index.ts via regex is fragile — breaks with decorators, comments, or new syntax (e.g., class fields). AST parsing (via @babel/parser or typescript) would be safer.
 1. Implement zod to validate config schemas.
 
 ## Compliance

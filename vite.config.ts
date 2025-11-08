@@ -19,7 +19,7 @@ export default defineConfig({
         },
         target: 'ESNext',
         rollupOptions: {
-            external: ['child_process', 'fs', 'util']
+            external: ['child_process', 'fs', 'nanoid', 'util']
         }
     },
     plugins: [dts({ outDir: 'dist/types' })],

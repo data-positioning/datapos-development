@@ -225,25 +225,6 @@ async function bumpVersion(): Promise<void> {
     }
 }
 
-// // Utilities - Clear directory.
-// async function clearDirectory(directoryPath: string): Promise<void> {
-//     try {
-//         console.info('🚀 Clearing directory...');
-//         for (const itemName of await fs.readdir(directoryPath)) {
-//             const itemPath = `${directoryPath}/${itemName}`;
-//             const stats = await fs.stat(itemPath);
-//             if (stats.isDirectory()) {
-//                 await fs.rm(itemPath, { recursive: true, force: true });
-//             } else {
-//                 await fs.unlink(itemPath);
-//             }
-//         }
-//         console.info('✅ Directory cleared.');
-//     } catch (error) {
-//         console.error('❌ Error bumping package version.', error);
-//     }
-// }
-
 // Utilities - Echo not implemented.
 function echoScriptNotImplemented(name: string): void {
     console.error(`❌ ${name} script not implemented.`);

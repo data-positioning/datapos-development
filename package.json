@@ -1,20 +1,30 @@
 {
     "name": "@datapos/datapos-development",
+    "version": "0.3.64",
+    "description": "A TypeScript library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
+    "author": "Jonathan Terrell <terrell.jm@gmail.com>",
     "private": false,
     "type": "module",
-    "version": "0.3.63",
-    "files": [
-        "dist"
-    ],
+    "homepage": "https://www.datapos.app",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/data-positioning/datapos-development.git"
+    },
+    "bugs": {
+        "url": "https://github.com/data-positioning/datapos-development/issues"
+    },
     "module": "./dist/datapos-development.es.js",
+    "types": "./dist/types/src/index.d.ts",
     "exports": {
         ".": {
             "import": "./dist/datapos-development.es.js",
             "types": "./dist/types/src/index.d.ts"
         }
     },
-    "types": "./dist/types/src/index.d.ts",
+    "files": [
+        "dist"
+    ],
     "devDependencies": {
         "@datapos/datapos-shared": "^0.3.140",
         "@types/node": "^24.10.0",
@@ -39,7 +49,7 @@
         "build": "vite build",
         "bump:version": "node -e \"import('./dist/datapos-development.es.js').then(m => m.bumpVersion())\"",
         "check": "npm outdated; npm-check-updates -i && retire",
-        "document": "license-report --only=prod,peer > LICENSES.json && license-report-check --source ./LICENSES.json --allowed 'MIT' --allowed 'n/a' --allowed 'Apache-2.0' --output=table",
+        "document": "npm run _document:licenceReport && npm run _document:licenceCheck",
         "format": "prettier --write src/",
         "lint": "eslint .",
         "publish:toNPM": "npm publish --access public",
@@ -47,6 +57,12 @@
         "sync:withGitHub": "npm run bump:version && node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",
         "test": "node -e \"import('./dist/datapos-development.es.js').then(m => m.echoScriptNotImplemented('Test'))\"",
         "update:dataPosDeps": "npm run _update:developDeps",
+        "_document:licenceReport": "license-report --only=prod,peer > LICENSES.json",
+        "_document:licenceCheck": "license-report-check --source ./LICENSES.json --allowed 'MIT' --allowed 'n/a' --allowed 'Apache-2.0' --output=table",
         "_update:developDeps": "npm install --save-dev @datapos/datapos-development@latest"
+    },
+    "engines": {
+        "node": ">=22.0.0",
+        "npm": ">=11.0.0"
     }
 }

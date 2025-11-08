@@ -36,13 +36,12 @@ The `src/index.ts' file exposes the following utilities:
 | Name                      | Notes                                                                    |
 | ------------------------- | ------------------------------------------------------------------------ |
 | buildConfig               | Build the config.json file for the repository.                           |
-| buildConnectorConfig      |                                                                          |
-| buildContextConfig        |                                                                          |
-| buildInformerConfig       |                                                                          |
-| buildPresenterConfig      |                                                                          |
+| buildConnectorConfig      | Build the connector config.json file for the repository.                 |
+| buildContextConfig        | Build the context config.json file for the repository.                   |
+| buildInformerConfig       | Build the informer config.json file for the repository.                  |
+| buildPresenterConfig      | Build the presenter config.json file for the repository.                 |
 | buildPublicDirectoryIndex | Build an index for the repositories public directory.                    |
 | bumpVersion               | Bump the repositories version number.                                    |
-| clearDirectory            | Clear the specified directory.                                           |
 | sendDeploymentNotice      | Send a deployment notice for the repository.                             |
 | syncWithGitHub            | Synchronise the local repository with the main GitHub repository.        |
 | uploadDirectoryToR2       | Upload a directory to Cloudflare R2 storage.                             |
@@ -54,22 +53,21 @@ The `src/index.ts' file exposes the following utilities:
 The table below lists the repository management commands available in this project.
 For detailed implementation, see the `scripts` section in the `package.json` file.
 
-| Name                 | Key Code         | Notes                                                                                                      |
-| -------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------- |
-| audit                | alt+ctrl+shift+a | Audit the project's dependencies for known security vulnerabilities.                                       |
-| build                | alt+ctrl+shift+b | Build the package using Vite.                                                                              |
-| build...Config       |                  | ❌ Not implemented.                                                                                        |
-| bumpVersion          | alt+ctrl+shift+v |                                                                                                            |
-| check                | alt+ctrl+shift+c | List outdated dependencies and run retire scanner.                                                         |
-| document             | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [LICENSES.json](./LICENSES.json). |
-| format               | alt+ctrl+shift+f | Enforce formatting style rules.                                                                            |
-| lint                 | alt+ctrl+shift+l | Check the code for errors and enforce coding style rules.                                                  |
-| publishToNPM         | alt+ctrl+shift+p |                                                                                                            |
-| release              | alt+ctrl+shift+r | Bump version, synchronise local repository with the main GitHub repository and publish to npm.             |
-| sendDeploymentNotice |                  | ❌ Not implemented.                                                                                        |
-| syncWithGitHub       | alt+ctrl+shift+s | Bump version and synchronise local repository with the main GitHub repository.                             |
-| test                 | alt+ctrl+shift+t | ❌ Not implemented.                                                                                        |
-| updateDependencies   | alt+ctrl+shift+u | ❌ Not implemented.                                                                                        |
+| Name               | Key Code         | Notes                                                                                                      |
+| ------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------- |
+| audit              | alt+ctrl+shift+a | Audit the project's dependencies for known security vulnerabilities.                                       |
+| build              | alt+ctrl+shift+b | Build the package using Vite.                                                                              |
+| bump:version       | alt+ctrl+shift+v | Increment patch version number.                                                                            |
+| check              | alt+ctrl+shift+c | List outdated dependencies and run retire scanner.                                                         |
+| document           | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [LICENSES.json](./LICENSES.json). |
+| format             | alt+ctrl+shift+f | Enforce formatting style rules.                                                                            |
+| lint               | alt+ctrl+shift+l | Check the code for errors and enforce coding style rules.                                                  |
+| publish:toNPM      | alt+ctrl+shift+p | Publish the package to npm.                                                                                |
+| release            | alt+ctrl+shift+r | Bump version, synchronise local repository with the main GitHub repository and publish to npm.             |
+| send:deployNotice  | alt+ctrl+shift+n | ❌ Not implemented.                                                                                        |
+| sync:withGitHub    | alt+ctrl+shift+s | Bump version and synchronise local repository with the main GitHub repository.                             |
+| test               | alt+ctrl+shift+t | ❌ Not implemented.                                                                                        |
+| update:dataPosDeps | alt+ctrl+shift+u | Install the latest version of all Data Positioning dependencies.                                           |
 
 ## Compliance
 

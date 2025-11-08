@@ -42,10 +42,11 @@ The `src/index.ts' file exposes the following utilities:
 | buildPresenterConfig      | Build the presenter config.json file for the repository.                 |
 | buildPublicDirectoryIndex | Build an index for the repositories public directory.                    |
 | bumpVersion               | Bump the repositories version number.                                    |
+| echoScriptNotImplemented  | Echo script not implemented message to console..                         |
 | sendDeploymentNotice      | Send a deployment notice for the repository.                             |
 | syncWithGitHub            | Synchronise the local repository with the main GitHub repository.        |
 | uploadDirectoryToR2       | Upload a directory to Cloudflare R2 storage.                             |
-| uploadModuleConfig        | Upload a modules configuration to the Cloudflare `state` durable object. |
+| uploadModuleConfigToDO    | Upload a modules configuration to the Cloudflare `state` durable object. |
 | uploadModuleToR2          | Upload a module to Cloudflare R2 storage.                                |
 
 ## Repository Common Management Commands
@@ -68,6 +69,12 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 | sync:withGitHub    | alt+ctrl+shift+s | Bump version and synchronise local repository with the main GitHub repository.                             |
 | test               | alt+ctrl+shift+t | ❌ Not implemented.                                                                                        |
 | update:dataPosDeps | alt+ctrl+shift+u | Install the latest version of all Data Positioning dependencies.                                           |
+
+## TODO
+
+1. Enhance `uploadDirectoryToR2`to batch upload files so more efficient and performant.
+1. Replace regex with TypeScript AST in `buildConnectorConfig`. More accurate.
+1. Implement zod to validate config schemas.
 
 ## Compliance
 

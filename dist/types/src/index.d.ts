@@ -12,6 +12,6 @@ declare function echoScriptNotImplemented(name: string): void;
 declare function sendDeploymentNotice(): Promise<void>;
 declare function syncWithGitHub(): Promise<void>;
 declare function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void>;
-declare function uploadModuleConfig(): Promise<void>;
+declare function uploadModuleConfigToDO(): Promise<void>;
 declare function uploadModuleToR2(fromPath: string, toPath: string): Promise<void>;
-export { buildConfig, buildConnectorConfig, buildContextConfig, buildInformerConfig, buildPresenterConfig, buildPublicDirectoryIndex, bumpVersion, echoScriptNotImplemented, sendDeploymentNotice, syncWithGitHub, uploadDirectoryToR2, uploadModuleConfig, uploadModuleToR2 };
+export { buildConfig, buildConnectorConfig, buildContextConfig, buildInformerConfig, buildPresenterConfig, buildPublicDirectoryIndex, bumpVersion, echoScriptNotImplemented, sendDeploymentNotice, syncWithGitHub, uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };

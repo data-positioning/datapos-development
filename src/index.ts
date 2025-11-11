@@ -3,7 +3,6 @@
  */
 
 // Dependencies - Vendor.
-import * as path from 'path';
 import { exec as execCallback } from 'child_process';
 import { promises as fs } from 'fs';
 import { nanoid } from 'nanoid';
@@ -333,32 +332,39 @@ async function uploadModuleToR21(fromPath: string, toPath: string): Promise<void
 async function uploadModuleToR2(distDir: string, presenterDir: string): Promise<void> {
     try {
         console.info('🚀 Uploading module to R2...');
+
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const versionedDir = `v${packageJSON.version}`;
-        async function uploadDir(dir: string) {
-            const entries = await fs.readdir(dir, { withFileTypes: true });
+
+        async function uploadDir(currentDir: string, prefix: string = '') {
+            const entries = await fs.readdir(currentDir, { withFileTypes: true });
+
             for (const entry of entries) {
-                console.log(1111, dir, entry);
-                console.log(2222, path);
-                // const fullPath = path.join(dir, entry.name);
+                const fullPath = `${currentDir}/${entry.name}`;
+                const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+
                 if (entry.isDirectory()) {
-                    // await uploadDir(fullPath);
+                    await uploadDir(fullPath, relativePath);
                 } else {
-                    //     const relativePath = path.relative('dist', fullPath);
-                    //     const r2Path = path.join(presenterDir, versionedDir, relativePath).replace(/\\/g, '/');
-                    //     const contentType = fullPath.endsWith('.js') ? 'application/javascript' : fullPath.endsWith('.css') ? 'text/css' : 'application/octet-stream';
-                    //     // const { stderr } = await exec(`wrangler r2 object put ${r2Path} --file=${fullPath} --content-type ${contentType} --jurisdiction=eu --remote`);
-                    //     // if (stderr) throw new Error(stderr);
-                    //     console.info(`✅ Uploaded ${relativePath} to ${r2Path}`);
+                    const r2Path = `${presenterDir}/${versionedDir}/${relativePath}`.replace(/\\/g, '/');
+
+                    const contentType = entry.name.endsWith('.js') ? 'application/javascript' : entry.name.endsWith('.css') ? 'text/css' : 'application/octet-stream';
+
+                    // const { stderr } = await exec(`wrangler r2 object put "${r2Path}" --file="${fullPath}" --content-type ${contentType} --jurisdiction=eu --remote`);
+                    // if (stderr) throw new Error(stderr);
+
+                    console.info(`✅ Uploaded ${relativePath} → ${r2Path}`);
                 }
             }
         }
-        await uploadDir('dist');
-        console.info('✅ Module uploaded to R2.');
+
+        await uploadDir(distDir);
+        console.info('🎉 All files uploaded to R2.');
     } catch (error) {
         console.error('❌ Error uploading module to R2.', error);
     }
 }
+
 // Exposures
 export {
     buildConfig,

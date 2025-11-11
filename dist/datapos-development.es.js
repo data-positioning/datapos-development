@@ -2212,7 +2212,7 @@ async function hi(n) {
       for (const c of s) {
         const u = `${r}/${c.name}`, d = i ? `${i}/${c.name}` : c.name;
         if (!c.isDirectory()) {
-          const l = `${n}/${e}_${d}`.replace(/\\/g, "/"), p = c.name.endsWith(".js") ? "application/javascript" : c.name.endsWith(".css") ? "text/css" : "application/octet-stream";
+          const l = `${n}/${e}/${d}`.replace(/\\/g, "/"), p = c.name.endsWith(".js") ? "application/javascript" : c.name.endsWith(".css") ? "text/css" : "application/octet-stream";
           console.info(`⚙️ Uploading '${d}' → '${l}'...`);
           const { stderr: m } = await N(`wrangler r2 object put "${l}" --file="${u}" --content-type ${p} --jurisdiction=eu --remote`);
           if (m) throw new Error(m);

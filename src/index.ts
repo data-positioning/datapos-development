@@ -342,7 +342,7 @@ async function uploadModuleToR2(uploadDirPath: string): Promise<void> {
                 if (entry.isDirectory()) {
                     // await uploadDir(fullPath, relativePath);
                 } else {
-                    const r2Path = `${uploadDirPath}/${versionedDir}_${relativePath}`.replace(/\\/g, '/');
+                    const r2Path = `${uploadDirPath}/${versionedDir}/${relativePath}`.replace(/\\/g, '/');
                     const contentType = entry.name.endsWith('.js') ? 'application/javascript' : entry.name.endsWith('.css') ? 'text/css' : 'application/octet-stream';
                     console.info(`⚙️ Uploading '${relativePath}' → '${r2Path}'...`);
                     const { stderr } = await asyncExec(`wrangler r2 object put "${r2Path}" --file="${fullPath}" --content-type ${contentType} --jurisdiction=eu --remote`);

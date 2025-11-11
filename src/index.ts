@@ -342,7 +342,7 @@ async function uploadModuleToR2(distDir: string, presenterDir: string): Promise<
                 if (entry.isDirectory()) {
                     await uploadDir(fullPath);
                 } else {
-                    const relativePath = path.relative(distDir, fullPath);
+                    const relativePath = path.relative('dist', fullPath);
                     const r2Path = path.join(presenterDir, versionedDir, relativePath).replace(/\\/g, '/');
                     const contentType = fullPath.endsWith('.js') ? 'application/javascript' : fullPath.endsWith('.css') ? 'text/css' : 'application/octet-stream';
                     const { stderr } = await exec(`wrangler r2 object put ${r2Path} --file=${fullPath} --content-type ${contentType} --jurisdiction=eu --remote`);
@@ -351,7 +351,7 @@ async function uploadModuleToR2(distDir: string, presenterDir: string): Promise<
                 }
             }
         }
-        await uploadDir(distDir);
+        await uploadDir('dist');
         console.info('✅ Module uploaded to R2.');
     } catch (error) {
         console.error('❌ Error uploading module to R2.', error);

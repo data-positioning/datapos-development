@@ -338,17 +338,19 @@ async function uploadModuleToR2(distDir: string, presenterDir: string): Promise<
         async function uploadDir(dir: string) {
             const entries = await fs.readdir(dir, { withFileTypes: true });
             for (const entry of entries) {
-                const fullPath = path.join(dir, entry.name);
-                if (entry.isDirectory()) {
-                    await uploadDir(fullPath);
-                } else {
-                    const relativePath = path.relative('dist', fullPath);
-                    const r2Path = path.join(presenterDir, versionedDir, relativePath).replace(/\\/g, '/');
-                    const contentType = fullPath.endsWith('.js') ? 'application/javascript' : fullPath.endsWith('.css') ? 'text/css' : 'application/octet-stream';
-                    const { stderr } = await exec(`wrangler r2 object put ${r2Path} --file=${fullPath} --content-type ${contentType} --jurisdiction=eu --remote`);
-                    if (stderr) throw new Error(stderr);
-                    console.info(`✅ Uploaded ${relativePath} to ${r2Path}`);
-                }
+                console.log(1111, entry);
+                console.log(2222, path);
+                // const fullPath = path.join(dir, entry.name);
+                // if (entry.isDirectory()) {
+                //     await uploadDir(fullPath);
+                // } else {
+                //     const relativePath = path.relative('dist', fullPath);
+                //     const r2Path = path.join(presenterDir, versionedDir, relativePath).replace(/\\/g, '/');
+                //     const contentType = fullPath.endsWith('.js') ? 'application/javascript' : fullPath.endsWith('.css') ? 'text/css' : 'application/octet-stream';
+                //     // const { stderr } = await exec(`wrangler r2 object put ${r2Path} --file=${fullPath} --content-type ${contentType} --jurisdiction=eu --remote`);
+                //     // if (stderr) throw new Error(stderr);
+                //     console.info(`✅ Uploaded ${relativePath} to ${r2Path}`);
+                // }
             }
         }
         await uploadDir('dist');

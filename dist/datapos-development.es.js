@@ -291,13 +291,13 @@ function Pn(n, t) {
     return (o = e).path ?? (o.path = []), e.path.unshift(n), e;
   });
 }
-function R(n) {
+function D(n) {
   return typeof n == "string" ? n : n?.message;
 }
 function j(n, t, e) {
   const o = { ...n, path: n.path ?? [] };
   if (!n.message) {
-    const r = R(n.inst?._zod.def?.error?.(n)) ?? R(t?.error?.(n)) ?? R(e.customError?.(n)) ?? R(e.localeError?.(n)) ?? "Invalid input";
+    const r = D(n.inst?._zod.def?.error?.(n)) ?? D(t?.error?.(n)) ?? D(e.customError?.(n)) ?? D(e.localeError?.(n)) ?? "Invalid input";
     o.message = r;
   }
   return delete o.inst, delete o.continue, t?.reportInput || delete o.input, o;
@@ -401,7 +401,7 @@ const sn = (n) => (t, e, o, r) => {
 function Nt() {
   return new RegExp(Tt, "u");
 }
-const Ft = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/, Ct = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/, Jt = /^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\/([0-9]|[1-2][0-9]|3[0-2])$/, Rt = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::|([0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:?){0,6})\/(12[0-8]|1[01][0-9]|[1-9]?[0-9])$/, Dt = /^$|^(?:[0-9a-zA-Z+/]{4})*(?:(?:[0-9a-zA-Z+/]{2}==)|(?:[0-9a-zA-Z+/]{3}=))?$/, Nn = /^[A-Za-z0-9_-]*$/, Ut = /^(?=.{1,253}\.?$)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[-0-9a-zA-Z]{0,61}[0-9a-zA-Z])?)*\.?$/, Vt = /^\+(?:[0-9]){6,14}[0-9]$/, Fn = "(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))", Lt = /* @__PURE__ */ new RegExp(`^${Fn}$`);
+const Ft = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/, Ct = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/, Jt = /^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\/([0-9]|[1-2][0-9]|3[0-2])$/, Dt = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::|([0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:?){0,6})\/(12[0-8]|1[01][0-9]|[1-9]?[0-9])$/, Rt = /^$|^(?:[0-9a-zA-Z+/]{4})*(?:(?:[0-9a-zA-Z+/]{2}==)|(?:[0-9a-zA-Z+/]{3}=))?$/, Nn = /^[A-Za-z0-9_-]*$/, Ut = /^(?=.{1,253}\.?$)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[-0-9a-zA-Z]{0,61}[0-9a-zA-Z])?)*\.?$/, Vt = /^\+(?:[0-9]){6,14}[0-9]$/, Fn = "(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))", Lt = /* @__PURE__ */ new RegExp(`^${Fn}$`);
 function Cn(n) {
   const t = "(?:[01]\\d|2[0-3]):[0-5]\\d";
   return typeof n.precision == "number" ? n.precision === -1 ? `${t}` : n.precision === 0 ? `${t}:[0-5]\\d` : `${t}:[0-5]\\d\\.\\d{${n.precision}}` : `${t}(?::[0-5]\\d(?:\\.\\d+)?)?`;
@@ -797,7 +797,7 @@ const se = {
 }), $e = /* @__PURE__ */ a("$ZodCIDRv4", (n, t) => {
   t.pattern ?? (t.pattern = Jt), v.init(n, t);
 }), Ze = /* @__PURE__ */ a("$ZodCIDRv6", (n, t) => {
-  t.pattern ?? (t.pattern = Rt), v.init(n, t), n._zod.check = (e) => {
+  t.pattern ?? (t.pattern = Dt), v.init(n, t), n._zod.check = (e) => {
     const o = e.value.split("/");
     try {
       if (o.length !== 2)
@@ -834,7 +834,7 @@ function Jn(n) {
   }
 }
 const Oe = /* @__PURE__ */ a("$ZodBase64", (n, t) => {
-  t.pattern ?? (t.pattern = Dt), v.init(n, t), n._zod.onattach.push((e) => {
+  t.pattern ?? (t.pattern = Rt), v.init(n, t), n._zod.onattach.push((e) => {
     e._zod.bag.contentEncoding = "base64";
   }), n._zod.check = (e) => {
     Jn(e.value) || e.issues.push({
@@ -929,7 +929,7 @@ const Te = /* @__PURE__ */ a("$ZodArray", (n, t) => {
 function W(n, t, e, o) {
   n.issues.length && t.issues.push(...Pn(e, n.issues)), n.value === void 0 ? e in o && (t.value[e] = void 0) : t.value[e] = n.value;
 }
-function Rn(n) {
+function Dn(n) {
   const t = Object.keys(n.shape);
   for (const o of t)
     if (!n.shape?.[o]?._zod?.traits?.has("$ZodType"))
@@ -943,7 +943,7 @@ function Rn(n) {
     optionalKeys: new Set(e)
   };
 }
-function Dn(n, t, e, o, r, i) {
+function Rn(n, t, e, o, r, i) {
   const s = [], c = r.keySet, u = r.catchall._zod, d = u.def.type;
   for (const l of Object.keys(t)) {
     if (c.has(l))
@@ -974,7 +974,7 @@ const Ne = /* @__PURE__ */ a("$ZodObject", (n, t) => {
       }
     });
   }
-  const e = tn(() => Rn(t));
+  const e = tn(() => Dn(t));
   g(n._zod, "propValues", () => {
     const s = t.shape, c = {};
     for (const u in s) {
@@ -1005,11 +1005,11 @@ const Ne = /* @__PURE__ */ a("$ZodObject", (n, t) => {
       const m = l[p]._zod.run({ value: u[p], issues: [] }, c);
       m instanceof Promise ? d.push(m.then((z) => W(z, s, p, u))) : W(m, s, p, u);
     }
-    return r ? Dn(d, u, s, c, e.value, n) : d.length ? Promise.all(d).then(() => s) : s;
+    return r ? Rn(d, u, s, c, e.value, n) : d.length ? Promise.all(d).then(() => s) : s;
   };
 }), Fe = /* @__PURE__ */ a("$ZodObjectJIT", (n, t) => {
   Ne.init(n, t);
-  const e = n._zod.parse, o = tn(() => Rn(t)), r = (p) => {
+  const e = n._zod.parse, o = tn(() => Dn(t)), r = (p) => {
     const m = new ie(["shape", "payload", "ctx"]), z = o.value, Gn = (Z) => {
       const k = fn(Z);
       return `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
@@ -1051,7 +1051,7 @@ const Ne = /* @__PURE__ */ a("$ZodObject", (n, t) => {
   n._zod.parse = (p, m) => {
     l ?? (l = o.value);
     const z = p.value;
-    return s(z) ? c && u && m?.async === !1 && m.jitless !== !0 ? (i || (i = r(t.shape)), p = i(p, m), d ? Dn([], z, p, m, l, n) : p) : e(p, m) : (p.issues.push({
+    return s(z) ? c && u && m?.async === !1 && m.jitless !== !0 ? (i || (i = r(t.shape)), p = i(p, m), d ? Rn([], z, p, m, l, n) : p) : e(p, m) : (p.issues.push({
       expected: "object",
       code: "invalid_type",
       input: z,
@@ -1151,7 +1151,7 @@ function mn(n, t, e) {
     throw new Error(`Unmergable intersection. Error path: ${JSON.stringify(o.mergeErrorPath)}`);
   return n.value = o.data, n;
 }
-const Re = /* @__PURE__ */ a("$ZodEnum", (n, t) => {
+const De = /* @__PURE__ */ a("$ZodEnum", (n, t) => {
   _.init(n, t);
   const e = et(t.entries), o = new Set(e);
   n._zod.values = o, n._zod.pattern = new RegExp(`^(${e.filter((r) => rt.has(typeof r)).map((r) => typeof r == "string" ? B(r) : r.toString()).join("|")})$`), n._zod.parse = (r, i) => {
@@ -1163,7 +1163,7 @@ const Re = /* @__PURE__ */ a("$ZodEnum", (n, t) => {
       inst: n
     }), r;
   };
-}), De = /* @__PURE__ */ a("$ZodTransform", (n, t) => {
+}), Re = /* @__PURE__ */ a("$ZodTransform", (n, t) => {
   _.init(n, t), n._zod.parse = (e, o) => {
     if (o.direction === "backward")
       throw new xn(n.constructor.name);
@@ -1249,13 +1249,13 @@ const Be = /* @__PURE__ */ a("$ZodCatch", (n, t) => {
   _.init(n, t), g(n._zod, "values", () => t.in._zod.values), g(n._zod, "optin", () => t.in._zod.optin), g(n._zod, "optout", () => t.out._zod.optout), g(n._zod, "propValues", () => t.in._zod.propValues), n._zod.parse = (e, o) => {
     if (o.direction === "backward") {
       const i = t.out._zod.run(e, o);
-      return i instanceof Promise ? i.then((s) => D(s, t.in, o)) : D(i, t.in, o);
+      return i instanceof Promise ? i.then((s) => R(s, t.in, o)) : R(i, t.in, o);
     }
     const r = t.in._zod.run(e, o);
-    return r instanceof Promise ? r.then((i) => D(i, t.out, o)) : D(r, t.out, o);
+    return r instanceof Promise ? r.then((i) => R(i, t.out, o)) : R(r, t.out, o);
   };
 });
-function D(n, t, e) {
+function R(n, t, e) {
   return n.issues.length ? (n.aborted = !0, n) : t._zod.run({ value: n.value, issues: n.issues }, e);
 }
 const Ge = /* @__PURE__ */ a("$ZodReadonly", (n, t) => {
@@ -1687,8 +1687,8 @@ function Jo(n, t, e) {
     ...f(e)
   });
 }
-function Ro(n) {
-  const t = Do((e) => (e.addIssue = (o) => {
+function Do(n) {
+  const t = Ro((e) => (e.addIssue = (o) => {
     if (typeof o == "string")
       e.issues.push(C(o, e.value, t._zod.def));
     else {
@@ -1698,7 +1698,7 @@ function Ro(n) {
   }, n(e.value, e)));
   return t;
 }
-function Do(n, t) {
+function Ro(n, t) {
   const e = new $({
     check: "custom",
     ...f(t)
@@ -1765,7 +1765,7 @@ const Ho = (n, t) => {
     ...t.checks ?? [],
     ...e.map((o) => typeof o == "function" ? { _zod: { check: o, def: { check: "custom" }, onattach: [] } } : o)
   ]
-})), n.clone = (e, o) => O(n, e, o), n.brand = () => n, n.register = (e, o) => (e.add(n, o), n), n.parse = (e, o) => qo(n, e, o, { callee: n.parse }), n.safeParse = (e, o) => Xo(n, e, o), n.parseAsync = async (e, o) => Yo(n, e, o, { callee: n.parseAsync }), n.safeParseAsync = async (e, o) => Qo(n, e, o), n.spa = n.safeParseAsync, n.encode = (e, o) => nr(n, e, o), n.decode = (e, o) => tr(n, e, o), n.encodeAsync = async (e, o) => er(n, e, o), n.decodeAsync = async (e, o) => or(n, e, o), n.safeEncode = (e, o) => rr(n, e, o), n.safeDecode = (e, o) => ir(n, e, o), n.safeEncodeAsync = async (e, o) => sr(n, e, o), n.safeDecodeAsync = async (e, o) => ar(n, e, o), n.refine = (e, o) => n.check(qr(e, o)), n.superRefine = (e) => n.check(Yr(e)), n.overwrite = (e) => n.check(J(e)), n.optional = () => kn(n), n.nullable = () => $n(n), n.nullish = () => kn($n(n)), n.nonoptional = (e) => Lr(n, e), n.array = () => Sr(n), n.or = (e) => Ir([n, e]), n.and = (e) => Nr(n, e), n.transform = (e) => Zn(n, Cr(e)), n.default = (e) => Dr(n, e), n.prefault = (e) => Vr(n, e), n.catch = (e) => Mr(n, e), n.pipe = (e) => Zn(n, e), n.readonly = () => Gr(n), n.describe = (e) => {
+})), n.clone = (e, o) => O(n, e, o), n.brand = () => n, n.register = (e, o) => (e.add(n, o), n), n.parse = (e, o) => qo(n, e, o, { callee: n.parse }), n.safeParse = (e, o) => Xo(n, e, o), n.parseAsync = async (e, o) => Yo(n, e, o, { callee: n.parseAsync }), n.safeParseAsync = async (e, o) => Qo(n, e, o), n.spa = n.safeParseAsync, n.encode = (e, o) => nr(n, e, o), n.decode = (e, o) => tr(n, e, o), n.encodeAsync = async (e, o) => er(n, e, o), n.decodeAsync = async (e, o) => or(n, e, o), n.safeEncode = (e, o) => rr(n, e, o), n.safeDecode = (e, o) => ir(n, e, o), n.safeEncodeAsync = async (e, o) => sr(n, e, o), n.safeDecodeAsync = async (e, o) => ar(n, e, o), n.refine = (e, o) => n.check(qr(e, o)), n.superRefine = (e) => n.check(Yr(e)), n.overwrite = (e) => n.check(J(e)), n.optional = () => kn(n), n.nullable = () => $n(n), n.nullish = () => kn($n(n)), n.nonoptional = (e) => Lr(n, e), n.array = () => Sr(n), n.or = (e) => Ir([n, e]), n.and = (e) => Nr(n, e), n.transform = (e) => Zn(n, Cr(e)), n.default = (e) => Rr(n, e), n.prefault = (e) => Vr(n, e), n.catch = (e) => Mr(n, e), n.pipe = (e) => Zn(n, e), n.readonly = () => Gr(n), n.describe = (e) => {
   const o = n.clone();
   return U.add(o, { description: e }), o;
 }, Object.defineProperty(n, "description", {
@@ -1878,7 +1878,7 @@ function Nr(n, t) {
   });
 }
 const nn = /* @__PURE__ */ a("ZodEnum", (n, t) => {
-  Re.init(n, t), w.init(n, t), n.enum = t.entries, n.options = Object.values(t.entries);
+  De.init(n, t), w.init(n, t), n.enum = t.entries, n.options = Object.values(t.entries);
   const e = new Set(Object.keys(t.entries));
   n.extract = (o, r) => {
     const i = {};
@@ -1917,7 +1917,7 @@ function Mn(n, t) {
   });
 }
 const Fr = /* @__PURE__ */ a("ZodTransform", (n, t) => {
-  De.init(n, t), w.init(n, t), n._zod.parse = (e, o) => {
+  Re.init(n, t), w.init(n, t), n._zod.parse = (e, o) => {
     if (o.direction === "backward")
       throw new xn(n.constructor.name);
     e.addIssue = (i) => {
@@ -1956,11 +1956,11 @@ function $n(n) {
     innerType: n
   });
 }
-const Rr = /* @__PURE__ */ a("ZodDefault", (n, t) => {
+const Dr = /* @__PURE__ */ a("ZodDefault", (n, t) => {
   Le.init(n, t), w.init(n, t), n.unwrap = () => n._zod.def.innerType, n.removeDefault = n.unwrap;
 });
-function Dr(n, t) {
-  return new Rr({
+function Rr(n, t) {
+  return new Dr({
     type: "default",
     innerType: n,
     get defaultValue() {
@@ -2027,7 +2027,7 @@ function qr(n, t = {}) {
   return Jo(Hr, n, t);
 }
 function Yr(n) {
-  return Ro(n);
+  return Do(n);
 }
 const On = Wn({
   "en-au": A().optional(),
@@ -2214,13 +2214,13 @@ async function mi(n, t) {
         if (c.isDirectory())
           await r(u);
         else {
-          const d = q.relative(n, u), l = q.join(t, o, d).replace(/\\/g, "/"), p = u.endsWith(".js") ? "application/javascript" : u.endsWith(".css") ? "text/css" : "application/octet-stream", { stderr: m } = await N(`wrangler r2 object put ${l} --file=${u} --content-type ${p} --jurisdiction=eu --remote`);
+          const d = q.relative("dist", u), l = q.join(t, o, d).replace(/\\/g, "/"), p = u.endsWith(".js") ? "application/javascript" : u.endsWith(".css") ? "text/css" : "application/octet-stream", { stderr: m } = await N(`wrangler r2 object put ${l} --file=${u} --content-type ${p} --jurisdiction=eu --remote`);
           if (m) throw new Error(m);
           console.info(`✅ Uploaded ${d} to ${l}`);
         }
       }
     }
-    await r(n), console.info("✅ Module uploaded to R2.");
+    await r("dist"), console.info("✅ Module uploaded to R2.");
   } catch (e) {
     console.error("❌ Error uploading module to R2.", e);
   }

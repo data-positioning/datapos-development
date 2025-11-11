@@ -3,8 +3,8 @@
  */
 
 // Dependencies - Vendor.
-import { exec as execCallback } from 'child_process';
-import { promises as fs } from 'fs';
+import { exec } from 'child_process';
+import fs from 'fs/promises';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'util';
@@ -36,7 +36,7 @@ interface DirectoryObjectEntry extends DirectoryEntry {
 }
 
 // Initialisation
-const exec = promisify(execCallback);
+const asyncExec = promisify(exec);
 
 // Utilities - Build configuration.
 async function buildConfig(): Promise<void> {
@@ -256,9 +256,9 @@ async function syncWithGitHub(): Promise<void> {
     try {
         console.info('🚀 Synchronising with GitHub....');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        await exec('git add .');
-        await exec(`git commit -m "v${packageJSON.version}"`);
-        await exec('git push origin main:main');
+        await asyncExec('git add .');
+        await asyncExec(`git commit -m "v${packageJSON.version}"`);
+        await asyncExec('git push origin main:main');
         console.info(`✅ Synchronised version ${packageJSON.version} with GitHub.`);
     } catch (error) {
         console.error('❌ Error synchronising with GitHub.', error);
@@ -280,7 +280,7 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
                 } else {
                     console.info(`⚙️ Uploading '${currentSourceDirectory}/${name}'.`);
                     const command = `wrangler r2 object put "datapos-sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
-                    const response = await exec(command);
+                    const response = await asyncExec(command);
                     if (response.stderr) throw new Error(response.stderr);
                 }
             }
@@ -319,7 +319,7 @@ async function uploadModuleToR21(fromPath: string, toPath: string): Promise<void
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const toPathWithVersion = toPath.replace(/^(.*?\.)/, `$1v${packageJSON.version}.`);
 
-        const { stderr } = await exec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`);
+        const { stderr } = await asyncExec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`);
         if (stderr) throw new Error(stderr);
 
         console.info('✅ Module uploaded to R2.');
@@ -350,8 +350,8 @@ async function uploadModuleToR2(distDir: string, presenterDir: string): Promise<
 
                     const contentType = entry.name.endsWith('.js') ? 'application/javascript' : entry.name.endsWith('.css') ? 'text/css' : 'application/octet-stream';
 
-                    // const { stderr } = await exec(`wrangler r2 object put "${r2Path}" --file="${fullPath}" --content-type ${contentType} --jurisdiction=eu --remote`);
-                    // if (stderr) throw new Error(stderr);
+                    const { stderr } = await asyncExec(`wrangler r2 object put "${r2Path}" --file="${fullPath}" --content-type ${contentType} --jurisdiction=eu --remote`);
+                    if (stderr) throw new Error(stderr);
 
                     console.info(`✅ Uploaded ${relativePath} → ${r2Path}`);
                 }
@@ -359,7 +359,7 @@ async function uploadModuleToR2(distDir: string, presenterDir: string): Promise<
         }
 
         await uploadDir('dist');
-        console.info('🎉 All files uploaded to R2.');
+        console.info('✅ Module uploaded to R2.');
     } catch (error) {
         console.error('❌ Error uploading module to R2.', error);
     }

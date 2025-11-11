@@ -358,7 +358,7 @@ async function uploadModuleToR2(distDir: string, presenterDir: string): Promise<
             }
         }
 
-        await uploadDir(distDir);
+        await uploadDir('dist');
         console.info('🎉 All files uploaded to R2.');
     } catch (error) {
         console.error('❌ Error uploading module to R2.', error);

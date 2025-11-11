@@ -278,7 +278,7 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
                     const nextLevelChildren = await fs.readdir(sourceItemPath);
                     await listDirectoryEntriesRecursively(sourceItemPath, destinationItemPath, nextLevelChildren);
                 } else {
-                    console.info(`⚙️ Uploading '${currentSourceDirectory}/${name}'.`);
+                    console.info(`⚙️ Uploading '${currentSourceDirectory}/${name}'...`);
                     const command = `wrangler r2 object put "datapos-sample-data-eu/${currentDestinationDirectory}/${name}" --file="${currentSourceDirectory}/${name}" --jurisdiction=eu --remote`;
                     const response = await asyncExec(command);
                     if (response.stderr) throw new Error(response.stderr);
@@ -312,52 +312,44 @@ async function uploadModuleConfigToDO(): Promise<void> {
     }
 }
 
+// // Utilities - Upload module to Cloudflare R2.
+// async function uploadModuleToR21(fromPath: string, toPath: string): Promise<void> {
+//     try {
+//         console.info('🚀 Uploading module to R2....');
+//         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
+//         const toPathWithVersion = toPath.replace(/^(.*?\.)/, `$1v${packageJSON.version}.`);
+
+//         const { stderr } = await asyncExec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`);
+//         if (stderr) throw new Error(stderr);
+
+//         console.info('✅ Module uploaded to R2.');
+//     } catch (error) {
+//         console.error('❌ Error uploading module to R2.', error);
+//     }
+// }
+
 // Utilities - Upload module to Cloudflare R2.
-async function uploadModuleToR21(fromPath: string, toPath: string): Promise<void> {
-    try {
-        console.info('🚀 Uploading module to R2....');
-        const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        const toPathWithVersion = toPath.replace(/^(.*?\.)/, `$1v${packageJSON.version}.`);
-
-        const { stderr } = await asyncExec(`wrangler r2 object put ${toPathWithVersion} --file=dist/${fromPath} --content-type application/javascript --jurisdiction=eu --remote`);
-        if (stderr) throw new Error(stderr);
-
-        console.info('✅ Module uploaded to R2.');
-    } catch (error) {
-        console.error('❌ Error uploading module to R2.', error);
-    }
-}
-
-// Utilities - Upload module to Cloudflare R2.
-async function uploadModuleToR2(distDir: string, presenterDir: string): Promise<void> {
+async function uploadModuleToR2(uploadDirPath: string): Promise<void> {
     try {
         console.info('🚀 Uploading module to R2...');
-
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const versionedDir = `v${packageJSON.version}`;
-
         async function uploadDir(currentDir: string, prefix: string = '') {
             const entries = await fs.readdir(currentDir, { withFileTypes: true });
-
             for (const entry of entries) {
                 const fullPath = `${currentDir}/${entry.name}`;
                 const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
-
                 if (entry.isDirectory()) {
                     await uploadDir(fullPath, relativePath);
                 } else {
-                    const r2Path = `${presenterDir}/${versionedDir}/${relativePath}`.replace(/\\/g, '/');
-
+                    const r2Path = `${uploadDirPath}/${versionedDir}/${relativePath}`.replace(/\\/g, '/');
                     const contentType = entry.name.endsWith('.js') ? 'application/javascript' : entry.name.endsWith('.css') ? 'text/css' : 'application/octet-stream';
-
+                    console.info(`⚙️ Uploading '${relativePath}' → '${r2Path}'...`);
                     const { stderr } = await asyncExec(`wrangler r2 object put "${r2Path}" --file="${fullPath}" --content-type ${contentType} --jurisdiction=eu --remote`);
                     if (stderr) throw new Error(stderr);
-
-                    console.info(`✅ Uploaded ${relativePath} → ${r2Path}`);
                 }
             }
         }
-
         await uploadDir('dist');
         console.info('✅ Module uploaded to R2.');
     } catch (error) {

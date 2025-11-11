@@ -2212,8 +2212,11 @@ async function gi(n, t) {
     const o = `v${JSON.parse(await p.readFile("package.json", "utf8")).version}`;
     async function r(i) {
       const s = await p.readdir(i, { withFileTypes: !0 });
-      for (const c of s)
+      for (const c of s) {
         console.log(1111, c), console.log(2222, nt);
+        const u = (void 0)(i, c.name);
+        c.isDirectory() && await r(u);
+      }
     }
     await r("dist"), console.info("✅ Module uploaded to R2.");
   } catch (e) {

@@ -338,11 +338,11 @@ async function uploadModuleToR2(distDir: string, presenterDir: string): Promise<
         async function uploadDir(dir: string) {
             const entries = await fs.readdir(dir, { withFileTypes: true });
             for (const entry of entries) {
-                console.log(1111, entry);
+                console.log(1111, dir, entry);
                 console.log(2222, path);
-                const fullPath = path.join(dir, entry.name);
+                // const fullPath = path.join(dir, entry.name);
                 if (entry.isDirectory()) {
-                    await uploadDir(fullPath);
+                    // await uploadDir(fullPath);
                 } else {
                     //     const relativePath = path.relative('dist', fullPath);
                     //     const r2Path = path.join(presenterDir, versionedDir, relativePath).replace(/\\/g, '/');

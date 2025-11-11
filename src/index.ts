@@ -3,11 +3,11 @@
  */
 
 // Dependencies - Vendor.
+import * as path from 'path';
 import { exec as execCallback } from 'child_process';
 import { promises as fs } from 'fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
-import path from 'path';
 import { promisify } from 'util';
 
 // Dependencies - Framework.

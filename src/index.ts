@@ -4,7 +4,7 @@
 
 // Dependencies - Vendor.
 import { exec } from 'child_process';
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'util';

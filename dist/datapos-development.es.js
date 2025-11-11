@@ -119,7 +119,7 @@ const et = nn(() => {
     return !1;
   }
 });
-function N(n) {
+function F(n) {
   if (L(n) === !1)
     return !1;
   const t = n.constructor;
@@ -129,7 +129,7 @@ function N(n) {
   return !(L(e) === !1 || Object.prototype.hasOwnProperty.call(e, "isPrototypeOf") === !1);
 }
 function En(n) {
-  return N(n) ? { ...n } : Array.isArray(n) ? [...n] : n;
+  return F(n) ? { ...n } : Array.isArray(n) ? [...n] : n;
 }
 const ot = /* @__PURE__ */ new Set(["string", "number", "symbol"]);
 function B(n) {
@@ -186,7 +186,7 @@ function st(n, t) {
   return O(n, o);
 }
 function at(n, t) {
-  if (!N(t))
+  if (!F(t))
     throw new Error("Invalid input to extend: expected a plain object");
   const e = n._zod.def.checks;
   if (e && e.length > 0)
@@ -201,7 +201,7 @@ function at(n, t) {
   return O(n, o);
 }
 function ct(n, t) {
-  if (!N(t))
+  if (!F(t))
     throw new Error("Invalid input to safeExtend: expected a plain object");
   const e = {
     ...n._zod.def,
@@ -291,13 +291,13 @@ function Sn(n, t) {
     return (o = e).path ?? (o.path = []), e.path.unshift(n), e;
   });
 }
-function J(n) {
+function D(n) {
   return typeof n == "string" ? n : n?.message;
 }
 function j(n, t, e) {
   const o = { ...n, path: n.path ?? [] };
   if (!n.message) {
-    const r = J(n.inst?._zod.def?.error?.(n)) ?? J(t?.error?.(n)) ?? J(e.customError?.(n)) ?? J(e.localeError?.(n)) ?? "Invalid input";
+    const r = D(n.inst?._zod.def?.error?.(n)) ?? D(t?.error?.(n)) ?? D(e.customError?.(n)) ?? D(e.localeError?.(n)) ?? "Invalid input";
     o.message = r;
   }
   return delete o.inst, delete o.continue, t?.reportInput || delete o.input, o;
@@ -305,7 +305,7 @@ function j(n, t, e) {
 function on(n) {
   return Array.isArray(n) ? "array" : typeof n == "string" ? "string" : "unknown";
 }
-function F(...n) {
+function C(...n) {
   const [t, e, o] = n;
   return typeof t == "string" ? {
     message: t,
@@ -1113,7 +1113,7 @@ function Y(n, t) {
     return { valid: !0, data: n };
   if (n instanceof Date && t instanceof Date && +n == +t)
     return { valid: !0, data: n };
-  if (N(n) && N(t)) {
+  if (F(n) && F(t)) {
     const e = Object.keys(t), o = Object.keys(n).filter((i) => e.indexOf(i) !== -1), r = { ...n, ...t };
     for (const i of o) {
       const s = Y(n[i], t[i]);
@@ -1249,13 +1249,13 @@ const Me = /* @__PURE__ */ a("$ZodCatch", (n, t) => {
   _.init(n, t), g(n._zod, "values", () => t.in._zod.values), g(n._zod, "optin", () => t.in._zod.optin), g(n._zod, "optout", () => t.out._zod.optout), g(n._zod, "propValues", () => t.in._zod.propValues), n._zod.parse = (e, o) => {
     if (o.direction === "backward") {
       const i = t.out._zod.run(e, o);
-      return i instanceof Promise ? i.then((s) => D(s, t.in, o)) : D(i, t.in, o);
+      return i instanceof Promise ? i.then((s) => R(s, t.in, o)) : R(i, t.in, o);
     }
     const r = t.in._zod.run(e, o);
-    return r instanceof Promise ? r.then((i) => D(i, t.out, o)) : D(r, t.out, o);
+    return r instanceof Promise ? r.then((i) => R(i, t.out, o)) : R(r, t.out, o);
   };
 });
-function D(n, t, e) {
+function R(n, t, e) {
   return n.issues.length ? (n.aborted = !0, n) : t._zod.run({ value: n.value, issues: n.issues }, e);
 }
 const Ke = /* @__PURE__ */ a("$ZodReadonly", (n, t) => {
@@ -1289,7 +1289,7 @@ function _n(n, t, e, o) {
       continue: !o._zod.def.abort
       // params: inst._zod.def.params,
     };
-    o._zod.def.params && (r.params = o._zod.def.params), t.issues.push(F(r));
+    o._zod.def.params && (r.params = o._zod.def.params), t.issues.push(C(r));
   }
 }
 class He {
@@ -1329,7 +1329,7 @@ class He {
 function qe() {
   return new He();
 }
-const R = /* @__PURE__ */ qe();
+const U = /* @__PURE__ */ qe();
 function Ye(n, t) {
   return new n({
     type: "string",
@@ -1651,23 +1651,23 @@ function Po(n, t) {
     suffix: n
   });
 }
-function C(n) {
+function J(n) {
   return new oe({
     check: "overwrite",
     tx: n
   });
 }
 function Ao(n) {
-  return C((t) => t.normalize(n));
+  return J((t) => t.normalize(n));
 }
 function Io() {
-  return C((n) => n.trim());
+  return J((n) => n.trim());
 }
 function To() {
-  return C((n) => n.toLowerCase());
+  return J((n) => n.toLowerCase());
 }
 function No() {
-  return C((n) => n.toUpperCase());
+  return J((n) => n.toUpperCase());
 }
 function Fo(n, t, e) {
   return new n({
@@ -1690,10 +1690,10 @@ function Co(n, t, e) {
 function Jo(n) {
   const t = Do((e) => (e.addIssue = (o) => {
     if (typeof o == "string")
-      e.issues.push(F(o, e.value, t._zod.def));
+      e.issues.push(C(o, e.value, t._zod.def));
     else {
       const r = o;
-      r.fatal && (r.continue = !1), r.code ?? (r.code = "custom"), r.input ?? (r.input = e.value), r.inst ?? (r.inst = t), r.continue ?? (r.continue = !t._zod.def.abort), e.issues.push(F(r));
+      r.fatal && (r.continue = !1), r.code ?? (r.code = "custom"), r.input ?? (r.input = e.value), r.inst ?? (r.inst = t), r.continue ?? (r.continue = !t._zod.def.abort), e.issues.push(C(r));
     }
   }, n(e.value, e)));
   return t;
@@ -1765,25 +1765,25 @@ const Go = (n, t) => {
     ...t.checks ?? [],
     ...e.map((o) => typeof o == "function" ? { _zod: { check: o, def: { check: "custom" }, onattach: [] } } : o)
   ]
-})), n.clone = (e, o) => O(n, e, o), n.brand = () => n, n.register = (e, o) => (e.add(n, o), n), n.parse = (e, o) => Ho(n, e, o, { callee: n.parse }), n.safeParse = (e, o) => Yo(n, e, o), n.parseAsync = async (e, o) => qo(n, e, o, { callee: n.parseAsync }), n.safeParseAsync = async (e, o) => Xo(n, e, o), n.spa = n.safeParseAsync, n.encode = (e, o) => Qo(n, e, o), n.decode = (e, o) => nr(n, e, o), n.encodeAsync = async (e, o) => tr(n, e, o), n.decodeAsync = async (e, o) => er(n, e, o), n.safeEncode = (e, o) => or(n, e, o), n.safeDecode = (e, o) => rr(n, e, o), n.safeEncodeAsync = async (e, o) => ir(n, e, o), n.safeDecodeAsync = async (e, o) => sr(n, e, o), n.refine = (e, o) => n.check(Hr(e, o)), n.superRefine = (e) => n.check(qr(e)), n.overwrite = (e) => n.check(C(e)), n.optional = () => bn(n), n.nullable = () => kn(n), n.nullish = () => bn(kn(n)), n.nonoptional = (e) => Vr(n, e), n.array = () => Er(n), n.or = (e) => Ar([n, e]), n.and = (e) => Tr(n, e), n.transform = (e) => $n(n, Fr(e)), n.default = (e) => Dr(n, e), n.prefault = (e) => Ur(n, e), n.catch = (e) => Wr(n, e), n.pipe = (e) => $n(n, e), n.readonly = () => Kr(n), n.describe = (e) => {
+})), n.clone = (e, o) => O(n, e, o), n.brand = () => n, n.register = (e, o) => (e.add(n, o), n), n.parse = (e, o) => Ho(n, e, o, { callee: n.parse }), n.safeParse = (e, o) => Yo(n, e, o), n.parseAsync = async (e, o) => qo(n, e, o, { callee: n.parseAsync }), n.safeParseAsync = async (e, o) => Xo(n, e, o), n.spa = n.safeParseAsync, n.encode = (e, o) => Qo(n, e, o), n.decode = (e, o) => nr(n, e, o), n.encodeAsync = async (e, o) => tr(n, e, o), n.decodeAsync = async (e, o) => er(n, e, o), n.safeEncode = (e, o) => or(n, e, o), n.safeDecode = (e, o) => rr(n, e, o), n.safeEncodeAsync = async (e, o) => ir(n, e, o), n.safeDecodeAsync = async (e, o) => sr(n, e, o), n.refine = (e, o) => n.check(Hr(e, o)), n.superRefine = (e) => n.check(qr(e)), n.overwrite = (e) => n.check(J(e)), n.optional = () => bn(n), n.nullable = () => kn(n), n.nullish = () => bn(kn(n)), n.nonoptional = (e) => Vr(n, e), n.array = () => Er(n), n.or = (e) => Ar([n, e]), n.and = (e) => Tr(n, e), n.transform = (e) => $n(n, Fr(e)), n.default = (e) => Dr(n, e), n.prefault = (e) => Ur(n, e), n.catch = (e) => Wr(n, e), n.pipe = (e) => $n(n, e), n.readonly = () => Kr(n), n.describe = (e) => {
   const o = n.clone();
-  return R.add(o, { description: e }), o;
+  return U.add(o, { description: e }), o;
 }, Object.defineProperty(n, "description", {
   get() {
-    return R.get(n)?.description;
+    return U.get(n)?.description;
   },
   configurable: !0
 }), n.meta = (...e) => {
   if (e.length === 0)
-    return R.get(n);
+    return U.get(n);
   const o = n.clone();
-  return R.add(o, e[0]), o;
+  return U.add(o, e[0]), o;
 }, n.isOptional = () => n.safeParse(void 0).success, n.isNullable = () => n.safeParse(null).success, n)), Vn = /* @__PURE__ */ a("_ZodString", (n, t) => {
   an.init(n, t), w.init(n, t);
   const e = n._zod.bag;
   n.format = e.format ?? null, n.minLength = e.minimum ?? null, n.maxLength = e.maximum ?? null, n.regex = (...o) => n.check(Oo(...o)), n.includes = (...o) => n.check(Eo(...o)), n.startsWith = (...o) => n.check(So(...o)), n.endsWith = (...o) => n.check(Po(...o)), n.min = (...o) => n.check(M(...o)), n.max = (...o) => n.check(Rn(...o)), n.length = (...o) => n.check(Un(...o)), n.nonempty = (...o) => n.check(M(1, ...o)), n.lowercase = (o) => n.check(xo(o)), n.uppercase = (o) => n.check(jo(o)), n.trim = () => n.check(Io()), n.normalize = (...o) => n.check(Ao(...o)), n.toLowerCase = () => n.check(To()), n.toUpperCase = () => n.check(No());
 }), ar = /* @__PURE__ */ a("ZodString", (n, t) => {
-  an.init(n, t), Vn.init(n, t), n.email = (e) => n.check(Xe(cr, e)), n.url = (e) => n.check(oo(ur, e)), n.jwt = (e) => n.check(_o($r, e)), n.emoji = (e) => n.check(ro(dr, e)), n.guid = (e) => n.check(wn(zn, e)), n.uuid = (e) => n.check(Qe(U, e)), n.uuidv4 = (e) => n.check(no(U, e)), n.uuidv6 = (e) => n.check(to(U, e)), n.uuidv7 = (e) => n.check(eo(U, e)), n.nanoid = (e) => n.check(io(fr, e)), n.guid = (e) => n.check(wn(zn, e)), n.cuid = (e) => n.check(so(lr, e)), n.cuid2 = (e) => n.check(ao(pr, e)), n.ulid = (e) => n.check(co(hr, e)), n.base64 = (e) => n.check(go(zr, e)), n.base64url = (e) => n.check(vo(br, e)), n.xid = (e) => n.check(uo(mr, e)), n.ksuid = (e) => n.check(fo(gr, e)), n.ipv4 = (e) => n.check(lo(vr, e)), n.ipv6 = (e) => n.check(po(yr, e)), n.cidrv4 = (e) => n.check(ho(_r, e)), n.cidrv6 = (e) => n.check(mo(wr, e)), n.e164 = (e) => n.check(yo(kr, e)), n.datetime = (e) => n.check(Uo(e)), n.date = (e) => n.check(Lo(e)), n.time = (e) => n.check(Mo(e)), n.duration = (e) => n.check(Ko(e));
+  an.init(n, t), Vn.init(n, t), n.email = (e) => n.check(Xe(cr, e)), n.url = (e) => n.check(oo(ur, e)), n.jwt = (e) => n.check(_o($r, e)), n.emoji = (e) => n.check(ro(dr, e)), n.guid = (e) => n.check(wn(zn, e)), n.uuid = (e) => n.check(Qe(V, e)), n.uuidv4 = (e) => n.check(no(V, e)), n.uuidv6 = (e) => n.check(to(V, e)), n.uuidv7 = (e) => n.check(eo(V, e)), n.nanoid = (e) => n.check(io(fr, e)), n.guid = (e) => n.check(wn(zn, e)), n.cuid = (e) => n.check(so(lr, e)), n.cuid2 = (e) => n.check(ao(pr, e)), n.ulid = (e) => n.check(co(hr, e)), n.base64 = (e) => n.check(go(zr, e)), n.base64url = (e) => n.check(vo(br, e)), n.xid = (e) => n.check(uo(mr, e)), n.ksuid = (e) => n.check(fo(gr, e)), n.ipv4 = (e) => n.check(lo(vr, e)), n.ipv6 = (e) => n.check(po(yr, e)), n.cidrv4 = (e) => n.check(ho(_r, e)), n.cidrv6 = (e) => n.check(mo(wr, e)), n.e164 = (e) => n.check(yo(kr, e)), n.datetime = (e) => n.check(Uo(e)), n.date = (e) => n.check(Lo(e)), n.time = (e) => n.check(Mo(e)), n.duration = (e) => n.check(Ko(e));
 });
 function A(n) {
   return Ye(ar, n);
@@ -1794,7 +1794,7 @@ const y = /* @__PURE__ */ a("ZodStringFormat", (n, t) => {
   ce.init(n, t), y.init(n, t);
 }), zn = /* @__PURE__ */ a("ZodGUID", (n, t) => {
   se.init(n, t), y.init(n, t);
-}), U = /* @__PURE__ */ a("ZodUUID", (n, t) => {
+}), V = /* @__PURE__ */ a("ZodUUID", (n, t) => {
   ae.init(n, t), y.init(n, t);
 }), ur = /* @__PURE__ */ a("ZodURL", (n, t) => {
   ue.init(n, t), y.init(n, t);
@@ -1922,10 +1922,10 @@ const Nr = /* @__PURE__ */ a("ZodTransform", (n, t) => {
       throw new On(n.constructor.name);
     e.addIssue = (i) => {
       if (typeof i == "string")
-        e.issues.push(F(i, e.value, t));
+        e.issues.push(C(i, e.value, t));
       else {
         const s = i;
-        s.fatal && (s.continue = !1), s.code ?? (s.code = "custom"), s.input ?? (s.input = e.value), s.inst ?? (s.inst = n), e.issues.push(F(s));
+        s.fatal && (s.continue = !1), s.code ?? (s.code = "custom"), s.input ?? (s.input = e.value), s.inst ?? (s.inst = n), e.issues.push(C(s));
       }
     };
     const r = t.transform(e.value, e);
@@ -2041,7 +2041,7 @@ const Zn = Ln({
   statusId: X(),
   typeId: Wn(["app", "engine", "connector", "context", "informer", "presenter"]),
   version: A()
-}), V = Xn(qn);
+}), N = Xn(qn);
 async function ei() {
   try {
     console.info("🚀 Building configuration...");
@@ -2162,7 +2162,7 @@ async function fi() {
   try {
     console.info("🚀 Synchronising with GitHub....");
     const n = JSON.parse(await h.readFile("package.json", "utf8"));
-    await V("git add ."), await V(`git commit -m "v${n.version}"`), await V("git push origin main:main"), console.info(`✅ Synchronised version ${n.version} with GitHub.`);
+    await N("git add ."), await N(`git commit -m "v${n.version}"`), await N("git push origin main:main"), console.info(`✅ Synchronised version ${n.version} with GitHub.`);
   } catch (n) {
     console.error("❌ Error synchronising with GitHub.", n);
   }
@@ -2178,7 +2178,7 @@ async function li(n, t) {
           await e(u, d, p);
         } else {
           console.info(`⚙️ Uploading '${r}/${c}'.`);
-          const p = `wrangler r2 object put "datapos-sample-data-eu/${i}/${c}" --file="${r}/${c}" --jurisdiction=eu --remote`, m = await V(p);
+          const p = `wrangler r2 object put "datapos-sample-data-eu/${i}/${c}" --file="${r}/${c}" --jurisdiction=eu --remote`, m = await N(p);
           if (m.stderr) throw new Error(m.stderr);
         }
       }
@@ -2214,12 +2214,13 @@ async function hi(n, t) {
         if (u.isDirectory())
           await r(d, l);
         else {
-          const p = `${t}/${o}/${l}`.replace(/\\/g, "/"), m = u.name.endsWith(".js") ? "application/javascript" : u.name.endsWith(".css") ? "text/css" : "application/octet-stream";
+          const p = `${t}/${o}/${l}`.replace(/\\/g, "/"), m = u.name.endsWith(".js") ? "application/javascript" : u.name.endsWith(".css") ? "text/css" : "application/octet-stream", { stderr: z } = await N(`wrangler r2 object put "${p}" --file="${d}" --content-type ${m} --jurisdiction=eu --remote`);
+          if (z) throw new Error(z);
           console.info(`✅ Uploaded ${l} → ${p}`);
         }
       }
     }
-    await r("dist"), console.info("🎉 All files uploaded to R2.");
+    await r("dist"), console.info("✅ Module uploaded to R2.");
   } catch (e) {
     console.error("❌ Error uploading module to R2.", e);
   }

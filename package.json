@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.84",
+    "version": "0.3.85",
     "description": "A TypeScript library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -26,11 +26,11 @@
         "dist"
     ],
     "devDependencies": {
-        "@datapos/datapos-development": "^0.3.64",
-        "@datapos/datapos-shared": "^0.3.158",
-        "@types/node": "^24.10.0",
-        "@typescript-eslint/eslint-plugin": "^8.46.3",
-        "@typescript-eslint/parser": "^8.46.3",
+        "@datapos/datapos-development": "^0.3.84",
+        "@datapos/datapos-shared": "^0.3.207",
+        "@types/node": "^24.10.1",
+        "@typescript-eslint/eslint-plugin": "^8.46.4",
+        "@typescript-eslint/parser": "^8.46.4",
         "eslint": "^9.39.1",
         "eslint-plugin-import": "^2.32.0",
         "jiti": "^2.6.1",

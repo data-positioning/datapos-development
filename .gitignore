@@ -1,5 +1,5 @@
+# Data Positioning public git ignore configuration.
 node_modules
 .env
-.env.*
 .npmrc
 **/.DS_Store

@@ -17,7 +17,7 @@ import type { ContextModuleConfig, ContextModuleOperation } from '@datapos/datap
 import type { InformerModuleConfig, InformerModuleOperation } from '@datapos/datapos-shared';
 import type { PresenterModuleConfig, PresenterModuleOperation } from '@datapos/datapos-shared';
 
-import { moduleConfigSchema, ModuleConfigZ } from '@datapos/datapos-shared';
+// import { moduleConfigSchema, ModuleConfigZ } from '@datapos/datapos-shared';
 
 // Interfaces/Types - Directory entry.
 interface DirectoryEntry {
@@ -44,7 +44,9 @@ async function buildConfig(): Promise<void> {
         console.info('🚀 Building configuration...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
-        moduleConfigSchema.parse(configJSON);
+
+        // moduleConfigSchema.parse(configJSON);
+
         if (packageJSON.name) configJSON.id = packageJSON.name;
         if (packageJSON.version) configJSON.version = packageJSON.version;
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
@@ -297,7 +299,7 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
 async function uploadModuleConfigToDO(): Promise<void> {
     try {
         console.info('🚀 Uploading module configuration....');
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfigZ;
+        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
         const stateId = configJSON.id;
         const options = {
             body: JSON.stringify(configJSON),

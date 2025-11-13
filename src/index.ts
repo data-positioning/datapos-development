@@ -47,7 +47,7 @@ async function buildConfig(): Promise<void> {
 
         // moduleConfigSchema.parse(configJSON);
 
-        if (packageJSON.name) configJSON.id = packageJSON.name;
+        if (packageJSON.name) configJSON.id = packageJSON.name.replace('@datapos/', '');
         if (packageJSON.version) configJSON.version = packageJSON.version;
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
         console.info('✅ Configuration built.');

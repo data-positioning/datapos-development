@@ -70,7 +70,7 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 
 ## Bundle Analysis
 
-View the [bundle report](https://data-positioning.github.io/datapos-shared/stats/index.html) to analyze the bundle composition and module sizes (generated with rollup-plugin-visualizer).
+View the [bundle report](https://data-positioning.github.io/datapos-development/stats/index.html) to analyze the bundle composition and module sizes (generated with rollup-plugin-visualizer).
 
 ## TODO
 

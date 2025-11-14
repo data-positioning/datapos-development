@@ -7,6 +7,7 @@ import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 import { fileURLToPath, URL } from 'node:url';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // Exposures - Configuration.
 export default defineConfig({
@@ -19,11 +20,21 @@ export default defineConfig({
         },
         target: 'ESNext',
         rollupOptions: {
-            external: ['child_process', 'fs', 'nanoid', 'util']
+            external: ['child_process', 'fs', 'nanoid', 'util'],
+            plugins: [
+                visualizer({
+                    filename: 'stats/index.html', // HTML report.
+                    open: false, // Automatically opens in browser.
+                    gzipSize: true, // Show gzip sizes.
+                    brotliSize: true // Show brotli sizes.
+                })
+            ]
         }
     },
     plugins: [dts({ outDir: 'dist/types' })],
     resolve: {
-        alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) }
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url))
+        }
     }
 });

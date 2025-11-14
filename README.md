@@ -54,21 +54,23 @@ The `src/index.ts' file exposes the following utilities:
 The table below lists the repository management commands available in this project.
 For detailed implementation, see the `scripts` section in the `package.json` file.
 
-| Name               | Key Code         | Notes                                                                                                      |
-| ------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------- |
-| audit              | alt+ctrl+shift+a | Audit the project's dependencies for known security vulnerabilities.                                       |
-| build              | alt+ctrl+shift+b | Build the package using Vite.                                                                              |
-| bump:version       | alt+ctrl+shift+v | Increment patch version number.                                                                            |
-| check              | alt+ctrl+shift+c | List outdated dependencies and run retire scanner.                                                         |
-| document           | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [LICENSES.json](./LICENSES.json). |
-| format             | alt+ctrl+shift+f | Enforce formatting style rules.                                                                            |
-| lint               | alt+ctrl+shift+l | Check the code for errors and enforce coding style rules.                                                  |
-| publish:toNPM      | alt+ctrl+shift+p | Publish the package to npm.                                                                                |
-| release            | alt+ctrl+shift+r | Bump version, synchronise local repository with the main GitHub repository and publish to npm.             |
-| send:deployNotice  | alt+ctrl+shift+n | ❌ Not implemented.                                                                                        |
-| sync:withGitHub    | alt+ctrl+shift+s | Bump version and synchronise local repository with the main GitHub repository.                             |
-| test               | alt+ctrl+shift+t | ❌ Not implemented.                                                                                        |
-| update:dataPosDeps | alt+ctrl+shift+u | Install the latest version of all Data Positioning dependencies.                                           |
+| Name               | Key Code         | Notes                                                                                                                                           |
+| ------------------ | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| audit              | alt+ctrl+shift+a | Audit the project's dependencies for known security vulnerabilities.                                                                            |
+| build              | alt+ctrl+shift+b | Build the package using Vite. Output to '/dist' directory.                                                                                      |
+| check              | alt+ctrl+shift+c | Identify outdated dependencies using npm `outdated` and `npm-check-updates` with option to install latest versions. Also runs `retire` scanner. |
+| document           | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [LICENSES.json](./LICENSES.json).                                      |
+| format             | alt+ctrl+shift+f | Use `prettier`to enforce formatting style rules.                                                                                                |
+| lint               | alt+ctrl+shift+l | Use `eslint`to check the code for potential errors and enforces coding style rules.                                                             |
+| publish            | alt+ctrl+shift+p | Publish the package to `npm`.                                                                                                                   |
+| release            | alt+ctrl+shift+r | Bump version, build library, synchronise with `GitHub` and publish to `npm`.                                                                    |
+| sync:withGitHub    | alt+ctrl+shift+s | Synchronise local repository with the main GitHub repository.                                                                                   |
+| test               | alt+ctrl+shift+t | ❌ Not implemented.                                                                                                                             |
+| update:dataPosDeps | alt+ctrl+shift+u | Install the latest version of all Data Positioning dependencies.                                                                                |
+
+## Bundle Analysis
+
+View the [bundle report](https://data-positioning.github.io/datapos-shared/stats/index.html) to analyze the bundle composition and module sizes (generated with rollup-plugin-visualizer).
 
 ## TODO
 

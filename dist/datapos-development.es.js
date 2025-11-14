@@ -89,7 +89,7 @@ async function C() {
     console.error("❌ Error building context configuration.", o);
   }
 }
-async function k() {
+async function E() {
   try {
     console.info("🚀 Bumping version...");
     const o = JSON.parse(await e.readFile("package.json", "utf8"));
@@ -102,7 +102,7 @@ async function k() {
     console.error("❌ Error bumping package version.", o);
   }
 }
-function E(o) {
+function k(o) {
   console.error(`❌ ${o} script not implemented.`);
 }
 async function I() {
@@ -173,7 +173,7 @@ async function T(o) {
       for (const a of f) {
         const c = `${r}/${a.name}`, l = t ? `${t}/${a.name}` : a.name;
         if (!a.isDirectory()) {
-          const d = `${o}/${i}_${l}`.replace(/\\/g, "/"), p = a.name.endsWith(".js") ? "application/javascript" : a.name.endsWith(".css") ? "text/css" : "application/octet-stream";
+          const d = `${o}_${i}/${l}`.replace(/\\/g, "/"), p = a.name.endsWith(".js") ? "application/javascript" : a.name.endsWith(".css") ? "text/css" : "application/octet-stream";
           console.info(`⚙️ Uploading '${l}' → '${d}'...`);
           const { stderr: u } = await g(`wrangler r2 object put "${d}" --file="${c}" --content-type ${p} --jurisdiction=eu --remote`);
           if (u) throw new Error(u);
@@ -192,8 +192,8 @@ export {
   F as buildInformerConfig,
   C as buildPresenterConfig,
   J as buildPublicDirectoryIndex,
-  k as bumpVersion,
-  E as echoScriptNotImplemented,
+  E as bumpVersion,
+  k as echoScriptNotImplemented,
   I as sendDeploymentNotice,
   R as syncWithGitHub,
   P as uploadDirectoryToR2,

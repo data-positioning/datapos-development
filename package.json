@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.93",
+    "version": "0.3.94",
     "description": "A TypeScript library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -25,8 +25,10 @@
     "files": [
         "dist"
     ],
+    "dependencies": {
+        "@datapos/datapos-shared": "^0.3.215"
+    },
     "devDependencies": {
-        "@datapos/datapos-shared": "^0.3.215",
         "@types/node": "^24.10.1",
         "@typescript-eslint/eslint-plugin": "^8.46.4",
         "@typescript-eslint/parser": "^8.46.4",
@@ -55,14 +57,15 @@
         "format": "prettier --write src/",
         "lint": "eslint .",
         "publish:toNPM": "npm publish --access public",
-        "release": "npm run _bump:version && npm run build && npm run sync:withGitHub && npm run publish:toNPM",
-        "sync:withGitHub": "node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",
+        "release": "npm run _bump:version && npm run build && npm run _sync:withGitHub && npm run publish:toNPM",
+        "sync": "npm run _bump:version && npm run _sync:withGitHub",
         "test": "node -e \"import('./dist/datapos-development.es.js').then(m => m.echoScriptNotImplemented('Test'))\"",
         "update:dataPosDeps": "npm run _update:sharedDep",
         "_bump:version": "node -e \"import('./dist/datapos-development.es.js').then(m => m.bumpVersion())\"",
         "_document:licenceReport": "license-report --only=prod,peer > LICENSES.json",
         "_document:licenceCheck": "license-report-check --source ./LICENSES.json --allowed 'MIT' --allowed 'n/a' --allowed 'Apache-2.0' --output=table",
-        "_update:sharedDep": "npm install --save-dev @datapos/datapos-shared@latest"
+        "_sync:withGitHub": "node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",
+        "_update:sharedDep": "npm install @datapos/datapos-shared@latest"
     },
     "engines": {
         "node": ">=22.0.0",

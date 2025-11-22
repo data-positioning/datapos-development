@@ -7,7 +7,7 @@ async function S() {
   try {
     console.info("🚀 Building configuration...");
     const o = JSON.parse(await e.readFile("package.json", "utf8")), n = JSON.parse(await e.readFile("config.json", "utf8"));
-    o.name && (n.id = o.name.replace("@datapos/", "")), o.version && (n.version = o.version), await e.writeFile("config.json", JSON.stringify(n, void 0, 4), "utf8"), console.info("✅ Configuration built.");
+    o.name && (n.id = o.name.replace("@datapos/", "").replace("@data-positioning/", "")), o.version && (n.version = o.version), await e.writeFile("config.json", JSON.stringify(n, void 0, 4), "utf8"), console.info("✅ Configuration built.");
   } catch (o) {
     console.error("❌ Error building configuration.", o);
   }

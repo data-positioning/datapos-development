@@ -12,10 +12,9 @@ import { promisify } from 'util';
 // Dependencies - Framework.
 import type { ModuleConfig } from '@datapos/datapos-shared';
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
-import type { ConnectorModuleConfig, ConnectorModuleOperation, ConnectorModuleUsageId } from '@datapos/datapos-shared';
-import type { ContextModuleConfig, ContextModuleOperation } from '@datapos/datapos-shared';
-import type { InformerModuleConfig, InformerModuleOperation } from '@datapos/datapos-shared';
-import type { PresenterModuleConfig, PresenterModuleOperation } from '@datapos/datapos-shared';
+import type { ConnectorConfig, ConnectorOperation, ConnectorUsageId } from '@datapos/datapos-shared';
+import type { ContextConfig, ContextOperation } from '@datapos/datapos-shared';
+import type { PresenterConfig, PresenterOperation } from '@datapos/datapos-shared';
 
 // import { moduleConfigSchema, ModuleConfigZ } from '@datapos/datapos-shared';
 
@@ -104,7 +103,7 @@ async function buildConnectorConfig(): Promise<void> {
     try {
         console.info('🚀 Building connector configuration...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorModuleConfig;
+        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
         let destinationOperations = false;
@@ -113,15 +112,15 @@ async function buildConnectorConfig(): Promise<void> {
         const operations = [...indexCode.matchAll(regex)]
             .filter((m) => !m[1] && m[2] !== 'constructor') // m[1] is 'private ' if present.
             .map((m) => {
-                const operation = m[2] as ConnectorModuleOperation;
+                const operation = m[2] as ConnectorOperation;
                 destinationOperations = destinationOperations || CONNECTOR_DESTINATION_OPERATIONS.includes(operation);
                 sourceOperations = sourceOperations || CONNECTOR_SOURCE_OPERATIONS.includes(operation);
                 return operation;
             });
         if (operations.length > 0) console.info(`ℹ️  Implements ${operations.length} operations.`);
         else console.warn('⚠️  Implements no operations.');
-        const usageId: ConnectorModuleUsageId | null =
-            sourceOperations && destinationOperations ? 'bidirectional' : sourceOperations ? 'source' : destinationOperations ? 'destination' : null;
+        const usageId: ConnectorUsageId =
+            sourceOperations && destinationOperations ? 'bidirectional' : sourceOperations ? 'source' : destinationOperations ? 'destination' : 'unknown';
         if (usageId) console.info(`ℹ️  Supports ${usageId} usage.`);
         else console.warn('⚠️  No usage identified.');
 
@@ -142,13 +141,13 @@ async function buildContextConfig(): Promise<void> {
     try {
         console.info('🚀 Building context configuration...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ContextModuleConfig;
+        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ContextConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
         const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
         const operations = [...indexCode.matchAll(regex)]
             .filter((m) => !m[1] && m[2] !== 'constructor') // m[1] is 'private ' if present.
-            .map((m) => m[2]) as ContextModuleOperation[];
+            .map((m) => m[2]) as ContextOperation[];
 
         if (packageJSON.name) configJSON.id = packageJSON.name;
         configJSON.operations = operations;
@@ -161,42 +160,18 @@ async function buildContextConfig(): Promise<void> {
     }
 }
 
-// Utilities - Build informer configuration.
-async function buildInformerConfig(): Promise<void> {
-    try {
-        console.info('🚀 Building informer configuration...');
-        const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as InformerModuleConfig;
-        const indexCode = await fs.readFile('src/index.ts', 'utf8');
-
-        const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
-        const operations = [...indexCode.matchAll(regex)]
-            .filter((m) => !m[1] && m[2] !== 'constructor') // m[1] is 'private ' if present.
-            .map((m) => m[2]) as InformerModuleOperation[];
-
-        if (packageJSON.name) configJSON.id = packageJSON.name;
-        configJSON.operations = operations;
-        if (packageJSON.version) configJSON.version = packageJSON.version;
-
-        await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
-        console.info('✅ Informer configuration built.');
-    } catch (error) {
-        console.error('❌ Error building informer configuration.', error);
-    }
-}
-
 // Utilities - Build presenter configuration.
 async function buildPresenterConfig(): Promise<void> {
     try {
         console.info('🚀 Building presenter configuration...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as PresenterModuleConfig;
+        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as PresenterConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
         const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
         const operations = [...indexCode.matchAll(regex)]
             .filter((m) => !m[1] && m[2] !== 'constructor') // m[1] is 'private ' if present.
-            .map((m) => m[2]) as PresenterModuleOperation[];
+            .map((m) => m[2]) as PresenterOperation[];
 
         if (packageJSON.name) configJSON.id = packageJSON.name;
         configJSON.operations = operations;
@@ -348,7 +323,6 @@ export {
     buildConfig,
     buildConnectorConfig,
     buildContextConfig,
-    buildInformerConfig,
     buildPresenterConfig,
     buildPublicDirectoryIndex,
     bumpVersion,

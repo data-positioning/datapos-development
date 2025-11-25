@@ -3,11 +3,11 @@
  */
 
 // Dependencies - Vendor.
-import { exec } from 'child_process';
-import { promises as fs } from 'fs';
+import { exec } from 'node:child_process';
+import { promises as fs } from 'node:fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
-import { promisify } from 'util';
+import { promisify } from 'node:util';
 
 // Dependencies - Framework.
 import type { ModuleConfig } from '@datapos/datapos-shared';
@@ -85,7 +85,7 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
             }
             entries.sort((left, right) => {
                 const typeComparison = left.typeId.localeCompare(right.typeId);
-                return typeComparison !== 0 ? typeComparison : left.name.localeCompare(right.name);
+                return typeComparison === 0 ? left.name.localeCompare(right.name) : typeComparison;
             });
         }
 

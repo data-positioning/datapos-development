@@ -5,9 +5,9 @@
 // Dependencies - Vendor.
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import { resolve } from 'path';
-import { fileURLToPath, URL } from 'node:url';
+import { resolve } from 'node:path';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { fileURLToPath, URL } from 'node:url';
 
 // Exposures - Configuration.
 export default defineConfig({

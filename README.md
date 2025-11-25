@@ -1,4 +1,6 @@
 # Data Positioning Development Library
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development?ref=badge_shield)
+
 
 [![npm version](https://img.shields.io/npm/v/@datapos/datapos-development.svg)](https://www.npmjs.com/package/@datapos/datapos-development)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
@@ -87,3 +89,6 @@ The following badge reflects FOSSA's assessment of this repository's open-source
 ## License
 
 [MIT](./LICENSE) © 2026 Data Positioning Pty Ltd
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development?ref=badge_large)

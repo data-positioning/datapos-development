@@ -1,13 +1,13 @@
 import { exec as m } from "node:child_process";
-import { promises as e } from "node:fs";
-import { nanoid as w } from "nanoid";
-import { promisify as y } from "node:util";
-const $ = ["createObject", "dropObject", "removeRecords", "upsertRecords"], h = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], g = y(m);
+import { promises as n } from "node:fs";
+import { nanoid as y } from "nanoid";
+import { promisify as w } from "node:util";
+const h = ["createObject", "dropObject", "removeRecords", "upsertRecords"], b = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], g = w(m);
 async function S() {
   try {
     console.info("🚀 Building configuration...");
-    const o = JSON.parse(await e.readFile("package.json", "utf8")), n = JSON.parse(await e.readFile("config.json", "utf8"));
-    o.name != null && (n.id = o.name.replace("@datapos/", "").replace("@data-positioning/", "")), o.version != null && (n.version = o.version), await e.writeFile("config.json", JSON.stringify(n, void 0, 4), "utf8"), console.info("✅ Configuration built.");
+    const o = JSON.parse(await n.readFile("package.json", "utf8")), e = JSON.parse(await n.readFile("config.json", "utf8"));
+    o.name != null && (e.id = o.name.replace("@datapos/", "").replace("@data-positioning/", "")), o.version != null && (e.version = o.version), await n.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Configuration built.");
   } catch (o) {
     console.error("❌ Error building configuration.", o);
   }
@@ -15,20 +15,20 @@ async function S() {
 async function O(o) {
   try {
     console.info(`🚀 Building public directory index for identifier '${o}'...`);
-    const n = {};
+    const e = {};
     async function i(r, s) {
       console.info(`⚙️ Processing directory '${r}'...`);
       const d = [], a = r.substring(`public/${o}`.length);
-      n[a] = d;
+      e[a] = d;
       for (const c of s) {
         const l = `${r}/${c}`;
         try {
-          const f = await e.stat(l);
+          const f = await n.stat(l);
           if (f.isDirectory()) {
-            const u = await e.readdir(l), p = { childCount: u.length, name: `${c}`, typeId: "folder" };
+            const u = await n.readdir(l), p = { childCount: u.length, name: `${c}`, typeId: "folder" };
             d.push(p), await i(l, u);
           } else {
-            const u = { id: w(), lastModifiedAt: f.mtimeMs, name: c, size: f.size, typeId: "object" };
+            const u = { id: y(), lastModifiedAt: f.mtimeMs, name: c, size: f.size, typeId: "object" };
             d.push(u);
           }
         } catch (f) {
@@ -40,24 +40,24 @@ async function O(o) {
         return f === 0 ? c.name.localeCompare(l.name) : f;
       });
     }
-    const t = await e.readdir(`public/${o}`);
-    await i(`public/${o}`, t), await e.writeFile(`./public/${o}Index.json`, JSON.stringify(n), "utf8"), console.info("✅ Public directory index built.");
-  } catch (n) {
-    console.error("❌ Error building public directory index.", n);
+    const t = await n.readdir(`public/${o}`);
+    await i(`public/${o}`, t), await n.writeFile(`./public/${o}Index.json`, JSON.stringify(e), "utf8"), console.info("✅ Public directory index built.");
+  } catch (e) {
+    console.error("❌ Error building public directory index.", e);
   }
 }
 async function J() {
   try {
     console.info("🚀 Building connector configuration...");
-    const o = JSON.parse(await e.readFile("package.json", "utf8")), n = JSON.parse(await e.readFile("config.json", "utf8")), i = await e.readFile("src/index.ts", "utf8");
+    const o = JSON.parse(await n.readFile("package.json", "utf8")), e = JSON.parse(await n.readFile("config.json", "utf8")), i = await n.readFile("src/index.ts", "utf8");
     let t = !1, r = !1;
     const s = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, d = [...i.matchAll(s)].filter((c) => c[1] == null && c[2] !== "constructor").map((c) => {
       const l = c[2];
-      return t = t || $.includes(l), r = r || h.includes(l), l;
+      return t = t || h.includes(l), r = r || b.includes(l), l;
     });
     d.length > 0 ? console.info(`ℹ️  Implements ${d.length} operations.`) : console.warn("⚠️  Implements no operations.");
     const a = r && t ? "bidirectional" : r ? "source" : t ? "destination" : "unknown";
-    a && console.info(`ℹ️  Supports ${a} usage.`), o.name != null && (n.id = o.name), n.operations = d, n.usageId = a, o.version != null && (n.version = o.version), await e.writeFile("config.json", JSON.stringify(n, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
+    a && console.info(`ℹ️  Supports ${a} usage.`), o.name != null && (e.id = o.name), e.operations = d, e.usageId = a, o.version != null && (e.version = o.version), await n.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
   } catch (o) {
     console.error("❌ Error building connector configuration.", o);
   }
@@ -65,8 +65,8 @@ async function J() {
 async function x() {
   try {
     console.info("🚀 Building context configuration...");
-    const o = JSON.parse(await e.readFile("package.json", "utf8")), n = JSON.parse(await e.readFile("config.json", "utf8")), i = await e.readFile("src/index.ts", "utf8"), t = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, r = [...i.matchAll(t)].filter((s) => s[1] == null && s[2] !== "constructor").map((s) => s[2]);
-    o.name != null && (n.id = o.name), n.operations = r, o.version != null && (n.version = o.version), await e.writeFile("config.json", JSON.stringify(n, void 0, 4), "utf8"), console.info("✅ Context configuration built.");
+    const o = JSON.parse(await n.readFile("package.json", "utf8")), e = JSON.parse(await n.readFile("config.json", "utf8")), i = await n.readFile("src/index.ts", "utf8"), t = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, r = [...i.matchAll(t)].filter((s) => s[1] == null && s[2] !== "constructor").map((s) => s[2]);
+    o.name != null && (e.id = o.name), e.operations = r, o.version != null && (e.version = o.version), await n.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Context configuration built.");
   } catch (o) {
     console.error("❌ Error building context configuration.", o);
   }
@@ -74,8 +74,8 @@ async function x() {
 async function j() {
   try {
     console.info("🚀 Building presenter configuration...");
-    const o = JSON.parse(await e.readFile("package.json", "utf8")), n = JSON.parse(await e.readFile("config.json", "utf8")), i = await e.readFile("src/index.ts", "utf8"), t = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, r = [...i.matchAll(t)].filter((s) => !s[1] && s[2] !== "constructor").map((s) => s[2]);
-    o.name != null && (n.id = o.name), n.operations = r, o.version != null && (n.version = o.version), await e.writeFile("config.json", JSON.stringify(n, void 0, 4), "utf8"), console.info("✅ Presenter configuration built.");
+    const o = JSON.parse(await n.readFile("package.json", "utf8")), e = JSON.parse(await n.readFile("config.json", "utf8")), i = await n.readFile("src/index.ts", "utf8"), t = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, r = [...i.matchAll(t)].filter((s) => !s[1] && s[2] !== "constructor").map((s) => s[2]);
+    o.name != null && (e.id = o.name), e.operations = r, o.version != null && (e.version = o.version), await n.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Presenter configuration built.");
   } catch (o) {
     console.error("❌ Error building context configuration.", o);
   }
@@ -83,40 +83,53 @@ async function j() {
 async function C(o = "./") {
   try {
     console.info("🚀 Bumping version...");
-    const n = JSON.parse(await e.readFile(`${o}package.json`, "utf8"));
-    if (n.version != null) {
-      const i = n.version, t = n.version.split(".");
-      n.version = `${t[0]}.${t[1]}.${Number(t[2]) + 1}`, await e.writeFile(`${o}package.json`, JSON.stringify(n, void 0, 4), "utf8"), console.info(`✅ Version bumped from ${i} to ${n.version}.`);
-    } else
-      n.version = "0.0.001", await e.writeFile(`${o}package.json`, JSON.stringify(n, void 0, 4), "utf8"), console.warn(`⚠️ Version initialised to ${n.version}.`);
-  } catch (n) {
-    console.error("❌ Error bumping package version.", n);
+    const e = JSON.parse(await n.readFile(`${o}package.json`, "utf8"));
+    if (e.version == null)
+      e.version = "0.0.001", await n.writeFile(`${o}package.json`, JSON.stringify(e, void 0, 4), "utf8"), console.warn(`⚠️ Version initialised to ${e.version}.`);
+    else {
+      const i = e.version, t = e.version.split(".");
+      e.version = `${t[0]}.${t[1]}.${Number(t[2]) + 1}`, await n.writeFile(`${o}package.json`, JSON.stringify(e, void 0, 4), "utf8"), console.info(`✅ Version bumped from ${i} to ${e.version}.`);
+    }
+  } catch (e) {
+    console.error("❌ Error bumping package version.", e);
   }
 }
 function F(o) {
   console.error(`❌ ${o} script not implemented.`);
 }
 async function R() {
-  const o = "<!-- DEPENDENCY_LICENSES_START -->", n = "<!-- DEPENDENCY_LICENSES_END -->";
+  const o = "<!-- DEPENDENCY_LICENSES_START -->", e = "<!-- DEPENDENCY_LICENSES_END -->";
   try {
-    const i = (await e.readFile("./licenses.md", "utf8")).trim(), t = await e.readFile("./README.md", "utf8"), r = t.indexOf(o), s = t.indexOf(n);
+    const i = (await n.readFile("./licenses.md", "utf8")).trim(), t = await n.readFile("./README.md", "utf8"), r = t.indexOf(o), s = t.indexOf(e);
     (r === -1 || s === -1) && (console.error("Error: Markers not found in README.md"), process.exit(1));
     const d = t.substring(0, r + o.length) + `
 ` + i + `
 ` + t.substring(s);
-    await e.writeFile("README.md", d, "utf8"), console.log("✓ README.md updated with license information");
+    await n.writeFile("README.md", d, "utf8"), console.log("✓ README.md updated with license information");
   } catch (i) {
     console.error("Error updating README:", i), process.exit(1);
   }
 }
 async function k() {
   try {
+    const o = JSON.parse(await n.readFile("./dependency-check-report.json", "utf-8"));
+    let e = 0;
+    for (const t of o.dependencies)
+      e += t.vulnerabilities.length;
+    console.log("vulnerabilityCount", e);
+    const i = await n.readFile("./README.md", "utf8");
+  } catch (o) {
+    console.error("Error updating README:", o), process.exit(1);
+  }
+}
+async function D() {
+  try {
     console.info("🚀 Sending deployment notice...");
-    const o = JSON.parse(await e.readFile("config.json", "utf8")), n = {
+    const o = JSON.parse(await n.readFile("config.json", "utf8")), e = {
       body: JSON.stringify(o),
       headers: { "Content-Type": "application/json" },
       method: "PUT"
-    }, i = await fetch(`https://api.datapos.app/states/${o.id}`, n);
+    }, i = await fetch(`https://api.datapos.app/states/${o.id}`, e);
     if (!i.ok) throw new Error(await i.text());
     console.info("✅ Deployment notice sent.");
   } catch (o) {
@@ -126,20 +139,20 @@ async function k() {
 async function I() {
   try {
     console.info("🚀 Synchronising with GitHub....");
-    const o = JSON.parse(await e.readFile("package.json", "utf8"));
+    const o = JSON.parse(await n.readFile("package.json", "utf8"));
     await g("git add ."), await g(`git commit -m "v${o.version}"`), await g("git push origin main:main"), console.info(`✅ Synchronised version ${o.version} with GitHub.`);
   } catch (o) {
     console.error("❌ Error synchronising with GitHub.", o);
   }
 }
-async function D(o, n) {
+async function A(o, e) {
   try {
     console.info("🚀 Uploading directory to R2....");
     async function i(r, s, d) {
       for (const a of d) {
         const c = `${r}/${a}`, l = `${s}/${a}`;
-        if ((await e.stat(c)).isDirectory()) {
-          const u = await e.readdir(c);
+        if ((await n.stat(c)).isDirectory()) {
+          const u = await n.readdir(c);
           await i(c, l, u);
         } else {
           console.info(`⚙️ Uploading '${r}/${a}'...`);
@@ -148,20 +161,20 @@ async function D(o, n) {
         }
       }
     }
-    const t = await e.readdir(`${o}/${n}/`);
-    await i(`${o}/${n}`, n, t), console.info("✅ Directory uploaded to R2.");
+    const t = await n.readdir(`${o}/${e}/`);
+    await i(`${o}/${e}`, e, t), console.info("✅ Directory uploaded to R2.");
   } catch (i) {
     console.error("❌ Error uploading directory to R2.", i);
   }
 }
-async function A() {
+async function M() {
   try {
     console.info("🚀 Uploading module configuration....");
-    const o = JSON.parse(await e.readFile("config.json", "utf8")), n = o.id, i = {
+    const o = JSON.parse(await n.readFile("config.json", "utf8")), e = o.id, i = {
       body: JSON.stringify(o),
       headers: { "Content-Type": "application/json" },
       method: "PUT"
-    }, t = await fetch(`https://api.datapos.app/states/${n}`, i);
+    }, t = await fetch(`https://api.datapos.app/states/${e}`, i);
     if (!t.ok) throw new Error(await t.text());
     console.info("✅ Module configuration uploaded.");
   } catch (o) {
@@ -171,9 +184,9 @@ async function A() {
 async function P(o) {
   try {
     console.info("🚀 Uploading module to R2...");
-    const i = `v${JSON.parse(await e.readFile("package.json", "utf8")).version}`;
+    const i = `v${JSON.parse(await n.readFile("package.json", "utf8")).version}`;
     async function t(r, s = "") {
-      const d = await e.readdir(r, { withFileTypes: !0 });
+      const d = await n.readdir(r, { withFileTypes: !0 });
       for (const a of d) {
         const c = `${r}/${a.name}`, l = s ? `${s}/${a.name}` : a.name;
         if (!a.isDirectory()) {
@@ -185,8 +198,8 @@ async function P(o) {
       }
     }
     await t("dist"), console.info("✅ Module uploaded to R2.");
-  } catch (n) {
-    console.error("❌ Error uploading module to R2.", n);
+  } catch (e) {
+    console.error("❌ Error uploading module to R2.", e);
   }
 }
 export {
@@ -198,9 +211,10 @@ export {
   C as bumpVersion,
   F as echoScriptNotImplemented,
   R as insertLicensesIntoReadme,
-  k as sendDeploymentNotice,
+  k as insertOWASPDependencyCheckBadgeIntoReadme,
+  D as sendDeploymentNotice,
   I as syncWithGitHub,
-  D as uploadDirectoryToR2,
-  A as uploadModuleConfigToDO,
+  A as uploadDirectoryToR2,
+  M as uploadModuleConfigToDO,
   P as uploadModuleToR2
 };

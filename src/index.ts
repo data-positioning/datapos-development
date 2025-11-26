@@ -238,6 +238,26 @@ async function insertLicensesIntoReadme(): Promise<void> {
     }
 }
 
+// Utilities - Insert OWASP dependency check badge into README file.
+async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
+    const START_MARKER = '<!-- OWASP_BADGE_START -->';
+    const END_MARKER = '<!-- OWASP_BADGE_END -->';
+    try {
+        const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-report.json', 'utf-8'));
+        let vulnerabilityCount = 0;
+        for (const dependency of dependencyCheckData.dependencies) {
+            vulnerabilityCount += dependency.vulnerabilities.length;
+        }
+
+        console.log('vulnerabilityCount', vulnerabilityCount);
+
+        const readmeContent = await fs.readFile('./README.md', 'utf8');
+    } catch (error) {
+        console.error('Error updating README:', error);
+        process.exit(1);
+    }
+}
+
 // Utilities - Send deployment notice.
 async function sendDeploymentNotice(): Promise<void> {
     try {
@@ -356,6 +376,7 @@ export {
     bumpVersion,
     echoScriptNotImplemented,
     insertLicensesIntoReadme,
+    insertOWASPDependencyCheckBadgeIntoReadme,
     sendDeploymentNotice,
     syncWithGitHub,
     uploadDirectoryToR2,

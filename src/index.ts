@@ -273,7 +273,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         for (const [severity, count] of Object.entries(severityCounts)) {
             if (count === 0) continue;
             const config = severityBadgeConfig[severity as keyof SeverityCounts];
-            const badgeUrl = `https://img.shields.io/badge/OWASP%20${config.label}-${count}-${config.color}`;
+            const badgeUrl = `https://img.shields.io/badge/OWASP%20${config.label}-vulnerability:-${count}-${config.color}`;
             badges.push(`[![OWASP ${config.label}](${badgeUrl})](./dependency-check-reports/dependency-check-report.html)`);
         }
 

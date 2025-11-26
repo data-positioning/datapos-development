@@ -1,8 +1,8 @@
-import { exec as h } from "node:child_process";
+import { exec as b } from "node:child_process";
 import { promises as t } from "node:fs";
-import { nanoid as b } from "nanoid";
+import { nanoid as h } from "nanoid";
 import { promisify as $ } from "node:util";
-const v = ["createObject", "dropObject", "removeRecords", "upsertRecords"], O = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], w = $(h);
+const v = ["createObject", "dropObject", "removeRecords", "upsertRecords"], O = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], w = $(b);
 async function j() {
   try {
     console.info("🚀 Building configuration...");
@@ -28,7 +28,7 @@ async function C(e) {
             const p = await t.readdir(l), u = { childCount: p.length, name: `${c}`, typeId: "folder" };
             d.push(u), await i(l, p);
           } else {
-            const p = { id: b(), lastModifiedAt: f.mtimeMs, name: c, size: f.size, typeId: "object" };
+            const p = { id: h(), lastModifiedAt: f.mtimeMs, name: c, size: f.size, typeId: "object" };
             d.push(p);
           }
         } catch (f) {
@@ -129,7 +129,7 @@ async function I() {
     }, r = [];
     for (const [u, g] of Object.entries(n)) {
       if (g === 0) continue;
-      const m = s[u], y = `https://img.shields.io/badge/OWASP%20${m.label}-${g}-${m.color}`;
+      const m = s[u], y = `https://img.shields.io/badge/OWASP%20${m.label}-vulnerability:-${g}-${m.color}`;
       r.push(`[![OWASP ${m.label}](${y})](./dependency-check-reports/dependency-check-report.html)`);
     }
     const d = Object.values(n).reduce((u, g) => u + g, 0);

@@ -3,11 +3,11 @@
  */
 
 // Dependencies - Vendor.
-import { exec } from 'node:child_process';
-import { promises as fs } from 'node:fs';
+import { exec } from 'child_process';
+import { promises as fs } from 'fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
-import { promisify } from 'node:util';
+import { promisify } from 'util';
 
 // Dependencies - Framework.
 import type { ModuleConfig } from '@datapos/datapos-shared';
@@ -18,7 +18,7 @@ import type { PresenterConfig, PresenterOperation } from '@datapos/datapos-share
 
 // import { moduleConfigSchema, ModuleConfigZ } from '@datapos/datapos-shared';
 
-// Interfaces/Types - Directory entry.
+// Types/Interfaces - Directory entry.
 interface DirectoryEntry {
     name: string;
     typeId: 'folder' | 'object';
@@ -46,8 +46,8 @@ async function buildConfig(): Promise<void> {
 
         // moduleConfigSchema.parse(configJSON);
 
-        if (packageJSON.name) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-        if (packageJSON.version) configJSON.version = packageJSON.version;
+        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
+        if (packageJSON.version != null) configJSON.version = packageJSON.version;
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
         console.info('✅ Configuration built.');
     } catch (error) {
@@ -61,7 +61,7 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
         console.info(`🚀 Building public directory index for identifier '${id}'...`);
         const index: Record<string, DirectoryEntry[]> = {};
 
-        async function listDirectoryEntriesRecursively(directoryPath: string, names: string[]) {
+        async function listDirectoryEntriesRecursively(directoryPath: string, names: string[]): Promise<void> {
             console.info(`⚙️ Processing directory '${directoryPath}'...`);
             const entries: DirectoryEntry[] = [];
             const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
@@ -124,10 +124,10 @@ async function buildConnectorConfig(): Promise<void> {
         if (usageId) console.info(`ℹ️  Supports ${usageId} usage.`);
         else console.warn('⚠️  No usage identified.');
 
-        if (packageJSON.name) configJSON.id = packageJSON.name;
+        if (packageJSON.name != null) configJSON.id = packageJSON.name;
         configJSON.operations = operations;
         configJSON.usageId = usageId;
-        if (packageJSON.version) configJSON.version = packageJSON.version;
+        if (packageJSON.version != null) configJSON.version = packageJSON.version;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
         console.info('✅ Connector configuration built.');
@@ -149,9 +149,9 @@ async function buildContextConfig(): Promise<void> {
             .filter((m) => !m[1] && m[2] !== 'constructor') // m[1] is 'private ' if present.
             .map((m) => m[2]) as ContextOperation[];
 
-        if (packageJSON.name) configJSON.id = packageJSON.name;
+        if (packageJSON.name != null) configJSON.id = packageJSON.name;
         configJSON.operations = operations;
-        if (packageJSON.version) configJSON.version = packageJSON.version;
+        if (packageJSON.version != null) configJSON.version = packageJSON.version;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
         console.info('✅ Context configuration built.');
@@ -173,9 +173,9 @@ async function buildPresenterConfig(): Promise<void> {
             .filter((m) => !m[1] && m[2] !== 'constructor') // m[1] is 'private ' if present.
             .map((m) => m[2]) as PresenterOperation[];
 
-        if (packageJSON.name) configJSON.id = packageJSON.name;
+        if (packageJSON.name != null) configJSON.id = packageJSON.name;
         configJSON.operations = operations;
-        if (packageJSON.version) configJSON.version = packageJSON.version;
+        if (packageJSON.version != null) configJSON.version = packageJSON.version;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
         console.info('✅ Presenter configuration built.');
@@ -189,7 +189,7 @@ async function bumpVersion(): Promise<void> {
     try {
         console.info('🚀 Bumping version...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        if (packageJSON.version) {
+        if (packageJSON.version != null) {
             const oldVersion = packageJSON.version;
             const versionSegments = packageJSON.version.split('.');
             packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
@@ -208,6 +208,28 @@ async function bumpVersion(): Promise<void> {
 // Utilities - Echo not implemented.
 function echoScriptNotImplemented(name: string): void {
     console.error(`❌ ${name} script not implemented.`);
+}
+
+// Utilities - Insert licenses into README file.
+async function insertLicensesIntoReadme(): Promise<void> {
+    const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
+    const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
+    try {
+        const licensesContent = (await fs.readFile('./licenses.md', 'utf8')).trim();
+        const readmeContent = await fs.readFile('./README.md', 'utf8');
+        const startIdx = readmeContent.indexOf(START_MARKER);
+        const endIdx = readmeContent.indexOf(END_MARKER);
+        if (startIdx === -1 || endIdx === -1) {
+            console.error('Error: Markers not found in README.md');
+            process.exit(1);
+        }
+        const newContent = readmeContent.substring(0, startIdx + START_MARKER.length) + '\n' + licensesContent + '\n' + readmeContent.substring(endIdx);
+        await fs.writeFile('README.md', newContent, 'utf8');
+        console.log('✓ README.md updated with license information');
+    } catch (error) {
+        console.error('Error updating README:', error);
+        process.exit(1);
+    }
 }
 
 // Utilities - Send deployment notice.
@@ -246,7 +268,7 @@ async function syncWithGitHub(): Promise<void> {
 async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void> {
     try {
         console.info('🚀 Uploading directory to R2....');
-        async function listDirectoryEntriesRecursively(currentSourceDirectory: string, currentDestinationDirectory: string, names: string[]) {
+        async function listDirectoryEntriesRecursively(currentSourceDirectory: string, currentDestinationDirectory: string, names: string[]): Promise<void> {
             for (const name of names) {
                 const sourceItemPath = `${currentSourceDirectory}/${name}`;
                 const destinationItemPath = `${currentDestinationDirectory}/${name}`;
@@ -295,7 +317,7 @@ async function uploadModuleToR2(uploadDirPath: string): Promise<void> {
         console.info('🚀 Uploading module to R2...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const version = `v${packageJSON.version}`;
-        async function uploadDir(currentDir: string, prefix: string = '') {
+        async function uploadDir(currentDir: string, prefix: string = ''): Promise<void> {
             const entries = await fs.readdir(currentDir, { withFileTypes: true });
             for (const entry of entries) {
                 const fullPath = `${currentDir}/${entry.name}`;
@@ -327,6 +349,7 @@ export {
     buildPublicDirectoryIndex,
     bumpVersion,
     echoScriptNotImplemented,
+    insertLicensesIntoReadme,
     sendDeploymentNotice,
     syncWithGitHub,
     uploadDirectoryToR2,

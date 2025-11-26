@@ -34,21 +34,21 @@ registry=https://registry.npmjs.org/
 
 The `src/index.ts' file exposes the following utilities:
 
-| Name                      | Notes                                                                    |
-| ------------------------- | ------------------------------------------------------------------------ |
-| buildConfig               | Build the config.json file for the repository.                           |
-| buildConnectorConfig      | Build the connector config.json file for the repository.                 |
-| buildContextConfig        | Build the context config.json file for the repository.                   |
-| buildInformerConfig       | Build the informer config.json file for the repository.                  |
-| buildPresenterConfig      | Build the presenter config.json file for the repository.                 |
-| buildPublicDirectoryIndex | Build an index for the repositories public directory.                    |
-| bumpVersion               | Bump the repositories version number.                                    |
-| echoScriptNotImplemented  | Echo script not implemented message to console..                         |
-| sendDeploymentNotice      | Send a deployment notice for the repository.                             |
-| syncWithGitHub            | Synchronise the local repository with the main GitHub repository.        |
-| uploadDirectoryToR2       | Upload a directory to Cloudflare R2 storage.                             |
-| uploadModuleConfigToDO    | Upload a modules configuration to the Cloudflare `state` durable object. |
-| uploadModuleToR2          | Upload a module to Cloudflare R2 storage.                                |
+| Name                      | Notes                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| buildConfig               | Build the config.json file for the repository.                               |
+| buildConnectorConfig      | Build the connector config.json file for the repository.                     |
+| buildContextConfig        | Build the context config.json file for the repository.                       |
+| buildPresenterConfig      | Build the presenter config.json file for the repository.                     |
+| buildPublicDirectoryIndex | Build an index for the repositories public directory.                        |
+| bumpVersion               | Bump the repositories version number.                                        |
+| echoScriptNotImplemented  | Echo script not implemented message to console..                             |
+| insertLicensesIntoReadme  | Insert the licenses for all production dependencies into the README.md file. |
+| sendDeploymentNotice      | Send a deployment notice for the repository.                                 |
+| syncWithGitHub            | Synchronise the local repository with the main GitHub repository.            |
+| uploadDirectoryToR2       | Upload a directory to Cloudflare R2 storage.                                 |
+| uploadModuleConfigToDO    | Upload a modules configuration to the Cloudflare `state` durable object.     |
+| uploadModuleToR2          | Upload a module to Cloudflare R2 storage.                                    |
 
 ## Reports & Compliance
 
@@ -63,9 +63,11 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 The following table lists top-level production and peer dependencies only. All dependency licenses (including transitive dependencies) have been recursively verified to conform to Apache-2.0, CC0-1.0, MIT, or n/a. Developers cloning this repository should independently verify dev and optional dependencies; users of the uploaded library are covered by these checks.
 
 <!-- DEPENDENCY_LICENSES_START -->
+
 | Name                    | Type | Installed | Latest  | Latest Modified          |
 | :---------------------- | :--: | :-------: | :-----: | :----------------------- |
 | @datapos/datapos-shared | MIT  |  0.3.252  | 0.3.252 | 2025-11-25T16:48:28.532Z |
+
 <!-- DEPENDENCY_LICENSES_END -->
 
 ### Bundle Analysis Report

@@ -226,14 +226,14 @@ async function insertLicensesIntoReadme(): Promise<void> {
         const startIdx = readmeContent.indexOf(START_MARKER);
         const endIdx = readmeContent.indexOf(END_MARKER);
         if (startIdx === -1 || endIdx === -1) {
-            console.error('Error: Markers not found in README.md');
+            console.error('❌ Dependency license markers not found in readme file.');
             process.exit(1);
         }
         const newContent = readmeContent.substring(0, startIdx + START_MARKER.length) + '\n' + licensesContent + '\n' + readmeContent.substring(endIdx);
         await fs.writeFile('README.md', newContent, 'utf8');
-        console.log('✓ README.md updated with license information');
+        console.log('✅ Readme file updated with license information');
     } catch (error) {
-        console.error('Error updating README:', error);
+        console.error('❌ Error updating readme file.', error);
         process.exit(1);
     }
 }
@@ -289,7 +289,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const endIdx = readmeContent.indexOf(END_MARKER);
 
         if (startIdx === -1 || endIdx === -1) {
-            console.error('❌ Markers not found in README.md.');
+            console.error('❌ OWASP badge markers not found in README.md.');
             process.exit(1);
         }
 

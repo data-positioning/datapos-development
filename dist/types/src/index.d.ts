@@ -6,7 +6,7 @@ declare function buildPublicDirectoryIndex(id: string): Promise<void>;
 declare function buildConnectorConfig(): Promise<void>;
 declare function buildContextConfig(): Promise<void>;
 declare function buildPresenterConfig(): Promise<void>;
-declare function bumpVersion(): Promise<void>;
+declare function bumpVersion(path?: string): Promise<void>;
 declare function echoScriptNotImplemented(name: string): void;
 declare function insertLicensesIntoReadme(): Promise<void>;
 declare function sendDeploymentNotice(): Promise<void>;

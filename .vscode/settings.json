@@ -3,6 +3,6 @@
     "explorer.fileNesting.patterns": {
         "package.json": ".env,.gitattributes, .gitignore, .markdownlint.json, .npmrc, .prettier*, eslint*, package-lock.json",
         "README.md": "LICENSE*",
-        "vite.config.ts": "tsconfig*"
+        "vite.config.ts": "tsconfig*, vitest.config.ts"
     }
 }

@@ -25,11 +25,11 @@ async function O(o) {
         try {
           const f = await e.stat(l);
           if (f.isDirectory()) {
-            const p = await e.readdir(l), u = { childCount: p.length, name: `${c}`, typeId: "folder" };
-            d.push(u), await t(l, p);
+            const u = await e.readdir(l), p = { childCount: u.length, name: `${c}`, typeId: "folder" };
+            d.push(p), await t(l, u);
           } else {
-            const p = { id: w(), lastModifiedAt: f.mtimeMs, name: c, size: f.size, typeId: "object" };
-            d.push(p);
+            const u = { id: w(), lastModifiedAt: f.mtimeMs, name: c, size: f.size, typeId: "object" };
+            d.push(u);
           }
         } catch (f) {
           throw new Error(`Unable to get information for '${c}' in 'buildPublicDirectoryIndex'. ${String(f)}`);
@@ -51,7 +51,7 @@ async function J() {
     console.info("🚀 Building connector configuration...");
     const o = JSON.parse(await e.readFile("package.json", "utf8")), n = JSON.parse(await e.readFile("config.json", "utf8")), t = await e.readFile("src/index.ts", "utf8");
     let i = !1, r = !1;
-    const s = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, d = [...t.matchAll(s)].filter((c) => !c[1] && c[2] !== "constructor").map((c) => {
+    const s = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, d = [...t.matchAll(s)].filter((c) => c[1] == null && c[2] !== "constructor").map((c) => {
       const l = c[2];
       return i = i || h.includes(l), r = r || b.includes(l), l;
     });
@@ -65,7 +65,7 @@ async function J() {
 async function x() {
   try {
     console.info("🚀 Building context configuration...");
-    const o = JSON.parse(await e.readFile("package.json", "utf8")), n = JSON.parse(await e.readFile("config.json", "utf8")), t = await e.readFile("src/index.ts", "utf8"), i = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, r = [...t.matchAll(i)].filter((s) => !s[1] && s[2] !== "constructor").map((s) => s[2]);
+    const o = JSON.parse(await e.readFile("package.json", "utf8")), n = JSON.parse(await e.readFile("config.json", "utf8")), t = await e.readFile("src/index.ts", "utf8"), i = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, r = [...t.matchAll(i)].filter((s) => s[1] == null && s[2] !== "constructor").map((s) => s[2]);
     o.name != null && (n.id = o.name), n.operations = r, o.version != null && (n.version = o.version), await e.writeFile("config.json", JSON.stringify(n, void 0, 4), "utf8"), console.info("✅ Context configuration built.");
   } catch (o) {
     console.error("❌ Error building context configuration.", o);
@@ -139,12 +139,12 @@ async function D(o, n) {
       for (const a of d) {
         const c = `${r}/${a}`, l = `${s}/${a}`;
         if ((await e.stat(c)).isDirectory()) {
-          const p = await e.readdir(c);
-          await t(c, l, p);
+          const u = await e.readdir(c);
+          await t(c, l, u);
         } else {
           console.info(`⚙️ Uploading '${r}/${a}'...`);
-          const p = `wrangler r2 object put "datapos-sample-data-eu/${s}/${a}" --file="${r}/${a}" --jurisdiction=eu --remote`, u = await g(p);
-          if (u.stderr) throw new Error(u.stderr);
+          const u = `wrangler r2 object put "datapos-sample-data-eu/${s}/${a}" --file="${r}/${a}" --jurisdiction=eu --remote`, p = await g(u);
+          if (p.stderr) throw new Error(p.stderr);
         }
       }
     }
@@ -177,10 +177,10 @@ async function P(o) {
       for (const a of d) {
         const c = `${r}/${a.name}`, l = s ? `${s}/${a.name}` : a.name;
         if (!a.isDirectory()) {
-          const f = `${o}_${t}/${l}`.replace(/\\/g, "/"), p = a.name.endsWith(".js") ? "application/javascript" : a.name.endsWith(".css") ? "text/css" : "application/octet-stream";
+          const f = `${o}_${t}/${l}`.replace(/\\/g, "/"), u = a.name.endsWith(".js") ? "application/javascript" : a.name.endsWith(".css") ? "text/css" : "application/octet-stream";
           console.info(`⚙️ Uploading '${l}' → '${f}'...`);
-          const { stderr: u } = await g(`wrangler r2 object put "${f}" --file="${c}" --content-type ${p} --jurisdiction=eu --remote`);
-          if (u) throw new Error(u);
+          const { stderr: p } = await g(`wrangler r2 object put "${f}" --file="${c}" --content-type ${u} --jurisdiction=eu --remote`);
+          if (p) throw new Error(p);
         }
       }
     }

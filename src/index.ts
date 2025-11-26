@@ -110,9 +110,9 @@ async function buildConnectorConfig(): Promise<void> {
         let sourceOperations = false;
         const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
         const operations = [...indexCode.matchAll(regex)]
-            .filter((m) => !m[1] && m[2] !== 'constructor') // m[1] is 'private ' if present.
-            .map((m) => {
-                const operation = m[2] as ConnectorOperation;
+            .filter((match) => match[1] == null && match[2] !== 'constructor') // match[1] is 'private ' if present.
+            .map((match) => {
+                const operation = match[2] as ConnectorOperation;
                 destinationOperations = destinationOperations || CONNECTOR_DESTINATION_OPERATIONS.includes(operation);
                 sourceOperations = sourceOperations || CONNECTOR_SOURCE_OPERATIONS.includes(operation);
                 return operation;
@@ -146,8 +146,8 @@ async function buildContextConfig(): Promise<void> {
 
         const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
         const operations = [...indexCode.matchAll(regex)]
-            .filter((m) => !m[1] && m[2] !== 'constructor') // m[1] is 'private ' if present.
-            .map((m) => m[2]) as ContextOperation[];
+            .filter((match) => match[1] == null && match[2] !== 'constructor') // match[1] is 'private ' if present.
+            .map((match) => match[2]) as ContextOperation[];
 
         if (packageJSON.name != null) configJSON.id = packageJSON.name;
         configJSON.operations = operations;

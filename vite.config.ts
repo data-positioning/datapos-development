@@ -34,6 +34,7 @@ export default defineConfig({
     plugins: [dts({ outDir: 'dist/types' })],
     resolve: {
         alias: {
+            '~': resolve(__dirname, '.'),
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     }

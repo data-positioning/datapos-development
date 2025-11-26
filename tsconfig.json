@@ -12,6 +12,7 @@
         "noImplicitAny": true,
         "outDir": "dist",
         "paths": {
+            "~/*": ["*"],
             "@/*": ["src/*"]
         },
         "resolveJsonModule": true,
@@ -22,5 +23,5 @@
         "target": "ESNext",
         "useDefineForClassFields": true
     },
-    "include": ["vite.config.*", "src/**/*"]
+    "include": ["vite.config.*", "src/**/*", "tests/**/*"]
 }

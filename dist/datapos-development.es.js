@@ -129,7 +129,7 @@ async function I() {
     }, r = [];
     for (const [u, g] of Object.entries(n)) {
       if (g === 0) continue;
-      const m = s[u], y = `https://img.shields.io/badge/OWASP%20${m.label}%20vulnerability-${g}-${m.color}`;
+      const m = s[u], y = `https://img.shields.io/badge/OWASP%20${m.label}%20vulnerability:-${g}-${m.color}`;
       r.push(`[![OWASP ${m.label}](${y})](./dependency-check-reports/dependency-check-report.html)`);
     }
     const d = Object.values(n).reduce((u, g) => u + g, 0);

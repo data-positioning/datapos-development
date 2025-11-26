@@ -294,7 +294,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         }
 
         const badgeContent = badges.join(' ');
-        const newContent = readmeContent.substring(0, startIdx + START_MARKER.length) + '\n' + badgeContent + '\n' + readmeContent.substring(endIdx);
+        const newContent = readmeContent.substring(0, startIdx + START_MARKER.length) + badgeContent + readmeContent.substring(endIdx);
         await fs.writeFile('README.md', newContent, 'utf8');
         console.info('✅ OWASP dependency check badges inserted into README.md');
     } catch (error) {

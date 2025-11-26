@@ -138,9 +138,7 @@ async function M() {
     );
     const a = await t.readFile("./README.md", "utf8"), c = a.indexOf(o), l = a.indexOf(e);
     (c === -1 || l === -1) && (console.error("❌ Markers not found in README.md."), process.exit(1));
-    const f = r.join(" "), p = a.substring(0, c + o.length) + `
-` + f + `
-` + a.substring(l);
+    const f = r.join(" "), p = a.substring(0, c + o.length) + f + a.substring(l);
     await t.writeFile("README.md", p, "utf8"), console.info("✅ OWASP dependency check badges inserted into README.md");
   } catch (i) {
     console.error("❌ Error updating README with OWASP badges:", i), process.exit(1);

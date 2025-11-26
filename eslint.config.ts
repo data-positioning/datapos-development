@@ -25,7 +25,7 @@ export default [
             '@typescript-eslint/no-unused-vars': 'warn',
             '@typescript-eslint/strict-boolean-expressions': 'warn',
 
-            'import/no-duplicates': 'off',
+            'import/no-duplicates': 'warn',
             'sort-imports': ['warn', { allowSeparatedGroups: true, ignoreCase: true, memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'] }],
 
             'no-empty': 'warn',

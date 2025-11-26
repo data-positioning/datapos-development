@@ -10,11 +10,17 @@ import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
 
 // Dependencies - Framework.
-import type { ModuleConfig } from '@datapos/datapos-shared';
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
-import type { ConnectorConfig, ConnectorOperation, ConnectorUsageId } from '@datapos/datapos-shared';
-import type { ContextConfig, ContextOperation } from '@datapos/datapos-shared';
-import type { PresenterConfig, PresenterOperation } from '@datapos/datapos-shared';
+import type {
+    ConnectorConfig,
+    ConnectorOperation,
+    ConnectorUsageId,
+    ContextConfig,
+    ContextOperation,
+    ModuleConfig,
+    PresenterConfig,
+    PresenterOperation
+} from '@datapos/datapos-shared';
 
 // import { moduleConfigSchema, ModuleConfigZ } from '@datapos/datapos-shared';
 
@@ -189,16 +195,16 @@ async function bumpVersion(path: string = './'): Promise<void> {
     try {
         console.info('🚀 Bumping version...');
         const packageJSON = JSON.parse(await fs.readFile(`${path}package.json`, 'utf8')) as PackageJson;
-        if (packageJSON.version != null) {
+        if (packageJSON.version == null) {
+            packageJSON.version = '0.0.001';
+            await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
+            console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
+        } else {
             const oldVersion = packageJSON.version;
             const versionSegments = packageJSON.version.split('.');
             packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
             await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
             console.info(`✅ Version bumped from ${oldVersion} to ${packageJSON.version}.`);
-        } else {
-            packageJSON.version = '0.0.001';
-            await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
-            console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
         }
     } catch (error) {
         console.error('❌ Error bumping package version.', error);

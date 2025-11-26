@@ -249,7 +249,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         interface SeverityCounts {
             critical: number;
             high: number;
-            medium: number;
+            moderate: number;
             low: number;
             info: number;
             unknown: number;
@@ -258,7 +258,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const severityCounts: SeverityCounts = {
             critical: 0,
             high: 0,
-            medium: 0,
+            moderate: 0,
             low: 0,
             info: 0,
             unknown: 0
@@ -285,7 +285,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
             critical: { color: 'red', label: 'Critical' },
             high: { color: 'orange', label: 'High' },
-            medium: { color: 'yellow', label: 'Medium' },
+            moderate: { color: 'yellow', label: 'Moderate' },
             low: { color: 'green', label: 'Low' },
             info: { color: 'brightgreen', label: 'Info' },
             unknown: { color: 'lightgrey', label: 'Unknown' }
@@ -310,7 +310,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const endIdx = readmeContent.indexOf(END_MARKER);
 
         if (startIdx === -1 || endIdx === -1) {
-            console.error('Error: Markers not found in README.md');
+            console.error('❌ Markers not found in README.md.');
             process.exit(1);
         }
 

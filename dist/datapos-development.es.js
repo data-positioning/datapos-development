@@ -116,7 +116,7 @@ async function I() {
     const i = JSON.parse(await t.readFile("./dependency-check-reports/dependency-check-report.json", "utf-8")), n = {
       critical: 0,
       high: 0,
-      medium: 0,
+      moderate: 0,
       low: 0,
       info: 0,
       unknown: 0
@@ -130,7 +130,7 @@ async function I() {
     const s = {
       critical: { color: "red", label: "Critical" },
       high: { color: "orange", label: "High" },
-      medium: { color: "yellow", label: "Medium" },
+      moderate: { color: "yellow", label: "Moderate" },
       low: { color: "green", label: "Low" },
       info: { color: "brightgreen", label: "Info" },
       unknown: { color: "lightgrey", label: "Unknown" }
@@ -144,7 +144,7 @@ async function I() {
       `   Critical: ${n.critical}, High: ${n.high}, Medium: ${n.medium}, Low: ${n.low}, Info: ${n.info}, Unknown: ${n.unknown}`
     );
     const a = await t.readFile("./README.md", "utf8"), c = a.indexOf(o), l = a.indexOf(e);
-    (c === -1 || l === -1) && (console.error("Error: Markers not found in README.md"), process.exit(1));
+    (c === -1 || l === -1) && (console.error("❌ Markers not found in README.md."), process.exit(1));
     const f = r.join(" "), p = a.substring(0, c + o.length) + `
 ` + f + `
 ` + a.substring(l);

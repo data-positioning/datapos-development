@@ -1,7 +1,7 @@
-import { exec as m } from "child_process";
-import { promises as e } from "fs";
+import { exec as m } from "node:child_process";
+import { promises as e } from "node:fs";
 import { nanoid as w } from "nanoid";
-import { promisify as y } from "util";
+import { promisify as y } from "node:util";
 const h = ["createObject", "dropObject", "removeRecords", "upsertRecords"], b = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], g = y(m);
 async function S() {
   try {

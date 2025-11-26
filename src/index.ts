@@ -244,17 +244,82 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
     const END_MARKER = '<!-- OWASP_BADGE_END -->';
     try {
         const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf-8'));
-        let vulnerabilityCount = 0;
-        for (const dependency of dependencyCheckData.dependencies) {
-            if (dependency.vulnerabilities == null) continue;
-            vulnerabilityCount += dependency.vulnerabilities.length;
+
+        // Count vulnerabilities by severity
+        interface SeverityCounts {
+            critical: number;
+            high: number;
+            medium: number;
+            low: number;
+            info: number;
+            unknown: number;
         }
 
-        console.log('vulnerabilityCount', vulnerabilityCount);
+        const severityCounts: SeverityCounts = {
+            critical: 0,
+            high: 0,
+            medium: 0,
+            low: 0,
+            info: 0,
+            unknown: 0
+        };
 
+        for (const dependency of dependencyCheckData.dependencies) {
+            if (dependency.vulnerabilities == null) continue;
+            for (const vulnerability of dependency.vulnerabilities) {
+                const severity = (vulnerability.severity?.toLowerCase() ?? 'unknown') as keyof SeverityCounts;
+                if (severity in severityCounts) {
+                    severityCounts[severity]++;
+                } else {
+                    severityCounts.unknown++;
+                }
+            }
+        }
+
+        // Generate shield badges for each severity
+        interface BadgeConfig {
+            color: string;
+            label: string;
+        }
+
+        const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
+            critical: { color: 'red', label: 'Critical' },
+            high: { color: 'orange', label: 'High' },
+            medium: { color: 'yellow', label: 'Medium' },
+            low: { color: 'green', label: 'Low' },
+            info: { color: 'brightgreen', label: 'Info' },
+            unknown: { color: 'lightgrey', label: 'Unknown' }
+        };
+
+        const badges: string[] = [];
+        for (const [severity, count] of Object.entries(severityCounts)) {
+            const config = severityBadgeConfig[severity as keyof SeverityCounts];
+            const badgeUrl = `https://img.shields.io/badge/OWASP%20${config.label}-${count}-${config.color}`;
+            badges.push(`[![OWASP ${config.label}](${badgeUrl})](./dependency-check-reports/dependency-check-report.html)`);
+        }
+
+        const totalVulnerabilities = Object.values(severityCounts).reduce((sum, count) => sum + count, 0);
+        console.info(`✅ Total vulnerabilities found: ${totalVulnerabilities}`);
+        console.info(
+            `   Critical: ${severityCounts.critical}, High: ${severityCounts.high}, Medium: ${severityCounts.medium}, Low: ${severityCounts.low}, Info: ${severityCounts.info}, Unknown: ${severityCounts.unknown}`
+        );
+
+        // Insert badges into README
         const readmeContent = await fs.readFile('./README.md', 'utf8');
+        const startIdx = readmeContent.indexOf(START_MARKER);
+        const endIdx = readmeContent.indexOf(END_MARKER);
+
+        if (startIdx === -1 || endIdx === -1) {
+            console.error('Error: Markers not found in README.md');
+            process.exit(1);
+        }
+
+        const badgeContent = badges.join(' ');
+        const newContent = readmeContent.substring(0, startIdx + START_MARKER.length) + '\n' + badgeContent + '\n' + readmeContent.substring(endIdx);
+        await fs.writeFile('README2.md', newContent, 'utf8');
+        console.info('✅ OWASP dependency check badges inserted into README.md');
     } catch (error) {
-        console.error('Error updating README:', error);
+        console.error('❌ Error updating README with OWASP badges:', error);
         process.exit(1);
     }
 }

@@ -243,9 +243,10 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
     const START_MARKER = '<!-- OWASP_BADGE_START -->';
     const END_MARKER = '<!-- OWASP_BADGE_END -->';
     try {
-        const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-report.json', 'utf-8'));
+        const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf-8'));
         let vulnerabilityCount = 0;
         for (const dependency of dependencyCheckData.dependencies) {
+            if (dependency.vulnerabilities == null) continue;
             vulnerabilityCount += dependency.vulnerabilities.length;
         }
 

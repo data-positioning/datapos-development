@@ -112,10 +112,10 @@ async function R() {
 }
 async function k() {
   try {
-    const o = JSON.parse(await n.readFile("./dependency-check-report.json", "utf-8"));
+    const o = JSON.parse(await n.readFile("./dependency-check-reports/dependency-check-report.json", "utf-8"));
     let e = 0;
     for (const t of o.dependencies)
-      e += t.vulnerabilities.length;
+      t.vulnerabilities != null && (e += t.vulnerabilities.length);
     console.log("vulnerabilityCount", e);
     const i = await n.readFile("./README.md", "utf8");
   } catch (o) {

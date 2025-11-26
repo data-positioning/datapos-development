@@ -1,8 +1,8 @@
-import { exec as b } from "node:child_process";
+import { exec as h } from "node:child_process";
 import { promises as t } from "node:fs";
-import { nanoid as h } from "nanoid";
+import { nanoid as b } from "nanoid";
 import { promisify as $ } from "node:util";
-const v = ["createObject", "dropObject", "removeRecords", "upsertRecords"], O = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], w = $(b);
+const v = ["createObject", "dropObject", "removeRecords", "upsertRecords"], O = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], w = $(h);
 async function j() {
   try {
     console.info("🚀 Building configuration...");
@@ -12,7 +12,7 @@ async function j() {
     console.error("❌ Error building configuration.", e);
   }
 }
-async function C(e) {
+async function k(e) {
   try {
     console.info(`🚀 Building public directory index for identifier '${e}'...`);
     const o = {};
@@ -28,7 +28,7 @@ async function C(e) {
             const p = await t.readdir(l), u = { childCount: p.length, name: `${c}`, typeId: "folder" };
             d.push(u), await i(l, p);
           } else {
-            const p = { id: h(), lastModifiedAt: f.mtimeMs, name: c, size: f.size, typeId: "object" };
+            const p = { id: b(), lastModifiedAt: f.mtimeMs, name: c, size: f.size, typeId: "object" };
             d.push(p);
           }
         } catch (f) {
@@ -46,7 +46,7 @@ async function C(e) {
     console.error("❌ Error building public directory index.", o);
   }
 }
-async function k() {
+async function C() {
   try {
     console.info("🚀 Building connector configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8")), i = await t.readFile("src/index.ts", "utf8");
@@ -121,15 +121,15 @@ async function I() {
           m in n ? n[m]++ : n.unknown++;
         }
     const s = {
-      critical: { color: "red", label: "Critical" },
-      high: { color: "orange", label: "High" },
-      moderate: { color: "yellow", label: "Moderate" },
-      low: { color: "green", label: "Low" },
-      unknown: { color: "lightgrey", label: "Unknown" }
+      critical: { color: "red", label: "critical" },
+      high: { color: "orange", label: "high" },
+      moderate: { color: "yellow", label: "moderate" },
+      low: { color: "green", label: "low" },
+      unknown: { color: "lightgrey", label: "unknown" }
     }, r = [];
     for (const [u, g] of Object.entries(n)) {
       if (g === 0) continue;
-      const m = s[u], y = `https://img.shields.io/badge/OWASP%20${m.label}%20vulnerability:-${g}-${m.color}`;
+      const m = s[u], y = `https://img.shields.io/badge/OWASP%20${m.label}%20vulnerabilities-${g}-${m.color}`;
       r.push(`[![OWASP ${m.label}](${y})](./dependency-check-reports/dependency-check-report.html)`);
     }
     const d = Object.values(n).reduce((u, g) => u + g, 0);
@@ -203,7 +203,7 @@ async function _() {
     console.error("❌ Error uploading module configuration.", e);
   }
 }
-async function U(e) {
+async function W(e) {
   try {
     console.info("🚀 Uploading module to R2...");
     const i = `v${JSON.parse(await t.readFile("package.json", "utf8")).version}`;
@@ -226,10 +226,10 @@ async function U(e) {
 }
 export {
   j as buildConfig,
-  k as buildConnectorConfig,
+  C as buildConnectorConfig,
   J as buildContextConfig,
   R as buildPresenterConfig,
-  C as buildPublicDirectoryIndex,
+  k as buildPublicDirectoryIndex,
   A as bumpVersion,
   F as echoScriptNotImplemented,
   D as insertLicensesIntoReadme,
@@ -238,5 +238,5 @@ export {
   M as syncWithGitHub,
   T as uploadDirectoryToR2,
   _ as uploadModuleConfigToDO,
-  U as uploadModuleToR2
+  W as uploadModuleToR2
 };

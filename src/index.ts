@@ -262,18 +262,18 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         // Generate shield badges for each severity
         type BadgeConfig = { color: string; label: string };
         const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
-            critical: { color: 'red', label: 'Critical' },
-            high: { color: 'orange', label: 'High' },
-            moderate: { color: 'yellow', label: 'Moderate' },
-            low: { color: 'green', label: 'Low' },
-            unknown: { color: 'lightgrey', label: 'Unknown' }
+            critical: { color: 'red', label: 'critical' },
+            high: { color: 'orange', label: 'high' },
+            moderate: { color: 'yellow', label: 'moderate' },
+            low: { color: 'green', label: 'low' },
+            unknown: { color: 'lightgrey', label: 'unknown' }
         };
 
         const badges: string[] = [];
         for (const [severity, count] of Object.entries(severityCounts)) {
             if (count === 0) continue;
             const config = severityBadgeConfig[severity as keyof SeverityCounts];
-            const badgeUrl = `https://img.shields.io/badge/OWASP%20${config.label}%20vulnerability:-${count}-${config.color}`;
+            const badgeUrl = `https://img.shields.io/badge/OWASP%20${config.label}%20vulnerabilities-${count}-${config.color}`;
             badges.push(`[![OWASP ${config.label}](${badgeUrl})](./dependency-check-reports/dependency-check-report.html)`);
         }
 

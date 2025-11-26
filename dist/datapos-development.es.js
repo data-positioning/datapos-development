@@ -110,31 +110,31 @@ async function D() {
     console.error("Error updating README:", i), process.exit(1);
   }
 }
-async function I() {
+async function M() {
   const o = "<!-- OWASP_BADGE_START -->", e = "<!-- OWASP_BADGE_END -->";
   try {
-    const i = JSON.parse(await t.readFile("./dependency-check-reports/dependency-check-report.json", "utf-8")), n = { critical: 0, high: 0, moderate: 0, low: 0, info: 0, unknown: 0 };
+    const i = JSON.parse(await t.readFile("./dependency-check-reports/dependency-check-report.json", "utf-8")), n = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
     for (const u of i.dependencies)
       if (u.vulnerabilities != null)
-        for (const m of u.vulnerabilities) {
-          const g = m.severity?.toLowerCase() ?? "unknown";
-          g in n ? n[g]++ : n.unknown++;
+        for (const g of u.vulnerabilities) {
+          const m = g.severity?.toLowerCase() ?? "unknown";
+          m in n ? n[m]++ : n.unknown++;
         }
     const s = {
       critical: { color: "red", label: "Critical" },
       high: { color: "orange", label: "High" },
       moderate: { color: "yellow", label: "Moderate" },
       low: { color: "green", label: "Low" },
-      info: { color: "brightgreen", label: "Info" },
       unknown: { color: "lightgrey", label: "Unknown" }
     }, r = [];
-    for (const [u, m] of Object.entries(n)) {
-      const g = s[u], y = `https://img.shields.io/badge/OWASP%20${g.label}-${m}-${g.color}`;
-      r.push(`[![OWASP ${g.label}](${y})](./dependency-check-reports/dependency-check-report.html)`);
+    for (const [u, g] of Object.entries(n)) {
+      if (g === 0) continue;
+      const m = s[u], y = `https://img.shields.io/badge/OWASP%20${m.label}-${g}-${m.color}`;
+      r.push(`[![OWASP ${m.label}](${y})](./dependency-check-reports/dependency-check-report.html)`);
     }
-    const d = Object.values(n).reduce((u, m) => u + m, 0);
+    const d = Object.values(n).reduce((u, g) => u + g, 0);
     console.info(`✅ Total vulnerabilities found: ${d}`), console.info(
-      `   Critical: ${n.critical}, High: ${n.high}, Moderate: ${n.moderate}, Low: ${n.low}, Info: ${n.info}, Unknown: ${n.unknown}`
+      `   Critical: ${n.critical}, High: ${n.high}, Moderate: ${n.moderate}, Low: ${n.low},  Unknown: ${n.unknown}`
     );
     const a = await t.readFile("./README.md", "utf8"), c = a.indexOf(o), l = a.indexOf(e);
     (c === -1 || l === -1) && (console.error("❌ Markers not found in README.md."), process.exit(1));
@@ -146,7 +146,7 @@ async function I() {
     console.error("❌ Error updating README with OWASP badges:", i), process.exit(1);
   }
 }
-async function M() {
+async function I() {
   try {
     console.info("🚀 Sending deployment notice...");
     const o = JSON.parse(await t.readFile("config.json", "utf8")), e = {
@@ -235,8 +235,8 @@ export {
   A as bumpVersion,
   F as echoScriptNotImplemented,
   D as insertLicensesIntoReadme,
-  I as insertOWASPDependencyCheckBadgeIntoReadme,
-  M as sendDeploymentNotice,
+  M as insertOWASPDependencyCheckBadgeIntoReadme,
+  I as sendDeploymentNotice,
   P as syncWithGitHub,
   T as uploadDirectoryToR2,
   _ as uploadModuleConfigToDO,

@@ -245,8 +245,8 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
     try {
         const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf-8'));
 
-        type SeverityCounts = { critical: number; high: number; moderate: number; low: number; info: number; unknown: number };
-        const severityCounts: SeverityCounts = { critical: 0, high: 0, moderate: 0, low: 0, info: 0, unknown: 0 };
+        type SeverityCounts = { critical: number; high: number; moderate: number; low: number; unknown: number };
+        const severityCounts: SeverityCounts = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
         for (const dependency of dependencyCheckData.dependencies) {
             if (dependency.vulnerabilities == null) continue;
             for (const vulnerability of dependency.vulnerabilities) {
@@ -266,12 +266,12 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
             high: { color: 'orange', label: 'High' },
             moderate: { color: 'yellow', label: 'Moderate' },
             low: { color: 'green', label: 'Low' },
-            info: { color: 'brightgreen', label: 'Info' },
             unknown: { color: 'lightgrey', label: 'Unknown' }
         };
 
         const badges: string[] = [];
         for (const [severity, count] of Object.entries(severityCounts)) {
+            if (count === 0) continue;
             const config = severityBadgeConfig[severity as keyof SeverityCounts];
             const badgeUrl = `https://img.shields.io/badge/OWASP%20${config.label}-${count}-${config.color}`;
             badges.push(`[![OWASP ${config.label}](${badgeUrl})](./dependency-check-reports/dependency-check-report.html)`);
@@ -280,7 +280,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const totalVulnerabilities = Object.values(severityCounts).reduce((sum, count) => sum + count, 0);
         console.info(`✅ Total vulnerabilities found: ${totalVulnerabilities}`);
         console.info(
-            `   Critical: ${severityCounts.critical}, High: ${severityCounts.high}, Moderate: ${severityCounts.moderate}, Low: ${severityCounts.low}, Info: ${severityCounts.info}, Unknown: ${severityCounts.unknown}`
+            `   Critical: ${severityCounts.critical}, High: ${severityCounts.high}, Moderate: ${severityCounts.moderate}, Low: ${severityCounts.low},  Unknown: ${severityCounts.unknown}`
         );
 
         // Insert badges into README

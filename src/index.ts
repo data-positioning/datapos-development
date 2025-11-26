@@ -245,25 +245,8 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
     try {
         const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf-8'));
 
-        // Count vulnerabilities by severity
-        interface SeverityCounts {
-            critical: number;
-            high: number;
-            moderate: number;
-            low: number;
-            info: number;
-            unknown: number;
-        }
-
-        const severityCounts: SeverityCounts = {
-            critical: 0,
-            high: 0,
-            moderate: 0,
-            low: 0,
-            info: 0,
-            unknown: 0
-        };
-
+        type SeverityCounts = { critical: number; high: number; moderate: number; low: number; info: number; unknown: number };
+        const severityCounts: SeverityCounts = { critical: 0, high: 0, moderate: 0, low: 0, info: 0, unknown: 0 };
         for (const dependency of dependencyCheckData.dependencies) {
             if (dependency.vulnerabilities == null) continue;
             for (const vulnerability of dependency.vulnerabilities) {
@@ -277,11 +260,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         }
 
         // Generate shield badges for each severity
-        interface BadgeConfig {
-            color: string;
-            label: string;
-        }
-
+        type BadgeConfig = { color: string; label: string };
         const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
             critical: { color: 'red', label: 'Critical' },
             high: { color: 'orange', label: 'High' },
@@ -301,7 +280,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const totalVulnerabilities = Object.values(severityCounts).reduce((sum, count) => sum + count, 0);
         console.info(`✅ Total vulnerabilities found: ${totalVulnerabilities}`);
         console.info(
-            `   Critical: ${severityCounts.critical}, High: ${severityCounts.high}, Medium: ${severityCounts.medium}, Low: ${severityCounts.low}, Info: ${severityCounts.info}, Unknown: ${severityCounts.unknown}`
+            `   Critical: ${severityCounts.critical}, High: ${severityCounts.high}, Moderate: ${severityCounts.moderate}, Low: ${severityCounts.low}, Info: ${severityCounts.info}, Unknown: ${severityCounts.unknown}`
         );
 
         // Insert badges into README

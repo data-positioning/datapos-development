@@ -113,14 +113,7 @@ async function D() {
 async function I() {
   const o = "<!-- OWASP_BADGE_START -->", e = "<!-- OWASP_BADGE_END -->";
   try {
-    const i = JSON.parse(await t.readFile("./dependency-check-reports/dependency-check-report.json", "utf-8")), n = {
-      critical: 0,
-      high: 0,
-      moderate: 0,
-      low: 0,
-      info: 0,
-      unknown: 0
-    };
+    const i = JSON.parse(await t.readFile("./dependency-check-reports/dependency-check-report.json", "utf-8")), n = { critical: 0, high: 0, moderate: 0, low: 0, info: 0, unknown: 0 };
     for (const u of i.dependencies)
       if (u.vulnerabilities != null)
         for (const m of u.vulnerabilities) {
@@ -141,7 +134,7 @@ async function I() {
     }
     const d = Object.values(n).reduce((u, m) => u + m, 0);
     console.info(`✅ Total vulnerabilities found: ${d}`), console.info(
-      `   Critical: ${n.critical}, High: ${n.high}, Medium: ${n.medium}, Low: ${n.low}, Info: ${n.info}, Unknown: ${n.unknown}`
+      `   Critical: ${n.critical}, High: ${n.high}, Moderate: ${n.moderate}, Low: ${n.low}, Info: ${n.info}, Unknown: ${n.unknown}`
     );
     const a = await t.readFile("./README.md", "utf8"), c = a.indexOf(o), l = a.indexOf(e);
     (c === -1 || l === -1) && (console.error("❌ Markers not found in README.md."), process.exit(1));

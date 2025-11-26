@@ -185,19 +185,19 @@ async function buildPresenterConfig(): Promise<void> {
 }
 
 // Utilities - Bump version.
-async function bumpVersion(): Promise<void> {
+async function bumpVersion(path: string = './'): Promise<void> {
     try {
         console.info('🚀 Bumping version...');
-        const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
+        const packageJSON = JSON.parse(await fs.readFile(`${path}package.json`, 'utf8')) as PackageJson;
         if (packageJSON.version != null) {
             const oldVersion = packageJSON.version;
             const versionSegments = packageJSON.version.split('.');
             packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-            await fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4), 'utf8');
+            await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
             console.info(`✅ Version bumped from ${oldVersion} to ${packageJSON.version}.`);
         } else {
             packageJSON.version = '0.0.001';
-            await fs.writeFile('package.json', JSON.stringify(packageJSON, undefined, 4), 'utf8');
+            await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
             console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
         }
     } catch (error) {

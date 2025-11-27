@@ -65,11 +65,10 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 The following table lists top-level production and peer dependencies. All these dependencies (including transitive ones) have been recursively verified to use Apache-2.0, CC0-1.0, or MIT—commercially friendly licenses with minimal restrictions. Developers cloning this repository should independently verify dev and optional dependencies; users of the published library are covered by these checks.
 
 <!-- DEPENDENCY_LICENSES_START -->
-
 | Name                    | Type | Installed | Latest  | Latest Modified          |
 | :---------------------- | :--: | :-------: | :-----: | :----------------------- |
 | @datapos/datapos-shared | MIT  |  0.3.252  | 0.3.252 | 2025-11-25T16:48:28.532Z |
-
+| node-pty                | MIT  |   1.0.0   |  1.0.0  | 2025-11-03T11:45:17.960Z |
 <!-- DEPENDENCY_LICENSES_END -->
 
 ### Bundle Analysis Report

@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.134",
+    "version": "0.3.135",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -70,9 +70,9 @@
         "_check:owaspBageInsertiions": "node -e \"import('./dist/datapos-development.es.js').then(m => m.insertOWASPDependencyCheckBadgeIntoReadme())\"",
         "_document:licenceReportJSON": "license-report --only=prod,peer --department.value=n/a --licensePeriod=n/a --material=n/a --relatedTo.value=n/a > licenses.json",
         "_document:licenceReportMarkdown": "license-report --config license-report-config.json --only=prod,peer --output=markdown > licenses.md",
-        "_document:licenceReportCheck": "license-report-check --source ./licenses.json --allowed 'MIT' --allowed 'n/a' --allowed 'Apache-2.0' --allowed 'CC0-1.0' --output=table",
+        "_document:licenceReportCheck": "license-report-check --source ./licenses.json --allowed 'MIT' --output=table",
         "_document:licenceTree": "license-report-recursive --only=prod,peer --department.value=n/a --licensePeriod=n/a --material=n/a --relatedTo.value=n/a --recurse --output=tree > licenseTree.json",
-        "_document:licenceTreeCheck": "license-report-check --source ./licenseTree.json --allowed 'MIT' --allowed 'n/a' --allowed 'Apache-2.0' --allowed 'CC0-1.0' --output=table",
+        "_document:licenceTreeCheck": "license-report-check --source ./licenseTree.json --allowed 'MIT' --output=table",
         "_document:insertLicensesIntoReadme": "node -e \"import('./dist/datapos-development.es.js').then(m => m.insertLicensesIntoReadme())\"",
         "_sync:withGitHub": "node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",
         "_update:sharedDep": "npm install @datapos/datapos-shared@latest"

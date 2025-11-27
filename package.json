@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.135",
+    "version": "0.3.136",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -53,10 +53,9 @@
         "zod": "^4.1.13"
     },
     "scripts": {
-        "audit": "npm audit",
+        "audit": "npm run _audit:vulnerabilities && npm audit",
         "build": "vite build",
-        "check:updates": "npm outdated; npm-check-updates -i",
-        "check:vulnerabilities": "npm run _check:owaspDependencyCheck; npm run _check:owaspBageInsertiions",
+        "check": "npm outdated; npm-check-updates -i",
         "document": "npm run _document:licenceReportJSON && npm run _document:licenceReportMarkdown && npm run _document:licenceReportCheck && npm run _document:insertLicensesIntoReadme && npm run _document:licenceTree && npm run _document:licenceTreeCheck",
         "format": "prettier --write src/",
         "lint": "eslint .",
@@ -65,9 +64,10 @@
         "sync": "npm run _bump:version && npm run _sync:withGitHub",
         "test": "vitest",
         "update:dataPosDeps": "npm run _update:sharedDep",
+        "_audit:vulnerabilities": "npm run _audit:owaspDependencyCheck && npm run _audit:owaspBageInsertiions",
+        "_audit:owaspDependencyCheck": "set -a && source .env && set +a && owasp-dependency-check --project \"@datapos/datapos-development\" --enableRetired --nvdApiKey \"$NVD_API_KEY\" --nodePackageSkipDevDependencies",
+        "_audit:owaspBageInsertiions": "node -e \"import('./dist/datapos-development.es.js').then(m => m.insertOWASPDependencyCheckBadgeIntoReadme())\"",
         "_bump:version": "node -e \"import('./dist/datapos-development.es.js').then(m => m.bumpVersion())\"",
-        "_check:owaspDependencyCheck": "set -a && source .env && set +a && owasp-dependency-check --project \"@datapos/datapos-development\" --enableRetired --nvdApiKey \"$NVD_API_KEY\" --nodePackageSkipDevDependencies",
-        "_check:owaspBageInsertiions": "node -e \"import('./dist/datapos-development.es.js').then(m => m.insertOWASPDependencyCheckBadgeIntoReadme())\"",
         "_document:licenceReportJSON": "license-report --only=prod,peer --department.value=n/a --licensePeriod=n/a --material=n/a --relatedTo.value=n/a > licenses.json",
         "_document:licenceReportMarkdown": "license-report --config license-report-config.json --only=prod,peer --output=markdown > licenses.md",
         "_document:licenceReportCheck": "license-report-check --source ./licenses.json --allowed 'MIT' --output=table",

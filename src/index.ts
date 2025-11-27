@@ -260,13 +260,14 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         }
 
         // Generate shield badges for each severity
+        // If needed a possible info color could be #0288D1.
         type BadgeConfig = { color: string; label: string };
         const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
-            critical: { color: 'red', label: 'critical' },
-            high: { color: 'orange', label: 'high' },
-            moderate: { color: 'yellow', label: 'moderate' },
-            low: { color: 'green', label: 'low' },
-            unknown: { color: 'lightgrey', label: 'unknown' }
+            critical: { color: 'D32F2F', label: 'critical' },
+            high: { color: 'EF6C00', label: 'high' },
+            moderate: { color: 'F9A825', label: 'moderate' },
+            low: { color: 'AFB42B', label: 'low' },
+            unknown: { color: '757575', label: 'unknown' }
         };
 
         const totalVulnerabilities = Object.values(severityCounts).reduce((sum, count) => sum + count, 0);
@@ -278,7 +279,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as PresenterConfig;
         const badges: string[] = [];
         if (totalVulnerabilities === 0) {
-            const badgeUrl = 'https://img.shields.io/badge/OWASP-passed-green';
+            const badgeUrl = 'https://img.shields.io/badge/OWASP-passed-4CAF50';
             badges.push(`[![OWASP](${badgeUrl})](https://data-positioning.github.io/${configJSON.id}/dependency-check-reports/dependency-check-report.html)`);
         } else {
             for (const [severity, count] of Object.entries(severityCounts)) {

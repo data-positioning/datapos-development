@@ -12,7 +12,7 @@ async function k() {
     console.error("❌ Error building configuration.", e);
   }
 }
-async function J(e) {
+async function C(e) {
   try {
     console.info(`🚀 Building public directory index for identifier '${e}'...`);
     const o = {};
@@ -46,7 +46,7 @@ async function J(e) {
     console.error("❌ Error building public directory index.", o);
   }
 }
-async function C() {
+async function J() {
   try {
     console.info("🚀 Building connector configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8")), i = await t.readFile("src/index.ts", "utf8");
@@ -62,7 +62,7 @@ async function C() {
     console.error("❌ Error building connector configuration.", e);
   }
 }
-async function R() {
+async function A() {
   try {
     console.info("🚀 Building context configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8")), i = await t.readFile("src/index.ts", "utf8"), n = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, s = [...i.matchAll(n)].filter((r) => r[1] == null && r[2] !== "constructor").map((r) => r[2]);
@@ -71,7 +71,7 @@ async function R() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function A() {
+async function F() {
   try {
     console.info("🚀 Building presenter configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8")), i = await t.readFile("src/index.ts", "utf8"), n = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, s = [...i.matchAll(n)].filter((r) => !r[1] && r[2] !== "constructor").map((r) => r[2]);
@@ -80,7 +80,7 @@ async function A() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function F(e = "./") {
+async function R(e = "./") {
   try {
     console.info("🚀 Bumping version...");
     const o = JSON.parse(await t.readFile(`${e}package.json`, "utf8"));
@@ -121,18 +121,18 @@ async function I() {
           w in n ? n[w]++ : n.unknown++;
         }
     const s = {
-      critical: { color: "red", label: "critical" },
-      high: { color: "orange", label: "high" },
-      moderate: { color: "yellow", label: "moderate" },
-      low: { color: "green", label: "low" },
-      unknown: { color: "lightgrey", label: "unknown" }
+      critical: { color: "D32F2F", label: "critical" },
+      high: { color: "EF6C00", label: "high" },
+      moderate: { color: "F9A825", label: "moderate" },
+      low: { color: "AFB42B", label: "low" },
+      unknown: { color: "757575", label: "unknown" }
     }, r = Object.values(n).reduce((g, m) => g + m, 0);
     console.info(`✅ Total vulnerabilities found: ${r}`), console.info(
       `   Critical: ${n.critical}, High: ${n.high}, Moderate: ${n.moderate}, Low: ${n.low},  Unknown: ${n.unknown}`
     );
     const d = JSON.parse(await t.readFile("config.json", "utf8")), c = [];
     if (r === 0)
-      c.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-green)](https://data-positioning.github.io/${d.id}/dependency-check-reports/dependency-check-report.html)`);
+      c.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/${d.id}/dependency-check-reports/dependency-check-report.html)`);
     else
       for (const [g, m] of Object.entries(n)) {
         if (m === 0) continue;
@@ -206,7 +206,7 @@ async function W() {
     console.error("❌ Error uploading module configuration.", e);
   }
 }
-async function U(e) {
+async function B(e) {
   try {
     console.info("🚀 Uploading module to R2...");
     const i = `v${JSON.parse(await t.readFile("package.json", "utf8")).version}`;
@@ -229,11 +229,11 @@ async function U(e) {
 }
 export {
   k as buildConfig,
-  C as buildConnectorConfig,
-  R as buildContextConfig,
-  A as buildPresenterConfig,
-  J as buildPublicDirectoryIndex,
-  F as bumpVersion,
+  J as buildConnectorConfig,
+  A as buildContextConfig,
+  F as buildPresenterConfig,
+  C as buildPublicDirectoryIndex,
+  R as bumpVersion,
   D as echoScriptNotImplemented,
   P as insertLicensesIntoReadme,
   I as insertOWASPDependencyCheckBadgeIntoReadme,
@@ -241,5 +241,5 @@ export {
   T as syncWithGitHub,
   _ as uploadDirectoryToR2,
   W as uploadModuleConfigToDO,
-  U as uploadModuleToR2
+  B as uploadModuleToR2
 };

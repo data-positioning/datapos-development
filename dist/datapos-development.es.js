@@ -1,9 +1,9 @@
-import { exec as h } from "node:child_process";
+import { exec as b } from "node:child_process";
 import { promises as t } from "node:fs";
-import { nanoid as b } from "nanoid";
-import { promisify as $ } from "node:util";
-const v = ["createObject", "dropObject", "removeRecords", "upsertRecords"], O = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], w = $(h);
-async function j() {
+import { nanoid as $ } from "nanoid";
+import { promisify as O } from "node:util";
+const S = ["createObject", "dropObject", "removeRecords", "upsertRecords"], v = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], y = O(b);
+async function k() {
   try {
     console.info("🚀 Building configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8"));
@@ -12,32 +12,32 @@ async function j() {
     console.error("❌ Error building configuration.", e);
   }
 }
-async function C(e) {
+async function J(e) {
   try {
     console.info(`🚀 Building public directory index for identifier '${e}'...`);
     const o = {};
     async function i(s, r) {
       console.info(`⚙️ Processing directory '${s}'...`);
-      const d = [], a = s.substring(`public/${e}`.length);
-      o[a] = d;
-      for (const c of r) {
-        const l = `${s}/${c}`;
+      const d = [], c = s.substring(`public/${e}`.length);
+      o[c] = d;
+      for (const a of r) {
+        const l = `${s}/${a}`;
         try {
           const f = await t.stat(l);
           if (f.isDirectory()) {
-            const p = await t.readdir(l), u = { childCount: p.length, name: `${c}`, typeId: "folder" };
-            d.push(u), await i(l, p);
+            const u = await t.readdir(l), p = { childCount: u.length, name: `${a}`, typeId: "folder" };
+            d.push(p), await i(l, u);
           } else {
-            const p = { id: b(), lastModifiedAt: f.mtimeMs, name: c, size: f.size, typeId: "object" };
-            d.push(p);
+            const u = { id: $(), lastModifiedAt: f.mtimeMs, name: a, size: f.size, typeId: "object" };
+            d.push(u);
           }
         } catch (f) {
-          throw new Error(`Unable to get information for '${c}' in 'buildPublicDirectoryIndex'. ${String(f)}`);
+          throw new Error(`Unable to get information for '${a}' in 'buildPublicDirectoryIndex'. ${String(f)}`);
         }
       }
-      d.sort((c, l) => {
-        const f = c.typeId.localeCompare(l.typeId);
-        return f === 0 ? c.name.localeCompare(l.name) : f;
+      d.sort((a, l) => {
+        const f = a.typeId.localeCompare(l.typeId);
+        return f === 0 ? a.name.localeCompare(l.name) : f;
       });
     }
     const n = await t.readdir(`public/${e}`);
@@ -46,23 +46,23 @@ async function C(e) {
     console.error("❌ Error building public directory index.", o);
   }
 }
-async function k() {
+async function C() {
   try {
     console.info("🚀 Building connector configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8")), i = await t.readFile("src/index.ts", "utf8");
     let n = !1, s = !1;
-    const r = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, d = [...i.matchAll(r)].filter((c) => c[1] == null && c[2] !== "constructor").map((c) => {
-      const l = c[2];
-      return n = n || v.includes(l), s = s || O.includes(l), l;
+    const r = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, d = [...i.matchAll(r)].filter((a) => a[1] == null && a[2] !== "constructor").map((a) => {
+      const l = a[2];
+      return n = n || S.includes(l), s = s || v.includes(l), l;
     });
     d.length > 0 ? console.info(`ℹ️  Implements ${d.length} operations.`) : console.warn("⚠️  Implements no operations.");
-    const a = s && n ? "bidirectional" : s ? "source" : n ? "destination" : "unknown";
-    a && console.info(`ℹ️  Supports ${a} usage.`), e.name != null && (o.id = e.name), o.operations = d, o.usageId = a, e.version != null && (o.version = e.version), await t.writeFile("config.json", JSON.stringify(o, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
+    const c = s && n ? "bidirectional" : s ? "source" : n ? "destination" : "unknown";
+    c && console.info(`ℹ️  Supports ${c} usage.`), e.name != null && (o.id = e.name), o.operations = d, o.usageId = c, e.version != null && (o.version = e.version), await t.writeFile("config.json", JSON.stringify(o, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
   } catch (e) {
     console.error("❌ Error building connector configuration.", e);
   }
 }
-async function J() {
+async function R() {
   try {
     console.info("🚀 Building context configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8")), i = await t.readFile("src/index.ts", "utf8"), n = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, s = [...i.matchAll(n)].filter((r) => r[1] == null && r[2] !== "constructor").map((r) => r[2]);
@@ -71,7 +71,7 @@ async function J() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function R() {
+async function A() {
   try {
     console.info("🚀 Building presenter configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8")), i = await t.readFile("src/index.ts", "utf8"), n = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, s = [...i.matchAll(n)].filter((r) => !r[1] && r[2] !== "constructor").map((r) => r[2]);
@@ -80,7 +80,7 @@ async function R() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function A(e = "./") {
+async function F(e = "./") {
   try {
     console.info("🚀 Bumping version...");
     const o = JSON.parse(await t.readFile(`${e}package.json`, "utf8"));
@@ -94,10 +94,10 @@ async function A(e = "./") {
     console.error("❌ Error bumping package version.", o);
   }
 }
-function F(e) {
+function D(e) {
   console.error(`❌ ${e} script not implemented.`);
 }
-async function D() {
+async function P() {
   const e = "<!-- DEPENDENCY_LICENSES_START -->", o = "<!-- DEPENDENCY_LICENSES_END -->";
   try {
     const i = (await t.readFile("./licenses.md", "utf8")).trim(), n = await t.readFile("./README.md", "utf8"), s = n.indexOf(e), r = n.indexOf(o);
@@ -114,37 +114,40 @@ async function I() {
   const e = "<!-- OWASP_BADGE_START -->", o = "<!-- OWASP_BADGE_END -->";
   try {
     const i = JSON.parse(await t.readFile("./dependency-check-reports/dependency-check-report.json", "utf-8")), n = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
-    for (const u of i.dependencies)
-      if (u.vulnerabilities != null)
-        for (const g of u.vulnerabilities) {
-          const m = g.severity?.toLowerCase() ?? "unknown";
-          m in n ? n[m]++ : n.unknown++;
+    for (const g of i.dependencies)
+      if (g.vulnerabilities != null)
+        for (const m of g.vulnerabilities) {
+          const w = m.severity?.toLowerCase() ?? "unknown";
+          w in n ? n[w]++ : n.unknown++;
         }
     const s = {
-      critical: { color: "red", label: "Critical" },
-      high: { color: "orange", label: "High" },
-      moderate: { color: "yellow", label: "Moderate" },
-      low: { color: "green", label: "Low" },
-      unknown: { color: "lightgrey", label: "Unknown" }
-    }, r = [];
-    for (const [u, g] of Object.entries(n)) {
-      if (g === 0) continue;
-      const m = s[u], y = `https://img.shields.io/badge/OWASP%20${m.label}-${g}-${m.color}`;
-      r.push(`[![OWASP ${m.label}](${y})](./dependency-check-reports/dependency-check-report.html)`);
-    }
-    const d = Object.values(n).reduce((u, g) => u + g, 0);
-    console.info(`✅ Total vulnerabilities found: ${d}`), console.info(
+      critical: { color: "red", label: "critical" },
+      high: { color: "orange", label: "high" },
+      moderate: { color: "yellow", label: "moderate" },
+      low: { color: "green", label: "low" },
+      unknown: { color: "lightgrey", label: "unknown" }
+    }, r = Object.values(n).reduce((g, m) => g + m, 0);
+    console.info(`✅ Total vulnerabilities found: ${r}`), console.info(
       `   Critical: ${n.critical}, High: ${n.high}, Moderate: ${n.moderate}, Low: ${n.low},  Unknown: ${n.unknown}`
     );
-    const a = await t.readFile("./README.md", "utf8"), c = a.indexOf(e), l = a.indexOf(o);
-    (c === -1 || l === -1) && (console.error("❌ OWASP badge markers not found in README.md."), process.exit(1));
-    const f = r.join(" "), p = a.substring(0, c + e.length) + f + a.substring(l);
+    const d = JSON.parse(await t.readFile("config.json", "utf8")), c = [];
+    if (r === 0)
+      c.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-green)](https://data-positioning.github.io/${d.id}/dependency-check-reports/dependency-check-report.html)`);
+    else
+      for (const [g, m] of Object.entries(n)) {
+        if (m === 0) continue;
+        const w = s[g], h = `https://img.shields.io/badge/OWASP-${m}%20${w.label}-${w.color}`;
+        c.push(`[![OWASP](${h})](https://data-positioning.github.io/${d.id}/dependency-check-reports/dependency-check-report.html)`);
+      }
+    const a = await t.readFile("./README.md", "utf8"), l = a.indexOf(e), f = a.indexOf(o);
+    (l === -1 || f === -1) && (console.error("❌ OWASP badge markers not found in README.md."), process.exit(1));
+    const u = c.join(" "), p = a.substring(0, l + e.length) + u + a.substring(f);
     await t.writeFile("README.md", p, "utf8"), console.info("✅ OWASP dependency check badges inserted into README.md");
   } catch (i) {
     console.error("❌ Error updating README with OWASP badges:", i), process.exit(1);
   }
 }
-async function P() {
+async function M() {
   try {
     console.info("🚀 Sending deployment notice...");
     const e = JSON.parse(await t.readFile("config.json", "utf8")), o = {
@@ -158,28 +161,28 @@ async function P() {
     console.error("❌ Error sending deployment notice.", e);
   }
 }
-async function M() {
+async function T() {
   try {
     console.info("🚀 Synchronising with GitHub....");
     const e = JSON.parse(await t.readFile("package.json", "utf8"));
-    await w("git add ."), await w(`git commit -m "v${e.version}"`), await w("git push origin main:main"), console.info(`✅ Synchronised version ${e.version} with GitHub.`);
+    await y("git add ."), await y(`git commit -m "v${e.version}"`), await y("git push origin main:main"), console.info(`✅ Synchronised version ${e.version} with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising with GitHub.", e);
   }
 }
-async function T(e, o) {
+async function _(e, o) {
   try {
     console.info("🚀 Uploading directory to R2....");
     async function i(s, r, d) {
-      for (const a of d) {
-        const c = `${s}/${a}`, l = `${r}/${a}`;
-        if ((await t.stat(c)).isDirectory()) {
-          const p = await t.readdir(c);
-          await i(c, l, p);
+      for (const c of d) {
+        const a = `${s}/${c}`, l = `${r}/${c}`;
+        if ((await t.stat(a)).isDirectory()) {
+          const u = await t.readdir(a);
+          await i(a, l, u);
         } else {
-          console.info(`⚙️ Uploading '${s}/${a}'...`);
-          const p = `wrangler r2 object put "datapos-sample-data-eu/${r}/${a}" --file="${s}/${a}" --jurisdiction=eu --remote`, u = await w(p);
-          if (u.stderr) throw new Error(u.stderr);
+          console.info(`⚙️ Uploading '${s}/${c}'...`);
+          const u = `wrangler r2 object put "datapos-sample-data-eu/${r}/${c}" --file="${s}/${c}" --jurisdiction=eu --remote`, p = await y(u);
+          if (p.stderr) throw new Error(p.stderr);
         }
       }
     }
@@ -189,7 +192,7 @@ async function T(e, o) {
     console.error("❌ Error uploading directory to R2.", i);
   }
 }
-async function _() {
+async function W() {
   try {
     console.info("🚀 Uploading module configuration....");
     const e = JSON.parse(await t.readFile("config.json", "utf8")), o = e.id, i = {
@@ -209,13 +212,13 @@ async function U(e) {
     const i = `v${JSON.parse(await t.readFile("package.json", "utf8")).version}`;
     async function n(s, r = "") {
       const d = await t.readdir(s, { withFileTypes: !0 });
-      for (const a of d) {
-        const c = `${s}/${a.name}`, l = r ? `${r}/${a.name}` : a.name;
-        if (!a.isDirectory()) {
-          const f = `${e}_${i}/${l}`.replace(/\\/g, "/"), p = a.name.endsWith(".js") ? "application/javascript" : a.name.endsWith(".css") ? "text/css" : "application/octet-stream";
+      for (const c of d) {
+        const a = `${s}/${c.name}`, l = r ? `${r}/${c.name}` : c.name;
+        if (!c.isDirectory()) {
+          const f = `${e}_${i}/${l}`.replace(/\\/g, "/"), u = c.name.endsWith(".js") ? "application/javascript" : c.name.endsWith(".css") ? "text/css" : "application/octet-stream";
           console.info(`⚙️ Uploading '${l}' → '${f}'...`);
-          const { stderr: u } = await w(`wrangler r2 object put "${f}" --file="${c}" --content-type ${p} --jurisdiction=eu --remote`);
-          if (u) throw new Error(u);
+          const { stderr: p } = await y(`wrangler r2 object put "${f}" --file="${a}" --content-type ${u} --jurisdiction=eu --remote`);
+          if (p) throw new Error(p);
         }
       }
     }
@@ -225,18 +228,18 @@ async function U(e) {
   }
 }
 export {
-  j as buildConfig,
-  k as buildConnectorConfig,
-  J as buildContextConfig,
-  R as buildPresenterConfig,
-  C as buildPublicDirectoryIndex,
-  A as bumpVersion,
-  F as echoScriptNotImplemented,
-  D as insertLicensesIntoReadme,
+  k as buildConfig,
+  C as buildConnectorConfig,
+  R as buildContextConfig,
+  A as buildPresenterConfig,
+  J as buildPublicDirectoryIndex,
+  F as bumpVersion,
+  D as echoScriptNotImplemented,
+  P as insertLicensesIntoReadme,
   I as insertOWASPDependencyCheckBadgeIntoReadme,
-  P as sendDeploymentNotice,
-  M as syncWithGitHub,
-  T as uploadDirectoryToR2,
-  _ as uploadModuleConfigToDO,
+  M as sendDeploymentNotice,
+  T as syncWithGitHub,
+  _ as uploadDirectoryToR2,
+  W as uploadModuleConfigToDO,
   U as uploadModuleToR2
 };

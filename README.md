@@ -58,7 +58,7 @@ The `src/index.ts' file exposes the following utilities:
 
 The OWASP Dependency Check Report identifies known vulnerabilities in project dependencies. It is generated automatically on each release using the npm package `owasp-dependency-check`.
 
-[View the OWASP Dependency Check Report](https://data-positioning.github.io/datapos-tool-micromark/dependency-check-reports/dependency-check-report.html)
+[View the OWASP Dependency Check Report](https://data-positioning.github.io/datapos-development/dependency-check-reports/dependency-check-report.html)
 
 ### Dependency Licenses
 

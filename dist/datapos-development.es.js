@@ -102,7 +102,9 @@ async function P() {
   try {
     const i = (await t.readFile("./licenses.md", "utf8")).trim(), n = await t.readFile("./README.md", "utf8"), s = n.indexOf(e), r = n.indexOf(o);
     (s === -1 || r === -1) && (console.error("❌ Dependency license markers not found in readme file."), process.exit(1));
-    const d = n.substring(0, s + e.length) + i + n.substring(r);
+    const d = n.substring(0, s + e.length) + `
+` + i + `
+` + n.substring(r);
     await t.writeFile("README.md", d, "utf8"), console.log("✅ Readme file updated with license information");
   } catch (i) {
     console.error("❌ Error updating readme file.", i), process.exit(1);

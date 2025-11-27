@@ -3,7 +3,7 @@ import { promises as t } from "node:fs";
 import { nanoid as $ } from "nanoid";
 import { promisify as O } from "node:util";
 const S = ["createObject", "dropObject", "removeRecords", "upsertRecords"], v = ["findObject", "getRecord", "listNodes", "previewObject", "retrieveRecords"], y = O(b);
-async function k() {
+async function j() {
   try {
     console.info("🚀 Building configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8"));
@@ -12,7 +12,7 @@ async function k() {
     console.error("❌ Error building configuration.", e);
   }
 }
-async function C(e) {
+async function k(e) {
   try {
     console.info(`🚀 Building public directory index for identifier '${e}'...`);
     const o = {};
@@ -62,7 +62,7 @@ async function J() {
     console.error("❌ Error building connector configuration.", e);
   }
 }
-async function A() {
+async function F() {
   try {
     console.info("🚀 Building context configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8")), i = await t.readFile("src/index.ts", "utf8"), n = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, s = [...i.matchAll(n)].filter((r) => r[1] == null && r[2] !== "constructor").map((r) => r[2]);
@@ -71,7 +71,7 @@ async function A() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function F() {
+async function R() {
   try {
     console.info("🚀 Building presenter configuration...");
     const e = JSON.parse(await t.readFile("package.json", "utf8")), o = JSON.parse(await t.readFile("config.json", "utf8")), i = await t.readFile("src/index.ts", "utf8"), n = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, s = [...i.matchAll(n)].filter((r) => !r[1] && r[2] !== "constructor").map((r) => r[2]);
@@ -80,7 +80,7 @@ async function F() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function R(e = "./") {
+async function A(e = "./") {
   try {
     console.info("🚀 Bumping version...");
     const o = JSON.parse(await t.readFile(`${e}package.json`, "utf8"));
@@ -123,9 +123,9 @@ async function I() {
     const s = {
       critical: { color: "D32F2F", label: "critical" },
       high: { color: "EF6C00", label: "high" },
-      moderate: { color: "F9A825", label: "moderate" },
-      low: { color: "AFB42B", label: "low" },
-      unknown: { color: "757575", label: "unknown" }
+      moderate: { color: "FBC02D", label: "moderate" },
+      low: { color: "6D8C31", label: "low" },
+      unknown: { color: "616161", label: "unknown" }
     }, r = Object.values(n).reduce((g, m) => g + m, 0);
     console.info(`✅ Total vulnerabilities found: ${r}`), console.info(
       `   Critical: ${n.critical}, High: ${n.high}, Moderate: ${n.moderate}, Low: ${n.low},  Unknown: ${n.unknown}`
@@ -206,7 +206,7 @@ async function W() {
     console.error("❌ Error uploading module configuration.", e);
   }
 }
-async function B(e) {
+async function U(e) {
   try {
     console.info("🚀 Uploading module to R2...");
     const i = `v${JSON.parse(await t.readFile("package.json", "utf8")).version}`;
@@ -228,12 +228,12 @@ async function B(e) {
   }
 }
 export {
-  k as buildConfig,
+  j as buildConfig,
   J as buildConnectorConfig,
-  A as buildContextConfig,
-  F as buildPresenterConfig,
-  C as buildPublicDirectoryIndex,
-  R as bumpVersion,
+  F as buildContextConfig,
+  R as buildPresenterConfig,
+  k as buildPublicDirectoryIndex,
+  A as bumpVersion,
   D as echoScriptNotImplemented,
   P as insertLicensesIntoReadme,
   I as insertOWASPDependencyCheckBadgeIntoReadme,
@@ -241,5 +241,5 @@ export {
   T as syncWithGitHub,
   _ as uploadDirectoryToR2,
   W as uploadModuleConfigToDO,
-  B as uploadModuleToR2
+  U as uploadModuleToR2
 };

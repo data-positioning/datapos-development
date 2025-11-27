@@ -260,14 +260,14 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         }
 
         // Generate shield badges for each severity
-        // If needed a possible info color could be #0288D1.
+        // If needed a possible info color could be #0288D1. See sample badges in ~/tests/sampleBadges.md
         type BadgeConfig = { color: string; label: string };
         const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
             critical: { color: 'D32F2F', label: 'critical' },
             high: { color: 'EF6C00', label: 'high' },
-            moderate: { color: 'F9A825', label: 'moderate' },
-            low: { color: 'AFB42B', label: 'low' },
-            unknown: { color: '757575', label: 'unknown' }
+            moderate: { color: 'FBC02D', label: 'moderate' },
+            low: { color: '6D8C31', label: 'low' },
+            unknown: { color: '616161', label: 'unknown' }
         };
 
         const totalVulnerabilities = Object.values(severityCounts).reduce((sum, count) => sum + count, 0);

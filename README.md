@@ -1,7 +1,7 @@
 # Data Positioning Development Library
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=data-positioning_datapos-development&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=data-positioning_datapos-development)
-<span><!-- OWASP_BADGE_START -->[![OWASP](https://img.shields.io/badge/OWASP-passed-ForestGreen)](https://data-positioning.github.io/test-lib/dependency-check-reports/dependency-check-report.html)<!-- OWASP_BADGE_END --></span>
+<span><!-- OWASP_BADGE_START -->[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/test-lib/dependency-check-reports/dependency-check-report.html)<!-- OWASP_BADGE_END --></span>
 [![npm version](https://img.shields.io/npm/v/@datapos/datapos-development.svg)](https://www.npmjs.com/package/@datapos/datapos-development)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
@@ -62,7 +62,7 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 
 ### Dependency Licenses
 
-The following table lists top-level production and peer dependencies only. All dependency licenses (including transitive dependencies) have been recursively verified to conform to Apache-2.0, CC0-1.0, MIT, or n/a. Developers cloning this repository should independently verify dev and optional dependencies; users of the uploaded library are covered by these checks.
+The following table lists top-level production and peer dependencies. All these dependencies (including transitive ones) have been recursively verified to use Apache-2.0, CC0-1.0, or MIT—commercially friendly licenses with minimal restrictions. Developers cloning this repository should independently verify dev and optional dependencies; users of the published library are covered by these checks.
 
 <!-- DEPENDENCY_LICENSES_START -->
 

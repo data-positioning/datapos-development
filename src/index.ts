@@ -123,37 +123,50 @@ async function buildConnectorConfig(): Promise<void> {
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
         try {
-            // Create a TypeScript-capable parser
+            // Create a TypeScript-capable parser using acorn with TypeScript plugin
             const TSParser = Parser.extend(acornTS());
-            const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module' });
+            const ast = TSParser.parse(indexCode, {
+                ecmaVersion: 'latest',
+                sourceType: 'module',
+                locations: false
+            });
+
             const functionNames: string[] = [];
+
+            // Walk the AST to extract all public functions and methods
             walk.simple(ast, {
                 FunctionDeclaration(node: any) {
-                    if (node.id) functionNames.push(node.id.name);
+                    // Top-level function declarations
+                    if (node.id?.name) {
+                        functionNames.push(node.id.name);
+                    }
                 },
                 MethodDefinition(node: any) {
+                    // Class methods - filter out private and constructor
                     const name = node.key?.name;
                     const isPrivate = node.key?.type === 'PrivateIdentifier';
-                    if (name && !isPrivate && name !== 'constructor') functionNames.push(name);
+                    const isConstructor = name === 'constructor';
+                    if (name && !isPrivate && !isConstructor) {
+                        functionNames.push(name);
+                    }
+                },
+                ArrowFunctionExpression(node: any) {
+                    // Arrow functions assigned to variables (e.g., const foo = () => {})
+                    if (node.parent?.type === 'VariableDeclarator' && node.parent?.id?.name) {
+                        const varName = node.parent.id.name;
+                        if (!functionNames.includes(varName)) {
+                            functionNames.push(varName);
+                        }
+                    }
                 }
             });
-            console.log(functionNames);
-        } catch (error) {
-            console.log(1111, error);
-        }
 
-        try {
-            const ast2 = parseScript(indexCode, { next: true, module: true });
-            function visit(node: any): void {
-                if (node.type === 'FunctionDeclaration') {
-                    console.log('function', node);
-                } else if (node.type === 'MethodDefinition') {
-                    console.log('method', node);
-                }
+            // Log extracted functions for debugging
+            if (functionNames.length > 0) {
+                console.info(`ℹ️  Extracted ${functionNames.length} functions from TypeScript AST`);
             }
-            visit(ast2);
         } catch (error) {
-            console.log(2222, error);
+            console.warn('⚠️  Failed to parse with acorn-typescript, falling back to regex method', error);
         }
 
         let destinationOperations = false;

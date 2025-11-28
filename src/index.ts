@@ -9,10 +9,8 @@ import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
 
-import { parseScript } from 'meriyah';
-
 import * as walk from 'acorn-walk';
-import acornTS from 'acorn-typescript';
+import acornTypeScript from 'acorn-typescript';
 import { Parser } from 'acorn';
 
 // Dependencies - Framework.
@@ -122,82 +120,55 @@ async function buildConnectorConfig(): Promise<void> {
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
-        try {
-            const ast = parseScript(indexCode, {
-                next: true,
-                module: true,
-                loc: true // Optional: if you need location info
-            });
+        // @ts-expect-error - acorn-typescript has type incompatibilities but works at runtime
+        const TSParser = Parser.extend(acornTypeScript());
 
-            const functionNames = new Set<string>();
+        const ast = TSParser.parse(indexCode, {
+            ecmaVersion: 'latest',
+            sourceType: 'module',
+            locations: true
+        });
 
-            function visit(node: any): void {
-                if (!node || typeof node !== 'object') return;
+        const functionNames = new Set<string>();
 
-                // Extract function names based on node type
-                switch (node.type) {
-                    case 'FunctionDeclaration':
-                        if (node.id?.name) {
-                            functionNames.add(node.id.name);
-                            console.log('function declaration:', node.id.name);
-                        }
-                        break;
-
-                    case 'MethodDefinition':
-                        const methodName = node.key?.name;
-                        const isPrivate = node.key?.type === 'PrivateIdentifier';
-                        const isConstructor = methodName === 'constructor';
-
-                        if (methodName && !isPrivate && !isConstructor) {
-                            functionNames.add(methodName);
-                            console.log('method:', methodName);
-                        }
-                        break;
-
-                    case 'VariableDeclaration':
-                        // Handle: const foo = () => {} or const bar = function() {}
-                        node.declarations?.forEach((decl: any) => {
-                            const name = decl.id?.name;
-                            const init = decl.init;
-
-                            if (name && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) {
-                                functionNames.add(name);
-                                console.log('variable function:', name);
-                            }
-                        });
-                        break;
-
-                    case 'PropertyDefinition':
-                        // Handle class properties: foo = () => {}
-                        const propName = node.key?.name;
-                        const isPropPrivate = node.key?.type === 'PrivateIdentifier';
-                        const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
-
-                        if (propName && !isPropPrivate && isFunction) {
-                            functionNames.add(propName);
-                            console.log('class property function:', propName);
-                        }
-                        break;
+        walk.ancestor(ast, {
+            FunctionDeclaration(node: any) {
+                if (node.id?.name) {
+                    functionNames.add(node.id.name);
                 }
+            },
 
-                // Recursively visit all child nodes
-                for (const key in node) {
-                    const child = node[key];
+            MethodDefinition(node: any) {
+                const name = node.key?.name;
+                const isPrivate = node.key?.type === 'PrivateIdentifier';
+                const isConstructor = name === 'constructor';
 
-                    if (Array.isArray(child)) {
-                        child.forEach(visit);
-                    } else if (child && typeof child === 'object' && child.type) {
-                        visit(child);
-                    }
+                if (name && !isPrivate && !isConstructor) {
+                    functionNames.add(name);
+                }
+            },
+
+            VariableDeclarator(node: any) {
+                const name = node.id?.name;
+                const init = node.init;
+
+                if (name && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) {
+                    functionNames.add(name);
+                }
+            },
+
+            PropertyDefinition(node: any) {
+                const name = node.key?.name;
+                const isPrivate = node.key?.type === 'PrivateIdentifier';
+                const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
+
+                if (name && !isPrivate && isFunction) {
+                    functionNames.add(name);
                 }
             }
+        });
 
-            visit(ast);
-
-            console.log('\nExtracted functions:', Array.from(functionNames));
-        } catch (error) {
-            console.log(2222, error);
-        }
+        console.log(`Extracted ${functionNames.size} functions:`, Array.from(functionNames));
 
         let destinationOperations = false;
         let sourceOperations = false;

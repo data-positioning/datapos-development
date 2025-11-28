@@ -133,9 +133,10 @@ async function buildConnectorConfig(): Promise<void> {
                     console.log(1111, methodDefinition);
                     const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
                     console.log(2222, identifier);
-                    const isPrivate = identifier.type === 'PrivateIdentifier';
-                    console.log(3333, identifier, methodDefinition.accessibility, isPrivate);
+                    const methodName = identifier.name;
                     const isConstructor = methodName === 'constructor';
+                    const isPrivate = identifier.type === 'PrivateIdentifier';
+                    console.log(3333, identifier, isConstructor, isPrivate, methodDefinition.accessibility);
                     if (methodName && !isPrivate && !isConstructor) functionNames.add(methodName);
                     break;
                 }

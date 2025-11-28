@@ -142,7 +142,7 @@ async function buildConnectorConfig(): Promise<void> {
             // Recursively traverse all child nodes.
             for (const key in node) {
                 if (key === 'loc' || key === 'range' || key === 'start' || key === 'end' || key === 'comments') continue; // Skip metadata properties
-                console.log(1111, node);
+                console.log(1111, key, node);
                 const child = node[key] as Node;
                 console.log(2222, child);
                 if (Array.isArray(child)) {

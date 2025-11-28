@@ -121,27 +121,24 @@ async function buildConnectorConfig(): Promise<void> {
         let destinationOperations = false;
         let sourceOperations = false;
 
-        // @ts-expect-error - acorn-typescript has type incompatibilities but works at runtime.
+        // @ts-expect-error - acorn-typescript has type incompatibilities but works at runtime
         const TSParser = Parser.extend(acornTypeScript());
         const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module', locations: true });
-        const operations: ConnectorOperation[] = [];
-
-        function handleMethodDefinition(node: Node): void {
-            if (node.type !== 'MethodDefinition') return;
-            const methodDefinition = node as MethodDefinition & { accessibility?: boolean };
-            const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
-            const methodName = identifier.name;
-            const isConstructor = methodName === 'constructor';
-            const isPrivate = methodDefinition.accessibility ?? false;
-            if (methodName && !isConstructor && !isPrivate) {
-                operations.push(methodName as ConnectorOperation);
-                if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) destinationOperations = true;
-                if (CONNECTOR_SOURCE_OPERATIONS.includes(methodName)) sourceOperations = true;
-            }
-        }
-
+        const operations: string[] = [];
         function traverse(node: Node): void {
-            handleMethodDefinition(node);
+            if (node.type === 'MethodDefinition') {
+                const methodDefinition = node as MethodDefinition & { accessibility?: boolean };
+                const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
+                const methodName = identifier.name;
+                const isConstructor = methodName === 'constructor';
+                const isPrivate = methodDefinition.accessibility ?? false;
+                if (methodName && !isConstructor && !isPrivate) {
+                    operations.push(methodName);
+                    if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) destinationOperations = true;
+                    if (CONNECTOR_SOURCE_OPERATIONS.includes(methodName)) sourceOperations = true;
+                }
+            }
+
             // Recursively traverse all child nodes.
             for (const [key, value] of Object.entries(node)) {
                 if (key === 'loc' || key === 'range' || key === 'start' || key === 'end' || key === 'comments') continue; // Skip metadata properties
@@ -154,6 +151,7 @@ async function buildConnectorConfig(): Promise<void> {
             }
         }
         traverse(ast);
+        console.log(`Extracted ${operations.length} functions:`, [...operations]);
 
         if (operations.length > 0) console.info(`ℹ️  Implements ${operations.length} operations.`);
         else console.warn('⚠️  Implements no operations.');

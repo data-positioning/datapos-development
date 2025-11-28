@@ -5120,8 +5120,9 @@ async function Vs() {
         if (_ === "loc" || _ === "range" || _ === "start" || _ === "end" || _ === "comments") continue;
         const B = F;
         if (Array.isArray(B))
-          for (const z of B) t(z);
-        else typeof B == "object" && typeof B.type == "string" && t(B);
+          for (const z of B)
+            t(z);
+        else B && typeof B == "object" && typeof B.type == "string" && t(B);
       }
     };
     console.info("🚀 Building connector configuration...");

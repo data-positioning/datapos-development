@@ -5,7 +5,7 @@
 // Dependencies - Vendor.
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import { resolve } from 'node:path';
+import path from 'node:path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { fileURLToPath, URL } from 'node:url';
 
@@ -13,14 +13,14 @@ import { fileURLToPath, URL } from 'node:url';
 export default defineConfig({
     build: {
         lib: {
-            entry: resolve('src/index.ts'),
+            entry: path.resolve('src/index.ts'),
             fileName: (format) => `datapos-development.${format}.js`,
             formats: ['es'],
             name: 'DataPosDevelopment'
         },
         target: 'ESNext',
         rollupOptions: {
-            external: ['node:child_process', 'node:fs', 'node-pty', 'node:readline', 'nanoid', 'node:util'],
+            external: ['node:child_process', 'node:fs', 'node:readline', 'nanoid', 'node:util'],
             plugins: [
                 visualizer({
                     filename: 'stats/index.html', // HTML report.
@@ -34,8 +34,8 @@ export default defineConfig({
     plugins: [dts({ outDir: 'dist/types' })],
     resolve: {
         alias: {
-            '~': resolve(__dirname, '.'),
-            '@': fileURLToPath(new URL('./src', import.meta.url))
+            '~': path.resolve(__dirname, '.'),
+            '@': fileURLToPath(new URL('src', import.meta.url))
         }
     }
 });

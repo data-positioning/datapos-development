@@ -9,6 +9,8 @@ import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
 
+import { init, parse } from 'es-module-lexer';
+
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
 import type {
@@ -22,7 +24,7 @@ import type {
     PresenterOperation
 } from '@datapos/datapos-shared';
 
-// import { moduleConfigSchema, ModuleConfigZ } from '@datapos/datapos-shared';
+// NOTE: import { moduleConfigSchema, ModuleConfigZ } from '@datapos/datapos-shared';
 
 // Types/Interfaces - Directory entry.
 interface DirectoryEntry {
@@ -50,7 +52,7 @@ async function buildConfig(): Promise<void> {
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
 
-        // moduleConfigSchema.parse(configJSON);
+        // NOTE: moduleConfigSchema.parse(configJSON);
 
         if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
         if (packageJSON.version != null) configJSON.version = packageJSON.version;
@@ -70,15 +72,17 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
         async function listDirectoryEntriesRecursively(directoryPath: string, names: string[]): Promise<void> {
             console.info(`⚙️ Processing directory '${directoryPath}'...`);
             const entries: DirectoryEntry[] = [];
-            const localDirectoryPath = directoryPath.substring(`public/${id}`.length);
-            index[localDirectoryPath] = entries;
+            const localDirectoryPath = directoryPath.slice(`public/${id}`.length);
+            index[localDirectoryPath === '' ? '/' : localDirectoryPath] = entries;
             for (const name of names) {
                 const itemPath = `${directoryPath}/${name}`;
                 try {
+                    // eslint-disable-next-line security/detect-non-literal-fs-filename
                     const stats = await fs.stat(itemPath);
                     if (stats.isDirectory()) {
+                        // eslint-disable-next-line security/detect-non-literal-fs-filename
                         const nextLevelChildren = await fs.readdir(itemPath);
-                        const folderEntry: DirectoryFolderEntry = { childCount: nextLevelChildren.length, name: `${name}`, typeId: 'folder' };
+                        const folderEntry: DirectoryFolderEntry = { childCount: nextLevelChildren.length, name, typeId: 'folder' };
                         entries.push(folderEntry);
                         await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
                     } else {
@@ -95,8 +99,10 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
             });
         }
 
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         const toplevelNames = await fs.readdir(`public/${id}`);
         await listDirectoryEntriesRecursively(`public/${id}`, toplevelNames);
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         await fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), 'utf8');
         console.info('✅ Public directory index built.');
     } catch (error) {
@@ -112,23 +118,34 @@ async function buildConnectorConfig(): Promise<void> {
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
+        await init;
+        const xxxx = parse(indexCode);
+        console.log(xxxx, xxxx.imports, xxxx.exports);
+
         let destinationOperations = false;
         let sourceOperations = false;
         const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
-        const operations = [...indexCode.matchAll(regex)]
-            .filter((match) => match[1] == null && match[2] !== 'constructor') // match[1] is 'private ' if present.
-            .map((match) => {
-                const operation = match[2] as ConnectorOperation;
-                destinationOperations = destinationOperations || CONNECTOR_DESTINATION_OPERATIONS.includes(operation);
-                sourceOperations = sourceOperations || CONNECTOR_SOURCE_OPERATIONS.includes(operation);
-                return operation;
-            });
+        const matches = [...indexCode.matchAll(regex)].filter((match) => match[1] == null && match[2] !== 'constructor');
+        const operations: ConnectorOperation[] = [];
+        for (const match of matches) {
+            const operation = match[2] as ConnectorOperation;
+            operations.push(operation);
+            if (CONNECTOR_DESTINATION_OPERATIONS.includes(operation)) destinationOperations = true;
+            if (CONNECTOR_SOURCE_OPERATIONS.includes(operation)) sourceOperations = true;
+        }
         if (operations.length > 0) console.info(`ℹ️  Implements ${operations.length} operations.`);
         else console.warn('⚠️  Implements no operations.');
-        const usageId: ConnectorUsageId =
-            sourceOperations && destinationOperations ? 'bidirectional' : sourceOperations ? 'source' : destinationOperations ? 'destination' : 'unknown';
-        if (usageId) console.info(`ℹ️  Supports ${usageId} usage.`);
-        else console.warn('⚠️  No usage identified.');
+
+        let usageId: ConnectorUsageId;
+        if (sourceOperations && destinationOperations) usageId = 'bidirectional';
+        else if (sourceOperations) usageId = 'source';
+        else if (destinationOperations) usageId = 'destination';
+        else usageId = 'unknown';
+        if (usageId === 'unknown') {
+            console.warn('⚠️  No usage identified.');
+        } else {
+            console.info(`ℹ️  Supports ${usageId} usage.`);
+        }
 
         if (packageJSON.name != null) configJSON.id = packageJSON.name;
         configJSON.operations = operations;
@@ -176,7 +193,7 @@ async function buildPresenterConfig(): Promise<void> {
 
         const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
         const operations = [...indexCode.matchAll(regex)]
-            .filter((m) => !m[1] && m[2] !== 'constructor') // m[1] is 'private ' if present.
+            .filter((m) => m[1] == null && m[2] !== 'constructor') // m[1] is 'private ' if present.
             .map((m) => m[2]) as PresenterOperation[];
 
         if (packageJSON.name != null) configJSON.id = packageJSON.name;
@@ -191,7 +208,7 @@ async function buildPresenterConfig(): Promise<void> {
 }
 
 // Utilities - Bump version.
-async function bumpVersion(path: string = './'): Promise<void> {
+async function bumpVersion(path = './'): Promise<void> {
     try {
         console.info('🚀 Bumping version...');
         const packageJSON = JSON.parse(await fs.readFile(`${path}package.json`, 'utf8')) as PackageJson;
@@ -243,9 +260,16 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
     const START_MARKER = '<!-- OWASP_BADGE_START -->';
     const END_MARKER = '<!-- OWASP_BADGE_END -->';
     try {
-        const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf-8'));
-
-        type SeverityCounts = { critical: number; high: number; moderate: number; low: number; unknown: number };
+        const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf-8')) as {
+            dependencies: { vulnerabilities?: { severity?: string }[] }[];
+        };
+        interface SeverityCounts {
+            critical: number;
+            high: number;
+            moderate: number;
+            low: number;
+            unknown: number;
+        }
         const severityCounts: SeverityCounts = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
         for (const dependency of dependencyCheckData.dependencies) {
             if (dependency.vulnerabilities == null) continue;
@@ -261,7 +285,10 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
 
         // Generate shield badges for each severity
         // If needed a possible info color could be #0288D1. See sample badges in ~/tests/sampleBadges.md.
-        type BadgeConfig = { color: string; label: string };
+        interface BadgeConfig {
+            color: string;
+            label: string;
+        }
         const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
             critical: { color: 'D32F2F', label: 'critical' },
             high: { color: 'EF6C00', label: 'high' },
@@ -272,13 +299,13 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
 
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as PresenterConfig;
         const badges: string[] = [];
-        const totalVulnerabilities = Object.values(severityCounts).reduce((sum, count) => sum + count, 0);
+        const totalVulnerabilities = Object.values(severityCounts).reduce<number>((sum, count: number) => sum + count, 0);
         if (totalVulnerabilities === 0) {
             console.info('✅ No vulnerabilities found.');
             const badgeUrl = 'https://img.shields.io/badge/OWASP-passed-4CAF50';
             badges.push(`[![OWASP](${badgeUrl})](https://data-positioning.github.io/${configJSON.id}/dependency-check-reports/dependency-check-report.html)`);
         } else {
-            for (const [severity, count] of Object.entries(severityCounts)) {
+            for (const [severity, count] of Object.entries(severityCounts) as [string, number][]) {
                 const config = severityBadgeConfig[severity as keyof SeverityCounts];
                 console.warn(`⚠️  ${count} ${config.label} vulnerability(ies) found.`);
                 if (count === 0) continue;
@@ -392,7 +419,7 @@ async function uploadModuleToR2(uploadDirPath: string): Promise<void> {
         console.info('🚀 Uploading module to R2...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const version = `v${packageJSON.version}`;
-        async function uploadDir(currentDir: string, prefix: string = ''): Promise<void> {
+        async function uploadDir(currentDir: string, prefix = ''): Promise<void> {
             const entries = await fs.readdir(currentDir, { withFileTypes: true });
             for (const entry of entries) {
                 const fullPath = `${currentDir}/${entry.name}`;

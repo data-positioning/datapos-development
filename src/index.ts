@@ -9,9 +9,10 @@ import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
 
-import * as walk from 'acorn-walk';
 import { parseScript } from 'meriyah';
-import acornTs from 'acorn-typescript';
+
+import * as walk from 'acorn-walk';
+import acornTS from 'acorn-typescript';
 import { Parser } from 'acorn';
 
 // Dependencies - Framework.
@@ -122,10 +123,11 @@ async function buildConnectorConfig(): Promise<void> {
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
         try {
-            const TSParser = Parser.extend(acornTs());
-            const ast1 = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module' });
+            // Create a TypeScript-capable parser
+            const TSParser = Parser.extend(acornTS());
+            const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module' });
             const functionNames: string[] = [];
-            walk.simple(ast1, {
+            walk.simple(ast, {
                 FunctionDeclaration(node: any) {
                     if (node.id) functionNames.push(node.id.name);
                 },

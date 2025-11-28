@@ -110,74 +110,177 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
     }
 }
 
+// // Utilities - Build connector configuration.
+// async function buildConnectorConfig(): Promise<void> {
+//     try {
+//         console.info('🚀 Building connector configuration...');
+//         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
+//         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorConfig;
+//         const indexCode = await fs.readFile('src/index.ts', 'utf8');
+
+//         let destinationOperations = false;
+//         let sourceOperations = false;
+
+//         // @ts-expect-error - acorn-typescript has type incompatibilities but works at runtime.
+//         const TSParser = Parser.extend(acornTypeScript());
+//         const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module', locations: true });
+//         const operations: ConnectorOperation[] = [];
+
+//         function handleMethodDefinition(node: Node): void {
+//             if (node.type !== 'MethodDefinition') return;
+//             const methodDefinition = node as MethodDefinition & { accessibility?: boolean };
+//             const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
+//             const methodName = identifier.name;
+//             const isConstructor = methodName === 'constructor';
+//             const isPrivate = methodDefinition.accessibility ?? false;
+//             if (methodName && !isConstructor && !isPrivate) {
+//                 operations.push(methodName as ConnectorOperation);
+//                 if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) destinationOperations = true;
+//                 if (CONNECTOR_SOURCE_OPERATIONS.includes(methodName)) sourceOperations = true;
+//             }
+//         }
+
+//         function traverse(node: Node): void {
+//             handleMethodDefinition(node);
+//             // Recursively traverse all child nodes.
+//             for (const [key, value] of Object.entries(node)) {
+//                 if (key === 'loc' || key === 'range' || key === 'start' || key === 'end' || key === 'comments') continue; // Skip metadata properties
+//                 const child = value as Node;
+//                 if (Array.isArray(child)) {
+//                     for (const item of child) traverse(item as Node);
+//                 } else if (typeof child === 'object' && typeof child.type === 'string') {
+//                     traverse(child);
+//                 }
+//             }
+//         }
+//         traverse(ast);
+
+//         if (operations.length > 0) console.info(`ℹ️  Implements ${operations.length} operations.`);
+//         else console.warn('⚠️  Implements no operations.');
+
+//         let usageId: ConnectorUsageId;
+//         if (sourceOperations && destinationOperations) usageId = 'bidirectional';
+//         else if (sourceOperations) usageId = 'source';
+//         else if (destinationOperations) usageId = 'destination';
+//         else usageId = 'unknown';
+//         if (usageId === 'unknown') {
+//             console.warn('⚠️  No usage identified.');
+//         } else {
+//             console.info(`ℹ️  Supports ${usageId} usage.`);
+//         }
+
+//         if (packageJSON.name != null) configJSON.id = packageJSON.name;
+//         configJSON.operations = operations;
+//         configJSON.usageId = usageId;
+//         if (packageJSON.version != null) configJSON.version = packageJSON.version;
+
+//         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
+//         console.info('✅ Connector configuration built.');
+//     } catch (error) {
+//         console.error('❌ Error building connector configuration.', error);
+//     }
+// }
+
 // Utilities - Build connector configuration.
 async function buildConnectorConfig(): Promise<void> {
     try {
         console.info('🚀 Building connector configuration...');
-        const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorConfig;
-        const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
-        let destinationOperations = false;
-        let sourceOperations = false;
+        const [packageJSON, configJSON, indexCode] = await Promise.all([
+            readJson<PackageJson>('package.json'),
+            readJson<ConnectorConfig>('config.json'),
+            fs.readFile('src/index.ts', 'utf8')
+        ]);
 
-        // @ts-expect-error - acorn-typescript has type incompatibilities but works at runtime
-        const TSParser = Parser.extend(acornTypeScript());
-        const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module', locations: true });
-        const operations: string[] = [];
-        function traverse(node: Node): void {
-            if (node.type === 'MethodDefinition') {
-                const methodDefinition = node as MethodDefinition & { accessibility?: boolean };
-                const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
-                const methodName = identifier.name;
-                const isConstructor = methodName === 'constructor';
-                const isPrivate = methodDefinition.accessibility ?? false;
-                if (methodName && !isConstructor && !isPrivate) {
-                    operations.push(methodName);
-                    if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) destinationOperations = true;
-                    if (CONNECTOR_SOURCE_OPERATIONS.includes(methodName)) sourceOperations = true;
-                }
-            }
+        const meta = extractOperationsFromSource(indexCode);
+        const usageId = determineUsageId(meta);
 
-            // Recursively traverse all child nodes.
-            for (const [key, value] of Object.entries(node)) {
-                if (key === 'loc' || key === 'range' || key === 'start' || key === 'end' || key === 'comments') continue; // Skip metadata properties
-                const child = value as Node;
-                if (Array.isArray(child)) {
-                    for (const item of child) {
-                        traverse(item as Node);
-                    }
-                } else if (child && typeof child === 'object' && typeof child.type === 'string') {
-                    traverse(child);
-                }
-            }
+        if (meta.operations.length > 0) {
+            console.info(`ℹ️  Implements ${meta.operations.length} operations.`);
+        } else {
+            console.warn('⚠️  Implements no operations.');
         }
-        traverse(ast);
-        console.log(`Extracted ${operations.length} functions:`, [...operations]);
 
-        if (operations.length > 0) console.info(`ℹ️  Implements ${operations.length} operations.`);
-        else console.warn('⚠️  Implements no operations.');
-
-        let usageId: ConnectorUsageId;
-        if (sourceOperations && destinationOperations) usageId = 'bidirectional';
-        else if (sourceOperations) usageId = 'source';
-        else if (destinationOperations) usageId = 'destination';
-        else usageId = 'unknown';
         if (usageId === 'unknown') {
             console.warn('⚠️  No usage identified.');
         } else {
             console.info(`ℹ️  Supports ${usageId} usage.`);
         }
 
-        if (packageJSON.name != null) configJSON.id = packageJSON.name;
-        configJSON.operations = operations;
-        configJSON.usageId = usageId;
-        if (packageJSON.version != null) configJSON.version = packageJSON.version;
+        const newConfig: ConnectorConfig = {
+            ...configJSON,
+            id: packageJSON.name ?? configJSON.id,
+            version: packageJSON.version ?? configJSON.version,
+            operations: meta.operations,
+            usageId
+        };
 
-        await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
+        await writeJson('config.json', newConfig);
         console.info('✅ Connector configuration built.');
     } catch (error) {
         console.error('❌ Error building connector configuration.', error);
+    }
+}
+
+async function readJson<T>(path: string): Promise<T> {
+    return JSON.parse(await fs.readFile(path, 'utf8')) as T;
+}
+
+async function writeJson(path: string, value: unknown): Promise<void> {
+    await fs.writeFile(path, JSON.stringify(value, undefined, 4), 'utf8');
+}
+
+function extractOperationsFromSource(source: string) {
+    // @ts-expect-error - acorn-typescript runtime mismatch is fine.
+    const TSParser = Parser.extend(acornTypeScript());
+    const ast = TSParser.parse(source, {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        locations: true
+    });
+
+    const operations: ConnectorOperation[] = [];
+    let sourceOps = false;
+    let destinationOps = false;
+
+    traverseAst(ast, (node) => {
+        if (node.type !== 'MethodDefinition') return;
+
+        const md = node as MethodDefinition & { accessibility?: string };
+        const key = md.key as Identifier | PrivateIdentifier;
+        const name = key.name;
+
+        if (!name) return;
+        if (name === 'constructor') return;
+        if (md.accessibility === 'private') return;
+
+        operations.push(name as ConnectorOperation);
+
+        if (CONNECTOR_SOURCE_OPERATIONS.includes(name)) sourceOps = true;
+        if (CONNECTOR_DESTINATION_OPERATIONS.includes(name)) destinationOps = true;
+    });
+
+    return { operations, sourceOps, destinationOps };
+}
+
+function determineUsageId(meta: { sourceOps: boolean; destinationOps: boolean }): ConnectorUsageId {
+    if (meta.sourceOps && meta.destinationOps) return 'bidirectional';
+    if (meta.sourceOps) return 'source';
+    if (meta.destinationOps) return 'destination';
+    return 'unknown';
+}
+
+function traverseAst(node: Node, doIt: (node: Node) => void) {
+    doIt(node);
+
+    for (const [key, value] of Object.entries(node)) {
+        if (['loc', 'range', 'start', 'end', 'comments'].includes(key)) continue;
+
+        if (Array.isArray(value)) {
+            value.forEach((child) => child && typeof child.type === 'string' && traverseAst(child, fn));
+        } else if (value && typeof value === 'object' && typeof value.type === 'string') {
+            traverseAst(value, fn);
+        }
     }
 }
 

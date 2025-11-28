@@ -25,28 +25,26 @@ export default [
         rules: {
             ...tseslint.configs['strict-type-checked']?.rules,
             ...tseslint.configs['stylistic-type-checked']?.rules,
-
-            ...unicorn.configs.recommended.rules, // Unicorn recommended.
-
-            ...sonarjs.configs.recommended.rules, // SonarJS recommended.
-
-            ...security.configs.recommended.rules, // Security recommended.
+            ...importPlugin.configs.recommended.rules, // Import plugin recommended.
+            ...unicorn.configs.recommended.rules, // Unicorn plugin recommended.
+            ...sonarjs.configs.recommended.rules, // SonarJS plugin recommended.
+            ...security.configs.recommended.rules, // Security plugin recommended.
 
             // Overrides and adjustments.
-            '@typescript-eslint/consistent-type-imports': 'warn',
-            '@typescript-eslint/no-import-type-side-effects': 'warn',
 
-            '@typescript-eslint/restrict-template-expressions': ['warn', { allowNumber: true }],
+            'no-empty': 'warn',
+            'prefer-const': 'warn',
+
+            '@typescript-eslint/consistent-type-imports': 'warn',
             '@typescript-eslint/explicit-function-return-type': 'warn',
             '@typescript-eslint/no-explicit-any': 'warn',
+            '@typescript-eslint/no-import-type-side-effects': 'warn',
             '@typescript-eslint/no-unused-vars': 'warn',
+            '@typescript-eslint/restrict-template-expressions': ['warn', { allowNumber: true }],
             '@typescript-eslint/strict-boolean-expressions': 'warn',
 
             'import/no-duplicates': 'warn',
             'sort-imports': ['warn', { allowSeparatedGroups: true, ignoreCase: true, memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'] }],
-
-            'no-empty': 'warn',
-            'prefer-const': 'warn',
 
             'unicorn/no-null': 'off'
         }

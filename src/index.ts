@@ -11,6 +11,7 @@ import { promisify } from 'node:util';
 
 import * as walk from 'acorn-walk';
 import { parseScript } from 'meriyah';
+import acornTs from 'acorn-typescript';
 import { parse } from 'acorn';
 
 // Dependencies - Framework.
@@ -121,15 +122,20 @@ async function buildConnectorConfig(): Promise<void> {
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
         try {
-            const ast1 = parse(indexCode, { ecmaVersion: 2020, sourceType: 'module' });
-            walk.simple(ast1, {
-                FunctionDeclaration(node) {
-                    console.log('function', node);
+            const TSParser = Parser.extend(acornTS());
+            const ast = TSParser.parse(code, { ecmaVersion: 'latest', sourceType: 'module' });
+            const functionNames: string[] = [];
+            walk.simple(ast, {
+                FunctionDeclaration(node: any) {
+                    if (node.id) functionNames.push(node.id.name);
                 },
-                MethodDefinition(node) {
-                    console.log('method', node);
+                MethodDefinition(node: any) {
+                    const name = node.key?.name;
+                    const isPrivate = node.key?.type === 'PrivateIdentifier';
+                    if (name && !isPrivate && name !== 'constructor') functionNames.push(name);
                 }
             });
+            console.log(functionNames);
         } catch (error) {
             console.log(1111, error);
         }

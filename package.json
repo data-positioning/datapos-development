@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.142",
+    "version": "0.3.143",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -28,6 +28,7 @@
     "dependencies": {
         "@datapos/datapos-shared": "^0.3.252",
         "acorn": "^8.15.0",
+        "acorn-typescript": "^1.4.13",
         "acorn-walk": "^8.3.4",
         "meriyah": "^7.0.0"
     },

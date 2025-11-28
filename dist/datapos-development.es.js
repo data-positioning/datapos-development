@@ -5306,7 +5306,9 @@ function Ls(t) {
   let u = !1, l = !1;
   return ye(r, (d) => {
     if (d.type !== "MethodDefinition") return;
-    const v = d, o = v.key.name;
+    const v = d, g = v.key;
+    if (g.type !== "Identifier") return;
+    const o = g.name;
     o && o !== "constructor" && v.accessibility !== "private" && (a.push(o), Ns.includes(o) && (u = !0), _s.includes(o) && (l = !0));
   }), { operations: a, sourceOps: u, destinationOps: l };
 }

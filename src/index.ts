@@ -9,7 +9,7 @@ import { promises as fs } from 'node:fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
-import { type Identifier, type MethodDefinition, type Node, Parser, type PrivateIdentifier } from 'acorn';
+import { type Expression, type MethodDefinition, type Node, Parser, type PrivateIdentifier } from 'acorn';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -451,7 +451,8 @@ function extractOperationsFromSource(source: string): { operations: ConnectorOpe
         if (node.type !== 'MethodDefinition') return;
 
         const md = node as MethodDefinition & { accessibility?: string };
-        const key = md.key as Identifier | PrivateIdentifier;
+        const key = md.key;
+        if (key.type !== 'Identifier') return;
         const name = key.name;
 
         if (!name) return;

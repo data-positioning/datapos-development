@@ -129,13 +129,15 @@ async function buildConnectorConfig(): Promise<void> {
                     if (functionNode.id?.name != null) functionNames.add(functionNode.id.name);
                     break;
                 }
-                // case 'MethodDefinition': {
-                //     const methodName = node.key?.name;
-                //     const isPrivate = node.key?.type === 'PrivateIdentifier';
-                //     const isConstructor = methodName === 'constructor';
-                //     if (methodName && !isPrivate && !isConstructor) functionNames.add(methodName);
-                //     break;
-                // }
+                case 'MethodDefinition': {
+                    const methodDefinition = node as MethodDefinition;
+                    console.log(1111, methodDefinition);
+                    const methodName = methodDefinition.key?.name;
+                    const isPrivate = node.key?.type === 'PrivateIdentifier';
+                    const isConstructor = methodName === 'constructor';
+                    if (methodName && !isPrivate && !isConstructor) functionNames.add(methodName);
+                    break;
+                }
                 // case 'VariableDeclarator': {
                 //     const varName = node.id?.name;
                 //     const init = node.init;

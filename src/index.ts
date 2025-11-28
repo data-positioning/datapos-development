@@ -12,8 +12,8 @@ import { promisify } from 'node:util';
 import { parseScript } from 'meriyah';
 
 import * as walk from 'acorn-walk';
-import acornTS from 'acorn-typescript';
-import { Parser } from 'acorn';
+import * as acorn from 'acorn';
+import tsPlugin from 'acorn-typescript';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -123,47 +123,55 @@ async function buildConnectorConfig(): Promise<void> {
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
         try {
-            // Create a TypeScript-capable parser using acorn with TypeScript plugin
-            const TSParser = Parser.extend(acornTS());
-            const ast = TSParser.parse(indexCode, {
-                ecmaVersion: 'latest',
-                sourceType: 'module',
-                locations: true
-            });
+            const TSParser = Parser.extend(tsPlugin());
+            const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module', locations: true });
 
-            const functionNames: string[] = [];
+            const functionNames = new Set<string>();
 
-            // Walk the AST to extract all public functions and methods
-            walk.simple(ast, {
+            // Use ancestor walk to track parent nodes
+            walk.ancestor(ast, {
                 FunctionDeclaration(node: any) {
-                    // Top-level function declarations
                     if (node.id?.name) {
-                        functionNames.push(node.id.name);
+                        functionNames.add(node.id.name);
                     }
                 },
+
                 MethodDefinition(node: any) {
-                    // Class methods - filter out private and constructor
                     const name = node.key?.name;
-                    const isPrivate = node.key?.type === 'PrivateIdentifier';
+                    const isPrivate = node.key?.type === 'PrivateIdentifier' || node.accessibility === 'private';
                     const isConstructor = name === 'constructor';
+
                     if (name && !isPrivate && !isConstructor) {
-                        functionNames.push(name);
+                        functionNames.add(name);
                     }
                 },
-                ArrowFunctionExpression(node: any) {
-                    // Arrow functions assigned to variables (e.g., const foo = () => {})
-                    if (node.parent?.type === 'VariableDeclarator' && node.parent?.id?.name) {
-                        const varName = node.parent.id.name;
-                        if (!functionNames.includes(varName)) {
-                            functionNames.push(varName);
-                        }
+
+                VariableDeclarator(node: any, ancestors: any[]) {
+                    // Check if the initializer is a function (arrow or regular)
+                    const name = node.id?.name;
+                    const init = node.init;
+
+                    if (name && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) {
+                        functionNames.add(name);
+                    }
+                },
+
+                // Handle class properties with arrow functions (TS/modern JS)
+                PropertyDefinition(node: any) {
+                    const name = node.key?.name;
+                    const isPrivate = node.key?.type === 'PrivateIdentifier' || node.accessibility === 'private';
+                    const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
+
+                    if (name && !isPrivate && isFunction) {
+                        functionNames.add(name);
                     }
                 }
             });
 
-            // Log extracted functions for debugging
-            if (functionNames.length > 0) {
-                console.info(`ℹ️  Extracted ${functionNames.length} functions from TypeScript AST`);
+            const functionNamesArray = Array.from(functionNames);
+
+            if (functionNamesArray.length > 0) {
+                console.info(`ℹ️  Extracted ${functionNamesArray.length} functions from TypeScript AST`);
             }
         } catch (error) {
             console.warn('⚠️  Failed to parse with acorn-typescript, falling back to regex method', error);

@@ -9,7 +9,9 @@ import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
 
-import { init, parse } from 'es-module-lexer';
+import * as walk from 'acorn-walk';
+import { parseScript } from 'meriyah';
+import { parse } from 'acorn';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -118,9 +120,25 @@ async function buildConnectorConfig(): Promise<void> {
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
-        await init;
-        const xxxx = parse(indexCode);
-        console.log(xxxx, xxxx.imports, xxxx.exports);
+        const ast1 = parse(indexCode, { ecmaVersion: 2020, sourceType: 'module' });
+        walk.simple(ast1, {
+            FunctionDeclaration(node) {
+                console.log('function', node);
+            },
+            MethodDefinition(node) {
+                console.log('method', node);
+            }
+        });
+
+        const ast2 = parseScript(indexCode, { next: true, module: true });
+        function visit(node: any): void {
+            if (node.type === 'FunctionDeclaration') {
+                console.log('function', node);
+            } else if (node.type === 'MethodDefinition') {
+                console.log('method', node);
+            }
+        }
+        visit(ast2);
 
         let destinationOperations = false;
         let sourceOperations = false;

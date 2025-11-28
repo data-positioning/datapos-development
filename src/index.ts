@@ -116,109 +116,29 @@ async function buildConnectorConfig(): Promise<void> {
         console.info('🚀 Building connector configuration...');
 
         const [packageJSON, configJSON, indexCode] = await Promise.all([
-            readJson<PackageJson>('package.json'),
-            readJson<ConnectorConfig>('config.json'),
+            fs.readFile('package.json', 'utf8').then((s) => JSON.parse(s) as PackageJson),
+            fs.readFile('config.json', 'utf8').then((s) => JSON.parse(s) as ConnectorConfig),
             fs.readFile('src/index.ts', 'utf8')
         ]);
 
         const meta = extractOperationsFromSource(indexCode);
         const usageId = determineUsageId(meta);
 
-        if (meta.operations.length > 0) {
-            console.info(`ℹ️  Implements ${meta.operations.length} operations.`);
-        } else {
-            console.warn('⚠️  Implements no operations.');
-        }
+        if (meta.operations.length > 0) console.info(`ℹ️  Implements ${meta.operations.length} operations.`);
+        else console.warn('⚠️  Implements no operations.');
 
-        if (usageId === 'unknown') {
-            console.warn('⚠️  No usage identified.');
-        } else {
-            console.info(`ℹ️  Supports ${usageId} usage.`);
-        }
+        if (usageId === 'unknown') console.warn('⚠️  No usage identified.');
+        else console.info(`ℹ️  Supports '${usageId}' usage.`);
 
-        const newConfig: ConnectorConfig = {
-            ...configJSON,
-            id: packageJSON.name ?? configJSON.id,
-            version: packageJSON.version ?? configJSON.version,
-            operations: meta.operations,
-            usageId
-        };
+        configJSON.id = packageJSON.name ?? configJSON.id;
+        configJSON.version = packageJSON.version ?? configJSON.version;
+        configJSON.operations = meta.operations;
+        configJSON.usageId = usageId;
 
-        await writeJson('config.json', newConfig);
+        await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
         console.info('✅ Connector configuration built.');
     } catch (error) {
         console.error('❌ Error building connector configuration.', error);
-    }
-}
-
-/* ──────────────────────────────────────────────
-   Helpers
-────────────────────────────────────────────── */
-
-async function readJson<T>(path: string): Promise<T> {
-    return JSON.parse(await fs.readFile(path, 'utf8')) as T;
-}
-
-async function writeJson(path: string, value: unknown): Promise<void> {
-    await fs.writeFile(path, JSON.stringify(value, undefined, 4), 'utf8');
-}
-
-function extractOperationsFromSource(source: string) {
-    // @ts-expect-error - acorn-typescript runtime mismatch is fine.
-    const TSParser = Parser.extend(acornTypeScript());
-    const ast = TSParser.parse(source, {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        locations: true
-    });
-
-    const operations: ConnectorOperation[] = [];
-    let sourceOps = false;
-    let destinationOps = false;
-
-    traverseAst(ast, (node) => {
-        if (node.type !== 'MethodDefinition') return;
-
-        const md = node as MethodDefinition & { accessibility?: string };
-        const key = md.key as Identifier | PrivateIdentifier;
-        const name = key.name;
-
-        if (!name) return;
-        if (name === 'constructor') return;
-        if (md.accessibility === 'private') return;
-
-        operations.push(name as ConnectorOperation);
-
-        if (CONNECTOR_SOURCE_OPERATIONS.includes(name)) sourceOps = true;
-        if (CONNECTOR_DESTINATION_OPERATIONS.includes(name)) destinationOps = true;
-    });
-
-    return { operations, sourceOps, destinationOps };
-}
-
-function determineUsageId(meta: { sourceOps: boolean; destinationOps: boolean }): ConnectorUsageId {
-    if (meta.sourceOps && meta.destinationOps) return 'bidirectional';
-    if (meta.sourceOps) return 'source';
-    if (meta.destinationOps) return 'destination';
-    return 'unknown';
-}
-
-function traverseAst(node: Node, doIt: (node: Node) => void): void {
-    doIt(node);
-
-    for (const [key, value_] of Object.entries(node)) {
-        if (['loc', 'range', 'start', 'end', 'comments'].includes(key)) continue;
-
-        const value = value_ as Node | undefined;
-        if (Array.isArray(value)) {
-            for (const child of value) {
-                if (child && typeof child.type === 'string') {
-                    traverseAst(child, doIt);
-                }
-            }
-        } else if (value && typeof value === 'object' && typeof value.type === 'string') {
-            traverseAst(value, doIt);
-        }
     }
 }
 
@@ -226,9 +146,12 @@ function traverseAst(node: Node, doIt: (node: Node) => void): void {
 async function buildContextConfig(): Promise<void> {
     try {
         console.info('🚀 Building context configuration...');
-        const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ContextConfig;
-        const indexCode = await fs.readFile('src/index.ts', 'utf8');
+
+        const [packageJSON, configJSON, indexCode] = await Promise.all([
+            fs.readFile('package.json', 'utf8').then((s) => JSON.parse(s) as PackageJson),
+            fs.readFile('config.json', 'utf8').then((s) => JSON.parse(s) as ContextConfig),
+            fs.readFile('src/index.ts', 'utf8')
+        ]);
 
         const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
         const operations = [...indexCode.matchAll(regex)]
@@ -250,9 +173,12 @@ async function buildContextConfig(): Promise<void> {
 async function buildPresenterConfig(): Promise<void> {
     try {
         console.info('🚀 Building presenter configuration...');
-        const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as PresenterConfig;
-        const indexCode = await fs.readFile('src/index.ts', 'utf8');
+
+        const [packageJSON, configJSON, indexCode] = await Promise.all([
+            fs.readFile('package.json', 'utf8').then((s) => JSON.parse(s) as PackageJson),
+            fs.readFile('config.json', 'utf8').then((s) => JSON.parse(s) as PresenterConfig),
+            fs.readFile('src/index.ts', 'utf8')
+        ]);
 
         const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
         const operations = [...indexCode.matchAll(regex)]
@@ -274,15 +200,18 @@ async function buildPresenterConfig(): Promise<void> {
 async function bumpVersion(path = './'): Promise<void> {
     try {
         console.info('🚀 Bumping version...');
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         const packageJSON = JSON.parse(await fs.readFile(`${path}package.json`, 'utf8')) as PackageJson;
         if (packageJSON.version == null) {
             packageJSON.version = '0.0.001';
+            // eslint-disable-next-line security/detect-non-literal-fs-filename
             await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
             console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
         } else {
             const oldVersion = packageJSON.version;
             const versionSegments = packageJSON.version.split('.');
             packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+            // eslint-disable-next-line security/detect-non-literal-fs-filename
             await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
             console.info(`✅ Version bumped from ${oldVersion} to ${packageJSON.version}.`);
         }
@@ -301,20 +230,21 @@ async function insertLicensesIntoReadme(): Promise<void> {
     const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
     const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
     try {
-        const licensesContent = (await fs.readFile('./licenses.md', 'utf8')).trim();
+        const licensesContent1 = await fs.readFile('./licenses.md', 'utf8');
+        const trimmedLicensesContent = licensesContent1.trim();
         const readmeContent = await fs.readFile('./README.md', 'utf8');
-        const startIdx = readmeContent.indexOf(START_MARKER);
-        const endIdx = readmeContent.indexOf(END_MARKER);
-        if (startIdx === -1 || endIdx === -1) {
+        const startIndex = readmeContent.indexOf(START_MARKER);
+        const endIndex = readmeContent.indexOf(END_MARKER);
+        if (startIndex === -1 || endIndex === -1) {
             console.error('❌ Dependency license markers not found in readme file.');
-            process.exit(1);
+            return;
         }
-        const newContent = readmeContent.substring(0, startIdx + START_MARKER.length) + '\n' + licensesContent + '\n' + readmeContent.substring(endIdx);
+        const newContent =
+            readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + '\n' + trimmedLicensesContent + '\n' + readmeContent.slice(Math.max(0, endIndex));
         await fs.writeFile('README.md', newContent, 'utf8');
         console.log('✅ Readme file updated with license information');
     } catch (error) {
         console.error('❌ Error updating readme file.', error);
-        process.exit(1);
     }
 }
 
@@ -323,7 +253,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
     const START_MARKER = '<!-- OWASP_BADGE_START -->';
     const END_MARKER = '<!-- OWASP_BADGE_END -->';
     try {
-        const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf-8')) as {
+        const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf8')) as {
             dependencies: { vulnerabilities?: { severity?: string }[] }[];
         };
         interface SeverityCounts {
@@ -379,21 +309,20 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
 
         // Insert badges into README
         const readmeContent = await fs.readFile('./README.md', 'utf8');
-        const startIdx = readmeContent.indexOf(START_MARKER);
-        const endIdx = readmeContent.indexOf(END_MARKER);
+        const startIndex = readmeContent.indexOf(START_MARKER);
+        const endIndex = readmeContent.indexOf(END_MARKER);
 
-        if (startIdx === -1 || endIdx === -1) {
+        if (startIndex === -1 || endIndex === -1) {
             console.error('❌ OWASP badge markers not found in README.md.');
-            process.exit(1);
+            return;
         }
 
         const badgeContent = badges.join(' ');
-        const newContent = readmeContent.substring(0, startIdx + START_MARKER.length) + badgeContent + readmeContent.substring(endIdx);
+        const newContent = readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + badgeContent + readmeContent.slice(Math.max(0, endIndex));
         await fs.writeFile('README.md', newContent, 'utf8');
         console.info('✅ OWASP dependency check badge(s) inserted into README.md');
     } catch (error) {
         console.error('❌ Error updating README with OWASP badges:', error);
-        process.exit(1);
     }
 }
 
@@ -477,31 +406,87 @@ async function uploadModuleConfigToDO(): Promise<void> {
 }
 
 // Utilities - Upload module to Cloudflare R2.
-async function uploadModuleToR2(uploadDirPath: string): Promise<void> {
+async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
     try {
         console.info('🚀 Uploading module to R2...');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const version = `v${packageJSON.version}`;
-        async function uploadDir(currentDir: string, prefix = ''): Promise<void> {
-            const entries = await fs.readdir(currentDir, { withFileTypes: true });
+        async function uploadDirectory(currentDirectory: string, prefix = ''): Promise<void> {
+            // eslint-disable-next-line security/detect-non-literal-fs-filename
+            const entries = await fs.readdir(currentDirectory, { withFileTypes: true });
             for (const entry of entries) {
-                const fullPath = `${currentDir}/${entry.name}`;
+                const fullPath = `${currentDirectory}/${entry.name}`;
                 const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
-                if (entry.isDirectory()) {
-                    // await uploadDir(fullPath, relativePath); // TODO: We only want primary javascript and dynamically loaded chunks.
-                } else {
-                    const r2Path = `${uploadDirPath}_${version}/${relativePath}`.replace(/\\/g, '/');
-                    const contentType = entry.name.endsWith('.js') ? 'application/javascript' : entry.name.endsWith('.css') ? 'text/css' : 'application/octet-stream';
-                    console.info(`⚙️ Uploading '${relativePath}' → '${r2Path}'...`);
-                    const { stderr } = await asyncExec(`wrangler r2 object put "${r2Path}" --file="${fullPath}" --content-type ${contentType} --jurisdiction=eu --remote`);
-                    if (stderr) throw new Error(stderr);
-                }
+                if (entry.isDirectory()) continue;
+                const r2Path = `${uploadDirectoryPath}_${version}/${relativePath}`.replaceAll('\\', '/');
+                const nonJavaScripContentType = entry.name.endsWith('.css') ? 'text/css' : 'application/octet-stream';
+                const contentType = entry.name.endsWith('.js') ? 'application/javascript' : nonJavaScripContentType;
+                console.info(`⚙️ Uploading '${relativePath}' → '${r2Path}'...`);
+                const { stderr } = await asyncExec(`wrangler r2 object put "${r2Path}" --file="${fullPath}" --content-type ${contentType} --jurisdiction=eu --remote`);
+                if (stderr) throw new Error(stderr);
             }
         }
-        await uploadDir('dist');
+        await uploadDirectory('dist');
         console.info('✅ Module uploaded to R2.');
     } catch (error) {
         console.error('❌ Error uploading module to R2.', error);
+    }
+}
+
+// Helpers - Extract operations from source.
+function extractOperationsFromSource(source: string): { operations: ConnectorOperation[]; sourceOps: boolean; destinationOps: boolean } {
+    // @ts-expect-error - acorn-typescript runtime mismatch is fine.
+    const TSParser = Parser.extend(acornTypeScript());
+    const ast = TSParser.parse(source, {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        locations: true
+    });
+
+    const operations: ConnectorOperation[] = [];
+    let sourceOps = false;
+    let destinationOps = false;
+
+    traverseAst(ast, (node) => {
+        if (node.type !== 'MethodDefinition') return;
+
+        const md = node as MethodDefinition & { accessibility?: string };
+        const key = md.key as Identifier | PrivateIdentifier;
+        const name = key.name;
+
+        if (!name) return;
+        if (name === 'constructor') return;
+        if (md.accessibility === 'private') return;
+
+        operations.push(name as ConnectorOperation);
+
+        if (CONNECTOR_SOURCE_OPERATIONS.includes(name)) sourceOps = true;
+        if (CONNECTOR_DESTINATION_OPERATIONS.includes(name)) destinationOps = true;
+    });
+
+    return { operations, sourceOps, destinationOps };
+}
+
+function determineUsageId(meta: { sourceOps: boolean; destinationOps: boolean }): ConnectorUsageId {
+    if (meta.sourceOps && meta.destinationOps) return 'bidirectional';
+    if (meta.sourceOps) return 'source';
+    if (meta.destinationOps) return 'destination';
+    return 'unknown';
+}
+
+function traverseAst(node: Node, doIt: (node: Node) => void): void {
+    doIt(node);
+    for (const [key, value_] of Object.entries(node)) {
+        if (['loc', 'range', 'start', 'end', 'comments'].includes(key)) continue;
+        const value = value_ as Node | undefined;
+        if (Array.isArray(value)) {
+            for (const child_ of value) {
+                const child = child_ as Node | undefined;
+                if (child && typeof child.type === 'string') traverseAst(child, doIt);
+            }
+        } else if (value && typeof value === 'object' && typeof value.type === 'string') {
+            traverseAst(value, doIt);
+        }
     }
 }
 

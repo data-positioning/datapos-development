@@ -122,7 +122,7 @@ async function buildConnectorConfig(): Promise<void> {
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
         try {
-            const TSParser = Parser.extend(acornTS());
+            const TSParser = Parser.extend(acornTs());
             const ast1 = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module' });
             const functionNames: string[] = [];
             walk.simple(ast1, {

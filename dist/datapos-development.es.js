@@ -5318,7 +5318,7 @@ async function Us() {
       const C = K.extend(Ls()).parse(s, {
         ecmaVersion: "latest",
         sourceType: "module",
-        locations: !1
+        locations: !0
       }), _ = [];
       Ri(C, {
         FunctionDeclaration(M) {

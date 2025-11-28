@@ -128,7 +128,7 @@ async function buildConnectorConfig(): Promise<void> {
             const ast = TSParser.parse(indexCode, {
                 ecmaVersion: 'latest',
                 sourceType: 'module',
-                locations: false
+                locations: true
             });
 
             const functionNames: string[] = [];

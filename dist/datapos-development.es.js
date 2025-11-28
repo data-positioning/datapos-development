@@ -5122,7 +5122,9 @@ async function Vs() {
           console.log(1111, B);
           const z = B.key;
           console.log(2222, z);
-          const I = z.name, X = j.key?.type === "PrivateIdentifier";
+          const I = z.name;
+          console.log(I, B.accessibility);
+          const X = j.key?.type === "PrivateIdentifier";
           I && !X && !(I === "constructor") && d.add(I);
           break;
         }

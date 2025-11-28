@@ -11,6 +11,8 @@ import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
 import { type Identifier, type MethodDefinition, type Node, Parser, type PrivateIdentifier } from 'acorn';
 
+import { simple as walk } from 'acorn-walk';
+
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
 import type {
@@ -125,34 +127,55 @@ async function buildConnectorConfig(): Promise<void> {
         const TSParser = Parser.extend(acornTypeScript());
         const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module', locations: true });
         const operations: string[] = [];
-        function traverse(node: Node): void {
-            if (node.type === 'MethodDefinition') {
-                const methodDefinition = node as MethodDefinition & { accessibility?: boolean };
-                const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
-                const methodName = identifier.name;
-                const isConstructor = methodName === 'constructor';
-                const isPrivate = methodDefinition.accessibility ?? false;
-                if (methodName && !isConstructor && !isPrivate) {
-                    operations.push(methodName);
-                    if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) destinationOperations = true;
-                    if (CONNECTOR_SOURCE_OPERATIONS.includes(methodName)) sourceOperations = true;
-                }
-            }
+        walk(ast, {
+            MethodDefinition(node: MethodDefinition & { accessibility?: boolean }) {
+                const key = node.key as Identifier | PrivateIdentifier;
+                const methodName = key.name;
 
-            // Recursively traverse all child nodes.
-            for (const [key, value] of Object.entries(node)) {
-                if (key === 'loc' || key === 'range' || key === 'start' || key === 'end' || key === 'comments') continue; // Skip metadata properties
-                const child = value as Node | undefined;
-                if (Array.isArray(child)) {
-                    for (const item of child) {
-                        traverse(item as Node);
-                    }
-                } else if (child && typeof child === 'object' && typeof child.type === 'string') {
-                    traverse(child);
+                const isConstructor = methodName === 'constructor';
+                const isPrivate = node.accessibility ?? false;
+
+                // valid public method
+                if (!methodName || isConstructor || isPrivate) return;
+
+                operations.push(methodName);
+
+                if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) {
+                    destinationOperations = true;
+                }
+                if (CONNECTOR_SOURCE_OPERATIONS.includes(methodName)) {
+                    sourceOperations = true;
                 }
             }
-        }
-        traverse(ast);
+        });
+        // function traverse(node: Node): void {
+        //     if (node.type === 'MethodDefinition') {
+        //         const methodDefinition = node as MethodDefinition & { accessibility?: boolean };
+        //         const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
+        //         const methodName = identifier.name;
+        //         const isConstructor = methodName === 'constructor';
+        //         const isPrivate = methodDefinition.accessibility ?? false;
+        //         if (methodName && !isConstructor && !isPrivate) {
+        //             operations.push(methodName);
+        //             if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) destinationOperations = true;
+        //             if (CONNECTOR_SOURCE_OPERATIONS.includes(methodName)) sourceOperations = true;
+        //         }
+        //     }
+
+        //     // Recursively traverse all child nodes.
+        //     for (const [key, value] of Object.entries(node)) {
+        //         if (key === 'loc' || key === 'range' || key === 'start' || key === 'end' || key === 'comments') continue; // Skip metadata properties
+        //         const child = value as Node | undefined;
+        //         if (Array.isArray(child)) {
+        //             for (const item of child) {
+        //                 traverse(item as Node);
+        //             }
+        //         } else if (child && typeof child === 'object' && typeof child.type === 'string') {
+        //             traverse(child);
+        //         }
+        //     }
+        // }
+        // traverse(ast);
         console.log(`Extracted ${operations.length} functions:`, [...operations]);
 
         if (operations.length > 0) console.info(`ℹ️  Implements ${operations.length} operations.`);
@@ -179,6 +202,43 @@ async function buildConnectorConfig(): Promise<void> {
     } catch (error) {
         console.error('❌ Error building connector configuration.', error);
     }
+}
+
+function extractOperationsFromIndex(indexCode: string) {
+    // @ts-expect-error - acorn-typescript still incompatible but works
+    const TSParser = Parser.extend(acornTypeScript());
+    const ast = TSParser.parse(indexCode, {
+        ecmaVersion: 'latest',
+        sourceType: 'module'
+    });
+
+    const operations: string[] = [];
+    let sourceOperations = false;
+    let destinationOperations = false;
+
+    walk(ast, {
+        MethodDefinition(node: MethodDefinition & { accessibility?: boolean }) {
+            const key = node.key as Identifier | PrivateIdentifier;
+            const methodName = key.name;
+
+            const isConstructor = methodName === 'constructor';
+            const isPrivate = node.accessibility ?? false;
+
+            // valid public method
+            if (!methodName || isConstructor || isPrivate) return;
+
+            operations.push(methodName);
+
+            if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) {
+                destinationOperations = true;
+            }
+            if (CONNECTOR_SOURCE_OPERATIONS.includes(methodName)) {
+                sourceOperations = true;
+            }
+        }
+    });
+
+    return { operations, sourceOperations, destinationOperations };
 }
 
 // Utilities - Build context configuration.

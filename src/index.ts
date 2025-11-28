@@ -9,7 +9,7 @@ import { promises as fs } from 'node:fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
-import { type Function, type Node, Parser } from 'acorn';
+import { type Function, type MethodDefinition, type Node, Parser } from 'acorn';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -129,13 +129,13 @@ async function buildConnectorConfig(): Promise<void> {
                     if (functionNode.id?.name != null) functionNames.add(functionNode.id.name);
                     break;
                 }
-                case 'MethodDefinition': {
-                    const methodName = node.key?.name;
-                    const isPrivate = node.key?.type === 'PrivateIdentifier';
-                    const isConstructor = methodName === 'constructor';
-                    if (methodName && !isPrivate && !isConstructor) functionNames.add(methodName);
-                    break;
-                }
+                // case 'MethodDefinition': {
+                //     const methodName = node.key?.name;
+                //     const isPrivate = node.key?.type === 'PrivateIdentifier';
+                //     const isConstructor = methodName === 'constructor';
+                //     if (methodName && !isPrivate && !isConstructor) functionNames.add(methodName);
+                //     break;
+                // }
                 // case 'VariableDeclarator': {
                 //     const varName = node.id?.name;
                 //     const init = node.init;

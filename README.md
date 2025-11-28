@@ -71,7 +71,9 @@ The following table lists top-level production and peer dependencies. All these 
 | Name                    | Type | Installed | Latest  | Latest Modified          |
 | :---------------------- | :--: | :-------: | :-----: | :----------------------- |
 | @datapos/datapos-shared | MIT  |  0.3.252  | 0.3.252 | 2025-11-25T16:48:28.532Z |
-| node-pty                | MIT  |   1.0.0   |  1.0.0  | 2025-11-03T11:45:17.960Z |
+| acorn                   | MIT  |  8.15.0   | 8.15.0  | 2025-06-09T04:08:15.567Z |
+| acorn-typescript        | MIT  |  1.4.13   | 1.4.13  | 2024-01-03T02:25:10.152Z |
+| acorn-walk              | MIT  |   8.3.4   |  8.3.4  | 2024-09-09T08:40:59.131Z |
 
 <!-- DEPENDENCY_LICENSES_END -->
 
@@ -103,7 +105,6 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 ## TODO
 
 1. Enhance `uploadDirectoryToR2`to batch upload files so more efficient and performant.
-1. Replace regex with TypeScript AST in `buildConnectorConfig`. Extracting method names from index.ts via regex is fragile — breaks with decorators, comments, or new syntax (e.g., class fields). AST parsing (via @babel/parser or typescript) would be safer.
 1. Implement zod to validate config schemas.
 
 ## License

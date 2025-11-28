@@ -3,13 +3,15 @@
  */
 
 // Dependencies - Vendor.
-import acornTypeScript from 'acorn-typescript';
 import { exec } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
-import { type Expression, type MethodDefinition, type Node, Parser, type PrivateIdentifier } from 'acorn';
+
+// Dependencies - Vendor Acorn.
+import acornTypeScript from 'acorn-typescript';
+import { type MethodDefinition, type Node, Parser } from 'acorn';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -41,6 +43,18 @@ interface DirectoryObjectEntry extends DirectoryEntry {
     size: number;
     typeId: 'object';
 }
+
+// Types/Interfaces
+interface SeverityCounts {
+    critical: number;
+    high: number;
+    moderate: number;
+    low: number;
+    unknown: number;
+}
+
+// Constants
+const ALLOWED_SEVERITY_KEYS = ['critical', 'high', 'moderate', 'low', 'unknown'] as (keyof SeverityCounts)[];
 
 // Initialisation
 const asyncExec = promisify(exec);
@@ -256,20 +270,14 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf8')) as {
             dependencies: { vulnerabilities?: { severity?: string }[] }[];
         };
-        interface SeverityCounts {
-            critical: number;
-            high: number;
-            moderate: number;
-            low: number;
-            unknown: number;
-        }
         const severityCounts: SeverityCounts = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
         for (const dependency of dependencyCheckData.dependencies) {
             if (dependency.vulnerabilities == null) continue;
             for (const vulnerability of dependency.vulnerabilities) {
                 const severity = (vulnerability.severity?.toLowerCase() ?? 'unknown') as keyof SeverityCounts;
                 if (severity in severityCounts) {
-                    severityCounts[severity]++;
+                    const severityKey = ALLOWED_SEVERITY_KEYS.find((key) => key === severity);
+                    severityCounts[severityKey ?? 'unknown']++;
                 } else {
                     severityCounts.unknown++;
                 }
@@ -366,8 +374,10 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
             for (const name of names) {
                 const sourceItemPath = `${currentSourceDirectory}/${name}`;
                 const destinationItemPath = `${currentDestinationDirectory}/${name}`;
+                // eslint-disable-next-line security/detect-non-literal-fs-filename
                 const stats = await fs.stat(sourceItemPath);
                 if (stats.isDirectory()) {
+                    // eslint-disable-next-line security/detect-non-literal-fs-filename
                     const nextLevelChildren = await fs.readdir(sourceItemPath);
                     await listDirectoryEntriesRecursively(sourceItemPath, destinationItemPath, nextLevelChildren);
                 } else {
@@ -378,6 +388,7 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
                 }
             }
         }
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         const toplevelNames = await fs.readdir(`${sourceDirectory}/${uploadDirectory}/`);
         await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}`, uploadDirectory, toplevelNames);
         console.info('✅ Directory uploaded to R2.');

@@ -120,25 +120,33 @@ async function buildConnectorConfig(): Promise<void> {
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
-        const ast1 = parse(indexCode, { ecmaVersion: 2020, sourceType: 'module' });
-        walk.simple(ast1, {
-            FunctionDeclaration(node) {
-                console.log('function', node);
-            },
-            MethodDefinition(node) {
-                console.log('method', node);
-            }
-        });
-
-        const ast2 = parseScript(indexCode, { next: true, module: true });
-        function visit(node: any): void {
-            if (node.type === 'FunctionDeclaration') {
-                console.log('function', node);
-            } else if (node.type === 'MethodDefinition') {
-                console.log('method', node);
-            }
+        try {
+            const ast1 = parse(indexCode, { ecmaVersion: 2020, sourceType: 'module' });
+            walk.simple(ast1, {
+                FunctionDeclaration(node) {
+                    console.log('function', node);
+                },
+                MethodDefinition(node) {
+                    console.log('method', node);
+                }
+            });
+        } catch (error) {
+            console.log(1111, error);
         }
-        visit(ast2);
+
+        try {
+            const ast2 = parseScript(indexCode, { next: true, module: true });
+            function visit(node: any): void {
+                if (node.type === 'FunctionDeclaration') {
+                    console.log('function', node);
+                } else if (node.type === 'MethodDefinition') {
+                    console.log('method', node);
+                }
+            }
+            visit(ast2);
+        } catch (error) {
+            console.log(2222, error);
+        }
 
         let destinationOperations = false;
         let sourceOperations = false;

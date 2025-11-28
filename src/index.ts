@@ -8,8 +8,8 @@ import { exec } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
-import { Parser } from 'acorn';
 import { promisify } from 'node:util';
+import { type Function, type Node, Parser } from 'acorn';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -122,35 +122,39 @@ async function buildConnectorConfig(): Promise<void> {
         const TSParser = Parser.extend(acornTypeScript());
         const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module', locations: true });
         const functionNames = new Set<string>();
-        function traverse(node: any): void {
-            if (!node || typeof node !== 'object') return;
+        function traverse(node: Node): void {
             switch (node.type) {
-                case 'FunctionDeclaration':
-                    if (node.id?.name) functionNames.add(node.id.name);
+                case 'FunctionDeclaration': {
+                    const functionNode = node as Function;
+                    if (functionNode.id?.name != null) functionNames.add(functionNode.id.name);
                     break;
-                case 'MethodDefinition':
+                }
+                case 'MethodDefinition': {
                     const methodName = node.key?.name;
                     const isPrivate = node.key?.type === 'PrivateIdentifier';
                     const isConstructor = methodName === 'constructor';
                     if (methodName && !isPrivate && !isConstructor) functionNames.add(methodName);
                     break;
-                case 'VariableDeclarator':
-                    const varName = node.id?.name;
-                    const init = node.init;
-                    if (varName && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) functionNames.add(varName);
-                    break;
-                case 'PropertyDefinition':
-                    const propName = node.key?.name;
-                    const isPropPrivate = node.key?.type === 'PrivateIdentifier';
-                    const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
-                    if (propName && !isPropPrivate && isFunction) functionNames.add(propName);
-                    break;
+                }
+                // case 'VariableDeclarator': {
+                //     const varName = node.id?.name;
+                //     const init = node.init;
+                //     if (varName && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) functionNames.add(varName);
+                //     break;
+                // }
+                // case 'PropertyDefinition': {
+                //     const propertyName = node.key?.name;
+                //     const isPropPrivate = node.key?.type === 'PrivateIdentifier';
+                //     const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
+                //     if (propertyName && !isPropPrivate && isFunction) functionNames.add(propertyName);
+                //     break;
+                // }
             }
 
             // Recursively traverse all child nodes.
             for (const key in node) {
                 if (key === 'loc' || key === 'range' || key === 'start' || key === 'end' || key === 'comments') continue; // Skip metadata properties
-                const child = node[key];
+                const child = node[key] as Node;
                 if (Array.isArray(child)) {
                     child.forEach(traverse);
                 } else if (child && typeof child === 'object' && typeof child.type === 'string') {

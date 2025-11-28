@@ -9,7 +9,7 @@ import { promises as fs } from 'node:fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
-import { type FunctionDeclaration, type PrivateIdentifier, type Identifier, type MethodDefinition, type Node, Parser } from 'acorn';
+import { type Identifier, type MethodDefinition, type Node, Parser, type PrivateIdentifier } from 'acorn';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -118,40 +118,26 @@ async function buildConnectorConfig(): Promise<void> {
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ConnectorConfig;
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
+        let destinationOperations = false;
+        let sourceOperations = false;
+
         // @ts-expect-error - acorn-typescript has type incompatibilities but works at runtime
         const TSParser = Parser.extend(acornTypeScript());
         const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module', locations: true });
-        const functionNames = new Set<string>();
+        const operations: string[] = [];
         function traverse(node: Node): void {
-            switch (node.type) {
-                case 'FunctionDeclaration': {
-                    console.log(1111, node);
-                    functionNames.add((node as FunctionDeclaration).id.name);
-                    break;
+            if (node.type === 'MethodDefinition') {
+                const methodDefinition = node as MethodDefinition & { accessibility?: boolean };
+                const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
+                const methodName = identifier.name;
+                const isConstructor = methodName === 'constructor';
+                const isPrivate = methodDefinition.accessibility ?? false;
+                console.log(3333, methodName, isConstructor, isPrivate);
+                if (methodName && !isConstructor && !isPrivate) {
+                    operations.push(methodName);
+                    if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) destinationOperations = true;
+                    if (CONNECTOR_SOURCE_OPERATIONS.includes(methodName)) sourceOperations = true;
                 }
-                case 'MethodDefinition': {
-                    const methodDefinition = node as MethodDefinition & { accessibility?: boolean };
-                    const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
-                    const methodName = identifier.name;
-                    const isConstructor = methodName === 'constructor';
-                    const isPrivate = methodDefinition.accessibility ?? false;
-                    console.log(3333, methodName, isConstructor, isPrivate);
-                    if (methodName && !isConstructor && !isPrivate) functionNames.add(methodName);
-                    break;
-                }
-                // case 'VariableDeclarator': {
-                //     const varName = node.id?.name;
-                //     const init = node.init;
-                //     if (varName && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) functionNames.add(varName);
-                //     break;
-                // }
-                // case 'PropertyDefinition': {
-                //     const propertyName = node.key?.name;
-                //     const isPropPrivate = node.key?.type === 'PrivateIdentifier';
-                //     const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
-                //     if (propertyName && !isPropPrivate && isFunction) functionNames.add(propertyName);
-                //     break;
-                // }
             }
 
             // Recursively traverse all child nodes.
@@ -165,22 +151,19 @@ async function buildConnectorConfig(): Promise<void> {
                 }
             }
         }
-
         traverse(ast);
+        console.log(`Extracted ${operations.length} functions:`, [...operations]);
 
-        console.log(`Extracted ${functionNames.size} functions:`, Array.from(functionNames));
+        // const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
+        // const matches = [...indexCode.matchAll(regex)].filter((match) => match[1] == null && match[2] !== 'constructor');
+        // const operations: ConnectorOperation[] = [];
+        // for (const match of matches) {
+        //     const operation = match[2] as ConnectorOperation;
+        //     operations.push(operation);
+        //     if (CONNECTOR_DESTINATION_OPERATIONS.includes(operation)) destinationOperations = true;
+        //     if (CONNECTOR_SOURCE_OPERATIONS.includes(operation)) sourceOperations = true;
+        // }
 
-        let destinationOperations = false;
-        let sourceOperations = false;
-        const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
-        const matches = [...indexCode.matchAll(regex)].filter((match) => match[1] == null && match[2] !== 'constructor');
-        const operations: ConnectorOperation[] = [];
-        for (const match of matches) {
-            const operation = match[2] as ConnectorOperation;
-            operations.push(operation);
-            if (CONNECTOR_DESTINATION_OPERATIONS.includes(operation)) destinationOperations = true;
-            if (CONNECTOR_SOURCE_OPERATIONS.includes(operation)) sourceOperations = true;
-        }
         if (operations.length > 0) console.info(`ℹ️  Implements ${operations.length} operations.`);
         else console.warn('⚠️  Implements no operations.');
 

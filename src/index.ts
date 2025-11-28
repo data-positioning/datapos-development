@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
 
-import * as walk from 'acorn-walk';
+import { simple } from 'acorn-walk';
 import acornTypeScript from 'acorn-typescript';
 import { Parser } from 'acorn';
 
@@ -131,42 +131,65 @@ async function buildConnectorConfig(): Promise<void> {
 
         const functionNames = new Set<string>();
 
-        walk.ancestor(ast, {
-            FunctionDeclaration(node: any) {
-                if (node.id?.name) {
-                    functionNames.add(node.id.name);
+        function traverse(node: any): void {
+            if (!node || typeof node !== 'object') return;
+
+            // Extract function names based on node type
+            switch (node.type) {
+                case 'FunctionDeclaration':
+                    if (node.id?.name) {
+                        functionNames.add(node.id.name);
+                    }
+                    break;
+
+                case 'MethodDefinition':
+                    const methodName = node.key?.name;
+                    const isPrivate = node.key?.type === 'PrivateIdentifier';
+                    const isConstructor = methodName === 'constructor';
+
+                    if (methodName && !isPrivate && !isConstructor) {
+                        functionNames.add(methodName);
+                    }
+                    break;
+
+                case 'VariableDeclarator':
+                    const varName = node.id?.name;
+                    const init = node.init;
+
+                    if (varName && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) {
+                        functionNames.add(varName);
+                    }
+                    break;
+
+                case 'PropertyDefinition':
+                    const propName = node.key?.name;
+                    const isPropPrivate = node.key?.type === 'PrivateIdentifier';
+                    const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
+
+                    if (propName && !isPropPrivate && isFunction) {
+                        functionNames.add(propName);
+                    }
+                    break;
+            }
+
+            // Recursively traverse all child nodes
+            for (const key in node) {
+                // Skip metadata properties
+                if (key === 'loc' || key === 'range' || key === 'start' || key === 'end' || key === 'comments') {
+                    continue;
                 }
-            },
 
-            MethodDefinition(node: any) {
-                const name = node.key?.name;
-                const isPrivate = node.key?.type === 'PrivateIdentifier';
-                const isConstructor = name === 'constructor';
+                const child = node[key];
 
-                if (name && !isPrivate && !isConstructor) {
-                    functionNames.add(name);
-                }
-            },
-
-            VariableDeclarator(node: any) {
-                const name = node.id?.name;
-                const init = node.init;
-
-                if (name && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) {
-                    functionNames.add(name);
-                }
-            },
-
-            PropertyDefinition(node: any) {
-                const name = node.key?.name;
-                const isPrivate = node.key?.type === 'PrivateIdentifier';
-                const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
-
-                if (name && !isPrivate && isFunction) {
-                    functionNames.add(name);
+                if (Array.isArray(child)) {
+                    child.forEach(traverse);
+                } else if (child && typeof child === 'object' && typeof child.type === 'string') {
+                    traverse(child);
                 }
             }
-        });
+        }
+
+        traverse(ast);
 
         console.log(`Extracted ${functionNames.size} functions:`, Array.from(functionNames));
 

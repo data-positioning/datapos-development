@@ -132,7 +132,6 @@ async function buildConnectorConfig(): Promise<void> {
                 const methodName = identifier.name;
                 const isConstructor = methodName === 'constructor';
                 const isPrivate = methodDefinition.accessibility ?? false;
-                console.log(3333, methodName, isConstructor, isPrivate);
                 if (methodName && !isConstructor && !isPrivate) {
                     operations.push(methodName);
                     if (CONNECTOR_DESTINATION_OPERATIONS.includes(methodName)) destinationOperations = true;
@@ -143,7 +142,9 @@ async function buildConnectorConfig(): Promise<void> {
             // Recursively traverse all child nodes.
             for (const key in node) {
                 if (key === 'loc' || key === 'range' || key === 'start' || key === 'end' || key === 'comments') continue; // Skip metadata properties
+                console.log(1111, node);
                 const child = node[key] as Node;
+                console.log(2222, child);
                 if (Array.isArray(child)) {
                     child.forEach(traverse);
                 } else if (child && typeof child === 'object' && typeof child.type === 'string') {
@@ -153,16 +154,6 @@ async function buildConnectorConfig(): Promise<void> {
         }
         traverse(ast);
         console.log(`Extracted ${operations.length} functions:`, [...operations]);
-
-        // const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
-        // const matches = [...indexCode.matchAll(regex)].filter((match) => match[1] == null && match[2] !== 'constructor');
-        // const operations: ConnectorOperation[] = [];
-        // for (const match of matches) {
-        //     const operation = match[2] as ConnectorOperation;
-        //     operations.push(operation);
-        //     if (CONNECTOR_DESTINATION_OPERATIONS.includes(operation)) destinationOperations = true;
-        //     if (CONNECTOR_SOURCE_OPERATIONS.includes(operation)) sourceOperations = true;
-        // }
 
         if (operations.length > 0) console.info(`ℹ️  Implements ${operations.length} operations.`);
         else console.warn('⚠️  Implements no operations.');

@@ -125,19 +125,18 @@ async function buildConnectorConfig(): Promise<void> {
         function traverse(node: Node): void {
             switch (node.type) {
                 case 'FunctionDeclaration': {
+                    console.log(1111, node);
                     functionNames.add((node as FunctionDeclaration).id.name);
                     break;
                 }
                 case 'MethodDefinition': {
-                    const methodDefinition = node as MethodDefinition;
-                    // console.log(1111, methodDefinition);
+                    const methodDefinition = node as MethodDefinition & { accessibility?: boolean };
                     const identifier = methodDefinition.key as Identifier | PrivateIdentifier;
-                    // console.log(2222, identifier);
                     const methodName = identifier.name;
                     const isConstructor = methodName === 'constructor';
-                    const isPrivate = identifier.type === 'PrivateIdentifier';
-                    console.log(3333, methodName, isConstructor, isPrivate, methodDefinition.accessibility);
-                    if (methodName && !isPrivate && !isConstructor) functionNames.add(methodName);
+                    const isPrivate = methodDefinition.accessibility ?? false;
+                    console.log(3333, methodName, isConstructor, isPrivate);
+                    if (methodName && !isConstructor && !isPrivate) functionNames.add(methodName);
                     break;
                 }
                 // case 'VariableDeclarator': {

@@ -12,7 +12,7 @@ import { promisify } from 'node:util';
 import * as walk from 'acorn-walk';
 import { parseScript } from 'meriyah';
 import acornTs from 'acorn-typescript';
-import { parse } from 'acorn';
+import { Parser } from 'acorn';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -123,9 +123,9 @@ async function buildConnectorConfig(): Promise<void> {
 
         try {
             const TSParser = Parser.extend(acornTS());
-            const ast = TSParser.parse(code, { ecmaVersion: 'latest', sourceType: 'module' });
+            const ast1 = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module' });
             const functionNames: string[] = [];
-            walk.simple(ast, {
+            walk.simple(ast1, {
                 FunctionDeclaration(node: any) {
                     if (node.id) functionNames.push(node.id.name);
                 },

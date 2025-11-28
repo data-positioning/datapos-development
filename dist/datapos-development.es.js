@@ -5131,19 +5131,14 @@ async function Vs() {
             break;
         }
         for (const j in R) {
-          if (j === "loc" || j === "range" || j === "start" || j === "end" || j === "comments")
-            continue;
+          if (j === "loc" || j === "range" || j === "start" || j === "end" || j === "comments") continue;
           const J = R[j];
           Array.isArray(J) ? J.forEach(t) : J && typeof J == "object" && typeof J.type == "string" && t(J);
         }
       }
     };
     console.info("🚀 Building connector configuration...");
-    const e = JSON.parse(await M.readFile("package.json", "utf8")), r = JSON.parse(await M.readFile("config.json", "utf8")), a = await M.readFile("src/index.ts", "utf8"), f = K.extend(Es()).parse(a, {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      locations: !0
-    }), d = /* @__PURE__ */ new Set();
+    const e = JSON.parse(await M.readFile("package.json", "utf8")), r = JSON.parse(await M.readFile("config.json", "utf8")), a = await M.readFile("src/index.ts", "utf8"), f = K.extend(Es()).parse(a, { ecmaVersion: "latest", sourceType: "module", locations: !0 }), d = /* @__PURE__ */ new Set();
     t(f), console.log(`Extracted ${d.size} functions:`, Array.from(d));
     let v = !1, g = !1;
     const o = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm, w = [...a.matchAll(o)].filter((R) => R[1] == null && R[2] !== "constructor"), _ = [];

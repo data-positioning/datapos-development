@@ -12,8 +12,8 @@ import { promisify } from 'node:util';
 import { parseScript } from 'meriyah';
 
 import * as walk from 'acorn-walk';
-import * as acorn from 'acorn';
-import tsPlugin from 'acorn-typescript';
+import acornTS from 'acorn-typescript';
+import { Parser } from 'acorn';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -123,58 +123,80 @@ async function buildConnectorConfig(): Promise<void> {
         const indexCode = await fs.readFile('src/index.ts', 'utf8');
 
         try {
-            const TSParser = Parser.extend(tsPlugin());
-            const ast = TSParser.parse(indexCode, { ecmaVersion: 'latest', sourceType: 'module', locations: true });
+            const ast = parseScript(indexCode, {
+                next: true,
+                module: true,
+                loc: true // Optional: if you need location info
+            });
 
             const functionNames = new Set<string>();
 
-            // Use ancestor walk to track parent nodes
-            walk.ancestor(ast, {
-                FunctionDeclaration(node: any) {
-                    if (node.id?.name) {
-                        functionNames.add(node.id.name);
-                    }
-                },
+            function visit(node: any): void {
+                if (!node || typeof node !== 'object') return;
 
-                MethodDefinition(node: any) {
-                    const name = node.key?.name;
-                    const isPrivate = node.key?.type === 'PrivateIdentifier' || node.accessibility === 'private';
-                    const isConstructor = name === 'constructor';
+                // Extract function names based on node type
+                switch (node.type) {
+                    case 'FunctionDeclaration':
+                        if (node.id?.name) {
+                            functionNames.add(node.id.name);
+                            console.log('function declaration:', node.id.name);
+                        }
+                        break;
 
-                    if (name && !isPrivate && !isConstructor) {
-                        functionNames.add(name);
-                    }
-                },
+                    case 'MethodDefinition':
+                        const methodName = node.key?.name;
+                        const isPrivate = node.key?.type === 'PrivateIdentifier';
+                        const isConstructor = methodName === 'constructor';
 
-                VariableDeclarator(node: any, ancestors: any[]) {
-                    // Check if the initializer is a function (arrow or regular)
-                    const name = node.id?.name;
-                    const init = node.init;
+                        if (methodName && !isPrivate && !isConstructor) {
+                            functionNames.add(methodName);
+                            console.log('method:', methodName);
+                        }
+                        break;
 
-                    if (name && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) {
-                        functionNames.add(name);
-                    }
-                },
+                    case 'VariableDeclaration':
+                        // Handle: const foo = () => {} or const bar = function() {}
+                        node.declarations?.forEach((decl: any) => {
+                            const name = decl.id?.name;
+                            const init = decl.init;
 
-                // Handle class properties with arrow functions (TS/modern JS)
-                PropertyDefinition(node: any) {
-                    const name = node.key?.name;
-                    const isPrivate = node.key?.type === 'PrivateIdentifier' || node.accessibility === 'private';
-                    const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
+                            if (name && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) {
+                                functionNames.add(name);
+                                console.log('variable function:', name);
+                            }
+                        });
+                        break;
 
-                    if (name && !isPrivate && isFunction) {
-                        functionNames.add(name);
+                    case 'PropertyDefinition':
+                        // Handle class properties: foo = () => {}
+                        const propName = node.key?.name;
+                        const isPropPrivate = node.key?.type === 'PrivateIdentifier';
+                        const isFunction = node.value?.type === 'ArrowFunctionExpression' || node.value?.type === 'FunctionExpression';
+
+                        if (propName && !isPropPrivate && isFunction) {
+                            functionNames.add(propName);
+                            console.log('class property function:', propName);
+                        }
+                        break;
+                }
+
+                // Recursively visit all child nodes
+                for (const key in node) {
+                    const child = node[key];
+
+                    if (Array.isArray(child)) {
+                        child.forEach(visit);
+                    } else if (child && typeof child === 'object' && child.type) {
+                        visit(child);
                     }
                 }
-            });
-
-            const functionNamesArray = Array.from(functionNames);
-
-            if (functionNamesArray.length > 0) {
-                console.info(`ℹ️  Extracted ${functionNamesArray.length} functions from TypeScript AST`);
             }
+
+            visit(ast);
+
+            console.log('\nExtracted functions:', Array.from(functionNames));
         } catch (error) {
-            console.warn('⚠️  Failed to parse with acorn-typescript, falling back to regex method', error);
+            console.log(2222, error);
         }
 
         let destinationOperations = false;

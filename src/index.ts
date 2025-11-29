@@ -136,9 +136,9 @@ async function buildConnectorConfig(): Promise<void> {
         if (response.success) {
             console.info(`ℹ️  Configuration is valid.`);
         } else {
-            console.log('Configuration validation errors:');
+            console.log('❌ Configuration is invalid:');
             console.table(response.error.issues);
-            throw new Error('Configuration is invalid.');
+            return;
         }
 
         const meta = extractOperationsFromSource(indexCode);

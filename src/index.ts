@@ -132,7 +132,6 @@ async function buildConnectorConfig(): Promise<void> {
         ]);
 
         const response = connectorConfigSchema.safeParse(configJSON);
-
         if (response.success) {
             console.info(`ℹ️  Configuration is valid.`);
         } else {
@@ -144,8 +143,10 @@ async function buildConnectorConfig(): Promise<void> {
         const meta = extractOperationsFromSource(indexCode);
         const usageId = determineUsageId(meta);
 
-        if (meta.operations.length > 0) console.info(`ℹ️  Implements ${meta.operations.length} operations.`);
-        else console.warn('⚠️  Implements no operations.');
+        if (meta.operations.length > 0) {
+            console.info(`ℹ️  Implements ${meta.operations.length} operations:`);
+            console.table(meta.operations);
+        } else console.warn('⚠️  Implements no operations.');
 
         if (usageId === 'unknown') console.warn('⚠️  No usage identified.');
         else console.info(`ℹ️  Supports '${usageId}' usage.`);

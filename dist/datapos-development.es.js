@@ -7578,7 +7578,7 @@ async function sh() {
       return;
     }
     const a = Jc(i), o = Gc(a);
-    a.operations.length > 0 ? console.info(`ℹ️  Implements ${a.operations.length} operations.`) : console.warn("⚠️  Implements no operations."), o === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${o}' usage.`), e.id = t.name ?? e.id, e.version = t.version ?? e.version, e.operations = a.operations, e.usageId = o, await V.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
+    a.operations.length > 0 ? (console.info(`ℹ️  Implements ${a.operations.length} operations:`), console.table(a.operations)) : console.warn("⚠️  Implements no operations."), o === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${o}' usage.`), e.id = t.name ?? e.id, e.version = t.version ?? e.version, e.operations = a.operations, e.usageId = o, await V.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
   } catch (t) {
     console.error("❌ Error building connector configuration.", t);
   }

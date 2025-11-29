@@ -34,8 +34,8 @@ type StatusColorId = 'amber' | 'green' | 'red' | 'other';
 
 interface ComponentConfig {
     id: string;
-    label: Partial<LocalisedString>;
-    description: Partial<LocalisedString>;
+    label: Record<string, string>;
+    description: Record<string, string>;
     firstCreatedAt?: number;
     icon?: string;
     iconDark?: string;

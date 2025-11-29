@@ -26,7 +26,7 @@ import type {
     PresenterOperation
 } from '@datapos/datapos-shared';
 
-import { connectorConfigSchema } from './connector-schema.zod';
+import { connectorConfigSchema } from './schema';
 console.log(1111, connectorConfigSchema);
 
 // Types/Interfaces - Directory entry.
@@ -67,7 +67,8 @@ async function buildConfig(): Promise<void> {
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
 
-        // NOTE: moduleConfigSchema.parse(configJSON);
+        const xxxx = connectorConfigSchema.parse(configJSON);
+        console.log(2222, xxxx);
 
         if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
         if (packageJSON.version != null) configJSON.version = packageJSON.version;

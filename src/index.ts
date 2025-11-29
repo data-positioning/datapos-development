@@ -12,7 +12,7 @@ import { promisify } from 'node:util';
 import { type MethodDefinition, type Node, Parser } from 'acorn';
 
 // Dependencies - Framework.
-import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS, connectorConfigSchema } from '@datapos/datapos-shared';
+import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS, connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
 import type {
     ConnectorConfig,
     ConnectorOperation,
@@ -41,6 +41,10 @@ interface DirectoryObjectEntry extends DirectoryEntry {
 }
 
 /// Interfaces/Types
+interface BadgeConfig {
+    color: string;
+    label: string;
+}
 interface SeverityCounts {
     critical: number;
     high: number;
@@ -172,7 +176,14 @@ async function buildContextConfig(): Promise<void> {
             fs.readFile('src/index.ts', 'utf8')
         ]);
 
-        // TODO: Validate context configuration using schema.
+        const response = contextConfigSchema.safeParse(configJSON);
+        if (response.success) {
+            console.info(`ℹ️  Configuration is valid.`);
+        } else {
+            console.log('❌ Configuration is invalid:');
+            console.table(response.error.issues);
+            return;
+        }
 
         const operations = extractOperationsFromSource<ContextOperation>(indexCode);
         if (operations.length > 0) {
@@ -202,7 +213,14 @@ async function buildPresenterConfig(): Promise<void> {
             fs.readFile('src/index.ts', 'utf8')
         ]);
 
-        // TODO: Validate presenter configuration using schema.
+        const response = presenterConfigSchema.safeParse(configJSON);
+        if (response.success) {
+            console.info(`ℹ️  Configuration is valid.`);
+        } else {
+            console.log('❌ Configuration is invalid:');
+            console.table(response.error.issues);
+            return;
+        }
 
         const operations = extractOperationsFromSource<PresenterOperation>(indexCode);
         if (operations.length > 0) {
@@ -296,35 +314,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         }
 
         // Generate shield badges for each severity
-        // If needed a possible info color could be #0288D1. See sample badges in ~/tests/sampleBadges.md.
-        interface BadgeConfig {
-            color: string;
-            label: string;
-        }
-        const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
-            critical: { color: 'D32F2F', label: 'critical' },
-            high: { color: 'EF6C00', label: 'high' },
-            moderate: { color: 'FBC02D', label: 'moderate' },
-            low: { color: '6D8C31', label: 'low' },
-            unknown: { color: '616161', label: 'unknown' }
-        };
-
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as PresenterConfig;
-        const badges: string[] = [];
-        const totalVulnerabilities = Object.values(severityCounts).reduce<number>((sum, count: number) => sum + count, 0);
-        if (totalVulnerabilities === 0) {
-            console.info('✅ No vulnerabilities found.');
-            const badgeUrl = 'https://img.shields.io/badge/OWASP-passed-4CAF50';
-            badges.push(`[![OWASP](${badgeUrl})](https://data-positioning.github.io/${configJSON.id}/dependency-check-reports/dependency-check-report.html)`);
-        } else {
-            for (const [severity, count] of Object.entries(severityCounts) as [string, number][]) {
-                const config = severityBadgeConfig[severity as keyof SeverityCounts];
-                console.warn(`⚠️  ${count} ${config.label} vulnerability(ies) found.`);
-                if (count === 0) continue;
-                const badgeUrl = `https://img.shields.io/badge/OWASP-${count}%20${config.label}-${config.color}`;
-                badges.push(`[![OWASP](${badgeUrl})](https://data-positioning.github.io/${configJSON.id}/dependency-check-reports/dependency-check-report.html)`);
-            }
-        }
+        const badges = await buildOWASPBadges(severityCounts);
 
         // Insert badges into README
         const readmeContent = await fs.readFile('./README.md', 'utf8');
@@ -453,6 +443,36 @@ async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
     } catch (error) {
         console.error('❌ Error uploading module to R2.', error);
     }
+}
+
+// Helpers - Build OWASP badges.
+async function buildOWASPBadges(severityCounts: SeverityCounts): Promise<string[]> {
+    // If needed a possible info color could be #0288D1. See sample badges in ~/tests/sampleBadges.md.
+    const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
+        critical: { color: 'D32F2F', label: 'critical' },
+        high: { color: 'EF6C00', label: 'high' },
+        moderate: { color: 'FBC02D', label: 'moderate' },
+        low: { color: '6D8C31', label: 'low' },
+        unknown: { color: '616161', label: 'unknown' }
+    };
+
+    const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as PresenterConfig;
+    const badges: string[] = [];
+    const totalVulnerabilities = Object.values(severityCounts).reduce<number>((sum, count: number) => sum + count, 0);
+    if (totalVulnerabilities === 0) {
+        console.info('✅ No vulnerabilities found.');
+        const badgeUrl = 'https://img.shields.io/badge/OWASP-passed-4CAF50';
+        badges.push(`[![OWASP](${badgeUrl})](https://data-positioning.github.io/${configJSON.id}/dependency-check-reports/dependency-check-report.html)`);
+    } else {
+        for (const [severity, count] of Object.entries(severityCounts) as [string, number][]) {
+            const config = severityBadgeConfig[severity as keyof SeverityCounts];
+            console.warn(`⚠️  ${count} ${config.label} vulnerability(ies) found.`);
+            if (count === 0) continue;
+            const badgeUrl = `https://img.shields.io/badge/OWASP-${count}%20${config.label}-${config.color}`;
+            badges.push(`[![OWASP](${badgeUrl})](https://data-positioning.github.io/${configJSON.id}/dependency-check-reports/dependency-check-report.html)`);
+        }
+    }
+    return badges;
 }
 
 // Helpers - Extract operations from source.

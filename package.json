@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.191",
+    "version": "0.3.192",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -26,7 +26,7 @@
         "dist"
     ],
     "dependencies": {
-        "@datapos/datapos-shared": "^0.3.254",
+        "@datapos/datapos-shared": "^0.3.255",
         "acorn": "^8.15.0",
         "acorn-typescript": "^1.4.13",
         "acorn-walk": "^8.3.4",
@@ -51,7 +51,6 @@
         "owasp-dependency-check": "^1.0.0",
         "prettier": "^3.7.2",
         "rollup-plugin-visualizer": "^6.0.5",
-        "ts-to-zod": "^5.1.0",
         "type-fest": "^5.2.0",
         "typescript": "^5.9.3",
         "vite": "^7.2.4",

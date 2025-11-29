@@ -132,7 +132,15 @@ async function buildConnectorConfig(): Promise<void> {
         ]);
 
         const response = connectorConfigSchema.safeParse(configJSON);
-        console.log(2222, response);
+
+        if (response.success) {
+            // Valid data
+            console.log('Valid config:', response.data);
+        } else {
+            // Validation failed
+            console.log('Validation errors:');
+            console.table(response.error.issues);
+        }
 
         const meta = extractOperationsFromSource(indexCode);
         const usageId = determineUsageId(meta);

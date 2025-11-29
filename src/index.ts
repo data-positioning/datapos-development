@@ -26,7 +26,8 @@ import type {
     PresenterOperation
 } from '@datapos/datapos-shared';
 
-// NOTE: import { moduleConfigSchema, ModuleConfigZ } from '@datapos/datapos-shared';
+import { connectorConfigSchema } from './connector-schema.zod';
+console.log(1111, connectorConfigSchema);
 
 // Types/Interfaces - Directory entry.
 interface DirectoryEntry {

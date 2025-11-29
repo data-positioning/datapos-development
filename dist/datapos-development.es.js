@@ -7485,8 +7485,8 @@ const Jc = ["critical", "high", "moderate", "low", "unknown"], ct = gs(vs);
 async function rh() {
   try {
     console.info("🚀 Building configuration...");
-    const e = JSON.parse(await F.readFile("package.json", "utf8")), t = JSON.parse(await F.readFile("config.json", "utf8")), i = fs.parse(t);
-    console.log(2222, i), e.name != null && (t.id = e.name.replace("@datapos/", "").replace("@data-positioning/", "")), e.version != null && (t.version = e.version), await F.writeFile("config.json", JSON.stringify(t, void 0, 4), "utf8"), console.info("✅ Configuration built.");
+    const e = JSON.parse(await F.readFile("package.json", "utf8")), t = JSON.parse(await F.readFile("config.json", "utf8"));
+    e.name != null && (t.id = e.name.replace("@datapos/", "").replace("@data-positioning/", "")), e.version != null && (t.version = e.version), await F.writeFile("config.json", JSON.stringify(t, void 0, 4), "utf8"), console.info("✅ Configuration built.");
   } catch (e) {
     console.error("❌ Error building configuration.", e);
   }
@@ -7529,11 +7529,13 @@ async function nh() {
   try {
     console.info("🚀 Building connector configuration...");
     const [e, t, i] = await Promise.all([
-      F.readFile("package.json", "utf8").then((u) => JSON.parse(u)),
-      F.readFile("config.json", "utf8").then((u) => JSON.parse(u)),
+      F.readFile("package.json", "utf8").then((h) => JSON.parse(h)),
+      F.readFile("config.json", "utf8").then((h) => JSON.parse(h)),
       F.readFile("src/index.ts", "utf8")
-    ]), r = Xc(i), n = Qc(r);
-    r.operations.length > 0 ? console.info(`ℹ️  Implements ${r.operations.length} operations.`) : console.warn("⚠️  Implements no operations."), n === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${n}' usage.`), t.id = e.name ?? t.id, t.version = e.version ?? t.version, t.operations = r.operations, t.usageId = n, await F.writeFile("config.json", JSON.stringify(t, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
+    ]), r = fs.parse(t);
+    console.log(2222, r);
+    const n = Xc(i), u = Qc(n);
+    n.operations.length > 0 ? console.info(`ℹ️  Implements ${n.operations.length} operations.`) : console.warn("⚠️  Implements no operations."), u === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${u}' usage.`), t.id = e.name ?? t.id, t.version = e.version ?? t.version, t.operations = n.operations, t.usageId = u, await F.writeFile("config.json", JSON.stringify(t, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
   } catch (e) {
     console.error("❌ Error building connector configuration.", e);
   }

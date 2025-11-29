@@ -67,9 +67,6 @@ async function buildConfig(): Promise<void> {
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
 
-        const xxxx = connectorConfigSchema.parse(configJSON);
-        console.log(2222, xxxx);
-
         if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
         if (packageJSON.version != null) configJSON.version = packageJSON.version;
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
@@ -136,6 +133,9 @@ async function buildConnectorConfig(): Promise<void> {
             fs.readFile('config.json', 'utf8').then((s) => JSON.parse(s) as ConnectorConfig),
             fs.readFile('src/index.ts', 'utf8')
         ]);
+
+        const xxxx = connectorConfigSchema.parse(configJSON);
+        console.log(2222, xxxx);
 
         const meta = extractOperationsFromSource(indexCode);
         const usageId = determineUsageId(meta);

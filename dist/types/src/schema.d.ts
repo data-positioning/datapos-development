@@ -16,11 +16,11 @@ export declare const connectorConfigSchema: z.ZodObject<{
     icon: z.ZodOptional<z.ZodString>;
     iconDark: z.ZodOptional<z.ZodString>;
     lastUpdatedAt: z.ZodOptional<z.ZodNumber>;
-    status: z.ZodOptional<z.ZodObject<{
+    status: z.ZodOptional<z.ZodNullable<z.ZodObject<{
         id: z.ZodString;
         color: z.ZodUnion<readonly [z.ZodLiteral<"amber">, z.ZodLiteral<"green">, z.ZodLiteral<"red">, z.ZodLiteral<"other">]>;
         label: z.ZodString;
-    }, z.core.$strip>>;
+    }, z.core.$strip>>>;
     statusId: z.ZodUnion<readonly [z.ZodLiteral<"alpha">, z.ZodLiteral<"beta">, z.ZodLiteral<"generalAvailability">, z.ZodLiteral<"notApplicable">, z.ZodLiteral<"preAlpha">, z.ZodLiteral<"proposed">, z.ZodLiteral<"releaseCandidate">, z.ZodLiteral<"unavailable">, z.ZodLiteral<"underReview">]>;
     version: z.ZodString;
     category: z.ZodOptional<z.ZodObject<{
@@ -40,7 +40,7 @@ export declare const connectorConfigSchema: z.ZodObject<{
     operations: z.ZodArray<z.ZodUnion<readonly [z.ZodLiteral<"abortOperation">, z.ZodLiteral<"authenticateConnection">, z.ZodLiteral<"createObject">, z.ZodLiteral<"describeConnection">, z.ZodLiteral<"dropObject">, z.ZodLiteral<"findObject">, z.ZodLiteral<"getRecord">, z.ZodLiteral<"listNodes">, z.ZodLiteral<"previewObject">, z.ZodLiteral<"removeRecords">, z.ZodLiteral<"retrieveRecords">, z.ZodLiteral<"upsertRecords">]>>;
     typeId: z.ZodLiteral<"connector">;
     usageId: z.ZodUnion<readonly [z.ZodLiteral<"bidirectional">, z.ZodLiteral<"destination">, z.ZodLiteral<"source">, z.ZodLiteral<"unknown">]>;
-    vendorAccountURL: z.ZodOptional<z.ZodString>;
-    vendorDocumentationURL: z.ZodOptional<z.ZodString>;
-    vendorHomeURL: z.ZodOptional<z.ZodString>;
+    vendorAccountURL: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    vendorDocumentationURL: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    vendorHomeURL: z.ZodOptional<z.ZodNullable<z.ZodString>>;
 }, z.core.$strip>;

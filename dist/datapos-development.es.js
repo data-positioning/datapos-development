@@ -7440,7 +7440,41 @@ function Rc(e, t = {}) {
 function Dc(e) {
   return gu(e);
 }
-const Mc = Ce([T("amber"), T("green"), T("red"), T("other")]), zc = Ce([T("alpha"), T("beta"), T("generalAvailability"), T("notApplicable"), T("preAlpha"), T("proposed"), T("releaseCandidate"), T("unavailable"), T("underReview")]), Vc = Ce([T("app"), T("connector"), T("connectorConnection"), T("context"), T("contextModelGroup"), T("contextModel"), T("contextModelDimensionGroup"), T("contextModelDimension"), T("contextModelDimensionHierarchy"), T("contextModelEntityGroup"), T("contextModelEntity"), T("contextModelEntityDataItem"), T("contextModelEntityEvent"), T("contextModelEntityPrimaryMeasure"), T("contextModelSecondaryMeasureGroup"), T("contextModelSecondaryMeasure"), T("dataView"), T("dimension"), T("engine"), T("eventQuery"), T("presenter"), T("presenterPresentation"), T("tool")]), Fc = Ce([T("en-au"), T("en-gb"), T("en-us"), T("es-es")]), jc = lt(Fc, ie()), $c = Zt({
+const Mc = Ce([T("amber"), T("green"), T("red"), T("other")]), zc = Ce([
+  T("alpha"),
+  T("beta"),
+  T("generalAvailability"),
+  T("notApplicable"),
+  T("preAlpha"),
+  T("proposed"),
+  T("releaseCandidate"),
+  T("unavailable"),
+  T("underReview")
+]), Vc = Ce([
+  T("app"),
+  T("connector"),
+  T("connectorConnection"),
+  T("context"),
+  T("contextModelGroup"),
+  T("contextModel"),
+  T("contextModelDimensionGroup"),
+  T("contextModelDimension"),
+  T("contextModelDimensionHierarchy"),
+  T("contextModelEntityGroup"),
+  T("contextModelEntity"),
+  T("contextModelEntityDataItem"),
+  T("contextModelEntityEvent"),
+  T("contextModelEntityPrimaryMeasure"),
+  T("contextModelSecondaryMeasureGroup"),
+  T("contextModelSecondaryMeasure"),
+  T("dataView"),
+  T("dimension"),
+  T("engine"),
+  T("eventQuery"),
+  T("presenter"),
+  T("presenterPresentation"),
+  T("tool")
+]), Fc = Ce([T("en-au"), T("en-gb"), T("en-us"), T("es-es")]), jc = lt(Fc, ie()), $c = Zt({
   id: ie(),
   color: Mc,
   label: ie()
@@ -7452,7 +7486,7 @@ const Mc = Ce([T("amber"), T("green"), T("red"), T("other")]), zc = Ce([T("alpha
   icon: ie().optional(),
   iconDark: ie().optional(),
   lastUpdatedAt: Rt().optional(),
-  status: $c.optional(),
+  status: $c.nullable().optional(),
   statusId: zc,
   typeId: Vc
 }), Zc = Ce([T("app"), T("engine"), T("connector"), T("context"), T("presenter"), T("tool")]), Uc = Zt({
@@ -7466,7 +7500,20 @@ const Mc = Ce([T("amber"), T("green"), T("red"), T("other")]), zc = Ce([T("alpha
   label: jc.optional(),
   maxConnectionCount: Rt().optional(),
   params: ki(lt(ie(), ie())).optional()
-}), Hc = Ce([T("application"), T("curatedDataset"), T("database"), T("fileStore")]), Wc = Ce([T("abortOperation"), T("authenticateConnection"), T("createObject"), T("describeConnection"), T("dropObject"), T("findObject"), T("getRecord"), T("listNodes"), T("previewObject"), T("removeRecords"), T("retrieveRecords"), T("upsertRecords")]), Kc = Ce([T("bidirectional"), T("destination"), T("source"), T("unknown")]), Gc = Bc.extend({
+}), Hc = Ce([T("application"), T("curatedDataset"), T("database"), T("fileStore")]), Wc = Ce([
+  T("abortOperation"),
+  T("authenticateConnection"),
+  T("createObject"),
+  T("describeConnection"),
+  T("dropObject"),
+  T("findObject"),
+  T("getRecord"),
+  T("listNodes"),
+  T("previewObject"),
+  T("removeRecords"),
+  T("retrieveRecords"),
+  T("upsertRecords")
+]), Kc = Ce([T("bidirectional"), T("destination"), T("source"), T("unknown")]), Gc = Bc.extend({
   typeId: Zc,
   version: ie()
 }), fs = Gc.extend({
@@ -7476,9 +7523,9 @@ const Mc = Ce([T("amber"), T("green"), T("red"), T("other")]), zc = Ce([T("alpha
   operations: ki(Wc),
   typeId: T("connector"),
   usageId: Kc,
-  vendorAccountURL: ie().optional(),
-  vendorDocumentationURL: ie().optional(),
-  vendorHomeURL: ie().optional()
+  vendorAccountURL: ie().nullable().optional(),
+  vendorDocumentationURL: ie().nullable().optional(),
+  vendorHomeURL: ie().nullable().optional()
 });
 console.log(1111, fs);
 const Jc = ["critical", "high", "moderate", "low", "unknown"], ct = gs(vs);

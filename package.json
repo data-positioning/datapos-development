@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.181",
+    "version": "0.3.182",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -26,10 +26,11 @@
         "dist"
     ],
     "dependencies": {
-        "@datapos/datapos-shared": "^0.3.252",
+        "@datapos/datapos-shared": "^0.3.254",
         "acorn": "^8.15.0",
         "acorn-typescript": "^1.4.13",
-        "acorn-walk": "^8.3.4"
+        "acorn-walk": "^8.3.4",
+        "zod": "^4.1.13"
     },
     "devDependencies": {
         "@types/eslint-plugin-security": "^3.0.0",
@@ -55,8 +56,7 @@
         "typescript": "^5.9.3",
         "vite": "^7.2.4",
         "vite-plugin-dts": "^4.5.4",
-        "vitest": "^4.0.14",
-        "zod": "^4.1.13"
+        "vitest": "^4.0.14"
     },
     "scripts": {
         "audit": "npm run _audit:vulnerabilities && npm audit",

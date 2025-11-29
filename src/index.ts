@@ -14,7 +14,7 @@ import acornTypeScript from 'acorn-typescript';
 import { type MethodDefinition, type Node, Parser } from 'acorn';
 
 // Dependencies - Framework.
-import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
+import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS, connectorConfigSchema } from '@datapos/datapos-shared';
 import type {
     ConnectorConfig,
     ConnectorOperation,
@@ -25,9 +25,6 @@ import type {
     PresenterConfig,
     PresenterOperation
 } from '@datapos/datapos-shared';
-
-import { connectorConfigSchema } from './schema';
-console.log(1111, connectorConfigSchema);
 
 // Types/Interfaces - Directory entry.
 interface DirectoryEntry {
@@ -134,8 +131,8 @@ async function buildConnectorConfig(): Promise<void> {
             fs.readFile('src/index.ts', 'utf8')
         ]);
 
-        const xxxx = connectorConfigSchema.parse(configJSON);
-        console.log(2222, xxxx);
+        const response = connectorConfigSchema.safeParse(configJSON);
+        console.log(2222, response);
 
         const meta = extractOperationsFromSource(indexCode);
         const usageId = determineUsageId(meta);

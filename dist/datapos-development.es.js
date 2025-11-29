@@ -7578,7 +7578,7 @@ async function sh() {
       return;
     }
     const a = Si(i), u = Gc(a);
-    a.length > 0 ? (console.info(`ℹ️  Implements ${a.length} operations:`), console.table(a)) : console.warn("⚠️  Implements no operations."), u === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${u}' usage.`), e.id = t.name ?? e.id, e.version = t.version ?? e.version, e.operations = a, e.usageId = u, await V.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
+    a.length > 0 ? (console.info(`ℹ️  Implements ${a.length} operations:`), console.table(a)) : console.warn("⚠️  Implements no operations."), u === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${u}' usage.`), t.name != null && (e.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (e.version = t.version), e.operations = a, e.usageId = u, await V.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
   } catch (t) {
     console.error("❌ Error building connector configuration.", t);
   }
@@ -7591,7 +7591,7 @@ async function rh() {
       V.readFile("config.json", "utf8").then((a) => JSON.parse(a)),
       V.readFile("src/index.ts", "utf8")
     ]), s = Si(i);
-    s.length > 0 ? (console.info(`ℹ️  Implements ${s.length} operations:`), console.table(s)) : console.warn("⚠️  Implements no operations."), t.name != null && (e.id = t.name), e.operations = s, t.version != null && (e.version = t.version), await V.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Context configuration built.");
+    s.length > 0 ? (console.info(`ℹ️  Implements ${s.length} operations:`), console.table(s)) : console.warn("⚠️  Implements no operations."), t.name != null && (e.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (e.version = t.version), e.operations = s, await V.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Context configuration built.");
   } catch (t) {
     console.error("❌ Error building context configuration.", t);
   }
@@ -7604,7 +7604,7 @@ async function ah() {
       V.readFile("config.json", "utf8").then((a) => JSON.parse(a)),
       V.readFile("src/index.ts", "utf8")
     ]), s = Si(i);
-    s.length > 0 ? (console.info(`ℹ️  Implements ${s.length} operations:`), console.table(s)) : console.warn("⚠️  Implements no operations."), t.name != null && (e.id = t.name), e.operations = s, t.version != null && (e.version = t.version), await V.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Presenter configuration built.");
+    s.length > 0 ? (console.info(`ℹ️  Implements ${s.length} operations:`), console.table(s)) : console.warn("⚠️  Implements no operations."), t.name != null && (e.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (e.version = t.version), e.operations = s, await V.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Presenter configuration built.");
   } catch (t) {
     console.error("❌ Error building context configuration.", t);
   }

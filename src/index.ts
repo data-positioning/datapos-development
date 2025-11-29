@@ -149,8 +149,8 @@ async function buildConnectorConfig(): Promise<void> {
         if (usageId === 'unknown') console.warn('⚠️  No usage identified.');
         else console.info(`ℹ️  Supports '${usageId}' usage.`);
 
-        configJSON.id = packageJSON.name ?? configJSON.id;
-        configJSON.version = packageJSON.version ?? configJSON.version;
+        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
+        if (packageJSON.version != null) configJSON.version = packageJSON.version;
         configJSON.operations = operations;
         configJSON.usageId = usageId;
 
@@ -180,9 +180,9 @@ async function buildContextConfig(): Promise<void> {
             console.table(operations);
         } else console.warn('⚠️  Implements no operations.');
 
-        if (packageJSON.name != null) configJSON.id = packageJSON.name;
-        configJSON.operations = operations;
+        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
         if (packageJSON.version != null) configJSON.version = packageJSON.version;
+        configJSON.operations = operations;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
         console.info('✅ Context configuration built.');
@@ -204,15 +204,15 @@ async function buildPresenterConfig(): Promise<void> {
 
         // TODO: Validate presenter configuration using schema.
 
-        const operations = extractOperationsFromSource<ContextOperation>(indexCode);
+        const operations = extractOperationsFromSource<PresenterOperation>(indexCode);
         if (operations.length > 0) {
             console.info(`ℹ️  Implements ${operations.length} operations:`);
             console.table(operations);
         } else console.warn('⚠️  Implements no operations.');
 
-        if (packageJSON.name != null) configJSON.id = packageJSON.name;
-        configJSON.operations = operations;
+        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
         if (packageJSON.version != null) configJSON.version = packageJSON.version;
+        configJSON.operations = operations;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
         console.info('✅ Presenter configuration built.');

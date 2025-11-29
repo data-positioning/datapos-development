@@ -1,16 +1,14 @@
 /**
- * Development utilities.
+ * Development operations.
  */
 
 // Dependencies - Vendor.
+import acornTypeScript from 'acorn-typescript';
 import { exec } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
-
-// Dependencies - Vendor Acorn.
-import acornTypeScript from 'acorn-typescript';
 import { type MethodDefinition, type Node, Parser } from 'acorn';
 
 // Dependencies - Framework.
@@ -26,7 +24,7 @@ import type {
     PresenterOperation
 } from '@datapos/datapos-shared';
 
-// Types/Interfaces - Directory entry.
+/// Interfaces/Types - Directory entry.
 interface DirectoryEntry {
     name: string;
     typeId: 'folder' | 'object';
@@ -42,7 +40,7 @@ interface DirectoryObjectEntry extends DirectoryEntry {
     typeId: 'object';
 }
 
-// Types/Interfaces
+/// Interfaces/Types
 interface SeverityCounts {
     critical: number;
     high: number;
@@ -57,7 +55,7 @@ const ALLOWED_SEVERITY_KEYS = ['critical', 'high', 'moderate', 'low', 'unknown']
 // Initialisation
 const asyncExec = promisify(exec);
 
-// Utilities - Build configuration.
+// Operations - Build configuration.
 async function buildConfig(): Promise<void> {
     try {
         console.info('🚀 Building configuration...');
@@ -73,7 +71,7 @@ async function buildConfig(): Promise<void> {
     }
 }
 
-// Utilities - Build public directory index.
+// Operations - Build public directory index.
 async function buildPublicDirectoryIndex(id: string): Promise<void> {
     try {
         console.info(`🚀 Building public directory index for identifier '${id}'...`);
@@ -120,7 +118,7 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
     }
 }
 
-// Utilities - Build connector configuration.
+// Operations - Build connector configuration.
 async function buildConnectorConfig(): Promise<void> {
     try {
         console.info('🚀 Building connector configuration...');
@@ -140,12 +138,12 @@ async function buildConnectorConfig(): Promise<void> {
             return;
         }
 
-        const meta = extractOperationsFromSource(indexCode);
-        const usageId = determineUsageId(meta);
+        const operations = extractOperationsFromSource<ConnectorOperation>(indexCode);
+        const usageId = determineConnectorUsageId(operations);
 
-        if (meta.operations.length > 0) {
-            console.info(`ℹ️  Implements ${meta.operations.length} operations:`);
-            console.table(meta.operations);
+        if (operations.length > 0) {
+            console.info(`ℹ️  Implements ${operations.length} operations:`);
+            console.table(operations);
         } else console.warn('⚠️  Implements no operations.');
 
         if (usageId === 'unknown') console.warn('⚠️  No usage identified.');
@@ -153,7 +151,7 @@ async function buildConnectorConfig(): Promise<void> {
 
         configJSON.id = packageJSON.name ?? configJSON.id;
         configJSON.version = packageJSON.version ?? configJSON.version;
-        configJSON.operations = meta.operations;
+        configJSON.operations = operations;
         configJSON.usageId = usageId;
 
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
@@ -163,7 +161,7 @@ async function buildConnectorConfig(): Promise<void> {
     }
 }
 
-// Utilities - Build context configuration.
+// Operations - Build context configuration.
 async function buildContextConfig(): Promise<void> {
     try {
         console.info('🚀 Building context configuration...');
@@ -174,10 +172,13 @@ async function buildContextConfig(): Promise<void> {
             fs.readFile('src/index.ts', 'utf8')
         ]);
 
-        const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
-        const operations = [...indexCode.matchAll(regex)]
-            .filter((match) => match[1] == null && match[2] !== 'constructor') // match[1] is 'private ' if present.
-            .map((match) => match[2]) as ContextOperation[];
+        // TODO: Validate context configuration using schema.
+
+        const operations = extractOperationsFromSource<ContextOperation>(indexCode);
+        if (operations.length > 0) {
+            console.info(`ℹ️  Implements ${operations.length} operations:`);
+            console.table(operations);
+        } else console.warn('⚠️  Implements no operations.');
 
         if (packageJSON.name != null) configJSON.id = packageJSON.name;
         configJSON.operations = operations;
@@ -190,7 +191,7 @@ async function buildContextConfig(): Promise<void> {
     }
 }
 
-// Utilities - Build presenter configuration.
+// Operations - Build presenter configuration.
 async function buildPresenterConfig(): Promise<void> {
     try {
         console.info('🚀 Building presenter configuration...');
@@ -201,10 +202,13 @@ async function buildPresenterConfig(): Promise<void> {
             fs.readFile('src/index.ts', 'utf8')
         ]);
 
-        const regex = /^\s{4}(?:async\s+)?(private\s+)?(?:public\s+|protected\s+)?([A-Za-z_]\w*)\s*\(/gm;
-        const operations = [...indexCode.matchAll(regex)]
-            .filter((m) => m[1] == null && m[2] !== 'constructor') // m[1] is 'private ' if present.
-            .map((m) => m[2]) as PresenterOperation[];
+        // TODO: Validate presenter configuration using schema.
+
+        const operations = extractOperationsFromSource<ContextOperation>(indexCode);
+        if (operations.length > 0) {
+            console.info(`ℹ️  Implements ${operations.length} operations:`);
+            console.table(operations);
+        } else console.warn('⚠️  Implements no operations.');
 
         if (packageJSON.name != null) configJSON.id = packageJSON.name;
         configJSON.operations = operations;
@@ -217,7 +221,7 @@ async function buildPresenterConfig(): Promise<void> {
     }
 }
 
-// Utilities - Bump version.
+// Operations - Bump version.
 async function bumpVersion(path = './'): Promise<void> {
     try {
         console.info('🚀 Bumping version...');
@@ -241,12 +245,12 @@ async function bumpVersion(path = './'): Promise<void> {
     }
 }
 
-// Utilities - Echo not implemented.
+// Operations - Echo not implemented.
 function echoScriptNotImplemented(name: string): void {
     console.error(`❌ ${name} script not implemented.`);
 }
 
-// Utilities - Insert licenses into README file.
+// Operations - Insert licenses into README file.
 async function insertLicensesIntoReadme(): Promise<void> {
     const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
     const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
@@ -269,7 +273,7 @@ async function insertLicensesIntoReadme(): Promise<void> {
     }
 }
 
-// Utilities - Insert OWASP dependency check badge into README file.
+// Operations - Insert OWASP dependency check badge into README file.
 async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
     const START_MARKER = '<!-- OWASP_BADGE_START -->';
     const END_MARKER = '<!-- OWASP_BADGE_END -->';
@@ -341,7 +345,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
     }
 }
 
-// Utilities - Send deployment notice.
+// Operations - Send deployment notice.
 async function sendDeploymentNotice(): Promise<void> {
     try {
         console.info('🚀 Sending deployment notice...');
@@ -359,7 +363,7 @@ async function sendDeploymentNotice(): Promise<void> {
     }
 }
 
-// Utilities - Synchronise with GitHub.
+// Operations - Synchronise with GitHub.
 async function syncWithGitHub(): Promise<void> {
     try {
         console.info('🚀 Synchronising with GitHub....');
@@ -373,7 +377,7 @@ async function syncWithGitHub(): Promise<void> {
     }
 }
 
-// Utilities - Upload directory to Cloudflare R2.
+// Operations - Upload directory to Cloudflare R2.
 async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void> {
     try {
         console.info('🚀 Uploading directory to R2....');
@@ -404,7 +408,7 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
     }
 }
 
-// Utilities - Upload module configuration ro Cloudflare 'state' durable object..
+// Operations - Upload module configuration ro Cloudflare 'state' durable object..
 async function uploadModuleConfigToDO(): Promise<void> {
     try {
         console.info('🚀 Uploading module configuration....');
@@ -423,7 +427,7 @@ async function uploadModuleConfigToDO(): Promise<void> {
     }
 }
 
-// Utilities - Upload module to Cloudflare R2.
+// Operations - Upload module to Cloudflare R2.
 async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
     try {
         console.info('🚀 Uploading module to R2...');
@@ -452,7 +456,7 @@ async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
 }
 
 // Helpers - Extract operations from source.
-function extractOperationsFromSource(source: string): { operations: ConnectorOperation[]; sourceOps: boolean; destinationOps: boolean } {
+function extractOperationsFromSource<T>(source: string): T[] {
     // @ts-expect-error - acorn-typescript runtime mismatch is fine.
     const TSParser = Parser.extend(acornTypeScript());
     const ast = TSParser.parse(source, {
@@ -461,11 +465,9 @@ function extractOperationsFromSource(source: string): { operations: ConnectorOpe
         locations: true
     });
 
-    const operations: ConnectorOperation[] = [];
-    let sourceOps = false;
-    let destinationOps = false;
+    const operations: T[] = [];
 
-    traverseAst(ast, (node) => {
+    traverseAST(ast, (node) => {
         if (node.type !== 'MethodDefinition') return;
 
         const md = node as MethodDefinition & { accessibility?: string };
@@ -477,23 +479,28 @@ function extractOperationsFromSource(source: string): { operations: ConnectorOpe
         if (name === 'constructor') return;
         if (md.accessibility === 'private') return;
 
-        operations.push(name as ConnectorOperation);
-
-        if (CONNECTOR_SOURCE_OPERATIONS.includes(name)) sourceOps = true;
-        if (CONNECTOR_DESTINATION_OPERATIONS.includes(name)) destinationOps = true;
+        operations.push(name as T);
     });
 
-    return { operations, sourceOps, destinationOps };
+    return operations;
 }
 
-function determineUsageId(meta: { sourceOps: boolean; destinationOps: boolean }): ConnectorUsageId {
-    if (meta.sourceOps && meta.destinationOps) return 'bidirectional';
-    if (meta.sourceOps) return 'source';
-    if (meta.destinationOps) return 'destination';
+// Helpers - Determine connector usage identifier.
+function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorUsageId {
+    let sourceOps = false;
+    let destinationOps = false;
+    for (const operation of operations) {
+        if (CONNECTOR_SOURCE_OPERATIONS.includes(operation)) sourceOps = true;
+        if (CONNECTOR_DESTINATION_OPERATIONS.includes(operation)) destinationOps = true;
+    }
+    if (sourceOps && destinationOps) return 'bidirectional';
+    if (sourceOps) return 'source';
+    if (destinationOps) return 'destination';
     return 'unknown';
 }
 
-function traverseAst(node: Node, doIt: (node: Node) => void): void {
+// Helpers - Traverse AST (Abstract Syntax Tree).
+function traverseAST(node: Node, doIt: (node: Node) => void): void {
     doIt(node);
     for (const [key, value_] of Object.entries(node)) {
         if (['loc', 'range', 'start', 'end', 'comments'].includes(key)) continue;
@@ -501,15 +508,15 @@ function traverseAst(node: Node, doIt: (node: Node) => void): void {
         if (Array.isArray(value)) {
             for (const child_ of value) {
                 const child = child_ as Node | undefined;
-                if (child && typeof child.type === 'string') traverseAst(child, doIt);
+                if (child && typeof child.type === 'string') traverseAST(child, doIt);
             }
         } else if (value && typeof value === 'object' && typeof value.type === 'string') {
-            traverseAst(value, doIt);
+            traverseAST(value, doIt);
         }
     }
 }
 
-// Exposures
+// Exposures - Operations.
 export {
     buildConfig,
     buildConnectorConfig,

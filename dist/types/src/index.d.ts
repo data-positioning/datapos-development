@@ -1,5 +1,5 @@
 /**
- * Development utilities.
+ * Development operations.
  */
 declare function buildConfig(): Promise<void>;
 declare function buildPublicDirectoryIndex(id: string): Promise<void>;

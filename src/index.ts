@@ -134,12 +134,11 @@ async function buildConnectorConfig(): Promise<void> {
         const response = connectorConfigSchema.safeParse(configJSON);
 
         if (response.success) {
-            // Valid data
-            console.log('Valid config:', response.data);
+            console.info(`ℹ️  Configuration is valid.`);
         } else {
-            // Validation failed
-            console.log('Validation errors:');
+            console.log('Configuration validation errors:');
             console.table(response.error.issues);
+            throw new Error('Configuration is invalid.');
         }
 
         const meta = extractOperationsFromSource(indexCode);

@@ -7571,7 +7571,10 @@ async function sh() {
       V.readFile("config.json", "utf8").then((h) => JSON.parse(h)),
       V.readFile("src/index.ts", "utf8")
     ]), s = Wc.safeParse(e);
-    s.success ? console.log("Valid config:", s.data) : (console.log("Validation errors:"), console.table(s.error.issues));
+    if (s.success)
+      console.info("ℹ️  Configuration is valid.");
+    else
+      throw console.log("Configuration validation errors:"), console.table(s.error.issues), new Error("Configuration is invalid.");
     const a = Jc(i), o = Gc(a);
     a.operations.length > 0 ? console.info(`ℹ️  Implements ${a.operations.length} operations.`) : console.warn("⚠️  Implements no operations."), o === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${o}' usage.`), e.id = t.name ?? e.id, e.version = t.version ?? e.version, e.operations = a.operations, e.usageId = o, await V.writeFile("config.json", JSON.stringify(e, void 0, 4), "utf8"), console.info("✅ Connector configuration built.");
   } catch (t) {

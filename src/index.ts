@@ -17,10 +17,8 @@ import {
     ALLOWED_SEVERITY_KEYS,
     buildOWASPBadges,
     determineConnectorUsageId,
-    execCommand,
     extractOperationsFromSource,
     loadEnvironmentVariables,
-    loadJSONFile,
     logOperationHeader,
     logOperationSuccess,
     logStepHeader,
@@ -81,7 +79,9 @@ async function audit(): Promise<void> {
 async function build(): Promise<void> {
     try {
         logOperationHeader('Build Artifact');
+
         await spawnCommand('vite', ['build']);
+
         logOperationSuccess('Artifact built.');
     } catch (error) {
         console.error('❌ Error building artifact.', error);
@@ -93,58 +93,19 @@ async function build(): Promise<void> {
 async function buildConfig(): Promise<void> {
     try {
         console.info('🚀 Building configuration...');
+
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
+
         const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
 
         if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
         if (packageJSON.version != null) configJSON.version = packageJSON.version;
+
         await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
+
         console.info('✅ Configuration built.');
     } catch (error) {
         console.error('❌ Error building configuration.', error);
-    }
-}
-
-// Operations - Build public directory index.
-async function buildPublicDirectoryIndex(id: string): Promise<void> {
-    try {
-        console.info(`🚀 Building public directory index for identifier '${id}'...`);
-        const index: Record<string, DirectoryEntry[]> = {};
-
-        async function listDirectoryEntriesRecursively(directoryPath: string, names: string[]): Promise<void> {
-            console.info(`⚙️ Processing directory '${directoryPath}'...`);
-            const entries: DirectoryEntry[] = [];
-            const localDirectoryPath = directoryPath.slice(`public/${id}`.length);
-            index[localDirectoryPath === '' ? '/' : localDirectoryPath] = entries;
-            for (const name of names) {
-                const itemPath = `${directoryPath}/${name}`;
-                try {
-                    const stats = await fs.stat(itemPath);
-                    if (stats.isDirectory()) {
-                        const nextLevelChildren = await fs.readdir(itemPath);
-                        const folderEntry: DirectoryFolderEntry = { childCount: nextLevelChildren.length, name, typeId: 'folder' };
-                        entries.push(folderEntry);
-                        await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
-                    } else {
-                        const objectEntry: DirectoryObjectEntry = { id: nanoid(), lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' };
-                        entries.push(objectEntry);
-                    }
-                } catch (error) {
-                    throw new Error(`Unable to get information for '${name}' in 'buildPublicDirectoryIndex'. ${String(error)}`);
-                }
-            }
-            entries.sort((left, right) => {
-                const typeComparison = left.typeId.localeCompare(right.typeId);
-                return typeComparison === 0 ? left.name.localeCompare(right.name) : typeComparison;
-            });
-        }
-
-        const toplevelNames = await fs.readdir(`public/${id}`);
-        await listDirectoryEntriesRecursively(`public/${id}`, toplevelNames);
-        await fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), 'utf8');
-        console.info('✅ Public directory index built.');
-    } catch (error) {
-        console.error('❌ Error building public directory index.', error);
     }
 }
 
@@ -265,23 +226,46 @@ async function buildPresenterConfig(): Promise<void> {
     }
 }
 
-// Operations - Bump version.
-async function bumpVersion(packageJSON: PackageJson, path = './'): Promise<void> {
+// Operations - Build public directory index.
+async function buildPublicDirectoryIndex(id: string): Promise<void> {
     try {
-        if (packageJSON.version == null) {
-            packageJSON.version = '0.0.001';
-            await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
-            console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
-        } else {
-            const oldVersion = packageJSON.version;
-            const versionSegments = packageJSON.version.split('.');
-            packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-            await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
-            console.info(`ℹ️  Version bumped from ${oldVersion} to ${packageJSON.version}.`);
+        console.info(`🚀 Building public directory index for identifier '${id}'...`);
+        const index: Record<string, DirectoryEntry[]> = {};
+
+        async function listDirectoryEntriesRecursively(directoryPath: string, names: string[]): Promise<void> {
+            console.info(`⚙️ Processing directory '${directoryPath}'...`);
+            const entries: DirectoryEntry[] = [];
+            const localDirectoryPath = directoryPath.slice(`public/${id}`.length);
+            index[localDirectoryPath === '' ? '/' : localDirectoryPath] = entries;
+            for (const name of names) {
+                const itemPath = `${directoryPath}/${name}`;
+                try {
+                    const stats = await fs.stat(itemPath);
+                    if (stats.isDirectory()) {
+                        const nextLevelChildren = await fs.readdir(itemPath);
+                        const folderEntry: DirectoryFolderEntry = { childCount: nextLevelChildren.length, name, typeId: 'folder' };
+                        entries.push(folderEntry);
+                        await listDirectoryEntriesRecursively(itemPath, nextLevelChildren);
+                    } else {
+                        const objectEntry: DirectoryObjectEntry = { id: nanoid(), lastModifiedAt: stats.mtimeMs, name, size: stats.size, typeId: 'object' };
+                        entries.push(objectEntry);
+                    }
+                } catch (error) {
+                    throw new Error(`Unable to get information for '${name}' in 'buildPublicDirectoryIndex'. ${String(error)}`);
+                }
+            }
+            entries.sort((left, right) => {
+                const typeComparison = left.typeId.localeCompare(right.typeId);
+                return typeComparison === 0 ? left.name.localeCompare(right.name) : typeComparison;
+            });
         }
+
+        const toplevelNames = await fs.readdir(`public/${id}`);
+        await listDirectoryEntriesRecursively(`public/${id}`, toplevelNames);
+        await fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), 'utf8');
+        console.info('✅ Public directory index built.');
     } catch (error) {
-        console.error('❌ Error bumping package version.', error);
-        process.exit(1);
+        console.error('❌ Error building public directory index.', error);
     }
 }
 
@@ -375,27 +359,6 @@ async function sendDeploymentNotice(): Promise<void> {
     }
 }
 
-// Operations - Synchronise with GitHub.
-async function syncWithGitHub(): Promise<void> {
-    try {
-        logOperationHeader('Synchronising with GitHub');
-
-        const packageJSON = await loadJSONFile<PackageJson>('package.json');
-
-        logStepHeader('Bump version');
-        await bumpVersion(packageJSON);
-
-        await execCommand('git add .');
-        await execCommand(`git commit -m "v${packageJSON.version}"`);
-        await execCommand('git push origin main:main');
-
-        logOperationSuccess(`Version ${packageJSON.version} synchronised with GitHub.`);
-    } catch (error) {
-        console.error('❌ Error synchronising with GitHub.', error);
-        process.exit(1);
-    }
-}
-
 // Operations - Upload directory to Cloudflare R2.
 async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void> {
     try {
@@ -483,8 +446,8 @@ export {
     insertLicensesIntoReadme,
     insertOWASPDependencyCheckBadgeIntoReadme,
     sendDeploymentNotice,
-    syncWithGitHub,
     uploadDirectoryToR2,
     uploadModuleConfigToDO,
     uploadModuleToR2
 };
+export { syncWithGitHub } from './syncWithGitHub';

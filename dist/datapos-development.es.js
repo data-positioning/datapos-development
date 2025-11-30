@@ -7701,8 +7701,29 @@ function ci(e, t) {
     else a && typeof a == "object" && typeof a.type == "string" && ci(a, t);
   }
 }
-const kr = ds(fs);
 async function Dh() {
+  try {
+    _i("Synchronising with GitHub");
+    const e = await Eh("package.json");
+    at("Bump version"), await Ih(e), await ei("git add ."), await ei(`git commit -m "v${e.version}"`), await ei("git push origin main:main"), Pi(`Version ${e.version} synchronised with GitHub.`);
+  } catch (e) {
+    console.error("❌ Error synchronising with GitHub.", e), process.exit(1);
+  }
+}
+async function Ih(e, t = "./") {
+  try {
+    if (e.version == null)
+      e.version = "0.0.001", await F.writeFile(`${t}package.json`, JSON.stringify(e, void 0, 4), "utf8"), console.warn(`⚠️ Version initialised to ${e.version}.`);
+    else {
+      const i = e.version, s = e.version.split(".");
+      e.version = `${s[0]}.${s[1]}.${Number(s[2]) + 1}`, await F.writeFile(`${t}package.json`, JSON.stringify(e, void 0, 4), "utf8"), console.info(`ℹ️  Version bumped from ${i} to ${e.version}.`);
+    }
+  } catch (i) {
+    console.error("❌ Error bumping package version.", i), process.exit(1);
+  }
+}
+const kr = ds(fs);
+async function Vh() {
   try {
     _i("Audit Dependencies"), await Ch(), await ui("owasp-dependency-check", [
       "--project",
@@ -7716,54 +7737,20 @@ async function Dh() {
     console.error("❌ Error auditing dependencies.", e), process.exit(1);
   }
 }
-async function Vh() {
+async function zh() {
   try {
     _i("Build Artifact"), await ui("vite", ["build"]), Pi("Artifact built.");
   } catch (e) {
     console.error("❌ Error building artifact.", e), process.exit(1);
   }
 }
-async function zh() {
+async function Fh() {
   try {
     console.info("🚀 Building configuration...");
     const e = JSON.parse(await F.readFile("package.json", "utf8")), t = JSON.parse(await F.readFile("config.json", "utf8"));
     e.name != null && (t.id = e.name.replace("@datapos/", "").replace("@data-positioning/", "")), e.version != null && (t.version = e.version), await F.writeFile("config.json", JSON.stringify(t, void 0, 4), "utf8"), console.info("✅ Configuration built.");
   } catch (e) {
     console.error("❌ Error building configuration.", e);
-  }
-}
-async function Fh(e) {
-  try {
-    console.info(`🚀 Building public directory index for identifier '${e}'...`);
-    const t = {};
-    async function i(a, o) {
-      console.info(`⚙️ Processing directory '${a}'...`);
-      const h = [], d = a.slice(`public/${e}`.length);
-      t[d === "" ? "/" : d] = h;
-      for (const y of o) {
-        const u = `${a}/${y}`;
-        try {
-          const w = await F.stat(u);
-          if (w.isDirectory()) {
-            const P = await F.readdir(u), M = { childCount: P.length, name: y, typeId: "folder" };
-            h.push(M), await i(u, P);
-          } else {
-            const P = { id: Ar(), lastModifiedAt: w.mtimeMs, name: y, size: w.size, typeId: "object" };
-            h.push(P);
-          }
-        } catch (w) {
-          throw new Error(`Unable to get information for '${y}' in 'buildPublicDirectoryIndex'. ${String(w)}`);
-        }
-      }
-      h.sort((y, u) => {
-        const w = y.typeId.localeCompare(u.typeId);
-        return w === 0 ? y.name.localeCompare(u.name) : w;
-      });
-    }
-    const s = await F.readdir(`public/${e}`);
-    await i(`public/${e}`, s), await F.writeFile(`./public/${e}Index.json`, JSON.stringify(t), "utf8"), console.info("✅ Public directory index built.");
-  } catch (t) {
-    console.error("❌ Error building public directory index.", t);
   }
 }
 async function jh() {
@@ -7826,22 +7813,44 @@ async function $h() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function Ih(e, t = "./") {
+async function Uh(e) {
   try {
-    if (e.version == null)
-      e.version = "0.0.001", await F.writeFile(`${t}package.json`, JSON.stringify(e, void 0, 4), "utf8"), console.warn(`⚠️ Version initialised to ${e.version}.`);
-    else {
-      const i = e.version, s = e.version.split(".");
-      e.version = `${s[0]}.${s[1]}.${Number(s[2]) + 1}`, await F.writeFile(`${t}package.json`, JSON.stringify(e, void 0, 4), "utf8"), console.info(`ℹ️  Version bumped from ${i} to ${e.version}.`);
+    console.info(`🚀 Building public directory index for identifier '${e}'...`);
+    const t = {};
+    async function i(a, o) {
+      console.info(`⚙️ Processing directory '${a}'...`);
+      const h = [], d = a.slice(`public/${e}`.length);
+      t[d === "" ? "/" : d] = h;
+      for (const y of o) {
+        const u = `${a}/${y}`;
+        try {
+          const w = await F.stat(u);
+          if (w.isDirectory()) {
+            const P = await F.readdir(u), M = { childCount: P.length, name: y, typeId: "folder" };
+            h.push(M), await i(u, P);
+          } else {
+            const P = { id: Ar(), lastModifiedAt: w.mtimeMs, name: y, size: w.size, typeId: "object" };
+            h.push(P);
+          }
+        } catch (w) {
+          throw new Error(`Unable to get information for '${y}' in 'buildPublicDirectoryIndex'. ${String(w)}`);
+        }
+      }
+      h.sort((y, u) => {
+        const w = y.typeId.localeCompare(u.typeId);
+        return w === 0 ? y.name.localeCompare(u.name) : w;
+      });
     }
-  } catch (i) {
-    console.error("❌ Error bumping package version.", i), process.exit(1);
+    const s = await F.readdir(`public/${e}`);
+    await i(`public/${e}`, s), await F.writeFile(`./public/${e}Index.json`, JSON.stringify(t), "utf8"), console.info("✅ Public directory index built.");
+  } catch (t) {
+    console.error("❌ Error building public directory index.", t);
   }
 }
-function Uh(e) {
+function Zh(e) {
   console.error(`❌ ${e} script not implemented.`);
 }
-async function Zh() {
+async function qh() {
   const e = "<!-- DEPENDENCY_LICENSES_START -->", t = "<!-- DEPENDENCY_LICENSES_END -->";
   try {
     const s = (await F.readFile("./licenses.md", "utf8")).trim(), a = await F.readFile("./README.md", "utf8"), o = a.indexOf(e), h = a.indexOf(t);
@@ -7882,7 +7891,7 @@ async function Nh() {
     console.error("❌ Error inserting OWASP badges into 'README.md'.", i);
   }
 }
-async function qh() {
+async function Hh() {
   try {
     console.info("🚀 Sending deployment notice...");
     const e = JSON.parse(await F.readFile("config.json", "utf8")), t = {
@@ -7894,15 +7903,6 @@ async function qh() {
     console.info("✅ Deployment notice sent.");
   } catch (e) {
     console.error("❌ Error sending deployment notice.", e);
-  }
-}
-async function Hh() {
-  try {
-    _i("Synchronising with GitHub");
-    const e = await Eh("package.json");
-    at("Bump version"), await Ih(e), await ei("git add ."), await ei(`git commit -m "v${e.version}"`), await ei("git push origin main:main"), Pi(`Version ${e.version} synchronised with GitHub.`);
-  } catch (e) {
-    console.error("❌ Error synchronising with GitHub.", e), process.exit(1);
   }
 }
 async function Wh(e, t) {
@@ -7962,18 +7962,18 @@ async function Gh(e) {
   }
 }
 export {
-  Dh as audit,
-  Vh as build,
-  zh as buildConfig,
+  Vh as audit,
+  zh as build,
+  Fh as buildConfig,
   jh as buildConnectorConfig,
   Bh as buildContextConfig,
   $h as buildPresenterConfig,
-  Fh as buildPublicDirectoryIndex,
-  Uh as echoScriptNotImplemented,
-  Zh as insertLicensesIntoReadme,
+  Uh as buildPublicDirectoryIndex,
+  Zh as echoScriptNotImplemented,
+  qh as insertLicensesIntoReadme,
   Nh as insertOWASPDependencyCheckBadgeIntoReadme,
-  qh as sendDeploymentNotice,
-  Hh as syncWithGitHub,
+  Hh as sendDeploymentNotice,
+  Dh as syncWithGitHub,
   Wh as uploadDirectoryToR2,
   Kh as uploadModuleConfigToDO,
   Gh as uploadModuleToR2

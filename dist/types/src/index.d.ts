@@ -1,6 +1,8 @@
 /**
  * Development operations.
  */
+declare function audit(): Promise<void>;
+declare function build(): Promise<void>;
 declare function buildConfig(): Promise<void>;
 declare function buildPublicDirectoryIndex(id: string): Promise<void>;
 declare function buildConnectorConfig(): Promise<void>;
@@ -15,4 +17,4 @@ declare function syncWithGitHub(): Promise<void>;
 declare function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void>;
 declare function uploadModuleConfigToDO(): Promise<void>;
 declare function uploadModuleToR2(uploadDirectoryPath: string): Promise<void>;
-export { buildConfig, buildConnectorConfig, buildContextConfig, buildPresenterConfig, buildPublicDirectoryIndex, bumpVersion, echoScriptNotImplemented, insertLicensesIntoReadme, insertOWASPDependencyCheckBadgeIntoReadme, sendDeploymentNotice, syncWithGitHub, uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };
+export { audit, build, buildConfig, buildConnectorConfig, buildContextConfig, buildPresenterConfig, buildPublicDirectoryIndex, bumpVersion, echoScriptNotImplemented, insertLicensesIntoReadme, insertOWASPDependencyCheckBadgeIntoReadme, sendDeploymentNotice, syncWithGitHub, uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };

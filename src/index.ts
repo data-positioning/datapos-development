@@ -6,11 +6,12 @@
 
 // Dependencies - Vendor.
 import acornTypeScript from 'acorn-typescript';
-import { exec } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import { nanoid } from 'nanoid';
 import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
+import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv';
+import { exec, spawn } from 'node:child_process';
 import { type MethodDefinition, type Node, Parser } from 'acorn';
 
 // Dependencies - Framework.
@@ -60,6 +61,47 @@ const ALLOWED_SEVERITY_KEYS = ['critical', 'high', 'moderate', 'low', 'unknown']
 
 // Initialisation
 const asyncExec = promisify(exec);
+
+// Operations - Audit dependencies.
+async function audit(): Promise<void> {
+    try {
+        showOperationHeader('Audit Dependencies');
+
+        showStepHeader('Load environment variables');
+        await loadEnvironmentVariables();
+
+        await spawnCommand('owasp-dependency-check', [
+            '--project',
+            '@datapos/datapos-development',
+            '--enableRetired',
+            '--nodePackageSkipDevDependencies',
+            '--nvdApiKey',
+            process.env.NVD_API_KEY ?? ''
+        ]);
+
+        showStepHeader('Insert OWASP Badge');
+        await insertOWASPDependencyCheckBadgeIntoReadme();
+
+        await spawnCommand('npm', ['audit']);
+
+        showOperationSuccess('Dependency audit complete.');
+    } catch (error) {
+        console.error('❌ Error auditing dependencies.', error);
+        process.exit(1);
+    }
+}
+
+// Operations - Build artifact.
+async function build(): Promise<void> {
+    try {
+        showOperationHeader('Build Artifact');
+        await spawnCommand('vite', ['build']);
+        showOperationSuccess('Artifact built.');
+    } catch (error) {
+        console.error('❌ Error building artifact.', error);
+        process.exit(1);
+    }
+}
 
 // Operations - Build configuration.
 async function buildConfig(): Promise<void> {
@@ -358,12 +400,15 @@ async function sendDeploymentNotice(): Promise<void> {
 // Operations - Synchronise with GitHub.
 async function syncWithGitHub(): Promise<void> {
     try {
-        showBanner('Synchronising with GitHub....');
+        showOperationHeader('Synchronising with GitHub....');
+
+        await bumpVersion();
+
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        await runCommand('git add .');
-        await runCommand(`git commit -m "v${packageJSON.version}"`);
-        await runCommand('git push origin main:main');
-        console.info(`✅ Synchronised version ${packageJSON.version} with GitHub.`);
+        await execCommand('git add .');
+        await execCommand(`git commit -m "v${packageJSON.version}"`);
+        await execCommand('git push origin main:main');
+        showOperationSuccess(`Synchronised version ${packageJSON.version} with GitHub.`);
     } catch (error) {
         console.error('❌ Error synchronising with GitHub.', error);
         process.exit(1);
@@ -522,24 +567,53 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
     return 'unknown';
 }
 
-// Helpers - Run command
-async function runCommand(command: string): Promise<void> {
-    console.info(`▶️  ${command}`);
+// Helpers - Execute command
+async function execCommand(command: string): Promise<void> {
+    showStepHeader(`Exec command: ${command}`);
     const { stdout, stderr } = await asyncExec(command);
-
     if (stdout.trim()) console.log(stdout.trim());
     if (stderr.trim()) console.error(stderr.trim());
 }
 
-// Helpers - Show banner.
-function showBanner(message: string): void {
+// Helpers - Load environment variables.
+async function loadEnvironmentVariables(): Promise<void> {
+    const dotenv = (await import('dotenv')) as { config(options?: DotenvConfigOptions): DotenvConfigOutput };
+    dotenv.config();
+}
+
+// Helpers - Show operation header.
+function showOperationHeader(text: string): void {
     const cyan = '\u001B[36m';
     const reset = '\u001B[0m';
-    const line = '─'.repeat(message.length + 10);
+    const line = '─'.repeat(text.length + 10);
+    console.info(`\n${cyan}${line}`);
+    console.info(`🚀 ${text}`);
+    console.info(`${line}${reset}`);
+}
 
-    console.info(`\n${line}`);
-    console.info(`     ${message}`);
-    console.info(`${line}\n`);
+// Helpers - Show operation success.
+function showOperationSuccess(message: string): void {
+    console.info(`\n✅ ${message}\n`);
+}
+
+// Helpers - Show step header.
+function showStepHeader(text: string): void {
+    console.info(`\n▶️  ${text}`);
+}
+
+// Helpers - Spawn command.
+async function spawnCommand(command: string, arguments_: string[] = []): Promise<void> {
+    showStepHeader(`Spawn command: ${command} ${arguments_.join(' ')}`);
+    return new Promise((resolve, reject) => {
+        const child = spawn(command, arguments_, { stdio: 'inherit' });
+        child.on('close', (code) => {
+            if (code === 0) {
+                resolve();
+            } else {
+                reject(new Error(`${command} exited with code ${code}`));
+            }
+        });
+    });
 }
 
 // Helpers - Traverse AST (Abstract Syntax Tree).
@@ -561,6 +635,8 @@ function traverseAST(node: Node, doIt: (node: Node) => void): void {
 
 // Exposures - Operations.
 export {
+    audit,
+    build,
     buildConfig,
     buildConnectorConfig,
     buildContextConfig,

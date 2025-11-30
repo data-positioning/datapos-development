@@ -9,6 +9,6 @@ declare function logStepHeader(text: string): void;
 declare function readJSONFile<T>(path: string): Promise<T>;
 declare function readTextFile(path: string): Promise<string>;
 declare function spawnCommand(command: string, arguments_?: string[]): Promise<void>;
-declare function writeJSONFile(path: string, data: string): Promise<void>;
+declare function writeJSONFile(path: string, data: Record<string, unknown>): Promise<void>;
 declare function writeTextFile(path: string, data: string): Promise<void>;
 export { determineConnectorUsageId, execCommand, extractOperationsFromSource, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, spawnCommand, writeJSONFile, writeTextFile };

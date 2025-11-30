@@ -7770,10 +7770,10 @@ async function $h() {
 async function Mh(e, t = "./") {
   try {
     if (e.version == null)
-      e.version = "0.0.001", console.warn(`⚠️ Version initialised to ${e.version}.`), await ds(`${t}package.json`, JSON.stringify(e, void 0, 4));
+      e.version = "0.0.001", console.warn(`⚠️ Version initialised to ${e.version}.`), await ds(`${t}package.json`, e);
     else {
       const i = e.version, s = e.version.split(".");
-      e.version = `${s[0]}.${s[1]}.${Number(s[2]) + 1}`, console.info(`ℹ️  Version bumped from ${i} to ${e.version}.`), await ds(`${t}package.json`, JSON.stringify(e, void 0, 4));
+      e.version = `${s[0]}.${s[1]}.${Number(s[2]) + 1}`, console.info(`ℹ️  Version bumped from ${i} to ${e.version}.`), await ds(`${t}package.json`, e);
     }
   } catch (i) {
     console.error("❌ Error bumping artifact version.", i);

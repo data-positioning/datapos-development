@@ -37,13 +37,13 @@ async function bumpVersion(packageJSON: PackageJson, path = './'): Promise<void>
         if (packageJSON.version == null) {
             packageJSON.version = '0.0.001';
             console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
-            await writeJSONFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4));
+            await writeJSONFile(`${path}package.json`, packageJSON);
         } else {
             const oldVersion = packageJSON.version;
             const versionSegments = packageJSON.version.split('.');
             packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
             console.info(`ℹ️  Version bumped from ${oldVersion} to ${packageJSON.version}.`);
-            await writeJSONFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4));
+            await writeJSONFile(`${path}package.json`, packageJSON);
         }
     } catch (error) {
         console.error('❌ Error bumping artifact version.', error);

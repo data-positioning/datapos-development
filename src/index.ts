@@ -2,6 +2,8 @@
  * Development operations.
  */
 
+/* eslint-disable unicorn/no-process-exit */
+
 // Dependencies - Vendor.
 import acornTypeScript from 'acorn-typescript';
 import { exec } from 'node:child_process';
@@ -356,7 +358,6 @@ async function sendDeploymentNotice(): Promise<void> {
 // Operations - Synchronise with GitHub.
 async function syncWithGitHub(): Promise<void> {
     try {
-        console.info('🚀 Synchronising with GitHub....');
         showBanner('Synchronising with GitHub....');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         await runCommand('git add .');
@@ -365,7 +366,6 @@ async function syncWithGitHub(): Promise<void> {
         console.info(`✅ Synchronised version ${packageJSON.version} with GitHub.`);
     } catch (error) {
         console.error('❌ Error synchronising with GitHub.', error);
-        // eslint-disable-next-line unicorn/no-process-exit
         process.exit(1);
     }
 }
@@ -538,7 +538,7 @@ function showBanner(message: string): void {
     const line = '─'.repeat(message.length + 10);
 
     console.info(`\n${cyan}${line}`);
-    console.info(`   🚀  ${message}`);
+    console.info(`     ${message}`);
     console.info(`${line}${reset}\n`);
 }
 

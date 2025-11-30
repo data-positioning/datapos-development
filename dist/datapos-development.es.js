@@ -7902,9 +7902,9 @@ async function Ye(t) {
   e.trim() && console.log(e.trim()), i.trim() && console.error(i.trim());
 }
 function Sh(t) {
-  const e = "\x1B[36m", i = "\x1B[0m", s = "─".repeat(t.length + 10);
+  const e = "─".repeat(t.length + 10);
   console.info(`
-${e}${s}`), console.info(`     ${t}`), console.info(`${s}${i}
+${e}`), console.info(`     ${t}`), console.info(`${e}
 `);
 }
 function oi(t, e) {

@@ -537,9 +537,9 @@ function showBanner(message: string): void {
     const reset = '\u001B[0m';
     const line = '─'.repeat(message.length + 10);
 
-    console.info(`\n${cyan}${line}`);
+    console.info(`\n${line}`);
     console.info(`     ${message}`);
-    console.info(`${line}${reset}\n`);
+    console.info(`${line}\n`);
 }
 
 // Helpers - Traverse AST (Abstract Syntax Tree).

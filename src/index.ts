@@ -286,7 +286,6 @@ async function buildPresenterConfig(): Promise<void> {
 // Operations - Bump version.
 async function bumpVersion(path = './'): Promise<void> {
     try {
-        console.info('🚀 Bumping version...');
         // eslint-disable-next-line security/detect-non-literal-fs-filename
         const packageJSON = JSON.parse(await fs.readFile(`${path}package.json`, 'utf8')) as PackageJson;
         if (packageJSON.version == null) {
@@ -400,14 +399,18 @@ async function sendDeploymentNotice(): Promise<void> {
 // Operations - Synchronise with GitHub.
 async function syncWithGitHub(): Promise<void> {
     try {
-        showOperationHeader('Synchronising with GitHub....');
+        showOperationHeader('Synchronising with GitHub');
 
+        showStepHeader('Bump version');
         await bumpVersion();
 
+        showStepHeader('Load package.json');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
+
         await execCommand('git add .');
         await execCommand(`git commit -m "v${packageJSON.version}"`);
         await execCommand('git push origin main:main');
+
         showOperationSuccess(`Synchronised version ${packageJSON.version} with GitHub.`);
     } catch (error) {
         console.error('❌ Error synchronising with GitHub.', error);

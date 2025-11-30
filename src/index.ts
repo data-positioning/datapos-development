@@ -358,12 +358,14 @@ async function syncWithGitHub(): Promise<void> {
     try {
         console.info('🚀 Synchronising with GitHub....');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-        await asyncExec('git add .');
-        await asyncExec(`git commit -m "v${packageJSON.version}"`);
-        await asyncExec('git push origin main:main');
+        await runCommand('git add .');
+        await runCommand(`git commit -m "v${packageJSON.version}"`);
+        await runCommand('git push origin main:main');
         console.info(`✅ Synchronised version ${packageJSON.version} with GitHub.`);
     } catch (error) {
         console.error('❌ Error synchronising with GitHub.', error);
+        // eslint-disable-next-line unicorn/no-process-exit
+        process.exit(1);
     }
 }
 
@@ -517,6 +519,15 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
     if (sourceOps) return 'source';
     if (destinationOps) return 'destination';
     return 'unknown';
+}
+
+// Helpers - Run command
+async function runCommand(cmd: string): Promise<void> {
+    console.info(`▶️  ${cmd}`);
+    const { stdout, stderr } = await asyncExec(cmd);
+
+    if (stdout.trim()) console.log(stdout.trim());
+    if (stderr.trim()) console.error(stderr.trim());
 }
 
 // Helpers - Traverse AST (Abstract Syntax Tree).

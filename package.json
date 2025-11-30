@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.203",
+    "version": "0.3.204",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -73,7 +73,6 @@
         "_audit:vulnerabilities": "npm run _audit:owaspDependencyCheck && npm run _audit:owaspBageInsertiions",
         "_audit:owaspDependencyCheck": "set -a && source .env && set +a && owasp-dependency-check --project \"@datapos/datapos-development\" --enableRetired --nvdApiKey \"$NVD_API_KEY\" --nodePackageSkipDevDependencies",
         "_audit:owaspBageInsertiions": "node -e \"import('./dist/datapos-development.es.js').then(m => m.insertOWASPDependencyCheckBadgeIntoReadme())\"",
-        "_bump:version": "node -e \"import('./dist/datapos-development.es.js').then(m => m.bumpVersion())\"",
         "_document:licenceReportJSON": "license-report --only=prod,peer --department.value=n/a --licensePeriod=n/a --material=n/a --relatedTo.value=n/a > licenses.json",
         "_document:licenceReportMarkdown": "license-report --config license-report-config.json --only=prod,peer --output=markdown > licenses.md",
         "_document:licenceReportCheck": "license-report-check --source ./licenses.json --allowed 'MIT' --output=table",

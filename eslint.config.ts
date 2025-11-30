@@ -22,6 +22,9 @@ export default [
             sonarjs,
             security
         },
+        settings: {
+            'import/resolver': { node: { extensions: ['.js', '.mjs', '.ts', '.tsx'] } }
+        },
         rules: {
             ...tseslint.configs['strict-type-checked']?.rules,
             ...tseslint.configs['stylistic-type-checked']?.rules,

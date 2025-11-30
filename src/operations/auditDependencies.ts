@@ -43,7 +43,7 @@ async function auditDependencies(): Promise<void> {
             process.env.NVD_API_KEY ?? ''
         ]);
 
-        logStepHeader('Insert OWASP Badges');
+        logStepHeader("Insert OWASP Badge(s) into 'README.md'");
         await insertOWASPDependencyCheckBadgeIntoReadme();
 
         await spawnCommand('npm', ['audit']);

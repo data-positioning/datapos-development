@@ -220,29 +220,6 @@ function echoScriptNotImplemented(name: string): void {
     console.error(`❌ ${name} script not implemented.`);
 }
 
-// Operations - Insert licenses into README file.
-async function insertLicensesIntoReadme(): Promise<void> {
-    const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
-    const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
-    try {
-        const licensesContent1 = await fs.readFile('./licenses.md', 'utf8');
-        const trimmedLicensesContent = licensesContent1.trim();
-        const readmeContent = await fs.readFile('./README.md', 'utf8');
-        const startIndex = readmeContent.indexOf(START_MARKER);
-        const endIndex = readmeContent.indexOf(END_MARKER);
-        if (startIndex === -1 || endIndex === -1) {
-            console.error("❌ No dependency license markers found in 'README.md'.");
-            return;
-        }
-        const newContent =
-            readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + '\n' + trimmedLicensesContent + '\n' + readmeContent.slice(Math.max(0, endIndex));
-        await fs.writeFile('README.md', newContent, 'utf8');
-        console.log("✅ Updated dependency license information in 'README.md'.");
-    } catch (error) {
-        console.error("❌ Error inserting dependency license information into 'README.md'.", error);
-    }
-}
-
 // Operations - Send deployment notice.
 async function sendDeploymentNotice(): Promise<void> {
     try {
@@ -343,7 +320,6 @@ export {
     buildPresenterConfig,
     buildPublicDirectoryIndex,
     echoScriptNotImplemented,
-    insertLicensesIntoReadme,
     sendDeploymentNotice,
     uploadDirectoryToR2,
     uploadModuleConfigToDO,

@@ -123,12 +123,6 @@ async function loadEnvironmentVariables(): Promise<void> {
     dotenv.config();
 }
 
-// Helpers - Load JSON file.
-async function loadJSONFile<T>(path: string): Promise<T> {
-    logStepHeader(`Load JSON file '${path}'`);
-    return JSON.parse(await fs.readFile(path, 'utf8')) as T;
-}
-
 // Helpers - Log operation header.
 function logOperationHeader(text: string): void {
     const cyan = '\u001B[36m';
@@ -147,6 +141,12 @@ function logOperationSuccess(message: string): void {
 // Helpers - Log step header.
 function logStepHeader(text: string): void {
     console.info(`\n▶️  ${text}`);
+}
+
+// Helpers - Read JSON file.
+async function readJSONFile<T>(path: string): Promise<T> {
+    logStepHeader(`Load JSON file '${path}'`);
+    return JSON.parse(await fs.readFile(path, 'utf8')) as T;
 }
 
 // Helpers - Spawn command.
@@ -181,15 +181,22 @@ function traverseAST(node: Node, doIt: (node: Node) => void): void {
     }
 }
 
+// Helpers - Write JSON file.
+async function writeJSONFile(path: string, data: string): Promise<void> {
+    logStepHeader(`Write JSON file '${path}'`);
+    await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
+}
+
 export {
     buildOWASPBadges,
     determineConnectorUsageId,
     execCommand,
     extractOperationsFromSource,
     loadEnvironmentVariables,
-    loadJSONFile,
     logOperationHeader,
     logOperationSuccess,
     logStepHeader,
-    spawnCommand
+    readJSONFile,
+    spawnCommand,
+    writeJSONFile
 };

@@ -5,18 +5,17 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Vendor.
-import { promises as fs } from 'node:fs';
 import type { PackageJson } from 'type-fest';
 
 // Dependencies - Framework.
-import { execCommand, loadJSONFile, logOperationHeader, logOperationSuccess, logStepHeader } from './utilities';
+import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, writeJSONFile } from './utilities';
 
 // Operations - Synchronise with GitHub.
 async function syncWithGitHub(): Promise<void> {
     try {
         logOperationHeader('Synchronising with GitHub');
 
-        const packageJSON = await loadJSONFile<PackageJson>('package.json');
+        const packageJSON = await readJSONFile<PackageJson>('package.json');
 
         logStepHeader('Bump version');
         await bumpVersion(packageJSON);
@@ -37,13 +36,13 @@ async function bumpVersion(packageJSON: PackageJson, path = './'): Promise<void>
     try {
         if (packageJSON.version == null) {
             packageJSON.version = '0.0.001';
-            await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
+            await writeJSONFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4));
             console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
         } else {
             const oldVersion = packageJSON.version;
             const versionSegments = packageJSON.version.split('.');
             packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-            await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
+            await writeJSONFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4));
             console.info(`ℹ️  Version bumped from ${oldVersion} to ${packageJSON.version}.`);
         }
     } catch (error) {

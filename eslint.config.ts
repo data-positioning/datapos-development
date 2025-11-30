@@ -49,6 +49,7 @@ export default [
             'import/no-duplicates': 'warn',
             'sort-imports': ['warn', { allowSeparatedGroups: true, ignoreCase: true, memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'] }],
 
+            'unicorn/filename-case': 'off',
             'unicorn/no-null': 'off'
         }
     }

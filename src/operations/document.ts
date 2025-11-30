@@ -8,9 +8,11 @@
 import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readTextFile, writeTextFile } from '../utilities';
 
 // Operations - Document.
-async function document(): Promise<void> {
+async function document(licenses: string[]): Promise<void> {
     try {
         logOperationHeader('Document');
+
+        const allowedFlags = licenses.flatMap((license) => ['--allowed', license]);
 
         await execCommand(
             'license-report',
@@ -20,7 +22,7 @@ async function document(): Promise<void> {
 
         await execCommand('license-report', ['--config', 'license-report-config.json', '--only=prod,peer', '--output=markdown'], 'licenses.md');
 
-        await execCommand('license-report-check', ['--source', './licenses.json', '--allowed', 'BSD-2-Clause', '--allowed', 'MIT', '--output=table']);
+        await execCommand('license-report-check', ['--source', './licenses.json', '--output=table', ...allowedFlags]);
 
         await execCommand(
             'license-report-recursive',
@@ -28,7 +30,7 @@ async function document(): Promise<void> {
             'licenseTree.json'
         );
 
-        await execCommand('license-report-check', ['--source', './licenseTree.json', '--allowed', 'BSD-2-Clause', '--allowed', 'MIT', '--output=table']);
+        await execCommand('license-report-check', ['--source', './licenseTree.json', '--output=table', ...allowedFlags]);
 
         logStepHeader("Insert licenses into 'README.md'");
         await insertLicensesIntoReadme();

@@ -7766,19 +7766,21 @@ async function Uh() {
     console.error("❌ Error checking dependencies.", e), process.exit(1);
   }
 }
-async function Zh() {
+async function Zh(e) {
   try {
-    Xe("Document"), await ze(
+    Xe("Document");
+    const t = e.flatMap((i) => ["--allowed", i]);
+    await ze(
       "license-report",
       ["--only=prod,peer", "--output=json", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenses.json"
-    ), await ze("license-report", ["--config", "license-report-config.json", "--only=prod,peer", "--output=markdown"], "licenses.md"), await ze("license-report-check", ["--source", "./licenses.json", "--allowed", "BSD-2-Clause", "--allowed", "MIT", "--output=table"]), await ze(
+    ), await ze("license-report", ["--config", "license-report-config.json", "--only=prod,peer", "--output=markdown"], "licenses.md"), await ze("license-report-check", ["--source", "./licenses.json", "--output=table", ...t]), await ze(
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", " --recurse", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenseTree.json"
-    ), await ze("license-report-check", ["--source", "./licenseTree.json", "--allowed", "BSD-2-Clause", "--allowed", "MIT", "--output=table"]), Ee("Insert licenses into 'README.md'"), await Mh(), Qe("Document complete.");
-  } catch (e) {
-    console.error("❌ Error documenting.", e), process.exit(1);
+    ), await ze("license-report-check", ["--source", "./licenseTree.json", "--output=table", ...t]), Ee("Insert licenses into 'README.md'"), await Mh(), Qe("Document complete.");
+  } catch (t) {
+    console.error("❌ Error documenting.", t), process.exit(1);
   }
 }
 async function Mh() {

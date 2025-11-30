@@ -1,5 +1,5 @@
 /**
- * Format operation.
+ * Format code operation.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -8,17 +8,17 @@
 import { logOperationHeader, logOperationSuccess, spawnCommand } from '../utilities';
 
 // Operations - Format.
-async function format(): Promise<void> {
+async function formatCode(): Promise<void> {
     try {
-        logOperationHeader('Format');
+        logOperationHeader('Format Code');
 
         await spawnCommand('prettier', ['--write', 'src/']);
 
-        logOperationSuccess('Format complete.');
+        logOperationSuccess('Code formatting complete.');
     } catch (error) {
-        console.error('❌ Error formatting.', error);
+        console.error('❌ Error formatting code.', error);
         process.exit(1);
     }
 }
 
-export { format };
+export { formatCode };

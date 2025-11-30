@@ -1,5 +1,5 @@
 /**
- * Document operation.
+ * Document dependencies operation.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -8,9 +8,9 @@
 import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readTextFile, writeTextFile } from '../utilities';
 
 // Operations - Document.
-async function document(licenses: string[]): Promise<void> {
+async function documentDependencies(licenses: string[]): Promise<void> {
     try {
-        logOperationHeader('Document');
+        logOperationHeader('Document Dependencies');
 
         const allowedFlags = licenses.flatMap((license) => ['--allowed', license]);
 
@@ -35,9 +35,9 @@ async function document(licenses: string[]): Promise<void> {
         logStepHeader("Insert licenses into 'README.md'");
         await insertLicensesIntoReadme();
 
-        logOperationSuccess('Document complete.');
+        logOperationSuccess('Document dependencies complete.');
     } catch (error) {
-        console.error('❌ Error documenting.', error);
+        console.error('❌ Error documenting dependencies.', error);
         process.exit(1);
     }
 }
@@ -65,4 +65,4 @@ async function insertLicensesIntoReadme(): Promise<void> {
     }
 }
 
-export { document };
+export { documentDependencies };

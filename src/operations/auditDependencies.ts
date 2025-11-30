@@ -48,7 +48,7 @@ async function auditDependencies(): Promise<void> {
 
         await spawnCommand('npm', ['audit']);
 
-        logOperationSuccess('Dependency audit complete.');
+        logOperationSuccess('Dependency auditing complete.');
     } catch (error) {
         console.error('❌ Error auditing dependencies.', error);
         process.exit(1);

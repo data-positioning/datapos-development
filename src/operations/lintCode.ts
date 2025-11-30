@@ -1,5 +1,5 @@
 /**
- * Lint operation.
+ * Lint code operation.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -7,18 +7,18 @@
 // Dependencies - Framework.
 import { logOperationHeader, logOperationSuccess, spawnCommand } from '../utilities';
 
-// Operations - Lint.
-async function lint(): Promise<void> {
+// Operations - Lint code.
+async function lintCode(): Promise<void> {
     try {
-        logOperationHeader('Lint');
+        logOperationHeader('Lint Code');
 
         await spawnCommand('eslint', ['.']);
 
-        logOperationSuccess('Lint complete.');
+        logOperationSuccess('Code linting complete.');
     } catch (error) {
-        console.error('❌ Error linting.', error);
+        console.error('❌ Error linting code.', error);
         process.exit(1);
     }
 }
 
-export { lint };
+export { lintCode };

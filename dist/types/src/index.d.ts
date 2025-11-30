@@ -12,10 +12,9 @@ declare function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: s
 declare function uploadModuleConfigToDO(): Promise<void>;
 declare function uploadModuleToR2(uploadDirectoryPath: string): Promise<void>;
 export { buildConfig, buildConnectorConfig, buildContextConfig, buildPresenterConfig, buildPublicDirectoryIndex, echoScriptNotImplemented, sendDeploymentNotice, uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };
-export { artifactBuild } from './operations/artifactBuild';
+export { buildArtifact, releaseArtifact, syncArtifactWithGitHub } from './operations/manageArtifact';
 export { auditDependencies } from './operations/auditDependencies';
 export { checkDependencies } from './operations/checkDependencies';
-export { document } from './operations/document';
-export { format } from './operations/format';
-export { lint } from './operations/lint';
-export { syncWithGitHub } from './operations/syncWithGitHub';
+export { documentDependencies } from './operations/documentDependencies';
+export { formatCode } from './operations/formatCode';
+export { lintCode } from './operations/lintCode';

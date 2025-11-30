@@ -326,10 +326,9 @@ export {
     uploadModuleToR2
 };
 
-export { artifactBuild } from './operations/artifactBuild';
+export { buildArtifact, releaseArtifact, syncArtifactWithGitHub } from './operations/manageArtifact';
 export { auditDependencies } from './operations/auditDependencies';
 export { checkDependencies } from './operations/checkDependencies';
-export { document } from './operations/document';
-export { format } from './operations/format';
-export { lint } from './operations/lint';
-export { syncWithGitHub } from './operations/syncWithGitHub';
+export { documentDependencies } from './operations/documentDependencies';
+export { formatCode } from './operations/formatCode';
+export { lintCode } from './operations/lintCode';

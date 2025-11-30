@@ -1,5 +1,5 @@
 /**
- * Build artifact operation.
+ * Artifact build operation.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -7,18 +7,18 @@
 // Dependencies - Framework.
 import { logOperationHeader, logOperationSuccess, spawnCommand } from '../utilities';
 
-// Operations - Build artifact.
-async function buildArtifact(): Promise<void> {
+// Operations - Artifact build.
+async function artifactBuild(): Promise<void> {
     try {
-        logOperationHeader('Build Artifact');
+        logOperationHeader('Artifact Build');
 
         await spawnCommand('vite', ['build']);
 
-        logOperationSuccess('Artifact built.');
+        logOperationSuccess('Artifact build complete.');
     } catch (error) {
         console.error('❌ Error building artifact.', error);
         process.exit(1);
     }
 }
 
-export { buildArtifact };
+export { artifactBuild };

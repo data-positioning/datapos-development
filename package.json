@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.208",
+    "version": "0.3.209",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -60,11 +60,11 @@
     },
     "scripts": {
         "audit": "node -e \"import('./dist/datapos-development.es.js').then(m => m.auditDependencies())\"",
-        "build": "node -e \"import('./dist/datapos-development.es.js').then(m => m.buildArtifact())\"",
+        "build": "node -e \"import('./dist/datapos-development.es.js').then(m => m.artifactBuild())\"",
         "check": "node -e \"import('./dist/datapos-development.es.js').then(m => m.checkDependencies())\"",
-        "document": "npm run _document:licenceReportJSON && npm run _document:licenceReportMarkdown && npm run _document:licenceReportCheck && npm run _document:insertLicensesIntoReadme && npm run _document:licenceTree && npm run _document:licenceTreeCheck",
-        "format": "prettier --write src/",
-        "lint": "eslint .",
+        "document": "node -e \"import('./dist/datapos-development.es.js').then(m => m.document())\"",
+        "format": "node -e \"import('./dist/datapos-development.es.js').then(m => m.format())\"",
+        "lint": "node -e \"import('./dist/datapos-development.es.js').then(m => m.lint())\"",
         "publish:toNPM": "npm publish --access public",
         "release": "npm run _bump:version && npm run build && npm run _sync:withGitHub && npm run publish:toNPM",
         "sync": "node -e \"import('./dist/datapos-development.es.js').then(m => m.syncWithGitHub())\"",

@@ -1,7 +1,7 @@
 import { ConnectorOperation, ConnectorUsageId } from '@datapos/datapos-shared';
 declare function extractOperationsFromSource<T>(source: string): T[];
 declare function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorUsageId;
-declare function execCommand(command: string): Promise<void>;
+declare function execCommand(command_: string, arguments_?: string[], outputFilePath?: string): Promise<void>;
 declare function loadEnvironmentVariables(): Promise<void>;
 declare function logOperationHeader(text: string): void;
 declare function logOperationSuccess(message: string): void;

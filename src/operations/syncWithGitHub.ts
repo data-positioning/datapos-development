@@ -20,9 +20,9 @@ async function syncWithGitHub(): Promise<void> {
         logStepHeader('Bump version');
         await bumpVersion(packageJSON);
 
-        await execCommand('git add .');
-        await execCommand(`git commit -m "v${packageJSON.version}"`);
-        await execCommand('git push origin main:main');
+        await execCommand('git', ['add', '.']);
+        await execCommand('git', ['commit', '-m', `"v${packageJSON.version}"`]);
+        await execCommand('git', ['push', 'origin', 'main:main']);
 
         logOperationSuccess(`Version ${packageJSON.version} synchronised with GitHub.`);
     } catch (error) {

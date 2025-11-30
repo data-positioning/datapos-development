@@ -350,7 +350,10 @@ export {
     uploadModuleToR2
 };
 
+export { artifactBuild } from './operations/artifactBuild';
 export { auditDependencies } from './operations/auditDependencies';
-export { buildArtifact } from './operations/buildArtifact';
 export { checkDependencies } from './operations/checkDependencies';
+export { document } from './operations/document';
+export { format } from './operations/format';
+export { lint } from './operations/lint';
 export { syncWithGitHub } from './operations/syncWithGitHub';

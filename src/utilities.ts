@@ -65,10 +65,15 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
 }
 
 // Helpers - Execute command.
-async function execCommand(command: string): Promise<void> {
+async function execCommand(command_: string, arguments_: string[] = [], outputFilePath?: string): Promise<void> {
+    const command = `${command_} ${arguments_.join(' ')}`;
     logStepHeader(`Execute command: ${command}`);
     const { stdout, stderr } = await asyncExec(command);
-    if (stdout.trim()) console.log(stdout.trim());
+    if (outputFilePath === undefined) {
+        if (stdout.trim()) console.log(stdout.trim());
+    } else {
+        await fs.writeFile(outputFilePath, stdout.trim(), 'utf8');
+    }
     if (stderr.trim()) console.error(stderr.trim());
 }
 

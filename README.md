@@ -64,9 +64,10 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 
 ### Dependency Licenses
 
-The following table lists top-level production and peer dependencies. All these dependencies (including transitive ones) have been recursively verified to use Apache-2.0, BSD-2-Clause, CC0-1.0, or MIT—commercially friendly licenses with minimal restrictions. Developers cloning this repository should independently verify dev and optional dependencies; users of the published library are covered by these checks. If a dependence has no license then it is treated as ?????
+The following table lists top-level production and peer dependencies. All these dependencies (including transitive ones) have been recursively verified to use Apache-2.0, BSD-2-Clause, CC0-1.0, or MIT—commercially friendly licenses with minimal restrictions. Developers cloning this repository should independently verify dev and optional dependencies; users of the published library are covered by these checks. If a dependence has no license then it is treated as ????? Used to support development activity and nor released as part of the production release. Check if you clone.
 
 <!-- DEPENDENCY_LICENSES_START -->
+
 | Name                    |     Type     | Installed | Latest  | Latest Modified          |
 | :---------------------- | :----------: | :-------: | :-----: | :----------------------- |
 | @datapos/datapos-shared |     MIT      |  0.3.255  | 0.3.255 | 2025-11-29T17:16:07.774Z |
@@ -75,6 +76,7 @@ The following table lists top-level production and peer dependencies. All these 
 | acorn-walk              |     MIT      |   8.3.4   |  8.3.4  | 2024-09-09T08:40:59.131Z |
 | dotenv                  | BSD-2-Clause |  17.2.3   | 17.2.3  | 2025-09-29T23:22:21.769Z |
 | zod                     |     MIT      |  4.1.13   | 4.1.13  | 2025-11-24T02:38:31.522Z |
+
 <!-- DEPENDENCY_LICENSES_END -->
 
 ### Bundle Analysis Report
@@ -93,10 +95,9 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 | audit              | alt+ctrl+shift+a | Audit the project's dependencies for known security vulnerabilities.                                                                            |
 | build              | alt+ctrl+shift+b | Build the package using Vite. Output to '/dist' directory.                                                                                      |
 | check              | alt+ctrl+shift+c | Identify outdated dependencies using npm `outdated` and `npm-check-updates` with option to install latest versions. Also runs `retire` scanner. |
-| document           | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [LICENSES.json](./LICENSES.json).                                      |
+| document           | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [licenses.json](./licenses.json).                                      |
 | format             | alt+ctrl+shift+f | Use `prettier` to enforce formatting style rules.                                                                                               |
 | lint               | alt+ctrl+shift+l | Use `eslint` to check the code for potential errors and enforces coding style rules.                                                            |
-| publish            | alt+ctrl+shift+p | Publish the package to `npm`.                                                                                                                   |
 | release            | alt+ctrl+shift+r | Bump version, build library, synchronise with `GitHub` and publish to `npm`.                                                                    |
 | sync:withGitHub    | alt+ctrl+shift+s | Synchronise local repository with the main GitHub repository.                                                                                   |
 | test               | alt+ctrl+shift+t | ❌ Not implemented.                                                                                                                             |
@@ -105,7 +106,6 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 ## TODO
 
 1. Enhance `uploadDirectoryToR2`to batch upload files so more efficient and performant.
-1. Implement zod to validate config schemas.
 
 ## License
 

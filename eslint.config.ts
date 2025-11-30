@@ -23,12 +23,14 @@ export default [
             security
         },
         settings: {
-            'import/resolver': { node: { extensions: ['.js', '.mjs', '.ts', '.tsx'] } }
+            'import/resolver': { node: { extensions: ['.js', '.mjs', '.ts'] } }
         },
         rules: {
-            ...tseslint.configs['strict-type-checked']?.rules,
-            ...tseslint.configs['stylistic-type-checked']?.rules,
-            ...importPlugin.configs.recommended.rules, // Import plugin recommended.
+            ...tseslint.configs.recommended.rules,
+            ...tseslint.configs['recommended-type-checked'].rules,
+            ...tseslint.configs['strict-type-checked'].rules,
+            ...tseslint.configs['stylistic-type-checked'].rules,
+            ...importPlugin.flatConfigs.recommended.rules, // Import plugin recommended.
             ...unicorn.configs.recommended.rules, // Unicorn plugin recommended.
             ...sonarjs.configs.recommended.rules, // SonarJS plugin recommended.
             ...security.configs.recommended.rules, // Security plugin recommended.

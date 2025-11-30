@@ -5,6 +5,7 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Framework.
+// TODO: import type { ModuleConfig } from '@datapos/datapos-shared';
 import type { PackageJson } from 'type-fest';
 import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, spawnCommand, writeJSONFile } from '../utilities';
 
@@ -12,6 +13,8 @@ import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, re
 async function buildArtifact(): Promise<void> {
     try {
         logOperationHeader('Build Artifact');
+
+        await buildConfig();
 
         await spawnCommand('vite', ['build']);
 
@@ -22,7 +25,7 @@ async function buildArtifact(): Promise<void> {
     }
 }
 // Operations - Release artifact.
-async function releaseArtifact(): Promise<void> {
+async function releaseArtifact(sendDeployNotice = false): Promise<void> {
     try {
         logOperationHeader('Release Artifact');
 
@@ -70,6 +73,26 @@ async function syncArtifactWithGitHub(): Promise<void> {
 // Operations - Test artifact.
 function testArtifact(): void {
     console.log('Test artifact...'); // Command: vitest
+}
+
+// Helpers - Build configuration.
+async function buildConfig(): Promise<void> {
+    try {
+        console.info('🚀 Building configuration...');
+
+        const packageJSON = await readJSONFile<PackageJson>('package.json');
+
+        const configJSON = await readJSONFile<Record<string, unknown>>('config.json'); // TODO: change to <ModuleConfig>
+
+        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
+        if (packageJSON.version != null) configJSON.version = packageJSON.version;
+
+        await writeJSONFile('config.json', configJSON);
+
+        console.info('✅ Configuration built.');
+    } catch (error) {
+        console.error('❌ Error building configuration.', error);
+    }
 }
 
 // Helper - Bump artifact version.

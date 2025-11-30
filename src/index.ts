@@ -2,6 +2,7 @@
  * Development operations.
  */
 
+/* eslint-disable security/detect-non-literal-fs-filename */
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Vendor.
@@ -133,10 +134,8 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
             for (const name of names) {
                 const itemPath = `${directoryPath}/${name}`;
                 try {
-                    // eslint-disable-next-line security/detect-non-literal-fs-filename
                     const stats = await fs.stat(itemPath);
                     if (stats.isDirectory()) {
-                        // eslint-disable-next-line security/detect-non-literal-fs-filename
                         const nextLevelChildren = await fs.readdir(itemPath);
                         const folderEntry: DirectoryFolderEntry = { childCount: nextLevelChildren.length, name, typeId: 'folder' };
                         entries.push(folderEntry);
@@ -155,10 +154,8 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
             });
         }
 
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
         const toplevelNames = await fs.readdir(`public/${id}`);
         await listDirectoryEntriesRecursively(`public/${id}`, toplevelNames);
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
         await fs.writeFile(`./public/${id}Index.json`, JSON.stringify(index), 'utf8');
         console.info('✅ Public directory index built.');
     } catch (error) {
@@ -286,18 +283,15 @@ async function buildPresenterConfig(): Promise<void> {
 // Operations - Bump version.
 async function bumpVersion(path = './'): Promise<void> {
     try {
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
         const packageJSON = JSON.parse(await fs.readFile(`${path}package.json`, 'utf8')) as PackageJson;
         if (packageJSON.version == null) {
             packageJSON.version = '0.0.001';
-            // eslint-disable-next-line security/detect-non-literal-fs-filename
             await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
             console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
         } else {
             const oldVersion = packageJSON.version;
             const versionSegments = packageJSON.version.split('.');
             packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-            // eslint-disable-next-line security/detect-non-literal-fs-filename
             await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
             console.info(`✅ Version bumped from ${oldVersion} to ${packageJSON.version}.`);
         }
@@ -401,21 +395,25 @@ async function syncWithGitHub(): Promise<void> {
     try {
         showOperationHeader('Synchronising with GitHub');
 
+        const packageJSON = await loadJSONFile<PackageJson>('package.json');
+
         showStepHeader('Bump version');
         await bumpVersion();
-
-        showStepHeader('Load package.json');
-        const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
 
         await execCommand('git add .');
         await execCommand(`git commit -m "v${packageJSON.version}"`);
         await execCommand('git push origin main:main');
 
-        showOperationSuccess(`Synchronised version ${packageJSON.version} with GitHub.`);
+        showOperationSuccess(`Version ${packageJSON.version} synchronised with GitHub.`);
     } catch (error) {
         console.error('❌ Error synchronising with GitHub.', error);
         process.exit(1);
     }
+}
+
+async function loadJSONFile<T>(path: string): Promise<T> {
+    showStepHeader(`Loading JSON file '${path}'`);
+    return JSON.parse(await fs.readFile(path, 'utf8')) as T;
 }
 
 // Operations - Upload directory to Cloudflare R2.
@@ -426,10 +424,8 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
             for (const name of names) {
                 const sourceItemPath = `${currentSourceDirectory}/${name}`;
                 const destinationItemPath = `${currentDestinationDirectory}/${name}`;
-                // eslint-disable-next-line security/detect-non-literal-fs-filename
                 const stats = await fs.stat(sourceItemPath);
                 if (stats.isDirectory()) {
-                    // eslint-disable-next-line security/detect-non-literal-fs-filename
                     const nextLevelChildren = await fs.readdir(sourceItemPath);
                     await listDirectoryEntriesRecursively(sourceItemPath, destinationItemPath, nextLevelChildren);
                 } else {
@@ -440,7 +436,6 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
                 }
             }
         }
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
         const toplevelNames = await fs.readdir(`${sourceDirectory}/${uploadDirectory}/`);
         await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}`, uploadDirectory, toplevelNames);
         console.info('✅ Directory uploaded to R2.');
@@ -475,7 +470,6 @@ async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         const version = `v${packageJSON.version}`;
         async function uploadDirectory(currentDirectory: string, prefix = ''): Promise<void> {
-            // eslint-disable-next-line security/detect-non-literal-fs-filename
             const entries = await fs.readdir(currentDirectory, { withFileTypes: true });
             for (const entry of entries) {
                 const fullPath = `${currentDirectory}/${entry.name}`;

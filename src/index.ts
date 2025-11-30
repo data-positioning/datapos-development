@@ -316,22 +316,22 @@ async function insertLicensesIntoReadme(): Promise<void> {
         const startIndex = readmeContent.indexOf(START_MARKER);
         const endIndex = readmeContent.indexOf(END_MARKER);
         if (startIndex === -1 || endIndex === -1) {
-            console.error('❌ Dependency license markers not found in readme file.');
+            console.error("❌ No dependency license markers found in 'README.md'.");
             return;
         }
         const newContent =
             readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + '\n' + trimmedLicensesContent + '\n' + readmeContent.slice(Math.max(0, endIndex));
         await fs.writeFile('README.md', newContent, 'utf8');
-        console.log('✅ Readme file updated with license information');
+        console.log("✅ Updated dependency license information in 'README.md'.");
     } catch (error) {
-        console.error('❌ Error updating readme file.', error);
+        console.error("❌ Error inserting dependency license information into 'README.md'.", error);
     }
 }
 
 // Operations - Insert OWASP dependency check badge into README file.
 async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
-    const START_MARKER = '<!-- OWASP_BADGE_START -->';
-    const END_MARKER = '<!-- OWASP_BADGE_END -->';
+    const START_MARKER = '<!-- OWASP_BADGES_START -->';
+    const END_MARKER = '<!-- OWASP_BADGES_END -->';
     try {
         const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf8')) as {
             dependencies: { vulnerabilities?: { severity?: string }[] }[];
@@ -359,16 +359,16 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const endIndex = readmeContent.indexOf(END_MARKER);
 
         if (startIndex === -1 || endIndex === -1) {
-            console.error('❌ OWASP badge markers not found in README.md.');
+            console.error("❌ No OWASP badge markers found in 'README.md'.");
             return;
         }
 
         const badgeContent = badges.join(' ');
         const newContent = readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + badgeContent + readmeContent.slice(Math.max(0, endIndex));
         await fs.writeFile('README.md', newContent, 'utf8');
-        console.info('✅ OWASP dependency check badge(s) inserted into README.md');
+        console.info("✅ OWASP audit badge(s) inserted into 'README.md'");
     } catch (error) {
-        console.error('❌ Error updating README with OWASP badges:', error);
+        console.error("❌ Error inserting OWASP badges into 'README.md'.", error);
     }
 }
 
@@ -564,9 +564,9 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
     return 'unknown';
 }
 
-// Helpers - Execute command
+// Helpers - Execute command.
 async function execCommand(command: string): Promise<void> {
-    showStepHeader(`Command 'exec': ${command}`);
+    showStepHeader(`Execute command: ${command}`);
     const { stdout, stderr } = await asyncExec(command);
     if (stdout.trim()) console.log(stdout.trim());
     if (stderr.trim()) console.error(stderr.trim());
@@ -600,7 +600,7 @@ function showStepHeader(text: string): void {
 
 // Helpers - Spawn command.
 async function spawnCommand(command: string, arguments_: string[] = []): Promise<void> {
-    showStepHeader(`Command 'spawn': ${command} ${arguments_.join(' ')}`);
+    showStepHeader(`Spawn command: ${command} ${arguments_.join(' ')}`);
     return new Promise((resolve, reject) => {
         const child = spawn(command, arguments_, { stdio: 'inherit' });
         child.on('close', (code) => {

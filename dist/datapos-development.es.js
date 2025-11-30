@@ -7762,19 +7762,19 @@ async function Uh() {
   try {
     const s = (await F.readFile("./licenses.md", "utf8")).trim(), a = await F.readFile("./README.md", "utf8"), o = a.indexOf(e), h = a.indexOf(t);
     if (o === -1 || h === -1) {
-      console.error("❌ Dependency license markers not found in readme file.");
+      console.error("❌ No dependency license markers found in 'README.md'.");
       return;
     }
     const d = a.slice(0, Math.max(0, o + e.length)) + `
 ` + s + `
 ` + a.slice(Math.max(0, h));
-    await F.writeFile("README.md", d, "utf8"), console.log("✅ Readme file updated with license information");
+    await F.writeFile("README.md", d, "utf8"), console.log("✅ Updated dependency license information in 'README.md'.");
   } catch (i) {
-    console.error("❌ Error updating readme file.", i);
+    console.error("❌ Error inserting dependency license information into 'README.md'.", i);
   }
 }
 async function Ph() {
-  const e = "<!-- OWASP_BADGE_START -->", t = "<!-- OWASP_BADGE_END -->";
+  const e = "<!-- OWASP_BADGES_START -->", t = "<!-- OWASP_BADGES_END -->";
   try {
     const i = JSON.parse(await F.readFile("./dependency-check-reports/dependency-check-report.json", "utf8")), s = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
     for (const w of i.dependencies)
@@ -7789,13 +7789,13 @@ async function Ph() {
         }
     const a = await Ch(s), o = await F.readFile("./README.md", "utf8"), h = o.indexOf(e), d = o.indexOf(t);
     if (h === -1 || d === -1) {
-      console.error("❌ OWASP badge markers not found in README.md.");
+      console.error("❌ No OWASP badge markers found in 'README.md'.");
       return;
     }
     const y = a.join(" "), u = o.slice(0, Math.max(0, h + e.length)) + y + o.slice(Math.max(0, d));
-    await F.writeFile("README.md", u, "utf8"), console.info("✅ OWASP dependency check badge(s) inserted into README.md");
+    await F.writeFile("README.md", u, "utf8"), console.info("'✅ OWASP audit badge(s) inserted into 'README.md'");
   } catch (i) {
-    console.error("❌ Error updating README with OWASP badges:", i);
+    console.error("❌ Error inserting OWASP badges into 'README.md'.", i);
   }
 }
 async function Zh() {
@@ -7920,7 +7920,7 @@ function Eh(e) {
   return t && i ? "bidirectional" : t ? "source" : i ? "destination" : "unknown";
 }
 async function ei(e) {
-  it(`Command 'exec': ${e}`);
+  it(`Execute command: ${e}`);
   const { stdout: t, stderr: i } = await Ti(e);
   t.trim() && console.log(t.trim()), i.trim() && console.error(i.trim());
 }
@@ -7942,7 +7942,7 @@ function it(e) {
 ▶️  ${e}`);
 }
 async function ui(e, t = []) {
-  return it(`Command 'spawn': ${e} ${t.join(" ")}`), new Promise((i, s) => {
+  return it(`Spawn command: ${e} ${t.join(" ")}`), new Promise((i, s) => {
     Ar(e, t, { stdio: "inherit" }).on("close", (o) => {
       o === 0 ? i() : s(new Error(`${e} exited with code ${o}`));
     });

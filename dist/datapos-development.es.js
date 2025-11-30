@@ -7822,7 +7822,7 @@ async function qh() {
   }
 }
 async function Ah(e) {
-  return it(`Loading JSON file '${e}'`), JSON.parse(await F.readFile(e, "utf8"));
+  return it(`Load JSON file '${e}'`), JSON.parse(await F.readFile(e, "utf8"));
 }
 async function Hh(e, t) {
   try {
@@ -7920,7 +7920,7 @@ function Eh(e) {
   return t && i ? "bidirectional" : t ? "source" : i ? "destination" : "unknown";
 }
 async function ei(e) {
-  it(`Exec command: ${e}`);
+  it(`Command 'exec': ${e}`);
   const { stdout: t, stderr: i } = await Ti(e);
   t.trim() && console.log(t.trim()), i.trim() && console.error(i.trim());
 }
@@ -7942,7 +7942,7 @@ function it(e) {
 ▶️  ${e}`);
 }
 async function ui(e, t = []) {
-  return it(`Spawn command: ${e} ${t.join(" ")}`), new Promise((i, s) => {
+  return it(`Command 'spawn': ${e} ${t.join(" ")}`), new Promise((i, s) => {
     Ar(e, t, { stdio: "inherit" }).on("close", (o) => {
       o === 0 ? i() : s(new Error(`${e} exited with code ${o}`));
     });

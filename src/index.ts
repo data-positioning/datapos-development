@@ -412,7 +412,7 @@ async function syncWithGitHub(): Promise<void> {
 }
 
 async function loadJSONFile<T>(path: string): Promise<T> {
-    showStepHeader(`Loading JSON file '${path}'`);
+    showStepHeader(`Load JSON file '${path}'`);
     return JSON.parse(await fs.readFile(path, 'utf8')) as T;
 }
 
@@ -566,7 +566,7 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
 
 // Helpers - Execute command
 async function execCommand(command: string): Promise<void> {
-    showStepHeader(`Exec command: ${command}`);
+    showStepHeader(`Command 'exec': ${command}`);
     const { stdout, stderr } = await asyncExec(command);
     if (stdout.trim()) console.log(stdout.trim());
     if (stderr.trim()) console.error(stderr.trim());
@@ -600,7 +600,7 @@ function showStepHeader(text: string): void {
 
 // Helpers - Spawn command.
 async function spawnCommand(command: string, arguments_: string[] = []): Promise<void> {
-    showStepHeader(`Spawn command: ${command} ${arguments_.join(' ')}`);
+    showStepHeader(`Command 'spawn': ${command} ${arguments_.join(' ')}`);
     return new Promise((resolve, reject) => {
         const child = spawn(command, arguments_, { stdio: 'inherit' });
         child.on('close', (code) => {

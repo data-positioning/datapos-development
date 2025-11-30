@@ -69,7 +69,7 @@ async function syncArtifactWithGitHub(): Promise<void> {
 
 // Operations - Test artifact.
 function testArtifact(): void {
-    console.log('Test artifact...');
+    console.log('Test artifact...'); // Command: vitest
 }
 
 // Helper - Bump artifact version.

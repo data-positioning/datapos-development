@@ -7718,6 +7718,9 @@ async function Uh() {
     console.error("❌ Error synchronising artifact with GitHub.", e), process.exit(1);
   }
 }
+function Zh() {
+  console.log("Test artifact...");
+}
 async function _r(e, t = "./") {
   try {
     if (e.version == null)
@@ -7731,7 +7734,7 @@ async function _r(e, t = "./") {
   }
 }
 const Lh = ["critical", "high", "moderate", "low", "unknown"];
-async function Zh() {
+async function qh() {
   try {
     ze("Audit Dependencies"), await Nh(), await Ce("owasp-dependency-check", [
       "--project",
@@ -7789,14 +7792,14 @@ async function Mh(e) {
     }
   return s;
 }
-async function qh() {
+async function Hh() {
   try {
     ze("Check Dependencies"), await Ce("npm", ["outdated"], !0), await Ce("npm-check-updates", ["-i"]), Fe("Dependency checking complete.");
   } catch (e) {
     console.error("❌ Error checking dependencies.", e), process.exit(1);
   }
 }
-async function Hh(e) {
+async function Wh(e) {
   try {
     ze("Document Dependencies");
     const t = e.flatMap((i) => ["--allowed", i]);
@@ -7829,21 +7832,21 @@ async function Rh() {
     console.error("❌ Error inserting dependency license information into 'README.md'.", i);
   }
 }
-async function Wh() {
+async function Kh() {
   try {
     ze("Format Code"), await Ce("prettier", ["--write", "src/"]), Fe("Code formatting complete.");
   } catch (e) {
     console.error("❌ Error formatting code.", e), process.exit(1);
   }
 }
-async function Kh() {
+async function Gh() {
   try {
     ze("Lint Code"), await Ce("eslint", ["."]), Fe("Code linting complete.");
   } catch (e) {
     console.error("❌ Error linting code.", e), process.exit(1);
   }
 }
-async function Gh(e) {
+async function Jh(e) {
   try {
     ze("Update datapos Dependencies");
     for (const t of e)
@@ -7854,7 +7857,7 @@ async function Gh(e) {
   }
 }
 const Pr = vs(ys);
-async function Jh() {
+async function Xh() {
   try {
     console.info("🚀 Building configuration...");
     const e = JSON.parse(await $.readFile("package.json", "utf8")), t = JSON.parse(await $.readFile("config.json", "utf8"));
@@ -7863,7 +7866,7 @@ async function Jh() {
     console.error("❌ Error building configuration.", e);
   }
 }
-async function Xh() {
+async function Qh() {
   try {
     console.info("🚀 Building connector configuration...");
     const [e, t, i] = await Promise.all([
@@ -7883,7 +7886,7 @@ async function Xh() {
     console.error("❌ Error building connector configuration.", e);
   }
 }
-async function Qh() {
+async function Yh() {
   try {
     console.info("🚀 Building context configuration...");
     const [e, t, i] = await Promise.all([
@@ -7903,7 +7906,7 @@ async function Qh() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function Yh() {
+async function ep() {
   try {
     console.info("🚀 Building presenter configuration...");
     const [e, t, i] = await Promise.all([
@@ -7923,7 +7926,7 @@ async function Yh() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function ep(e) {
+async function tp(e) {
   try {
     console.info(`🚀 Building public directory index for identifier '${e}'...`);
     const t = {};
@@ -7956,9 +7959,6 @@ async function ep(e) {
   } catch (t) {
     console.error("❌ Error building public directory index.", t);
   }
-}
-function tp(e) {
-  console.error(`❌ ${e} script not implemented.`);
 }
 async function ip() {
   try {
@@ -8031,22 +8031,22 @@ async function ap(e) {
   }
 }
 export {
-  Zh as auditDependencies,
+  qh as auditDependencies,
   Bh as buildArtifact,
-  Jh as buildConfig,
-  Xh as buildConnectorConfig,
-  Qh as buildContextConfig,
-  Yh as buildPresenterConfig,
-  ep as buildPublicDirectoryIndex,
-  qh as checkDependencies,
-  Hh as documentDependencies,
-  tp as echoScriptNotImplemented,
-  Wh as formatCode,
-  Kh as lintCode,
+  Xh as buildConfig,
+  Qh as buildConnectorConfig,
+  Yh as buildContextConfig,
+  ep as buildPresenterConfig,
+  tp as buildPublicDirectoryIndex,
+  Hh as checkDependencies,
+  Wh as documentDependencies,
+  Kh as formatCode,
+  Gh as lintCode,
   $h as releaseArtifact,
   ip as sendDeploymentNotice,
   Uh as syncArtifactWithGitHub,
-  Gh as updateDataPosDependencies,
+  Zh as testArtifact,
+  Jh as updateDataPosDependencies,
   sp as uploadDirectoryToR2,
   rp as uploadModuleConfigToDO,
   ap as uploadModuleToR2

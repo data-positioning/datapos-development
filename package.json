@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.214",
+    "version": "0.3.215",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -67,7 +67,7 @@
         "lint": "node -e \"import('./dist/datapos-development.es.js').then(m => m.lintCode())\"",
         "release": "node -e \"import('./dist/datapos-development.es.js').then(m => m.releaseArtifact())\"",
         "sync": "node -e \"import('./dist/datapos-development.es.js').then(m => m.syncArtifactWithGitHub())\"",
-        "test": "vitest",
+        "test": "node -e \"import('./dist/datapos-development.es.js').then(m => m.testArtifact())\"",
         "update:dataPosDeps": "node -e \"import('./dist/datapos-development.es.js').then(m => m.updateDataPosDependencies(['shared']))\""
     },
     "engines": {

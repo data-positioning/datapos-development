@@ -7794,7 +7794,7 @@ async function Dh() {
 }
 async function zh() {
   try {
-    console.info("🚀 Synchronising with GitHub...."), Sh("Synchronising with GitHub....");
+    Sh("Synchronising with GitHub....");
     const t = JSON.parse(await F.readFile("package.json", "utf8"));
     await Ye("git add ."), await Ye(`git commit -m "v${t.version}"`), await Ye("git push origin main:main"), console.info(`✅ Synchronised version ${t.version} with GitHub.`);
   } catch (t) {
@@ -7904,7 +7904,7 @@ async function Ye(t) {
 function Sh(t) {
   const e = "\x1B[36m", i = "\x1B[0m", s = "─".repeat(t.length + 10);
   console.info(`
-${e}${s}`), console.info(`   🚀  ${t}`), console.info(`${s}${i}
+${e}${s}`), console.info(`     ${t}`), console.info(`${s}${i}
 `);
 }
 function oi(t, e) {

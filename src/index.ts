@@ -281,9 +281,8 @@ async function buildPresenterConfig(): Promise<void> {
 }
 
 // Operations - Bump version.
-async function bumpVersion(path = './'): Promise<void> {
+async function bumpVersion(packageJSON: PackageJson, path = './'): Promise<void> {
     try {
-        const packageJSON = JSON.parse(await fs.readFile(`${path}package.json`, 'utf8')) as PackageJson;
         if (packageJSON.version == null) {
             packageJSON.version = '0.0.001';
             await fs.writeFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4), 'utf8');
@@ -398,7 +397,7 @@ async function syncWithGitHub(): Promise<void> {
         const packageJSON = await loadJSONFile<PackageJson>('package.json');
 
         showStepHeader('Bump version');
-        await bumpVersion();
+        await bumpVersion(packageJSON);
 
         await execCommand('git add .');
         await execCommand(`git commit -m "v${packageJSON.version}"`);
@@ -639,7 +638,6 @@ export {
     buildContextConfig,
     buildPresenterConfig,
     buildPublicDirectoryIndex,
-    bumpVersion,
     echoScriptNotImplemented,
     insertLicensesIntoReadme,
     insertOWASPDependencyCheckBadgeIntoReadme,

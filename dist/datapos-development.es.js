@@ -7741,17 +7741,16 @@ async function Bh() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function _h(e = "./") {
+async function _h(e, t = "./") {
   try {
-    const t = JSON.parse(await F.readFile(`${e}package.json`, "utf8"));
-    if (t.version == null)
-      t.version = "0.0.001", await F.writeFile(`${e}package.json`, JSON.stringify(t, void 0, 4), "utf8"), console.warn(`⚠️ Version initialised to ${t.version}.`);
+    if (e.version == null)
+      e.version = "0.0.001", await F.writeFile(`${t}package.json`, JSON.stringify(e, void 0, 4), "utf8"), console.warn(`⚠️ Version initialised to ${e.version}.`);
     else {
-      const i = t.version, s = t.version.split(".");
-      t.version = `${s[0]}.${s[1]}.${Number(s[2]) + 1}`, await F.writeFile(`${e}package.json`, JSON.stringify(t, void 0, 4), "utf8"), console.info(`✅ Version bumped from ${i} to ${t.version}.`);
+      const i = e.version, s = e.version.split(".");
+      e.version = `${s[0]}.${s[1]}.${Number(s[2]) + 1}`, await F.writeFile(`${t}package.json`, JSON.stringify(e, void 0, 4), "utf8"), console.info(`✅ Version bumped from ${i} to ${e.version}.`);
     }
-  } catch (t) {
-    console.error("❌ Error bumping package version.", t);
+  } catch (i) {
+    console.error("❌ Error bumping package version.", i);
   }
 }
 function $h(e) {
@@ -7793,7 +7792,7 @@ async function Ph() {
       return;
     }
     const y = a.join(" "), u = o.slice(0, Math.max(0, h + e.length)) + y + o.slice(Math.max(0, d));
-    await F.writeFile("README.md", u, "utf8"), console.info("'✅ OWASP audit badge(s) inserted into 'README.md'");
+    await F.writeFile("README.md", u, "utf8"), console.info("✅ OWASP audit badge(s) inserted into 'README.md'");
   } catch (i) {
     console.error("❌ Error inserting OWASP badges into 'README.md'.", i);
   }
@@ -7816,7 +7815,7 @@ async function qh() {
   try {
     Pi("Synchronising with GitHub");
     const e = await Ah("package.json");
-    it("Bump version"), await _h(), await ei("git add ."), await ei(`git commit -m "v${e.version}"`), await ei("git push origin main:main"), Ai(`Version ${e.version} synchronised with GitHub.`);
+    it("Bump version"), await _h(e), await ei("git add ."), await ei(`git commit -m "v${e.version}"`), await ei("git push origin main:main"), Ai(`Version ${e.version} synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising with GitHub.", e), process.exit(1);
   }
@@ -7969,7 +7968,6 @@ export {
   jh as buildContextConfig,
   Bh as buildPresenterConfig,
   zh as buildPublicDirectoryIndex,
-  _h as bumpVersion,
   $h as echoScriptNotImplemented,
   Uh as insertLicensesIntoReadme,
   Ph as insertOWASPDependencyCheckBadgeIntoReadme,

@@ -349,6 +349,8 @@ export {
     uploadModuleConfigToDO,
     uploadModuleToR2
 };
+
 export { auditDependencies } from './operations/auditDependencies';
 export { buildArtifact } from './operations/buildArtifact';
+export { checkDependencies } from './operations/checkDependencies';
 export { syncWithGitHub } from './operations/syncWithGitHub';

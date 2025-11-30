@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.207",
+    "version": "0.3.208",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -50,7 +50,7 @@
         "nanoid": "^5.1.6",
         "npm-check-updates": "^19.1.2",
         "owasp-dependency-check": "^1.0.0",
-        "prettier": "^3.7.2",
+        "prettier": "^3.7.3",
         "rollup-plugin-visualizer": "^6.0.5",
         "type-fest": "^5.2.0",
         "typescript": "^5.9.3",
@@ -61,7 +61,7 @@
     "scripts": {
         "audit": "node -e \"import('./dist/datapos-development.es.js').then(m => m.auditDependencies())\"",
         "build": "node -e \"import('./dist/datapos-development.es.js').then(m => m.buildArtifact())\"",
-        "check": "npm outdated; npm-check-updates -i",
+        "check": "node -e \"import('./dist/datapos-development.es.js').then(m => m.checkDependencies())\"",
         "document": "npm run _document:licenceReportJSON && npm run _document:licenceReportMarkdown && npm run _document:licenceReportCheck && npm run _document:insertLicensesIntoReadme && npm run _document:licenceTree && npm run _document:licenceTreeCheck",
         "format": "prettier --write src/",
         "lint": "eslint .",

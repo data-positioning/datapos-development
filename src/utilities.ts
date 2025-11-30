@@ -112,12 +112,12 @@ async function readTextFile(path: string): Promise<string> {
 }
 
 // Helpers - Spawn command.
-async function spawnCommand(command: string, arguments_: string[] = []): Promise<void> {
+async function spawnCommand(command: string, arguments_: string[] = [], ignoreErrors = false): Promise<void> {
     logStepHeader(`Spawn command: ${command} ${arguments_.join(' ')}`);
     return new Promise((resolve, reject) => {
         const child = spawn(command, arguments_, { stdio: 'inherit' });
         child.on('close', (code) => {
-            if (code === 0) {
+            if (code === 0 || ignoreErrors) {
                 resolve();
             } else {
                 reject(new Error(`${command} exited with code ${code}`));

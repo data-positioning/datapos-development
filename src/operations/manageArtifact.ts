@@ -28,10 +28,6 @@ async function releaseArtifact(): Promise<void> {
 
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
-        /*
-        npm run _bump:version && npm run build && npm run _sync:withGitHub && npm run publish:toNPM
-        */
-
         logStepHeader('Bump artifact version');
         await bumpArtifactVersion(packageJSON);
 
@@ -71,6 +67,11 @@ async function syncArtifactWithGitHub(): Promise<void> {
     }
 }
 
+// Operations - Test artifact.
+function testArtifact(): void {
+    console.log('Test artifact...');
+}
+
 // Helper - Bump artifact version.
 async function bumpArtifactVersion(packageJSON: PackageJson, path = './'): Promise<void> {
     try {
@@ -90,4 +91,4 @@ async function bumpArtifactVersion(packageJSON: PackageJson, path = './'): Promi
     }
 }
 
-export { buildArtifact, releaseArtifact, syncArtifactWithGitHub };
+export { buildArtifact, releaseArtifact, syncArtifactWithGitHub, testArtifact };

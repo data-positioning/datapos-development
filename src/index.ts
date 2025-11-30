@@ -215,11 +215,6 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
     }
 }
 
-// Operations - Echo not implemented.
-function echoScriptNotImplemented(name: string): void {
-    console.error(`❌ ${name} script not implemented.`);
-}
-
 // Operations - Send deployment notice.
 async function sendDeploymentNotice(): Promise<void> {
     try {
@@ -319,16 +314,16 @@ export {
     buildContextConfig,
     buildPresenterConfig,
     buildPublicDirectoryIndex,
-    echoScriptNotImplemented,
     sendDeploymentNotice,
     uploadDirectoryToR2,
     uploadModuleConfigToDO,
     uploadModuleToR2
 };
 
-export { buildArtifact, releaseArtifact, syncArtifactWithGitHub } from './operations/manageArtifact';
+export { buildArtifact, releaseArtifact, syncArtifactWithGitHub, testArtifact } from './operations/manageArtifact';
 export { auditDependencies } from './operations/auditDependencies';
 export { checkDependencies } from './operations/checkDependencies';
 export { documentDependencies } from './operations/documentDependencies';
 export { formatCode } from './operations/formatCode';
 export { lintCode } from './operations/lintCode';
+export { updateDataPosDependencies } from './operations/updateDataPosDependencies';

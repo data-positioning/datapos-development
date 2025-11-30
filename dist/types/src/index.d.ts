@@ -1,8 +1,6 @@
 /**
  * Development operations.
  */
-declare function audit(): Promise<void>;
-declare function build(): Promise<void>;
 declare function buildConfig(): Promise<void>;
 declare function buildConnectorConfig(): Promise<void>;
 declare function buildContextConfig(): Promise<void>;
@@ -10,10 +8,11 @@ declare function buildPresenterConfig(): Promise<void>;
 declare function buildPublicDirectoryIndex(id: string): Promise<void>;
 declare function echoScriptNotImplemented(name: string): void;
 declare function insertLicensesIntoReadme(): Promise<void>;
-declare function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void>;
 declare function sendDeploymentNotice(): Promise<void>;
 declare function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void>;
 declare function uploadModuleConfigToDO(): Promise<void>;
 declare function uploadModuleToR2(uploadDirectoryPath: string): Promise<void>;
-export { audit, build, buildConfig, buildConnectorConfig, buildContextConfig, buildPresenterConfig, buildPublicDirectoryIndex, echoScriptNotImplemented, insertLicensesIntoReadme, insertOWASPDependencyCheckBadgeIntoReadme, sendDeploymentNotice, uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };
-export { syncWithGitHub } from './syncWithGitHub';
+export { buildConfig, buildConnectorConfig, buildContextConfig, buildPresenterConfig, buildPublicDirectoryIndex, echoScriptNotImplemented, insertLicensesIntoReadme, sendDeploymentNotice, uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };
+export { auditDependencies } from './operations/auditDependencies';
+export { buildArtifact } from './operations/buildArtifact';
+export { syncWithGitHub } from './operations/syncWithGitHub';

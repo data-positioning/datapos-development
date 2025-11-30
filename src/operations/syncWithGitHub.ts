@@ -8,7 +8,7 @@
 import type { PackageJson } from 'type-fest';
 
 // Dependencies - Framework.
-import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, writeJSONFile } from './utilities';
+import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, writeJSONFile } from '../utilities';
 
 // Operations - Synchronise with GitHub.
 async function syncWithGitHub(): Promise<void> {
@@ -31,23 +31,22 @@ async function syncWithGitHub(): Promise<void> {
     }
 }
 
-// Helper - Bump version.
+// Helper - Bump artifact version.
 async function bumpVersion(packageJSON: PackageJson, path = './'): Promise<void> {
     try {
         if (packageJSON.version == null) {
             packageJSON.version = '0.0.001';
-            await writeJSONFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4));
             console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
+            await writeJSONFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4));
         } else {
             const oldVersion = packageJSON.version;
             const versionSegments = packageJSON.version.split('.');
             packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-            await writeJSONFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4));
             console.info(`ℹ️  Version bumped from ${oldVersion} to ${packageJSON.version}.`);
+            await writeJSONFile(`${path}package.json`, JSON.stringify(packageJSON, undefined, 4));
         }
     } catch (error) {
-        console.error('❌ Error bumping package version.', error);
-        process.exit(1);
+        console.error('❌ Error bumping artifact version.', error);
     }
 }
 

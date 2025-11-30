@@ -7,62 +7,18 @@
 // Dependencies - Vendor.
 import acornTypeScript from 'acorn-typescript';
 import { promises as fs } from 'node:fs';
+import { Parser } from 'acorn';
 import { promisify } from 'node:util';
 import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv';
 import { exec, spawn } from 'node:child_process';
-import { type MethodDefinition, type Node, Parser } from 'acorn';
+import type { MethodDefinition, Node } from 'acorn';
 
 // Dependencies - Framework.
-import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS, type ConnectorOperation, type ConnectorUsageId, type ModuleConfig } from '@datapos/datapos-shared';
-
-// Interfaces/Types
-interface BadgeConfig {
-    color: string;
-    label: string;
-}
-export interface SeverityCounts {
-    critical: number;
-    high: number;
-    moderate: number;
-    low: number;
-    unknown: number;
-}
-
-// Constants
-export const ALLOWED_SEVERITY_KEYS = ['critical', 'high', 'moderate', 'low', 'unknown'] as (keyof SeverityCounts)[];
+import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
+import type { ConnectorOperation, ConnectorUsageId } from '@datapos/datapos-shared';
 
 // Initialisation
 const asyncExec = promisify(exec);
-
-// Helpers - Build OWASP badges.
-async function buildOWASPBadges(severityCounts: SeverityCounts): Promise<string[]> {
-    // If needed a possible info color could be #0288D1. See sample badges in ~/tests/sampleBadges.md.
-    const severityBadgeConfig: Record<keyof SeverityCounts, BadgeConfig> = {
-        critical: { color: 'D32F2F', label: 'critical' },
-        high: { color: 'EF6C00', label: 'high' },
-        moderate: { color: 'FBC02D', label: 'moderate' },
-        low: { color: '6D8C31', label: 'low' },
-        unknown: { color: '616161', label: 'unknown' }
-    };
-
-    const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
-    const badges: string[] = [];
-    const totalVulnerabilities = Object.values(severityCounts).reduce<number>((sum, count: number) => sum + count, 0);
-    if (totalVulnerabilities === 0) {
-        console.info('✅ No vulnerabilities found.');
-        const badgeUrl = 'https://img.shields.io/badge/OWASP-passed-4CAF50';
-        badges.push(`[![OWASP](${badgeUrl})](https://data-positioning.github.io/${configJSON.id}/dependency-check-reports/dependency-check-report.html)`);
-    } else {
-        for (const [severity, count] of Object.entries(severityCounts) as [string, number][]) {
-            const config = severityBadgeConfig[severity as keyof SeverityCounts];
-            console.warn(`⚠️  ${count} ${config.label} vulnerability(ies) found.`);
-            if (count === 0) continue;
-            const badgeUrl = `https://img.shields.io/badge/OWASP-${count}%20${config.label}-${config.color}`;
-            badges.push(`[![OWASP](${badgeUrl})](https://data-positioning.github.io/${configJSON.id}/dependency-check-reports/dependency-check-report.html)`);
-        }
-    }
-    return badges;
-}
 
 // Helpers - Extract operations from source.
 function extractOperationsFromSource<T>(source: string): T[] {
@@ -149,6 +105,12 @@ async function readJSONFile<T>(path: string): Promise<T> {
     return JSON.parse(await fs.readFile(path, 'utf8')) as T;
 }
 
+// Helpers - Read text file.
+async function readTextFile(path: string): Promise<string> {
+    logStepHeader(`Load text file '${path}'`);
+    return await fs.readFile(path, 'utf8');
+}
+
 // Helpers - Spawn command.
 async function spawnCommand(command: string, arguments_: string[] = []): Promise<void> {
     logStepHeader(`Spawn command: ${command} ${arguments_.join(' ')}`);
@@ -187,8 +149,13 @@ async function writeJSONFile(path: string, data: string): Promise<void> {
     await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
 }
 
+// Helpers - Write text file.
+async function writeTextFile(path: string, data: string): Promise<void> {
+    logStepHeader(`Write text file '${path}'`);
+    await fs.writeFile(path, data, 'utf8');
+}
+
 export {
-    buildOWASPBadges,
     determineConnectorUsageId,
     execCommand,
     extractOperationsFromSource,
@@ -197,6 +164,8 @@ export {
     logOperationSuccess,
     logStepHeader,
     readJSONFile,
+    readTextFile,
     spawnCommand,
-    writeJSONFile
+    writeJSONFile,
+    writeTextFile
 };

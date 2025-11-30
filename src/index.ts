@@ -3,7 +3,6 @@
  */
 
 /* eslint-disable security/detect-non-literal-fs-filename */
-/* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Vendor.
 import { exec } from 'node:child_process';
@@ -13,20 +12,9 @@ import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
 
 // Dependencies - Framework.
-import {
-    ALLOWED_SEVERITY_KEYS,
-    buildOWASPBadges,
-    determineConnectorUsageId,
-    extractOperationsFromSource,
-    loadEnvironmentVariables,
-    logOperationHeader,
-    logOperationSuccess,
-    logStepHeader,
-    type SeverityCounts,
-    spawnCommand
-} from './utilities';
 import type { ConnectorConfig, ConnectorOperation, ContextConfig, ContextOperation, ModuleConfig, PresenterConfig, PresenterOperation } from '@datapos/datapos-shared';
 import { connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
+import { determineConnectorUsageId, extractOperationsFromSource } from './utilities';
 
 /// Interfaces/Types - Directory entry.
 interface DirectoryEntry {
@@ -46,48 +34,6 @@ interface DirectoryObjectEntry extends DirectoryEntry {
 
 // Initialisation
 const asyncExec = promisify(exec);
-
-// Operations - Audit dependencies.
-async function audit(): Promise<void> {
-    try {
-        logOperationHeader('Audit Dependencies');
-
-        await loadEnvironmentVariables();
-
-        await spawnCommand('owasp-dependency-check', [
-            '--project',
-            '@datapos/datapos-development',
-            '--enableRetired',
-            '--nodePackageSkipDevDependencies',
-            '--nvdApiKey',
-            process.env.NVD_API_KEY ?? ''
-        ]);
-
-        logStepHeader('Insert OWASP Badges');
-        await insertOWASPDependencyCheckBadgeIntoReadme();
-
-        await spawnCommand('npm', ['audit']);
-
-        logOperationSuccess('Dependency audit complete.');
-    } catch (error) {
-        console.error('❌ Error auditing dependencies.', error);
-        process.exit(1);
-    }
-}
-
-// Operations - Build artifact.
-async function build(): Promise<void> {
-    try {
-        logOperationHeader('Build Artifact');
-
-        await spawnCommand('vite', ['build']);
-
-        logOperationSuccess('Artifact built.');
-    } catch (error) {
-        console.error('❌ Error building artifact.', error);
-        process.exit(1);
-    }
-}
 
 // Operations - Build configuration.
 async function buildConfig(): Promise<void> {
@@ -297,50 +243,6 @@ async function insertLicensesIntoReadme(): Promise<void> {
     }
 }
 
-// Operations - Insert OWASP dependency check badge into README file.
-async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
-    const START_MARKER = '<!-- OWASP_BADGES_START -->';
-    const END_MARKER = '<!-- OWASP_BADGES_END -->';
-    try {
-        const dependencyCheckData = JSON.parse(await fs.readFile('./dependency-check-reports/dependency-check-report.json', 'utf8')) as {
-            dependencies: { vulnerabilities?: { severity?: string }[] }[];
-        };
-        const severityCounts: SeverityCounts = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
-        for (const dependency of dependencyCheckData.dependencies) {
-            if (dependency.vulnerabilities == null) continue;
-            for (const vulnerability of dependency.vulnerabilities) {
-                const severity = (vulnerability.severity?.toLowerCase() ?? 'unknown') as keyof SeverityCounts;
-                if (severity in severityCounts) {
-                    const severityKey = ALLOWED_SEVERITY_KEYS.find((key) => key === severity);
-                    severityCounts[severityKey ?? 'unknown']++;
-                } else {
-                    severityCounts.unknown++;
-                }
-            }
-        }
-
-        // Generate shield badges for each severity
-        const badges = await buildOWASPBadges(severityCounts);
-
-        // Insert badges into README
-        const readmeContent = await fs.readFile('./README.md', 'utf8');
-        const startIndex = readmeContent.indexOf(START_MARKER);
-        const endIndex = readmeContent.indexOf(END_MARKER);
-
-        if (startIndex === -1 || endIndex === -1) {
-            console.error("❌ No OWASP badge markers found in 'README.md'.");
-            return;
-        }
-
-        const badgeContent = badges.join(' ');
-        const newContent = readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + badgeContent + readmeContent.slice(Math.max(0, endIndex));
-        await fs.writeFile('README.md', newContent, 'utf8');
-        console.info("✅ OWASP audit badge(s) inserted into 'README.md'");
-    } catch (error) {
-        console.error("❌ Error inserting OWASP badges into 'README.md'.", error);
-    }
-}
-
 // Operations - Send deployment notice.
 async function sendDeploymentNotice(): Promise<void> {
     try {
@@ -435,8 +337,6 @@ async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
 
 // Exposures - Operations.
 export {
-    audit,
-    build,
     buildConfig,
     buildConnectorConfig,
     buildContextConfig,
@@ -444,10 +344,11 @@ export {
     buildPublicDirectoryIndex,
     echoScriptNotImplemented,
     insertLicensesIntoReadme,
-    insertOWASPDependencyCheckBadgeIntoReadme,
     sendDeploymentNotice,
     uploadDirectoryToR2,
     uploadModuleConfigToDO,
     uploadModuleToR2
 };
-export { syncWithGitHub } from './syncWithGitHub';
+export { auditDependencies } from './operations/auditDependencies';
+export { buildArtifact } from './operations/buildArtifact';
+export { syncWithGitHub } from './operations/syncWithGitHub';

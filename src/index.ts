@@ -357,6 +357,7 @@ async function sendDeploymentNotice(): Promise<void> {
 async function syncWithGitHub(): Promise<void> {
     try {
         console.info('🚀 Synchronising with GitHub....');
+        showBanner('Synchronising with GitHub....');
         const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
         await runCommand('git add .');
         await runCommand(`git commit -m "v${packageJSON.version}"`);
@@ -522,12 +523,23 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
 }
 
 // Helpers - Run command
-async function runCommand(cmd: string): Promise<void> {
-    console.info(`▶️  ${cmd}`);
-    const { stdout, stderr } = await asyncExec(cmd);
+async function runCommand(command: string): Promise<void> {
+    console.info(`▶️  ${command}`);
+    const { stdout, stderr } = await asyncExec(command);
 
     if (stdout.trim()) console.log(stdout.trim());
     if (stderr.trim()) console.error(stderr.trim());
+}
+
+// Helpers - Show banner.
+function showBanner(message: string): void {
+    const cyan = '\u001B[36m';
+    const reset = '\u001B[0m';
+    const line = '─'.repeat(message.length + 10);
+
+    console.info(`\n${cyan}${line}`);
+    console.info(`   🚀  ${message}`);
+    console.info(`${line}${reset}\n`);
 }
 
 // Helpers - Traverse AST (Abstract Syntax Tree).

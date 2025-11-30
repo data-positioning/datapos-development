@@ -7617,7 +7617,7 @@ const Vc = st([g("amber"), g("green"), g("red"), g("other")]), Fc = st([
   operations: jt(vh),
   typeId: g("presenter")
 }), gh = ["critical", "high", "moderate", "low", "unknown"], Si = Sr(br);
-async function Ph() {
+async function Ah() {
   try {
     console.info("🚀 Building configuration...");
     const t = JSON.parse(await F.readFile("package.json", "utf8")), e = JSON.parse(await F.readFile("config.json", "utf8"));
@@ -7626,7 +7626,7 @@ async function Ph() {
     console.error("❌ Error building configuration.", t);
   }
 }
-async function Ah(t) {
+async function Ch(t) {
   try {
     console.info(`🚀 Building public directory index for identifier '${t}'...`);
     const e = {};
@@ -7660,7 +7660,7 @@ async function Ah(t) {
     console.error("❌ Error building public directory index.", e);
   }
 }
-async function Ch() {
+async function Eh() {
   try {
     console.info("🚀 Building connector configuration...");
     const [t, e, i] = await Promise.all([
@@ -7680,7 +7680,7 @@ async function Ch() {
     console.error("❌ Error building connector configuration.", t);
   }
 }
-async function Eh() {
+async function Ih() {
   try {
     console.info("🚀 Building context configuration...");
     const [t, e, i] = await Promise.all([
@@ -7700,7 +7700,7 @@ async function Eh() {
     console.error("❌ Error building context configuration.", t);
   }
 }
-async function Ih() {
+async function Nh() {
   try {
     console.info("🚀 Building presenter configuration...");
     const [t, e, i] = await Promise.all([
@@ -7720,7 +7720,7 @@ async function Ih() {
     console.error("❌ Error building context configuration.", t);
   }
 }
-async function Nh(t = "./") {
+async function Lh(t = "./") {
   try {
     console.info("🚀 Bumping version...");
     const e = JSON.parse(await F.readFile(`${t}package.json`, "utf8"));
@@ -7734,10 +7734,10 @@ async function Nh(t = "./") {
     console.error("❌ Error bumping package version.", e);
   }
 }
-function Lh(t) {
+function Oh(t) {
   console.error(`❌ ${t} script not implemented.`);
 }
-async function Oh() {
+async function Mh() {
   const t = "<!-- DEPENDENCY_LICENSES_START -->", e = "<!-- DEPENDENCY_LICENSES_END -->";
   try {
     const s = (await F.readFile("./licenses.md", "utf8")).trim(), a = await F.readFile("./README.md", "utf8"), o = a.indexOf(t), h = a.indexOf(e);
@@ -7753,7 +7753,7 @@ async function Oh() {
     console.error("❌ Error updating readme file.", i);
   }
 }
-async function Mh() {
+async function Rh() {
   const t = "<!-- OWASP_BADGE_START -->", e = "<!-- OWASP_BADGE_END -->";
   try {
     const i = JSON.parse(await F.readFile("./dependency-check-reports/dependency-check-report.json", "utf8")), s = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
@@ -7778,7 +7778,7 @@ async function Mh() {
     console.error("❌ Error updating README with OWASP badges:", i);
   }
 }
-async function Rh() {
+async function Dh() {
   try {
     console.info("🚀 Sending deployment notice...");
     const t = JSON.parse(await F.readFile("config.json", "utf8")), e = {
@@ -7792,16 +7792,16 @@ async function Rh() {
     console.error("❌ Error sending deployment notice.", t);
   }
 }
-async function Dh() {
+async function zh() {
   try {
-    console.info("🚀 Synchronising with GitHub....");
+    console.info("🚀 Synchronising with GitHub...."), Sh("Synchronising with GitHub....");
     const t = JSON.parse(await F.readFile("package.json", "utf8"));
     await Ye("git add ."), await Ye(`git commit -m "v${t.version}"`), await Ye("git push origin main:main"), console.info(`✅ Synchronised version ${t.version} with GitHub.`);
   } catch (t) {
     console.error("❌ Error synchronising with GitHub.", t), process.exit(1);
   }
 }
-async function zh(t, e) {
+async function Vh(t, e) {
   try {
     console.info("🚀 Uploading directory to R2....");
     async function i(a, o, h) {
@@ -7823,7 +7823,7 @@ async function zh(t, e) {
     console.error("❌ Error uploading directory to R2.", i);
   }
 }
-async function Vh() {
+async function Fh() {
   try {
     console.info("🚀 Uploading module configuration....");
     const t = JSON.parse(await F.readFile("config.json", "utf8")), e = t.id, i = {
@@ -7837,7 +7837,7 @@ async function Vh() {
     console.error("❌ Error uploading module configuration.", t);
   }
 }
-async function Fh(t) {
+async function jh(t) {
   try {
     console.info("🚀 Uploading module to R2...");
     const i = `v${JSON.parse(await F.readFile("package.json", "utf8")).version}`;
@@ -7901,6 +7901,12 @@ async function Ye(t) {
   const { stdout: e, stderr: i } = await Si(t);
   e.trim() && console.log(e.trim()), i.trim() && console.error(i.trim());
 }
+function Sh(t) {
+  const e = "\x1B[36m", i = "\x1B[0m", s = "─".repeat(t.length + 10);
+  console.info(`
+${e}${s}`), console.info(`   🚀  ${t}`), console.info(`${s}${i}
+`);
+}
 function oi(t, e) {
   e(t);
   for (const [i, s] of Object.entries(t)) {
@@ -7915,18 +7921,18 @@ function oi(t, e) {
   }
 }
 export {
-  Ph as buildConfig,
-  Ch as buildConnectorConfig,
-  Eh as buildContextConfig,
-  Ih as buildPresenterConfig,
-  Ah as buildPublicDirectoryIndex,
-  Nh as bumpVersion,
-  Lh as echoScriptNotImplemented,
-  Oh as insertLicensesIntoReadme,
-  Mh as insertOWASPDependencyCheckBadgeIntoReadme,
-  Rh as sendDeploymentNotice,
-  Dh as syncWithGitHub,
-  zh as uploadDirectoryToR2,
-  Vh as uploadModuleConfigToDO,
-  Fh as uploadModuleToR2
+  Ah as buildConfig,
+  Eh as buildConnectorConfig,
+  Ih as buildContextConfig,
+  Nh as buildPresenterConfig,
+  Ch as buildPublicDirectoryIndex,
+  Lh as bumpVersion,
+  Oh as echoScriptNotImplemented,
+  Mh as insertLicensesIntoReadme,
+  Rh as insertOWASPDependencyCheckBadgeIntoReadme,
+  Dh as sendDeploymentNotice,
+  zh as syncWithGitHub,
+  Vh as uploadDirectoryToR2,
+  Fh as uploadModuleConfigToDO,
+  jh as uploadModuleToR2
 };

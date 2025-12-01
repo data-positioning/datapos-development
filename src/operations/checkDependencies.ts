@@ -12,8 +12,8 @@ async function checkDependencies(): Promise<void> {
     try {
         logOperationHeader('Check Dependencies');
 
-        await spawnCommand('npm', ['outdated'], true);
-        await spawnCommand('npm-check-updates', ['-i']);
+        await spawnCommand('', 'npm', ['outdated'], true);
+        await spawnCommand('', 'npm-check-updates', ['-i']);
 
         logOperationSuccess('Dependency checking complete.');
     } catch (error) {

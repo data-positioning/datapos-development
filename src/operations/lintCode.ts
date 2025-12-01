@@ -12,7 +12,7 @@ async function lintCode(): Promise<void> {
     try {
         logOperationHeader('Lint Code');
 
-        await spawnCommand('eslint', ['.']);
+        await spawnCommand('', 'eslint', ['.']);
 
         logOperationSuccess('Code linting complete.');
     } catch (error) {

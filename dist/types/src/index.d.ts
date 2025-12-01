@@ -11,7 +11,7 @@ declare function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: s
 declare function uploadModuleConfigToDO(): Promise<void>;
 declare function uploadModuleToR2(uploadDirectoryPath: string): Promise<void>;
 export { buildConfig, buildConnectorConfig, buildContextConfig, buildPresenterConfig, buildPublicDirectoryIndex, sendDeploymentNotice, uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };
-export { buildArtifact, releaseArtifact, syncArtifactWithGitHub, testArtifact } from './operations/manageArtifact';
+export { buildProject, releaseProject, syncProjectWithGitHub, testProject } from './operations/manageArtifact';
 export { auditDependencies } from './operations/auditDependencies';
 export { checkDependencies } from './operations/checkDependencies';
 export { documentDependencies } from './operations/documentDependencies';

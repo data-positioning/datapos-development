@@ -13,7 +13,7 @@ async function updateDataPosDependencies(dependencies: string[]): Promise<void> 
         logOperationHeader('Update datapos Dependencies');
 
         for (const dependency of dependencies) {
-            await spawnCommand('npm', ['install', `@datapos/datapos-${dependency}@latest`]);
+            await spawnCommand('', 'npm', ['install', `@datapos/datapos-${dependency}@latest`]);
         }
 
         logOperationSuccess('Updating datapos dependencies complete.');

@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.220",
+    "version": "0.3.221",
     "description": "A library of utilities for managing the Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -60,14 +60,14 @@
     },
     "scripts": {
         "audit": "node -e \"import('./dist/datapos-development.es.js').then(m => m.auditDependencies())\"",
-        "build": "node -e \"import('./dist/datapos-development.es.js').then(m => m.buildArtifact())\"",
+        "build": "node -e \"import('./dist/datapos-development.es.js').then(m => m.buildProject())\"",
         "check": "node -e \"import('./dist/datapos-development.es.js').then(m => m.checkDependencies())\"",
         "document": "node -e \"import('./dist/datapos-development.es.js').then(m => m.documentDependencies(['BSD-2-Clause','MIT']))\"",
         "format": "node -e \"import('./dist/datapos-development.es.js').then(m => m.formatCode())\"",
         "lint": "node -e \"import('./dist/datapos-development.es.js').then(m => m.lintCode())\"",
-        "release": "node -e \"import('./dist/datapos-development.es.js').then(m => m.releaseArtifact())\"",
-        "sync": "node -e \"import('./dist/datapos-development.es.js').then(m => m.syncArtifactWithGitHub())\"",
-        "test": "node -e \"import('./dist/datapos-development.es.js').then(m => m.testArtifact())\"",
+        "release": "node -e \"import('./dist/datapos-development.es.js').then(m => m.releaseProject())\"",
+        "sync": "node -e \"import('./dist/datapos-development.es.js').then(m => m.syncProjectWithGitHub())\"",
+        "test": "node -e \"import('./dist/datapos-development.es.js').then(m => m.testProject())\"",
         "update:dataPosDeps": "node -e \"import('./dist/datapos-development.es.js').then(m => m.updateDataPosDependencies(['shared']))\""
     },
     "engines": {

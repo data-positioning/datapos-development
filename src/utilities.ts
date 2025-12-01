@@ -90,7 +90,7 @@ function logOperationHeader(text: string): void {
     const reset = '\u001B[0m';
     const line = '─'.repeat(text.length + 10);
     console.info(`\n${cyan}${line}`);
-    console.info(`🚀 ${text}`);
+    console.info(`▶️  ${text}`);
     console.info(`${line}${reset}`);
 }
 
@@ -101,24 +101,24 @@ function logOperationSuccess(message: string): void {
 
 // Helpers - Log step header.
 function logStepHeader(text: string): void {
-    console.info(`\n▶️  ${text}`);
+    console.info(`\nℹ️  ${text}`);
 }
 
 // Helpers - Read JSON file.
 async function readJSONFile<T>(path: string): Promise<T> {
-    // logStepHeader(`Load JSON file '${path}'`);
+    logStepHeader(`Load JSON file '${path}'`);
     return JSON.parse(await fs.readFile(path, 'utf8')) as T;
 }
 
 // Helpers - Read text file.
 async function readTextFile(path: string): Promise<string> {
-    // logStepHeader(`Load text file '${path}'`);
+    logStepHeader(`Load text file '${path}'`);
     return await fs.readFile(path, 'utf8');
 }
 
 // Helpers - Spawn command.
-async function spawnCommand(command: string, arguments_: string[] = [], ignoreErrors = false): Promise<void> {
-    logStepHeader(`Spawn command: ${command} ${arguments_.join(' ')}`);
+async function spawnCommand(label: string, command: string, arguments_: string[] = [], ignoreErrors = false): Promise<void> {
+    logStepHeader(`${label}. Spawn command: ${command} ${arguments_.join(' ')}`);
     return new Promise((resolve, reject) => {
         const child = spawn(command, arguments_, { stdio: 'inherit' });
         child.on('close', (code) => {
@@ -150,13 +150,13 @@ function traverseAST(node: Node, doIt: (node: Node) => void): void {
 
 // Helpers - Write JSON file.
 async function writeJSONFile(path: string, data: object): Promise<void> {
-    // logStepHeader(`Write JSON file '${path}'`);
+    logStepHeader(`Write JSON file '${path}'`);
     await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
 }
 
 // Helpers - Write text file.
 async function writeTextFile(path: string, data: string): Promise<void> {
-    // logStepHeader(`Write text file '${path}'`);
+    logStepHeader(`Write text file '${path}'`);
     await fs.writeFile(path, data, 'utf8');
 }
 

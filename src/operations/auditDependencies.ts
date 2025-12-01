@@ -34,7 +34,7 @@ async function auditDependencies(): Promise<void> {
 
         await loadEnvironmentVariables();
 
-        await spawnCommand('owasp-dependency-check', [
+        await spawnCommand('', 'owasp-dependency-check', [
             '--project',
             '@datapos/datapos-development',
             '--enableRetired',
@@ -46,7 +46,7 @@ async function auditDependencies(): Promise<void> {
         logStepHeader("Insert OWASP Badge(s) into 'README.md'");
         await insertOWASPDependencyCheckBadgeIntoReadme();
 
-        await spawnCommand('npm', ['audit']);
+        await spawnCommand('', 'npm', ['audit']);
 
         logOperationSuccess('Dependency auditing complete.');
     } catch (error) {

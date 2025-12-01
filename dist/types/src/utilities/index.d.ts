@@ -1,7 +1,9 @@
-import { ConnectorOperation, ConnectorUsageId } from '@datapos/datapos-shared';
+import { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
 declare function extractOperationsFromSource<T>(source: string): T[];
-declare function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorUsageId;
-declare function execCommand(label: string, command_: string, arguments_?: string[], outputFilePath?: string): Promise<void>;
+declare function execCommand(label: string | undefined, command_: string, arguments_?: string[], outputFilePath?: string): Promise<void>;
+declare function getDirectoryEntries(path: string): Promise<string[]>;
+declare function getDirectoryEntries(path: string, options: ObjectEncodingOptions): Promise<Dirent[]>;
+declare function getStatsForPath(path: string): Promise<Stats>;
 declare function loadEnvironmentVariables(): Promise<void>;
 declare function logOperationHeader(text: string): void;
 declare function logOperationSuccess(message: string): void;
@@ -11,4 +13,4 @@ declare function readTextFile(path: string): Promise<string>;
 declare function spawnCommand(label: string, command: string, arguments_?: string[], ignoreErrors?: boolean): Promise<void>;
 declare function writeJSONFile(path: string, data: object): Promise<void>;
 declare function writeTextFile(path: string, data: string): Promise<void>;
-export { determineConnectorUsageId, execCommand, extractOperationsFromSource, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, spawnCommand, writeJSONFile, writeTextFile };
+export { execCommand, extractOperationsFromSource, getDirectoryEntries, getStatsForPath, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, spawnCommand, writeJSONFile, writeTextFile };

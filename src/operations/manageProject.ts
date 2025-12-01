@@ -30,6 +30,7 @@ import type {
     PresenterConfig,
     PresenterOperation
 } from '@datapos/datapos-shared';
+import { uploadModuleToR2 } from '../utilities/cloudflare';
 
 // Interfaces/Types
 type PackageTypeId = 'connector' | 'context' | 'presenter' | 'tool' | 'other';
@@ -53,6 +54,7 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
         logOperationHeader('Release Project');
 
         const packageJSON = await readJSONFile<PackageJson>('package.json');
+        const configJSON = await readJSONFile<ModuleConfig>('config.json');
 
         await bumpProjectVersion('1️⃣', packageJSON);
 
@@ -80,15 +82,19 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         await execCommand('6️⃣  Push changes', 'git', ['push', 'origin', 'main:main']);
 
-        switch (packageTypeId) {
-            case 'connector':
-                break;
-            case 'context':
-                break;
-            case 'presenter':
-                break;
-            default:
-        }
+        const prefix = 'tools';
+        const suffix = configJSON.id.slice(Math.max(0, configJSON.id.lastIndexOf('-') + 1));
+        console.log(1111, `${prefix}/${suffix}`);
+        // switch (packageTypeId) {
+        //     case 'connector':
+        //     case 'context':
+        //     case 'presenter':
+        //     case 'tool':
+        //         moduleConfigToDO();
+        //         uploadModuleToR2();
+        //         break;
+        //     default:
+        // }
 
         await spawnCommand('7️⃣. Publish to npm', 'npm', ['publish', '--access', 'public']);
 
@@ -285,3 +291,6 @@ async function sendDeploymentNotice(stepIcon: string): Promise<void> {
 }
 
 export { buildProject, releaseProject, syncProjectWithGitHub, testProject };
+function moduleConfigToDO() {
+    throw new Error('Function not implemented.');
+}

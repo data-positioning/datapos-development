@@ -106,13 +106,13 @@ function logStepHeader(text: string): void {
 
 // Helpers - Read JSON file.
 async function readJSONFile<T>(path: string): Promise<T> {
-    logStepHeader(`Load JSON file '${path}'`);
+    // logStepHeader(`Load JSON file '${path}'`);
     return JSON.parse(await fs.readFile(path, 'utf8')) as T;
 }
 
 // Helpers - Read text file.
 async function readTextFile(path: string): Promise<string> {
-    logStepHeader(`Load text file '${path}'`);
+    // logStepHeader(`Load text file '${path}'`);
     return await fs.readFile(path, 'utf8');
 }
 
@@ -150,13 +150,13 @@ function traverseAST(node: Node, doIt: (node: Node) => void): void {
 
 // Helpers - Write JSON file.
 async function writeJSONFile(path: string, data: object): Promise<void> {
-    logStepHeader(`Write JSON file '${path}'`);
+    // logStepHeader(`Write JSON file '${path}'`);
     await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
 }
 
 // Helpers - Write text file.
 async function writeTextFile(path: string, data: string): Promise<void> {
-    logStepHeader(`Write text file '${path}'`);
+    // logStepHeader(`Write text file '${path}'`);
     await fs.writeFile(path, data, 'utf8');
 }
 

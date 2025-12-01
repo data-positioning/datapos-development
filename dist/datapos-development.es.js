@@ -7642,7 +7642,7 @@ async function _e(e, t, i = [], s) {
   const a = `${t} ${i.join(" ")}`;
   We(`${e}. Execute command: '${a}'`);
   const { stdout: o, stderr: h } = await Eh(a);
-  o.trim() && console.log(o.trim()), h.trim() && console.error(h.trim());
+  s === void 0 ? o.trim() && console.log(o.trim()) : await $.writeFile(s, o.trim(), "utf8"), h.trim() && console.error(h.trim());
 }
 async function Nh() {
   We("Load environment variables"), (await import("dotenv")).config();
@@ -7704,7 +7704,7 @@ async function Uh(e = !1) {
   try {
     Ne("Release Project");
     const t = await St("package.json");
-    await _r("1️⃣", t), await Lh("2️⃣", t), await Ae("3️⃣  Bundle project.", "vite", ["build"]), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${t.version}"`]), await _e("git", ["push", "origin", "main:main"]), await Ae("", "npm", ["publish", "--access", "public"]), Ve(`Project version ${t.version} released.`);
+    await _r("1️⃣", t), await Lh("2️⃣", t), await Ae("3️⃣  Bundle project.", "vite", ["build"]), await _e("", "git", ["add", "."]), await _e("", "git", ["commit", "-m", `"v${t.version}"`]), await _e("", "git", ["push", "origin", "main:main"]), await Ae("", "npm", ["publish", "--access", "public"]), Ve(`Project version ${t.version} released.`);
   } catch (t) {
     console.error("❌ Error releasing project.", t), process.exit(1);
   }
@@ -7713,7 +7713,7 @@ async function Zh() {
   try {
     Ne("Synchronise Project with GitHub");
     const e = await St("package.json");
-    We("Bump project version"), await _r("1️⃣", e), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${e.version}"`]), await _e("git", ["push", "origin", "main:main"]), Ve(`Project version ${e.version} synchronised with GitHub.`);
+    We("Bump project version"), await _r("1️⃣", e), await _e("", "git", ["add", "."]), await _e("", "git", ["commit", "-m", `"v${e.version}"`]), await _e("", "git", ["push", "origin", "main:main"]), Ve(`Project version ${e.version} synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }
@@ -7811,14 +7811,16 @@ async function Kh(e) {
     Ne("Document Dependencies");
     const t = e.flatMap((i) => ["--allowed", i]);
     await _e(
+      "",
       "license-report",
       ["--only=prod,peer", "--output=json", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenses.json"
-    ), await _e("license-report", ["--config", "license-report-config.json", "--only=prod,peer", "--output=markdown"], "licenses.md"), await _e("license-report-check", ["--source", "./licenses.json", "--output=table", ...t]), await _e(
+    ), await _e("", "license-report", ["--config", "license-report-config.json", "--only=prod,peer", "--output=markdown"], "licenses.md"), await _e("", "license-report-check", ["--source", "./licenses.json", "--output=table", ...t]), await _e(
+      "",
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", " --recurse", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenseTree.json"
-    ), await _e("license-report-check", ["--source", "./licenseTree.json", "--output=table", ...t]), We("Insert licenses into 'README.md'"), await Dh(), Ve("Document dependencies complete.");
+    ), await _e("", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...t]), We("Insert licenses into 'README.md'"), await Dh(), Ve("Document dependencies complete.");
   } catch (t) {
     console.error("❌ Error documenting dependencies.", t), process.exit(1);
   }

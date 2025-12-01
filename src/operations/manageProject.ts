@@ -35,9 +35,9 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         await spawnCommand('3️⃣  Bundle project.', 'vite', ['build']);
 
-        await execCommand('git', ['add', '.']);
-        await execCommand('git', ['commit', '-m', `"v${packageJSON.version}"`]);
-        await execCommand('git', ['push', 'origin', 'main:main']);
+        await execCommand('', 'git', ['add', '.']);
+        await execCommand('', 'git', ['commit', '-m', `"v${packageJSON.version}"`]);
+        await execCommand('', 'git', ['push', 'origin', 'main:main']);
 
         await spawnCommand('', 'npm', ['publish', '--access', 'public']);
 
@@ -58,9 +58,9 @@ async function syncProjectWithGitHub(): Promise<void> {
         logStepHeader('Bump project version');
         await bumpProjectVersion('1️⃣', packageJSON);
 
-        await execCommand('git', ['add', '.']);
-        await execCommand('git', ['commit', '-m', `"v${packageJSON.version}"`]);
-        await execCommand('git', ['push', 'origin', 'main:main']);
+        await execCommand('', 'git', ['add', '.']);
+        await execCommand('', 'git', ['commit', '-m', `"v${packageJSON.version}"`]);
+        await execCommand('', 'git', ['push', 'origin', 'main:main']);
 
         logOperationSuccess(`Project version ${packageJSON.version} synchronised with GitHub.`);
     } catch (error) {

@@ -15,22 +15,24 @@ async function documentDependencies(licenses: string[]): Promise<void> {
         const allowedFlags = licenses.flatMap((license) => ['--allowed', license]);
 
         await execCommand(
+            '',
             'license-report',
             ['--only=prod,peer', '--output=json', '--department.value=n/a', '--licensePeriod=n/a', '--material=n/a', '--relatedTo.value=n/a'],
             'licenses.json'
         );
 
-        await execCommand('license-report', ['--config', 'license-report-config.json', '--only=prod,peer', '--output=markdown'], 'licenses.md');
+        await execCommand('', 'license-report', ['--config', 'license-report-config.json', '--only=prod,peer', '--output=markdown'], 'licenses.md');
 
-        await execCommand('license-report-check', ['--source', './licenses.json', '--output=table', ...allowedFlags]);
+        await execCommand('', 'license-report-check', ['--source', './licenses.json', '--output=table', ...allowedFlags]);
 
         await execCommand(
+            '',
             'license-report-recursive',
             ['--only=prod,peer', '--output=tree', ' --recurse', '--department.value=n/a', '--licensePeriod=n/a', '--material=n/a', '--relatedTo.value=n/a'],
             'licenseTree.json'
         );
 
-        await execCommand('license-report-check', ['--source', './licenseTree.json', '--output=table', ...allowedFlags]);
+        await execCommand('', 'license-report-check', ['--source', './licenseTree.json', '--output=table', ...allowedFlags]);
 
         logStepHeader("Insert licenses into 'README.md'");
         await insertLicensesIntoReadme();

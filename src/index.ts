@@ -12,9 +12,7 @@ import type { PackageJson } from 'type-fest';
 import { promisify } from 'node:util';
 
 // Dependencies - Framework.
-import type { ConnectorConfig, ConnectorOperation, ContextConfig, ContextOperation, ModuleConfig, PresenterConfig, PresenterOperation } from '@datapos/datapos-shared';
-import { connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
-import { determineConnectorUsageId, extractOperationsFromSource } from './utilities';
+import type { ModuleConfig } from '@datapos/datapos-shared';
 
 /// Interfaces/Types - Directory entry.
 interface DirectoryEntry {
@@ -34,143 +32,6 @@ interface DirectoryObjectEntry extends DirectoryEntry {
 
 // Initialisation
 const asyncExec = promisify(exec);
-
-// Operations - Build configuration.
-async function buildConfig(): Promise<void> {
-    try {
-        console.info('🚀 Building configuration...');
-
-        const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
-
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
-
-        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-        if (packageJSON.version != null) configJSON.version = packageJSON.version;
-
-        await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
-
-        console.info('✅ Configuration built.');
-    } catch (error) {
-        console.error('❌ Error building configuration.', error);
-    }
-}
-
-// Operations - Build connector configuration.
-async function buildConnectorConfig(): Promise<void> {
-    try {
-        console.info('🚀 Building connector configuration...');
-
-        const [packageJSON, configJSON, indexCode] = await Promise.all([
-            fs.readFile('package.json', 'utf8').then((s) => JSON.parse(s) as PackageJson),
-            fs.readFile('config.json', 'utf8').then((s) => JSON.parse(s) as ConnectorConfig),
-            fs.readFile('src/index.ts', 'utf8')
-        ]);
-
-        const response = connectorConfigSchema.safeParse(configJSON);
-        if (response.success) {
-            console.info(`ℹ️  Configuration is valid.`);
-        } else {
-            console.log('❌ Configuration is invalid:');
-            console.table(response.error.issues);
-            return;
-        }
-
-        const operations = extractOperationsFromSource<ConnectorOperation>(indexCode);
-        const usageId = determineConnectorUsageId(operations);
-
-        if (operations.length > 0) {
-            console.info(`ℹ️  Implements ${operations.length} operations:`);
-            console.table(operations);
-        } else console.warn('⚠️  Implements no operations.');
-
-        if (usageId === 'unknown') console.warn('⚠️  No usage identified.');
-        else console.info(`ℹ️  Supports '${usageId}' usage.`);
-
-        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-        if (packageJSON.version != null) configJSON.version = packageJSON.version;
-        configJSON.operations = operations;
-        configJSON.usageId = usageId;
-
-        await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
-        console.info('✅ Connector configuration built.');
-    } catch (error) {
-        console.error('❌ Error building connector configuration.', error);
-    }
-}
-
-// Operations - Build context configuration.
-async function buildContextConfig(): Promise<void> {
-    try {
-        console.info('🚀 Building context configuration...');
-
-        const [packageJSON, configJSON, indexCode] = await Promise.all([
-            fs.readFile('package.json', 'utf8').then((s) => JSON.parse(s) as PackageJson),
-            fs.readFile('config.json', 'utf8').then((s) => JSON.parse(s) as ContextConfig),
-            fs.readFile('src/index.ts', 'utf8')
-        ]);
-
-        const response = contextConfigSchema.safeParse(configJSON);
-        if (response.success) {
-            console.info(`ℹ️  Configuration is valid.`);
-        } else {
-            console.log('❌ Configuration is invalid:');
-            console.table(response.error.issues);
-            return;
-        }
-
-        const operations = extractOperationsFromSource<ContextOperation>(indexCode);
-        if (operations.length > 0) {
-            console.info(`ℹ️  Implements ${operations.length} operations:`);
-            console.table(operations);
-        } else console.warn('⚠️  Implements no operations.');
-
-        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-        if (packageJSON.version != null) configJSON.version = packageJSON.version;
-        configJSON.operations = operations;
-
-        await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
-        console.info('✅ Context configuration built.');
-    } catch (error) {
-        console.error('❌ Error building context configuration.', error);
-    }
-}
-
-// Operations - Build presenter configuration.
-async function buildPresenterConfig(): Promise<void> {
-    try {
-        console.info('🚀 Building presenter configuration...');
-
-        const [packageJSON, configJSON, indexCode] = await Promise.all([
-            fs.readFile('package.json', 'utf8').then((s) => JSON.parse(s) as PackageJson),
-            fs.readFile('config.json', 'utf8').then((s) => JSON.parse(s) as PresenterConfig),
-            fs.readFile('src/index.ts', 'utf8')
-        ]);
-
-        const response = presenterConfigSchema.safeParse(configJSON);
-        if (response.success) {
-            console.info(`ℹ️  Configuration is valid.`);
-        } else {
-            console.log('❌ Configuration is invalid:');
-            console.table(response.error.issues);
-            return;
-        }
-
-        const operations = extractOperationsFromSource<PresenterOperation>(indexCode);
-        if (operations.length > 0) {
-            console.info(`ℹ️  Implements ${operations.length} operations:`);
-            console.table(operations);
-        } else console.warn('⚠️  Implements no operations.');
-
-        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-        if (packageJSON.version != null) configJSON.version = packageJSON.version;
-        configJSON.operations = operations;
-
-        await fs.writeFile('config.json', JSON.stringify(configJSON, undefined, 4), 'utf8');
-        console.info('✅ Presenter configuration built.');
-    } catch (error) {
-        console.error('❌ Error building context configuration.', error);
-    }
-}
 
 // Operations - Build public directory index.
 async function buildPublicDirectoryIndex(id: string): Promise<void> {
@@ -212,24 +73,6 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
         console.info('✅ Public directory index built.');
     } catch (error) {
         console.error('❌ Error building public directory index.', error);
-    }
-}
-
-// Operations - Send deployment notice.
-async function sendDeploymentNotice(): Promise<void> {
-    try {
-        console.info('🚀 Sending deployment notice...');
-        const configJSON = JSON.parse(await fs.readFile('config.json', 'utf8')) as ModuleConfig;
-        const options = {
-            body: JSON.stringify(configJSON),
-            headers: { 'Content-Type': 'application/json' },
-            method: 'PUT'
-        };
-        const response = await fetch(`https://api.datapos.app/states/${configJSON.id}`, options);
-        if (!response.ok) throw new Error(await response.text());
-        console.info('✅ Deployment notice sent.');
-    } catch (error) {
-        console.error('❌ Error sending deployment notice.', error);
     }
 }
 
@@ -308,17 +151,7 @@ async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
 }
 
 // Exposures - Operations.
-export {
-    buildConfig,
-    buildConnectorConfig,
-    buildContextConfig,
-    buildPresenterConfig,
-    buildPublicDirectoryIndex,
-    sendDeploymentNotice,
-    uploadDirectoryToR2,
-    uploadModuleConfigToDO,
-    uploadModuleToR2
-};
+export { buildPublicDirectoryIndex, uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };
 
 export { buildProject, releaseProject, syncProjectWithGitHub, testProject } from './operations/manageProject';
 export { auditDependencies } from './operations/auditDependencies';

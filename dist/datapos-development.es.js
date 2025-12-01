@@ -7738,7 +7738,7 @@ async function _r(e, t, i = "./") {
     t.version = "0.0.001", console.warn(`⚠️ Project version initialised to '${t.version}'.`), await di(`${i}package.json`, t);
   else {
     const s = t.version, a = t.version.split(".");
-    t.version = `${a[0]}.${a[1]}.${Number(a[2]) + 1}`, console.info(`✔️  Project version bumped from '${s}' to '${t.version}'.`), await di(`${i}package.json`, t);
+    t.version = `${a[0]}.${a[1]}.${Number(a[2]) + 1}`, console.info(`Project version bumped from '${s}' to '${t.version}'.`), await di(`${i}package.json`, t);
   }
 }
 const Oh = ["critical", "high", "moderate", "low", "unknown"];
@@ -7776,7 +7776,7 @@ async function Mh() {
       return;
     }
     const y = a.join(" "), u = o.slice(0, Math.max(0, h + e.length)) + y + o.slice(Math.max(0, d));
-    await Tr("README.md", u), console.info("✔️  OWASP audit badge(s) inserted into 'README.md'");
+    await Tr("README.md", u), console.info("OWASP audit badge(s) inserted into 'README.md'");
   } catch (i) {
     console.error("❌ Error inserting OWASP badges into 'README.md'.", i);
   }
@@ -7790,7 +7790,7 @@ async function Rh(e) {
     unknown: { color: "616161", label: "unknown" }
   }, i = await St("config.json"), s = [];
   if (Object.values(e).reduce((o, h) => o + h, 0) === 0)
-    console.info("✔️  No vulnerabilities found."), s.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/${i.id}/dependency-check-reports/dependency-check-report.html)`);
+    console.info("No vulnerabilities found."), s.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/${i.id}/dependency-check-reports/dependency-check-report.html)`);
   else
     for (const [o, h] of Object.entries(e)) {
       const d = t[o];

@@ -102,7 +102,7 @@ async function bumpProjectVersion(stepIcon: string, packageJSON: PackageJson, pa
         const oldVersion = packageJSON.version;
         const versionSegments = packageJSON.version.split('.');
         packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-        console.info(`✔️  Project version bumped from '${oldVersion}' to '${packageJSON.version}'.`);
+        console.info(`Project version bumped from '${oldVersion}' to '${packageJSON.version}'.`);
         await writeJSONFile(`${path}package.json`, packageJSON);
     }
 }

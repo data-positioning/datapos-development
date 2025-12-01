@@ -7731,7 +7731,7 @@ function qh() {
 async function Lh(e, t) {
   We(`${e}  Build project configuration`);
   const i = await St("config.json");
-  t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), await di("config.json", i), console.info("✔️  Configuration built.");
+  t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), await di("config.json", i);
 }
 async function _r(e, t, i = "./") {
   if (We(`${e}  Bump project version`), t.version == null)
@@ -7776,7 +7776,7 @@ async function Mh() {
       return;
     }
     const y = a.join(" "), u = o.slice(0, Math.max(0, h + e.length)) + y + o.slice(Math.max(0, d));
-    await Tr("README.md", u), console.info("✅ OWASP audit badge(s) inserted into 'README.md'");
+    await Tr("README.md", u), console.info("✔️  OWASP audit badge(s) inserted into 'README.md'");
   } catch (i) {
     console.error("❌ Error inserting OWASP badges into 'README.md'.", i);
   }
@@ -7790,7 +7790,7 @@ async function Rh(e) {
     unknown: { color: "616161", label: "unknown" }
   }, i = await St("config.json"), s = [];
   if (Object.values(e).reduce((o, h) => o + h, 0) === 0)
-    console.info("✅ No vulnerabilities found."), s.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/${i.id}/dependency-check-reports/dependency-check-report.html)`);
+    console.info("✔️  No vulnerabilities found."), s.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/${i.id}/dependency-check-reports/dependency-check-report.html)`);
   else
     for (const [o, h] of Object.entries(e)) {
       const d = t[o];
@@ -7812,35 +7812,31 @@ async function Kh(e) {
     Ne("Document Dependencies");
     const t = e.flatMap((i) => ["--allowed", i]);
     await _e(
-      "",
+      "1️⃣  Generate 'licenses.json' file",
       "license-report",
       ["--only=prod,peer", "--output=json", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenses.json"
-    ), await _e("", "license-report", ["--config", "license-report-config.json", "--only=prod,peer", "--output=markdown"], "licenses.md"), await _e("", "license-report-check", ["--source", "./licenses.json", "--output=table", ...t]), await _e(
-      "",
+    ), await _e("2️⃣  Generate 'licenses.md' file", "license-report", ["--config", "license-report-config.json", "--only=prod,peer", "--output=markdown"], "licenses.md"), await _e("3️⃣. Check 'licenses.json' file", "license-report-check", ["--source", "./licenses.json", "--output=table", ...t]), await _e(
+      "4️⃣  Generate 'licenseTree.json' file",
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", " --recurse", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenseTree.json"
-    ), await _e("", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...t]), We("Insert licenses into 'README.md'"), await Dh(), Ve("Document dependencies complete.");
+    ), await _e("5️⃣. Check 'licenseTree.json' file", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...t]), await Dh("6️⃣"), Ve("Dependencies documented.");
   } catch (t) {
     console.error("❌ Error documenting dependencies.", t), process.exit(1);
   }
 }
-async function Dh() {
-  const e = "<!-- DEPENDENCY_LICENSES_START -->", t = "<!-- DEPENDENCY_LICENSES_END -->";
-  try {
-    const s = (await li("./licenses.md")).trim(), a = await li("./README.md"), o = a.indexOf(e), h = a.indexOf(t);
-    if (o === -1 || h === -1) {
-      console.error("❌ No dependency license markers found in 'README.md'.");
-      return;
-    }
-    const d = a.slice(0, Math.max(0, o + e.length)) + `
-` + s + `
-` + a.slice(Math.max(0, h));
-    await Tr("README.md", d), console.log("✅ Updated dependency license information in 'README.md'.");
-  } catch (i) {
-    console.error("❌ Error inserting dependency license information into 'README.md'.", i);
+async function Dh(e) {
+  We(`${e}  Insert licenses into 'README.md'`);
+  const t = "<!-- DEPENDENCY_LICENSES_START -->", i = "<!-- DEPENDENCY_LICENSES_END -->", a = (await li("./licenses.md")).trim(), o = await li("./README.md"), h = o.indexOf(t), d = o.indexOf(i);
+  if (h === -1 || d === -1) {
+    console.error("❌ No dependency license markers found in 'README.md'.");
+    return;
   }
+  const y = o.slice(0, Math.max(0, h + t.length)) + `
+` + a + `
+` + o.slice(Math.max(0, d));
+  await Tr("README.md", y);
 }
 async function Gh() {
   try {

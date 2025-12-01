@@ -88,8 +88,6 @@ async function buildProjectConfig(stepIcon: string, packageJSON: PackageJson): P
     if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
     if (packageJSON.version != null) configJSON.version = packageJSON.version;
     await writeJSONFile('config.json', configJSON);
-
-    console.info('✔️  Configuration built.');
 }
 
 // Helper - Bump project version.

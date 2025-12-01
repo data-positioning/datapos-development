@@ -91,7 +91,7 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
         const badgeContent = badges.join(' ');
         const newContent = readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + badgeContent + readmeContent.slice(Math.max(0, endIndex));
         await writeTextFile('README.md', newContent);
-        console.info("✅ OWASP audit badge(s) inserted into 'README.md'");
+        console.info("✔️  OWASP audit badge(s) inserted into 'README.md'");
     } catch (error) {
         console.error("❌ Error inserting OWASP badges into 'README.md'.", error);
     }
@@ -112,7 +112,7 @@ async function buildOWASPBadges(severityCounts: SeverityCounts): Promise<string[
     const badges: string[] = [];
     const totalVulnerabilities = Object.values(severityCounts).reduce<number>((sum, count: number) => sum + count, 0);
     if (totalVulnerabilities === 0) {
-        console.info('✅ No vulnerabilities found.');
+        console.info('✔️  No vulnerabilities found.');
         const badgeUrl = 'https://img.shields.io/badge/OWASP-passed-4CAF50';
         badges.push(`[![OWASP](${badgeUrl})](https://data-positioning.github.io/${configJSON.id}/dependency-check-reports/dependency-check-report.html)`);
     } else {

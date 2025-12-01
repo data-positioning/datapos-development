@@ -14,7 +14,7 @@ async function buildProject(): Promise<void> {
     try {
         logOperationHeader('Build Project');
 
-        await spawnCommand('', 'vite', ['build']);
+        await spawnCommand('1️⃣  Bundle project', 'vite', ['build']);
 
         logOperationSuccess('Project built.');
     } catch (error) {
@@ -33,7 +33,7 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         await buildProjectConfig('2️⃣', packageJSON);
 
-        await spawnCommand('3️⃣  Bundle project.', 'vite', ['build']);
+        await spawnCommand('3️⃣  Bundle project', 'vite', ['build']);
 
         await execCommand('4️⃣  Stage changes', 'git', ['add', '.']);
         await execCommand('5️⃣  Commit changes', 'git', ['commit', '-m', `"v${packageJSON.version}"`]);

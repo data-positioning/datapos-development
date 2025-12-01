@@ -7648,7 +7648,7 @@ async function Nh() {
   We("Load environment variables"), (await import("dotenv")).config();
 }
 function Ne(e) {
-  const t = "\x1B[36m", i = "\x1B[0m", s = "─".repeat(e.length + 3);
+  const t = "\x1B[36m", i = "\x1B[0m", s = "─".repeat(Math.max(e.length + 60, 60));
   console.info(`
 ${t}${s}`), console.info(`▶️  ${e}`), console.info(`${s}${i}`);
 }
@@ -7659,7 +7659,8 @@ function Ve(e) {
 }
 function We(e) {
   console.info(`
-${e}`);
+${e}
+`);
 }
 async function St(e) {
   return JSON.parse(await $.readFile(e, "utf8"));
@@ -7695,7 +7696,7 @@ async function Tr(e, t) {
 }
 async function $h() {
   try {
-    Ne("Build Project"), await Ae("", "vite", ["build"]), Ve("Project built.");
+    Ne("Build Project"), await Ae("1️⃣  Bundle project", "vite", ["build"]), Ve("Project built.");
   } catch (e) {
     console.error("❌ Error building project.", e), process.exit(1);
   }
@@ -7704,7 +7705,7 @@ async function Uh(e = !1) {
   try {
     Ne("Release Project");
     const t = await St("package.json");
-    await _r("1️⃣", t), await Lh("2️⃣", t), await Ae("3️⃣  Bundle project.", "vite", ["build"]), await _e("4️⃣  Stage changes", "git", ["add", "."]), await _e("5️⃣  Commit changes", "git", ["commit", "-m", `"v${t.version}"`]), await _e("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), await Ae("7️⃣. Publish to npm", "npm", ["publish", "--access", "public"]), Ve(`Project version '${t.version}' released.`);
+    await _r("1️⃣", t), await Lh("2️⃣", t), await Ae("3️⃣  Bundle project", "vite", ["build"]), await _e("4️⃣  Stage changes", "git", ["add", "."]), await _e("5️⃣  Commit changes", "git", ["commit", "-m", `"v${t.version}"`]), await _e("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), await Ae("7️⃣. Publish to npm", "npm", ["publish", "--access", "public"]), Ve(`Project version '${t.version}' released.`);
   } catch (t) {
     console.error("❌ Error releasing project.", t), process.exit(1);
   }

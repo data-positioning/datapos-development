@@ -88,7 +88,7 @@ async function loadEnvironmentVariables(): Promise<void> {
 function logOperationHeader(text: string): void {
     const cyan = '\u001B[36m';
     const reset = '\u001B[0m';
-    const line = '─'.repeat(text.length + 3);
+    const line = '─'.repeat(Math.max(text.length + 60, 60));
     console.info(`\n${cyan}${line}`);
     console.info(`▶️  ${text}`);
     console.info(`${line}${reset}`);
@@ -101,7 +101,7 @@ function logOperationSuccess(message: string): void {
 
 // Helpers - Log step header.
 function logStepHeader(text: string): void {
-    console.info(`\n${text}`);
+    console.info(`\n${text}\n`);
 }
 
 // Helpers - Read JSON file.

@@ -7704,7 +7704,7 @@ async function Uh(e = !1) {
   try {
     Ne("Release Project");
     const t = await St("package.json");
-    await _r(t), await Lh(t), await Ae("3️⃣  Bundle project.", "vite", ["build"]), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${t.version}"`]), await _e("git", ["push", "origin", "main:main"]), await Ae("", "npm", ["publish", "--access", "public"]), Ve(`Project version ${t.version} released.`);
+    await _r("1️⃣", t), await Lh("2️⃣", t), await Ae("3️⃣  Bundle project.", "vite", ["build"]), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${t.version}"`]), await _e("git", ["push", "origin", "main:main"]), await Ae("", "npm", ["publish", "--access", "public"]), Ve(`Project version ${t.version} released.`);
   } catch (t) {
     console.error("❌ Error releasing project.", t), process.exit(1);
   }
@@ -7713,7 +7713,7 @@ async function Zh() {
   try {
     Ne("Synchronise Project with GitHub");
     const e = await St("package.json");
-    We("Bump project version"), await _r(e), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${e.version}"`]), await _e("git", ["push", "origin", "main:main"]), Ve(`Project version ${e.version} synchronised with GitHub.`);
+    We("Bump project version"), await _r("1️⃣", e), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${e.version}"`]), await _e("git", ["push", "origin", "main:main"]), Ve(`Project version ${e.version} synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }
@@ -7727,17 +7727,17 @@ function qh() {
     console.error("❌ Error testing project.", e), process.exit(1);
   }
 }
-async function Lh(e) {
-  We("2️⃣  Build project configuration");
-  const t = await St("config.json");
-  e.name != null && (t.id = e.name.replace("@datapos/", "").replace("@data-positioning/", "")), e.version != null && (t.version = e.version), await di("config.json", t), console.info("✔️ Configuration built.");
+async function Lh(e, t) {
+  We(`${e}  Build project configuration`);
+  const i = await St("config.json");
+  t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), await di("config.json", i), console.info("✔️  Configuration built.");
 }
-async function _r(e, t = "./") {
-  if (We("1️⃣  Bump project version"), e.version == null)
-    e.version = "0.0.001", console.warn(`⚠️ Project version initialised to ${e.version}.`), await di(`${t}package.json`, e);
+async function _r(e, t, i = "./") {
+  if (We(`${e}  Bump project version`), t.version == null)
+    t.version = "0.0.001", console.warn(`⚠️ Project version initialised to ${t.version}.`), await di(`${i}package.json`, t);
   else {
-    const i = e.version, s = e.version.split(".");
-    e.version = `${s[0]}.${s[1]}.${Number(s[2]) + 1}`, console.info(`ℹ️  Project version bumped from ${i} to ${e.version}.`), await di(`${t}package.json`, e);
+    const s = t.version, a = t.version.split(".");
+    t.version = `${a[0]}.${a[1]}.${Number(a[2]) + 1}`, console.info(`✔️  Project version bumped from ${s} to ${t.version}.`), await di(`${i}package.json`, t);
   }
 }
 const Oh = ["critical", "high", "moderate", "low", "unknown"];

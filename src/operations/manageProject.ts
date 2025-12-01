@@ -29,9 +29,9 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
-        await bumpProjectVersion(packageJSON);
+        await bumpProjectVersion('1️⃣', packageJSON);
 
-        await buildProjectConfig(packageJSON);
+        await buildProjectConfig('2️⃣', packageJSON);
 
         await spawnCommand('3️⃣  Bundle project.', 'vite', ['build']);
 
@@ -56,7 +56,7 @@ async function syncProjectWithGitHub(): Promise<void> {
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
         logStepHeader('Bump project version');
-        await bumpProjectVersion(packageJSON);
+        await bumpProjectVersion('1️⃣', packageJSON);
 
         await execCommand('git', ['add', '.']);
         await execCommand('git', ['commit', '-m', `"v${packageJSON.version}"`]);
@@ -81,20 +81,20 @@ function testProject(): void {
 }
 
 // Helpers - Build project configuration.
-async function buildProjectConfig(packageJSON: PackageJson): Promise<void> {
-    logStepHeader('2️⃣  Build project configuration');
+async function buildProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<void> {
+    logStepHeader(`${stepIcon}  Build project configuration`);
 
     const configJSON = await readJSONFile<ModuleConfig>('config.json');
     if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
     if (packageJSON.version != null) configJSON.version = packageJSON.version;
     await writeJSONFile('config.json', configJSON);
 
-    console.info('✔️ Configuration built.');
+    console.info('✔️  Configuration built.');
 }
 
 // Helper - Bump project version.
-async function bumpProjectVersion(packageJSON: PackageJson, path = './'): Promise<void> {
-    logStepHeader('1️⃣  Bump project version');
+async function bumpProjectVersion(stepIcon: string, packageJSON: PackageJson, path = './'): Promise<void> {
+    logStepHeader(`${stepIcon}  Bump project version`);
 
     if (packageJSON.version == null) {
         packageJSON.version = '0.0.001';
@@ -104,7 +104,7 @@ async function bumpProjectVersion(packageJSON: PackageJson, path = './'): Promis
         const oldVersion = packageJSON.version;
         const versionSegments = packageJSON.version.split('.');
         packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-        console.info(`ℹ️  Project version bumped from ${oldVersion} to ${packageJSON.version}.`);
+        console.info(`✔️  Project version bumped from ${oldVersion} to ${packageJSON.version}.`);
         await writeJSONFile(`${path}package.json`, packageJSON);
     }
 }

@@ -7640,7 +7640,7 @@ function Ih(e) {
 }
 async function _e(e, t, i = [], s) {
   const a = `${t} ${i.join(" ")}`;
-  We(`${e}. Execute command: '${a}'`);
+  We(`${e} - exec(${a})`);
   const { stdout: o, stderr: h } = await Eh(a);
   s === void 0 ? o.trim() && console.log(o.trim()) : await $.writeFile(s, o.trim(), "utf8"), h.trim() && console.error(h.trim());
 }
@@ -7669,7 +7669,7 @@ async function li(e) {
   return await $.readFile(e, "utf8");
 }
 async function Ae(e, t, i = [], s = !1) {
-  return We(`${e}. Spawn command: '${t} ${i.join(" ")}'`), new Promise((a, o) => {
+  return We(`${e} - spawn(${t} ${i.join(" ")})`), new Promise((a, o) => {
     Nr(t, i, { stdio: "inherit" }).on("close", (d) => {
       d === 0 || s ? a() : o(new Error(`${t} exited with code ${d}`));
     });

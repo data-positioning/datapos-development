@@ -67,7 +67,7 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
 // Helpers - Execute command.
 async function execCommand(label: string, command_: string, arguments_: string[] = [], outputFilePath?: string): Promise<void> {
     const command = `${command_} ${arguments_.join(' ')}`;
-    logStepHeader(`${label}. Execute command: '${command}'`);
+    logStepHeader(`${label} - exec(${command})`);
     const { stdout, stderr } = await asyncExec(command);
     if (outputFilePath === undefined) {
         if (stdout.trim()) console.log(stdout.trim());
@@ -116,7 +116,7 @@ async function readTextFile(path: string): Promise<string> {
 
 // Helpers - Spawn command.
 async function spawnCommand(label: string, command: string, arguments_: string[] = [], ignoreErrors = false): Promise<void> {
-    logStepHeader(`${label}. Spawn command: '${command} ${arguments_.join(' ')}'`);
+    logStepHeader(`${label} - spawn(${command} ${arguments_.join(' ')})`);
     return new Promise((resolve, reject) => {
         const child = spawn(command, arguments_, { stdio: 'inherit' });
         child.on('close', (code) => {

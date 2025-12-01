@@ -7,7 +7,6 @@
 // Dependencies - Framework.
 import type { PackageJson } from 'type-fest';
 import {
-    determineConnectorUsageId,
     execCommand,
     extractOperationsFromSource,
     logOperationHeader,
@@ -20,8 +19,20 @@ import {
 } from '../utilities';
 
 // Dependencies - Framework.
-import type { ConnectorConfig, ConnectorOperation, ContextConfig, ContextOperation, ModuleConfig, PresenterConfig, PresenterOperation } from '@datapos/datapos-shared';
-import { connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
+import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS, connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
+import type {
+    ConnectorConfig,
+    ConnectorOperation,
+    ConnectorUsageId,
+    ContextConfig,
+    ContextOperation,
+    ModuleConfig,
+    PresenterConfig,
+    PresenterOperation
+} from '@datapos/datapos-shared';
+
+// Interfaces/Types
+type PackageTypeId = 'connector' | 'context' | 'presenter' | 'tool' | 'other';
 
 // Operations - Build project.
 async function buildProject(): Promise<void> {
@@ -45,11 +56,21 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         await bumpProjectVersion('1️⃣', packageJSON);
 
-        const packageName = packageJSON.name ?? '';
-        if (packageName.includes('datapos-connector')) await buildConnectorProjectConfig('2️⃣', packageJSON);
-        else if (packageName.includes('datapos-context')) await buildContextProjectConfig('2️⃣', packageJSON);
-        else if (packageName.includes('datapos-presenter')) await buildPresenterProjectConfig('2️⃣', packageJSON);
-        else await buildProjectConfig('2️⃣', packageJSON);
+        const packageTypeId = getPackageTypeId(packageJSON);
+
+        switch (packageTypeId) {
+            case 'connector':
+                await buildConnectorProjectConfig('2️⃣', packageJSON);
+                break;
+            case 'context':
+                await buildContextProjectConfig('2️⃣', packageJSON);
+                break;
+            case 'presenter':
+                await buildPresenterProjectConfig('2️⃣', packageJSON);
+                break;
+            default:
+                await buildProjectConfig('2️⃣', packageJSON);
+        }
 
         await spawnCommand('3️⃣  Bundle project', 'vite', ['build']);
 
@@ -58,6 +79,16 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
         await execCommand('5️⃣  Commit changes', 'git', ['commit', '-m', `"v${packageJSON.version}"`]);
 
         await execCommand('6️⃣  Push changes', 'git', ['push', 'origin', 'main:main']);
+
+        switch (packageTypeId) {
+            case 'connector':
+                break;
+            case 'context':
+                break;
+            case 'presenter':
+                break;
+            default:
+        }
 
         await spawnCommand('7️⃣. Publish to npm', 'npm', ['publish', '--access', 'public']);
 
@@ -68,6 +99,15 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
         console.error('❌ Error releasing project.', error);
         process.exit(1);
     }
+}
+
+function getPackageTypeId(packageJSON: PackageJson): PackageTypeId {
+    const packageName = packageJSON.name ?? '';
+    if (packageName.includes('datapos-connector')) return 'connector';
+    else if (packageName.includes('datapos-context')) return 'context';
+    else if (packageName.includes('datapos-presenter')) return 'presenter';
+    else if (packageName.includes('datapos-tool')) return 'tool';
+    else return 'other';
 }
 
 // Operations - Synchronise project with GitHub.
@@ -214,6 +254,20 @@ async function bumpProjectVersion(stepIcon: string, packageJSON: PackageJson, pa
         console.info(`Project version bumped from '${oldVersion}' to '${packageJSON.version}'.`);
         await writeJSONFile(`${path}package.json`, packageJSON);
     }
+}
+
+// Helpers - Determine connector usage identifier.
+function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorUsageId {
+    let sourceOps = false;
+    let destinationOps = false;
+    for (const operation of operations) {
+        if (CONNECTOR_SOURCE_OPERATIONS.includes(operation)) sourceOps = true;
+        if (CONNECTOR_DESTINATION_OPERATIONS.includes(operation)) destinationOps = true;
+    }
+    if (sourceOps && destinationOps) return 'bidirectional';
+    if (sourceOps) return 'source';
+    if (destinationOps) return 'destination';
+    return 'unknown';
 }
 
 // Helpers - Send deployment notice.

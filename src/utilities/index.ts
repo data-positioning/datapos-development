@@ -9,18 +9,15 @@ import acornTypeScript from 'acorn-typescript';
 import { promises as fs } from 'node:fs';
 import { Parser } from 'acorn';
 import { promisify } from 'node:util';
+import type { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
 import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv';
 import { exec, spawn } from 'node:child_process';
 import type { MethodDefinition, Node } from 'acorn';
 
-// Dependencies - Framework.
-import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
-import type { ConnectorOperation, ConnectorUsageId } from '@datapos/datapos-shared';
-
 // Initialisation
 const asyncExec = promisify(exec);
 
-// Helpers - Extract operations from source.
+// Utilities - Extract operations from source.
 function extractOperationsFromSource<T>(source: string): T[] {
     // @ts-expect-error - acorn-typescript runtime mismatch is fine.
     const TSParser = Parser.extend(acornTypeScript());
@@ -50,24 +47,10 @@ function extractOperationsFromSource<T>(source: string): T[] {
     return operations;
 }
 
-// Helpers - Determine connector usage identifier.
-function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorUsageId {
-    let sourceOps = false;
-    let destinationOps = false;
-    for (const operation of operations) {
-        if (CONNECTOR_SOURCE_OPERATIONS.includes(operation)) sourceOps = true;
-        if (CONNECTOR_DESTINATION_OPERATIONS.includes(operation)) destinationOps = true;
-    }
-    if (sourceOps && destinationOps) return 'bidirectional';
-    if (sourceOps) return 'source';
-    if (destinationOps) return 'destination';
-    return 'unknown';
-}
-
-// Helpers - Execute command.
-async function execCommand(label: string, command_: string, arguments_: string[] = [], outputFilePath?: string): Promise<void> {
+// Utilities - Execute command.
+async function execCommand(label: string | undefined, command_: string, arguments_: string[] = [], outputFilePath?: string): Promise<void> {
     const command = `${command_} ${arguments_.join(' ')}`;
-    logStepHeader(`${label} - exec(${command})`);
+    if (label !== undefined) logStepHeader(`${label} - exec(${command})`);
     const { stdout, stderr } = await asyncExec(command);
     if (outputFilePath === undefined) {
         if (stdout.trim()) console.log(stdout.trim());
@@ -77,14 +60,26 @@ async function execCommand(label: string, command_: string, arguments_: string[]
     if (stderr.trim()) console.error(stderr.trim());
 }
 
-// Helpers - Load environment variables.
+// Utilities - Get directory entries.
+function getDirectoryEntries(path: string): Promise<string[]>;
+function getDirectoryEntries(path: string, options: ObjectEncodingOptions): Promise<Dirent[]>;
+async function getDirectoryEntries(path: string, options?: ObjectEncodingOptions): Promise<string[] | Dirent[]> {
+    return fs.readdir(path, options);
+}
+
+// Utilities - Get stats for path.
+async function getStatsForPath(path: string): Promise<Stats> {
+    return await fs.stat(path);
+}
+
+// Utilities - Load environment variables.
 async function loadEnvironmentVariables(): Promise<void> {
     logStepHeader('Load environment variables');
     const dotenv = (await import('dotenv')) as { config(options?: DotenvConfigOptions): DotenvConfigOutput };
     dotenv.config();
 }
 
-// Helpers - Log operation header.
+// Utilities - Log operation header.
 function logOperationHeader(text: string): void {
     const cyan = '\u001B[36m';
     const reset = '\u001B[0m';
@@ -94,27 +89,27 @@ function logOperationHeader(text: string): void {
     console.info(`${line}${reset}`);
 }
 
-// Helpers - Log operation success.
+// Utilities - Log operation success.
 function logOperationSuccess(message: string): void {
     console.info(`\n✅ ${message}\n`);
 }
 
-// Helpers - Log step header.
+// Utilities - Log step header.
 function logStepHeader(text: string): void {
     console.info(`\n${text}\n`);
 }
 
-// Helpers - Read JSON file.
+// Utilities - Read JSON file.
 async function readJSONFile<T>(path: string): Promise<T> {
     return JSON.parse(await fs.readFile(path, 'utf8')) as T;
 }
 
-// Helpers - Read text file.
+// Utilities - Read text file.
 async function readTextFile(path: string): Promise<string> {
     return await fs.readFile(path, 'utf8');
 }
 
-// Helpers - Spawn command.
+// Utilities - Spawn command.
 async function spawnCommand(label: string, command: string, arguments_: string[] = [], ignoreErrors = false): Promise<void> {
     logStepHeader(`${label} - spawn(${command} ${arguments_.join(' ')})`);
     return new Promise((resolve, reject) => {
@@ -127,6 +122,16 @@ async function spawnCommand(label: string, command: string, arguments_: string[]
             }
         });
     });
+}
+
+// Utilities - Write JSON file.
+async function writeJSONFile(path: string, data: object): Promise<void> {
+    await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
+}
+
+// Utilities - Write text file.
+async function writeTextFile(path: string, data: string): Promise<void> {
+    await fs.writeFile(path, data, 'utf8');
 }
 
 // Helpers - Traverse AST (Abstract Syntax Tree).
@@ -146,20 +151,12 @@ function traverseAST(node: Node, doIt: (node: Node) => void): void {
     }
 }
 
-// Helpers - Write JSON file.
-async function writeJSONFile(path: string, data: object): Promise<void> {
-    await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
-}
-
-// Helpers - Write text file.
-async function writeTextFile(path: string, data: string): Promise<void> {
-    await fs.writeFile(path, data, 'utf8');
-}
-
+// Exposures
 export {
-    determineConnectorUsageId,
     execCommand,
     extractOperationsFromSource,
+    getDirectoryEntries,
+    getStatsForPath,
     loadEnvironmentVariables,
     logOperationHeader,
     logOperationSuccess,

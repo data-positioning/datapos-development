@@ -51,6 +51,7 @@ export default [
             'import/no-duplicates': 'warn',
             'sort-imports': ['warn', { allowSeparatedGroups: true, ignoreCase: true, memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'] }],
 
+            'unicorn/switch-case-braces': ['warn', 'avoid'],
             'unicorn/filename-case': 'off',
             'unicorn/no-null': 'off'
         }

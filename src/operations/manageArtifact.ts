@@ -31,6 +31,8 @@ async function releaseArtifact(sendDeployNotice = false): Promise<void> {
 
         await bumpArtifactVersion(packageJSON);
 
+        await buildArtifactConfig(packageJSON);
+
         await spawnCommand('vite', ['build']);
 
         await execCommand('git', ['add', '.']);
@@ -72,16 +74,16 @@ function testArtifact(): void {
     console.log('Test artifact...'); // Command: vitest
 }
 
-// Helpers - Build configuration.
-async function buildConfig(packageJSON: PackageJson): Promise<void> {
-    logStepHeader('Build configuration');
+// Helpers - Build artifact configuration.
+async function buildArtifactConfig(packageJSON: PackageJson): Promise<void> {
+    logStepHeader('Build artifact configuration');
 
     const configJSON = await readJSONFile<ModuleConfig>('config.json');
     if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
     if (packageJSON.version != null) configJSON.version = packageJSON.version;
-    console.info('✅ Configuration built.');
-
     await writeJSONFile('config.json', configJSON);
+
+    console.info('✅ Configuration built.');
 }
 
 // Helper - Bump artifact version.
@@ -90,13 +92,13 @@ async function bumpArtifactVersion(packageJSON: PackageJson, path = './'): Promi
 
     if (packageJSON.version == null) {
         packageJSON.version = '0.0.001';
-        console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
+        console.warn(`⚠️ Artifact version initialised to ${packageJSON.version}.`);
         await writeJSONFile(`${path}package.json`, packageJSON);
     } else {
         const oldVersion = packageJSON.version;
         const versionSegments = packageJSON.version.split('.');
         packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-        console.info(`ℹ️  Version bumped from ${oldVersion} to ${packageJSON.version}.`);
+        console.info(`ℹ️  Artifact version bumped from ${oldVersion} to ${packageJSON.version}.`);
         await writeJSONFile(`${path}package.json`, packageJSON);
     }
 }

@@ -84,20 +84,22 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         const moduleGroupName = determineModuleGroupName(packageTypeId);
         if (packageTypeId === 'app') {
-            logStepHeader('8️⃣. Register module');
+            logStepHeader('7️⃣ Register module');
             await putState();
         } else if (packageTypeId === 'engine') {
-            logStepHeader('8️⃣. Register module');
+            logStepHeader('7️⃣ Register module');
             await uploadModuleConfigToDO();
             await uploadModuleToR2('datapos-engine-eu');
-        } else if (moduleGroupName !== undefined) {
-            logStepHeader('8️⃣. Register module');
+        } else if (moduleGroupName === undefined) {
+            logStepHeader('7️⃣ Register not required.');
+        } else {
+            logStepHeader('7️⃣ Register module');
             await uploadModuleConfigToDO();
             const moduleTypeName = configJSON.id.slice(Math.max(0, configJSON.id.lastIndexOf('-') + 1));
             await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
         }
 
-        await spawnCommand('7️⃣. Publish to npm', 'npm', ['publish', '--access', 'public']);
+        await spawnCommand('8️⃣ Publish to npm', 'npm', ['publish', '--access', 'public']);
 
         logOperationSuccess(`Project version '${packageJSON.version}' released.`);
     } catch (error) {

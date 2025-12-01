@@ -149,7 +149,7 @@ function traverseAST(node: Node, doIt: (node: Node) => void): void {
 }
 
 // Helpers - Write JSON file.
-async function writeJSONFile(path: string, data: Record<string, unknown>): Promise<void> {
+async function writeJSONFile(path: string, data: object): Promise<void> {
     logStepHeader(`Write JSON file '${path}'`);
     await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
 }

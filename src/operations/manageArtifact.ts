@@ -5,7 +5,7 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Framework.
-// TODO: import type { ModuleConfig } from '@datapos/datapos-shared';
+import type { ModuleConfig } from '@datapos/datapos-shared';
 import type { PackageJson } from 'type-fest';
 import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, spawnCommand, writeJSONFile } from '../utilities';
 
@@ -13,8 +13,6 @@ import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, re
 async function buildArtifact(): Promise<void> {
     try {
         logOperationHeader('Build Artifact');
-
-        await buildConfig();
 
         await spawnCommand('vite', ['build']);
 
@@ -31,7 +29,6 @@ async function releaseArtifact(sendDeployNotice = false): Promise<void> {
 
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
-        logStepHeader('Bump artifact version');
         await bumpArtifactVersion(packageJSON);
 
         await spawnCommand('vite', ['build']);
@@ -76,41 +73,31 @@ function testArtifact(): void {
 }
 
 // Helpers - Build configuration.
-async function buildConfig(): Promise<void> {
-    try {
-        console.info('🚀 Building configuration...');
+async function buildConfig(packageJSON: PackageJson): Promise<void> {
+    logStepHeader('Build configuration');
 
-        const packageJSON = await readJSONFile<PackageJson>('package.json');
+    const configJSON = await readJSONFile<ModuleConfig>('config.json');
+    if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
+    if (packageJSON.version != null) configJSON.version = packageJSON.version;
+    console.info('✅ Configuration built.');
 
-        const configJSON = await readJSONFile<Record<string, unknown>>('config.json'); // TODO: change to <ModuleConfig>
-
-        if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-        if (packageJSON.version != null) configJSON.version = packageJSON.version;
-
-        await writeJSONFile('config.json', configJSON);
-
-        console.info('✅ Configuration built.');
-    } catch (error) {
-        console.error('❌ Error building configuration.', error);
-    }
+    await writeJSONFile('config.json', configJSON);
 }
 
 // Helper - Bump artifact version.
 async function bumpArtifactVersion(packageJSON: PackageJson, path = './'): Promise<void> {
-    try {
-        if (packageJSON.version == null) {
-            packageJSON.version = '0.0.001';
-            console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
-            await writeJSONFile(`${path}package.json`, packageJSON);
-        } else {
-            const oldVersion = packageJSON.version;
-            const versionSegments = packageJSON.version.split('.');
-            packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-            console.info(`ℹ️  Version bumped from ${oldVersion} to ${packageJSON.version}.`);
-            await writeJSONFile(`${path}package.json`, packageJSON);
-        }
-    } catch (error) {
-        console.error('❌ Error bumping artifact version.', error);
+    logStepHeader('Bump artifact version');
+
+    if (packageJSON.version == null) {
+        packageJSON.version = '0.0.001';
+        console.warn(`⚠️ Version initialised to ${packageJSON.version}.`);
+        await writeJSONFile(`${path}package.json`, packageJSON);
+    } else {
+        const oldVersion = packageJSON.version;
+        const versionSegments = packageJSON.version.split('.');
+        packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
+        console.info(`ℹ️  Version bumped from ${oldVersion} to ${packageJSON.version}.`);
+        await writeJSONFile(`${path}package.json`, packageJSON);
     }
 }
 

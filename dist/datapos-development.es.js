@@ -7750,17 +7750,17 @@ async function ep(e = !1) {
     await Ee("3️⃣  Bundle project", "vite", ["build"]), await Te("4️⃣  Stage changes", "git", ["add", "."]), await Te("5️⃣  Commit changes", "git", ["commit", "-m", `"v${t.version}"`]), await Te("6️⃣  Push changes", "git", ["push", "origin", "main:main"]);
     const a = Bh(s);
     if (s === "app")
-      oe("7️⃣ Register module"), await Mh();
+      oe("7️⃣  Register module"), await Mh();
     else if (s === "engine")
-      oe("7️⃣ Register module"), await ys(), await vs("datapos-engine-eu");
+      oe("7️⃣  Register module"), await ys(), await vs("datapos-engine-eu");
     else if (a === void 0)
-      oe("7️⃣ Register not required.");
+      oe("7️⃣  Registration not required.");
     else {
-      oe("7️⃣ Register module"), await ys();
+      oe("7️⃣  Register module"), await ys();
       const o = i.id.slice(Math.max(0, i.id.lastIndexOf("-") + 1));
       await vs(`datapos-engine-eu/${a}/${o}`);
     }
-    await Ee("8️⃣ Publish to npm", "npm", ["publish", "--access", "public"]), Fe(`Project version '${t.version}' released.`);
+    await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]), Fe(`Project version '${t.version}' released.`);
   } catch (t) {
     console.error("❌ Error releasing project.", t), process.exit(1);
   }

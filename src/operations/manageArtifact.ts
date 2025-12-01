@@ -16,7 +16,7 @@ async function buildArtifact(): Promise<void> {
 
         await spawnCommand('vite', ['build']);
 
-        logOperationSuccess('Artifact build complete.');
+        logOperationSuccess('Artifact built.');
     } catch (error) {
         console.error('❌ Error building artifact.', error);
         process.exit(1);
@@ -41,7 +41,7 @@ async function releaseArtifact(sendDeployNotice = false): Promise<void> {
 
         await spawnCommand('npm', ['publish', '--access', 'public']);
 
-        logOperationSuccess(`Version ${packageJSON.version} of artifact released.`);
+        logOperationSuccess(`Artifact version ${packageJSON.version} released.`);
     } catch (error) {
         console.error('❌ Error releasing artifact.', error);
         process.exit(1);
@@ -51,7 +51,7 @@ async function releaseArtifact(sendDeployNotice = false): Promise<void> {
 // Operations - Synchronise artifact with GitHub.
 async function syncArtifactWithGitHub(): Promise<void> {
     try {
-        logOperationHeader('Synchronising Artifact with GitHub');
+        logOperationHeader('Synchronise Artifact with GitHub');
 
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
@@ -62,7 +62,7 @@ async function syncArtifactWithGitHub(): Promise<void> {
         await execCommand('git', ['commit', '-m', `"v${packageJSON.version}"`]);
         await execCommand('git', ['push', 'origin', 'main:main']);
 
-        logOperationSuccess(`Version ${packageJSON.version} of artifact synchronised with GitHub.`);
+        logOperationSuccess(`Artifact version ${packageJSON.version} synchronised with GitHub.`);
     } catch (error) {
         console.error('❌ Error synchronising artifact with GitHub.', error);
         process.exit(1);
@@ -71,7 +71,13 @@ async function syncArtifactWithGitHub(): Promise<void> {
 
 // Operations - Test artifact.
 function testArtifact(): void {
-    console.log('Test artifact...'); // Command: vitest
+    try {
+        logOperationHeader('Test Artifact');
+        console.log('\n❌ Test artifact is not implemented. No vitest command.\n');
+    } catch (error) {
+        console.error('❌ Error testing artifact.', error);
+        process.exit(1);
+    }
 }
 
 // Helpers - Build artifact configuration.

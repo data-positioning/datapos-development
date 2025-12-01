@@ -1179,13 +1179,13 @@ const Tn = /* @__PURE__ */ w("$ZodObject", (e, t) => {
       return `shape[${ge}]._zod.run({ value: input[${ge}], issues: [] }, ctx)`;
     };
     M.write("const input = payload.value;");
-    const Ne = /* @__PURE__ */ Object.create(null);
+    const Le = /* @__PURE__ */ Object.create(null);
     let R = 0;
     for (const de of U.keys)
-      Ne[de] = `key_${R++}`;
+      Le[de] = `key_${R++}`;
     M.write("const newResult = {};");
     for (const de of U.keys) {
-      const ge = Ne[de], Ke = Di(de);
+      const ge = Le[de], Ke = Di(de);
       M.write(`const ${ge} = ${he(de)};`), M.write(`
         if (${ge}.issues.length) {
           payload.issues = payload.issues.concat(${ge}.issues.map(iss => ({
@@ -2127,7 +2127,7 @@ const Y = /* @__PURE__ */ w("ZodStringFormat", (e, t) => {
   const i = e._zod.bag;
   e.minValue = Math.max(i.minimum ?? Number.NEGATIVE_INFINITY, i.exclusiveMinimum ?? Number.NEGATIVE_INFINITY) ?? null, e.maxValue = Math.min(i.maximum ?? Number.POSITIVE_INFINITY, i.exclusiveMaximum ?? Number.POSITIVE_INFINITY) ?? null, e.isInt = (i.format ?? "").includes("int") || Number.isSafeInteger(i.multipleOf ?? 0.5), e.isFinite = !0, e.format = i.format ?? null;
 });
-function Le(e) {
+function Oe(e) {
   return yo(Vs, e);
 }
 const bu = /* @__PURE__ */ w("ZodNumberFormat", (e, t) => {
@@ -2412,10 +2412,10 @@ const Ju = se([g("amber"), g("green"), g("red"), g("other")]), Xu = se([
   id: L(),
   label: xe(L(), L()),
   description: xe(L(), L()),
-  firstCreatedAt: Le().optional(),
+  firstCreatedAt: Oe().optional(),
   icon: L().optional(),
   iconDark: L().optional(),
-  lastUpdatedAt: Le().optional(),
+  lastUpdatedAt: Oe().optional(),
   status: tc.nullable().optional(),
   statusId: Xu,
   typeId: Qu
@@ -2423,12 +2423,12 @@ const Ju = se([g("amber"), g("green"), g("red"), g("other")]), Xu = se([
   id: L(),
   label: L()
 }), ac = Ce({
-  activeConnectionCount: Le().optional(),
+  activeConnectionCount: Oe().optional(),
   canDescribe: wu().optional(),
   id: L().optional(),
   authMethodId: se([g("apiKey"), g("disabled"), g("oAuth2"), g("none")]),
   label: ec.optional(),
-  maxConnectionCount: Le().optional(),
+  maxConnectionCount: Oe().optional(),
   params: Ze(xe(L(), L())).optional()
 }), nc = se([g("application"), g("curatedDataset"), g("database"), g("fileStore")]), oc = se([
   g("abortOperation"),
@@ -2490,7 +2490,7 @@ const Ju = se([g("amber"), g("green"), g("red"), g("other")]), Xu = se([
   g("presenter"),
   g("presenterPresentation"),
   g("tool")
-]), is = Le(), dc = Ce({
+]), is = Oe(), dc = Ce({
   id: L(),
   color: pc,
   label: L()
@@ -2500,7 +2500,7 @@ const Ju = se([g("amber"), g("green"), g("red"), g("other")]), Xu = se([
   description: xe(L(), L()),
   icon: L().optional(),
   iconDark: L().optional(),
-  order: Le(),
+  order: Oe(),
   path: L()
 }), Bs = Ce({
   id: L(),
@@ -2518,12 +2518,12 @@ const Ju = se([g("amber"), g("green"), g("red"), g("other")]), Xu = se([
   version: L()
 }), xc = Bs.extend({
   modelRefs: Ze(mc),
-  order: Le()
+  order: Oe()
 }), gc = g("list"), bc = vc.extend({
   models: Ze(xc),
   operations: Ze(gc),
   typeId: g("context")
-}), kc = se([g("amber"), g("green"), g("red"), g("other")]), wc = se([g("alpha"), g("beta"), g("generalAvailability"), g("notApplicable"), g("preAlpha"), g("proposed"), g("releaseCandidate"), g("unavailable"), g("underReview")]), Sc = se([g("app"), g("connector"), g("connectorConnection"), g("context"), g("contextModelGroup"), g("contextModel"), g("contextModelDimensionGroup"), g("contextModelDimension"), g("contextModelDimensionHierarchy"), g("contextModelEntityGroup"), g("contextModelEntity"), g("contextModelEntityDataItem"), g("contextModelEntityEvent"), g("contextModelEntityPrimaryMeasure"), g("contextModelSecondaryMeasureGroup"), g("contextModelSecondaryMeasure"), g("dataView"), g("dimension"), g("engine"), g("eventQuery"), g("presenter"), g("presenterPresentation"), g("tool")]), ss = Le(), Tc = Ce({
+}), kc = se([g("amber"), g("green"), g("red"), g("other")]), wc = se([g("alpha"), g("beta"), g("generalAvailability"), g("notApplicable"), g("preAlpha"), g("proposed"), g("releaseCandidate"), g("unavailable"), g("underReview")]), Sc = se([g("app"), g("connector"), g("connectorConnection"), g("context"), g("contextModelGroup"), g("contextModel"), g("contextModelDimensionGroup"), g("contextModelDimension"), g("contextModelDimensionHierarchy"), g("contextModelEntityGroup"), g("contextModelEntity"), g("contextModelEntityDataItem"), g("contextModelEntityEvent"), g("contextModelEntityPrimaryMeasure"), g("contextModelSecondaryMeasureGroup"), g("contextModelSecondaryMeasure"), g("dataView"), g("dimension"), g("engine"), g("eventQuery"), g("presenter"), g("presenterPresentation"), g("tool")]), ss = Oe(), Tc = Ce({
   id: L(),
   color: kc,
   label: L()
@@ -2533,7 +2533,7 @@ const Ju = se([g("amber"), g("green"), g("red"), g("other")]), Xu = se([
   description: xe(L(), L()),
   icon: L().optional(),
   iconDark: L().optional(),
-  order: Le(),
+  order: Oe(),
   path: L()
 }), Pc = Ce({
   id: L(),
@@ -2577,7 +2577,7 @@ function ui(e, t) {
 function Pe(e, t) {
   return e < 65 ? e === 36 : e < 91 ? !0 : e < 97 ? e === 95 : e < 123 ? !0 : e <= 65535 ? e >= 170 && Rc.test(String.fromCharCode(e)) : t === !1 ? !1 : ui(e, $s);
 }
-function Oe(e, t) {
+function Me(e, t) {
   return e < 48 ? e === 36 : e < 58 ? !0 : e < 65 ? !1 : e < 91 ? !0 : e < 97 ? e === 95 : e < 123 ? !0 : e <= 65535 ? e >= 170 && Dc.test(String.fromCharCode(e)) : t === !1 ? !1 : ui(e, $s) || ui(e, Nc);
 }
 var V = function(t, i) {
@@ -2704,7 +2704,7 @@ var wi = /[\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/, ae = /(?:\s|\/\/.*|\/\
 function Be(e) {
   return as[e] || (as[e] = new RegExp("^(?:" + e.replace(/ /g, "|") + ")$"));
 }
-function Me(e) {
+function Re(e) {
   return e <= 65535 ? String.fromCharCode(e) : (e -= 65536, String.fromCharCode((e >> 10) + 55296, (e & 1023) + 56320));
 }
 var Fc = /(?:[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])/, nt = function(t, i) {
@@ -2849,7 +2849,7 @@ var vt = 1, ut = 2, Ti = 4, Ws = 8, _i = 16, Ks = 32, Zt = 64, Gs = 128, Qe = 25
 function Pi(e, t) {
   return ut | (e ? Ti : 0) | (t ? Ws : 0);
 }
-var Dt = 0, Ai = 1, De = 2, Js = 3, Xs = 4, Qs = 5, X = function(t, i, s) {
+var Dt = 0, Ai = 1, ze = 2, Js = 3, Xs = 4, Qs = 5, X = function(t, i, s) {
   this.options = t = jc(t), this.sourceFile = t.sourceFile, this.keywords = Be(Oc[t.ecmaVersion >= 6 ? 6 : t.sourceType === "module" ? "5module" : 5]);
   var a = "";
   t.allowReserved !== !0 && (a = ei[t.ecmaVersion >= 6 ? 6 : t.ecmaVersion === 5 ? 5 : 3], t.sourceType === "module" && (a += " await")), this.reservedWords = Be(a);
@@ -3018,7 +3018,7 @@ E.isLet = function(e) {
   if (s === 123 || s > 55295 && s < 56320)
     return !0;
   if (Pe(s, !0)) {
-    for (var a = i + 1; Oe(s = this.input.charCodeAt(a), !0); )
+    for (var a = i + 1; Me(s = this.input.charCodeAt(a), !0); )
       ++a;
     if (s === 92 || s > 55295 && s < 56320)
       return !0;
@@ -3033,7 +3033,7 @@ E.isAsyncFunction = function() {
     return !1;
   ae.lastIndex = this.pos;
   var e = ae.exec(this.input), t = this.pos + e[0].length, i;
-  return !ue.test(this.input.slice(this.pos, t)) && this.input.slice(t, t + 8) === "function" && (t + 8 === this.input.length || !(Oe(i = this.input.charCodeAt(t + 8)) || i > 55295 && i < 56320));
+  return !ue.test(this.input.slice(this.pos, t)) && this.input.slice(t, t + 8) === "function" && (t + 8 === this.input.length || !(Me(i = this.input.charCodeAt(t + 8)) || i > 55295 && i < 56320));
 };
 E.isUsingKeyword = function(e, t) {
   if (this.options.ecmaVersion < 17 || !this.isContextual(e ? "await" : "using"))
@@ -3044,7 +3044,7 @@ E.isUsingKeyword = function(e, t) {
     return !1;
   if (e) {
     var a = s + 5, o;
-    if (this.input.slice(s, a) !== "using" || a === this.input.length || Oe(o = this.input.charCodeAt(a)) || o > 55295 && o < 56320)
+    if (this.input.slice(s, a) !== "using" || a === this.input.length || Me(o = this.input.charCodeAt(a)) || o > 55295 && o < 56320)
       return !1;
     ae.lastIndex = a;
     var h = ae.exec(this.input);
@@ -3053,7 +3053,7 @@ E.isUsingKeyword = function(e, t) {
   }
   if (t) {
     var d = s + 2, y;
-    if (this.input.slice(s, d) === "of" && (d === this.input.length || !Oe(y = this.input.charCodeAt(d)) && !(y > 55295 && y < 56320)))
+    if (this.input.slice(s, d) === "of" && (d === this.input.length || !Me(y = this.input.charCodeAt(d)) && !(y > 55295 && y < 56320)))
       return !1;
   }
   var u = this.input.charCodeAt(s);
@@ -3188,7 +3188,7 @@ E.parseThrowStatement = function(e) {
 var Zc = [];
 E.parseCatchClauseParam = function() {
   var e = this.parseBindingAtom(), t = e.type === "Identifier";
-  return this.enterScope(t ? Ks : 0), this.checkLValPattern(e, t ? Xs : De), this.expect(p.parenR), e;
+  return this.enterScope(t ? Ks : 0), this.checkLValPattern(e, t ? Xs : ze), this.expect(p.parenR), e;
 };
 E.parseTryStatement = function(e) {
   if (this.next(), e.block = this.parseBlock(), e.handler = null, this.type === p._catch) {
@@ -3252,11 +3252,11 @@ E.parseVar = function(e, t, i, s) {
   return e;
 };
 E.parseVarId = function(e, t) {
-  e.id = t === "using" || t === "await using" ? this.parseIdent() : this.parseBindingAtom(), this.checkLValPattern(e.id, t === "var" ? Ai : De, !1);
+  e.id = t === "using" || t === "await using" ? this.parseIdent() : this.parseBindingAtom(), this.checkLValPattern(e.id, t === "var" ? Ai : ze, !1);
 };
 var dt = 1, ci = 2, Ys = 4;
 E.parseFunction = function(e, t, i, s, a) {
-  this.initFunction(e), (this.options.ecmaVersion >= 9 || this.options.ecmaVersion >= 6 && !s) && (this.type === p.star && t & ci && this.unexpected(), e.generator = this.eat(p.star)), this.options.ecmaVersion >= 8 && (e.async = !!s), t & dt && (e.id = t & Ys && this.type !== p.name ? null : this.parseIdent(), e.id && !(t & ci) && this.checkLValSimple(e.id, this.strict || e.generator || e.async ? this.treatFunctionsAsVar ? Ai : De : Js));
+  this.initFunction(e), (this.options.ecmaVersion >= 9 || this.options.ecmaVersion >= 6 && !s) && (this.type === p.star && t & ci && this.unexpected(), e.generator = this.eat(p.star)), this.options.ecmaVersion >= 8 && (e.async = !!s), t & dt && (e.id = t & Ys && this.type !== p.name ? null : this.parseIdent(), e.id && !(t & ci) && this.checkLValSimple(e.id, this.strict || e.generator || e.async ? this.treatFunctionsAsVar ? Ai : ze : Js));
   var o = this.yieldPos, h = this.awaitPos, d = this.awaitIdentPos;
   return this.yieldPos = 0, this.awaitPos = 0, this.awaitIdentPos = 0, this.enterScope(Pi(e.async, e.generator)), t & dt || (e.id = this.type === p.name ? this.parseIdent() : null), this.parseFunctionParams(e), this.parseFunctionBody(e, i, !1, a), this.yieldPos = o, this.awaitPos = h, this.awaitIdentPos = d, this.finishNode(e, t & dt ? "FunctionDeclaration" : "FunctionExpression");
 };
@@ -3319,7 +3319,7 @@ E.parseClassStaticBlock = function(e) {
   return this.next(), this.exitScope(), this.labels = t, this.finishNode(e, "StaticBlock");
 };
 E.parseClassId = function(e, t) {
-  this.type === p.name ? (e.id = this.parseIdent(), t && this.checkLValSimple(e.id, De, !1)) : (t === !0 && this.unexpected(), e.id = null);
+  this.type === p.name ? (e.id = this.parseIdent(), t && this.checkLValSimple(e.id, ze, !1)) : (t === !0 && this.unexpected(), e.id = null);
 };
 E.parseClassSuper = function(e) {
   e.superClass = this.eat(p._extends) ? this.parseExprSubscripts(null, !1) : null;
@@ -3437,15 +3437,15 @@ E.parseImport = function(e) {
 };
 E.parseImportSpecifier = function() {
   var e = this.startNode();
-  return e.imported = this.parseModuleExportName(), this.eatContextual("as") ? e.local = this.parseIdent() : (this.checkUnreserved(e.imported), e.local = e.imported), this.checkLValSimple(e.local, De), this.finishNode(e, "ImportSpecifier");
+  return e.imported = this.parseModuleExportName(), this.eatContextual("as") ? e.local = this.parseIdent() : (this.checkUnreserved(e.imported), e.local = e.imported), this.checkLValSimple(e.local, ze), this.finishNode(e, "ImportSpecifier");
 };
 E.parseImportDefaultSpecifier = function() {
   var e = this.startNode();
-  return e.local = this.parseIdent(), this.checkLValSimple(e.local, De), this.finishNode(e, "ImportDefaultSpecifier");
+  return e.local = this.parseIdent(), this.checkLValSimple(e.local, ze), this.finishNode(e, "ImportDefaultSpecifier");
 };
 E.parseImportNamespaceSpecifier = function() {
   var e = this.startNode();
-  return this.next(), this.expectContextual("as"), e.local = this.parseIdent(), this.checkLValSimple(e.local, De), this.finishNode(e, "ImportNamespaceSpecifier");
+  return this.next(), this.expectContextual("as"), e.local = this.parseIdent(), this.checkLValSimple(e.local, ze), this.finishNode(e, "ImportNamespaceSpecifier");
 };
 E.parseImportSpecifiers = function() {
   var e = [], t = !0;
@@ -3606,7 +3606,7 @@ Te.checkLValSimple = function(e, t, i) {
   var s = t !== Dt;
   switch (e.type) {
     case "Identifier":
-      this.strict && this.reservedWordsStrictBind.test(e.name) && this.raiseRecoverable(e.start, (s ? "Binding " : "Assigning to ") + e.name + " in strict mode"), s && (t === De && e.name === "let" && this.raiseRecoverable(e.start, "let is disallowed as a lexically bound name"), i && (ot(i, e.name) && this.raiseRecoverable(e.start, "Argument name clash"), i[e.name] = !0), t !== Qs && this.declareName(e.name, t, e.start));
+      this.strict && this.reservedWordsStrictBind.test(e.name) && this.raiseRecoverable(e.start, (s ? "Binding " : "Assigning to ") + e.name + " in strict mode"), s && (t === ze && e.name === "let" && this.raiseRecoverable(e.start, "let is disallowed as a lexically bound name"), i && (ot(i, e.name) && this.raiseRecoverable(e.start, "Argument name clash"), i[e.name] = !0), t !== Qs && this.declareName(e.name, t, e.start));
       break;
     case "ChainExpression":
       this.raiseRecoverable(e.start, "Optional chaining cannot appear in left-hand side");
@@ -3893,12 +3893,12 @@ D.parseSubscript = function(e, t, i, s, a, o, h) {
   } else if (!s && this.eat(p.parenL)) {
     var P = new Ht(), M = this.yieldPos, U = this.awaitPos, he = this.awaitIdentPos;
     this.yieldPos = 0, this.awaitPos = 0, this.awaitIdentPos = 0;
-    var Ne = this.parseExprList(p.parenR, this.options.ecmaVersion >= 8, !1, P);
+    var Le = this.parseExprList(p.parenR, this.options.ecmaVersion >= 8, !1, P);
     if (a && !y && this.shouldParseAsyncArrow())
-      return this.checkPatternErrors(P, !1), this.checkYieldAwaitInDefaultParams(), this.awaitIdentPos > 0 && this.raise(this.awaitIdentPos, "Cannot use 'await' as identifier inside an async function"), this.yieldPos = M, this.awaitPos = U, this.awaitIdentPos = he, this.parseSubscriptAsyncArrow(t, i, Ne, h);
+      return this.checkPatternErrors(P, !1), this.checkYieldAwaitInDefaultParams(), this.awaitIdentPos > 0 && this.raise(this.awaitIdentPos, "Cannot use 'await' as identifier inside an async function"), this.yieldPos = M, this.awaitPos = U, this.awaitIdentPos = he, this.parseSubscriptAsyncArrow(t, i, Le, h);
     this.checkExpressionErrors(P, !0), this.yieldPos = M || this.yieldPos, this.awaitPos = U || this.awaitPos, this.awaitIdentPos = he || this.awaitIdentPos;
     var R = this.startNodeAt(t, i);
-    R.callee = e, R.arguments = Ne, d && (R.optional = y), e = this.finishNode(R, "CallExpression");
+    R.callee = e, R.arguments = Le, d && (R.optional = y), e = this.finishNode(R, "CallExpression");
   } else if (this.type === p.backQuote) {
     (y || o) && this.raise(this.start, "Optional chaining cannot appear in the tag of tagged template expressions");
     var re = this.startNodeAt(t, i);
@@ -4012,10 +4012,10 @@ D.parseParenAndDistinguishExpression = function(e, t) {
         break;
       } else
         y.push(this.parseMaybeAssign(!1, P, this.parseParenItem));
-    var Ne = this.lastTokEnd, R = this.lastTokEndLoc;
+    var Le = this.lastTokEnd, R = this.lastTokEndLoc;
     if (this.expect(p.parenR), e && this.shouldParseArrow(y) && this.eat(p.arrow))
       return this.checkPatternErrors(P, !1), this.checkYieldAwaitInDefaultParams(), this.yieldPos = M, this.awaitPos = U, this.parseParenArrowList(i, s, y, t);
-    (!y.length || S) && this.unexpected(this.lastTokStart), he && this.unexpected(he), this.checkExpressionErrors(P, !0), this.yieldPos = M || this.yieldPos, this.awaitPos = U || this.awaitPos, y.length > 1 ? (a = this.startNodeAt(h, d), a.expressions = y, this.finishNodeAt(a, "SequenceExpression", Ne, R)) : a = y[0];
+    (!y.length || S) && this.unexpected(this.lastTokStart), he && this.unexpected(he), this.checkExpressionErrors(P, !0), this.yieldPos = M || this.yieldPos, this.awaitPos = U || this.awaitPos, y.length > 1 ? (a = this.startNodeAt(h, d), a.expressions = y, this.finishNodeAt(a, "SequenceExpression", Le, R)) : a = y[0];
   } else
     a = this.parseParenExpression();
   if (this.options.preserveParens) {
@@ -4213,7 +4213,7 @@ He.treatFunctionsAsVarInScope = function(e) {
 };
 He.declareName = function(e, t, i) {
   var s = !1;
-  if (t === De) {
+  if (t === ze) {
     var a = this.currentScope();
     s = a.lexical.indexOf(e) > -1 || a.functions.indexOf(e) > -1 || a.var.indexOf(e) > -1, a.lexical.push(e), this.inModule && a.flags & vt && delete this.undefinedExports[e];
   } else if (t === Xs) {
@@ -4595,7 +4595,7 @@ A.regexp_eatCapturingGroup = function(e) {
 };
 A.regexp_eatModifiers = function(e) {
   for (var t = "", i = 0; (i = e.current()) !== -1 && rh(i); )
-    t += Me(i), e.advance();
+    t += Re(i), e.advance();
   return t;
 };
 function rh(e) {
@@ -4660,8 +4660,8 @@ A.regexp_eatGroupName = function(e) {
 };
 A.regexp_eatRegExpIdentifierName = function(e) {
   if (e.lastStringValue = "", this.regexp_eatRegExpIdentifierStart(e)) {
-    for (e.lastStringValue += Me(e.lastIntValue); this.regexp_eatRegExpIdentifierPart(e); )
-      e.lastStringValue += Me(e.lastIntValue);
+    for (e.lastStringValue += Re(e.lastIntValue); this.regexp_eatRegExpIdentifierPart(e); )
+      e.lastStringValue += Re(e.lastIntValue);
     return !0;
   }
   return !1;
@@ -4678,7 +4678,7 @@ A.regexp_eatRegExpIdentifierPart = function(e) {
   return e.advance(i), s === 92 && this.regexp_eatRegExpUnicodeEscapeSequence(e, i) && (s = e.lastIntValue), nh(s) ? (e.lastIntValue = s, !0) : (e.pos = t, !1);
 };
 function nh(e) {
-  return Oe(e, !0) || e === 36 || e === 95 || e === 8204 || e === 8205;
+  return Me(e, !0) || e === 36 || e === 95 || e === 8204 || e === 8205;
 }
 A.regexp_eatAtomEscape = function(e) {
   return this.regexp_eatBackReference(e) || this.regexp_eatCharacterClassEscape(e) || this.regexp_eatCharacterEscape(e) || e.switchN && this.regexp_eatKGroupName(e) ? !0 : (e.switchU && (e.current() === 99 && e.raise("Invalid unicode escape"), e.raise("Invalid escape")), !1);
@@ -4796,11 +4796,11 @@ A.regexp_eatDecimalEscape = function(e) {
   }
   return !1;
 };
-var mr = 0, Re = 1, we = 2;
+var mr = 0, De = 1, we = 2;
 A.regexp_eatCharacterClassEscape = function(e) {
   var t = e.current();
   if (uh(t))
-    return e.lastIntValue = -1, e.advance(), Re;
+    return e.lastIntValue = -1, e.advance(), De;
   var i = !1;
   if (e.switchU && this.options.ecmaVersion >= 9 && ((i = t === 80) || t === 112)) {
     e.lastIntValue = -1, e.advance();
@@ -4829,7 +4829,7 @@ A.regexp_eatUnicodePropertyValueExpression = function(e) {
     var i = e.lastStringValue;
     if (this.regexp_eatUnicodePropertyValue(e)) {
       var s = e.lastStringValue;
-      return this.regexp_validateUnicodePropertyNameAndValue(e, i, s), Re;
+      return this.regexp_validateUnicodePropertyNameAndValue(e, i, s), De;
     }
   }
   if (e.pos = t, this.regexp_eatLoneUnicodePropertyNameOrValue(e)) {
@@ -4843,7 +4843,7 @@ A.regexp_validateUnicodePropertyNameAndValue = function(e, t, i) {
 };
 A.regexp_validateUnicodePropertyNameOrValue = function(e, t) {
   if (e.unicodeProperties.binary.test(t))
-    return Re;
+    return De;
   if (e.switchV && e.unicodeProperties.binaryOfStrings.test(t))
     return we;
   e.raise("Invalid property name");
@@ -4851,7 +4851,7 @@ A.regexp_validateUnicodePropertyNameOrValue = function(e, t) {
 A.regexp_eatUnicodePropertyName = function(e) {
   var t = 0;
   for (e.lastStringValue = ""; yr(t = e.current()); )
-    e.lastStringValue += Me(t), e.advance();
+    e.lastStringValue += Re(t), e.advance();
   return e.lastStringValue !== "";
 };
 function yr(e) {
@@ -4860,7 +4860,7 @@ function yr(e) {
 A.regexp_eatUnicodePropertyValue = function(e) {
   var t = 0;
   for (e.lastStringValue = ""; ch(t = e.current()); )
-    e.lastStringValue += Me(t), e.advance();
+    e.lastStringValue += Re(t), e.advance();
   return e.lastStringValue !== "";
 };
 function ch(e) {
@@ -4886,7 +4886,7 @@ A.regexp_eatCharacterClass = function(e) {
   return !1;
 };
 A.regexp_classContents = function(e) {
-  return e.current() === 93 ? Re : e.switchV ? this.regexp_classSetExpression(e) : (this.regexp_nonEmptyClassRanges(e), Re);
+  return e.current() === 93 ? De : e.switchV ? this.regexp_classSetExpression(e) : (this.regexp_nonEmptyClassRanges(e), De);
 };
 A.regexp_nonEmptyClassRanges = function(e) {
   for (; this.regexp_eatClassAtom(e); ) {
@@ -4940,7 +4940,7 @@ A.regexp_eatClassEscape = function(e) {
   return this.regexp_eatCharacterClassEscape(e) || this.regexp_eatCharacterEscape(e);
 };
 A.regexp_classSetExpression = function(e) {
-  var t = Re, i;
+  var t = De, i;
   if (!this.regexp_eatClassSetRange(e)) if (i = this.regexp_eatClassSetOperand(e)) {
     i === we && (t = we);
     for (var s = e.pos; e.eatChars(
@@ -4948,7 +4948,7 @@ A.regexp_classSetExpression = function(e) {
       /* && */
     ); ) {
       if (e.current() !== 38 && (i = this.regexp_eatClassSetOperand(e))) {
-        i !== we && (t = Re);
+        i !== we && (t = De);
         continue;
       }
       e.raise("Invalid character in character class");
@@ -4987,7 +4987,7 @@ A.regexp_eatClassSetRange = function(e) {
   return !1;
 };
 A.regexp_eatClassSetOperand = function(e) {
-  return this.regexp_eatClassSetCharacter(e) ? Re : this.regexp_eatClassStringDisjunction(e) || this.regexp_eatNestedClass(e);
+  return this.regexp_eatClassSetCharacter(e) ? De : this.regexp_eatClassStringDisjunction(e) || this.regexp_eatNestedClass(e);
 };
 A.regexp_eatNestedClass = function(e) {
   var t = e.pos;
@@ -5050,7 +5050,7 @@ A.regexp_classStringDisjunctionContents = function(e) {
 A.regexp_classString = function(e) {
   for (var t = 0; this.regexp_eatClassSetCharacter(e); )
     t++;
-  return t === 1 ? Re : we;
+  return t === 1 ? De : we;
 };
 A.regexp_eatClassSetCharacter = function(e) {
   var t = e.pos;
@@ -5317,7 +5317,7 @@ F.readToken_numberSign = function() {
   var e = this.options.ecmaVersion, t = 35;
   if (e >= 13 && (++this.pos, t = this.fullCharCodeAtPos(), Pe(t, !0) || t === 92))
     return this.finishToken(p.privateId, this.readWord1());
-  this.raise(this.pos, "Unexpected character '" + Me(t) + "'");
+  this.raise(this.pos, "Unexpected character '" + Re(t) + "'");
 };
 F.getTokenFromCode = function(e) {
   switch (e) {
@@ -5404,7 +5404,7 @@ F.getTokenFromCode = function(e) {
     case 35:
       return this.readToken_numberSign();
   }
-  this.raise(this.pos, "Unexpected character '" + Me(e) + "'");
+  this.raise(this.pos, "Unexpected character '" + Re(e) + "'");
 };
 F.finishOp = function(e, t) {
   var i = this.input.slice(this.pos, this.pos + t);
@@ -5581,7 +5581,7 @@ F.readEscapedChar = function(e) {
       return String.fromCharCode(this.readHexChar(2));
     // 'x'
     case 117:
-      return Me(this.readCodePoint());
+      return Re(this.readCodePoint());
     // 'u'
     case 116:
       return "	";
@@ -5631,14 +5631,14 @@ F.readWord1 = function() {
   this.containsEsc = !1;
   for (var e = "", t = !0, i = this.pos, s = this.options.ecmaVersion >= 6; this.pos < this.input.length; ) {
     var a = this.fullCharCodeAtPos();
-    if (Oe(a, s))
+    if (Me(a, s))
       this.pos += a <= 65535 ? 1 : 2;
     else if (a === 92) {
       this.containsEsc = !0, e += this.input.slice(i, this.pos);
       var o = this.pos;
       this.input.charCodeAt(++this.pos) !== 117 && this.invalidStringToken(this.pos, "Expecting Unicode escape sequence \\uXXXX"), ++this.pos;
       var h = this.readCodePoint();
-      (t ? Pe : Oe)(h, s) || this.invalidStringToken(o, "Invalid Unicode escape"), e += Me(h), i = this.pos;
+      (t ? Pe : Me)(h, s) || this.invalidStringToken(o, "Invalid Unicode escape"), e += Re(h), i = this.pos;
     } else
       break;
     t = !1;
@@ -5663,7 +5663,7 @@ X.acorn = {
   keywordTypes: at,
   TokContext: oe,
   tokContexts: H,
-  isIdentifierChar: Oe,
+  isIdentifierChar: Me,
   isIdentifierStart: Pe,
   Token: Kt,
   isNewLine: Xe,
@@ -5691,7 +5691,7 @@ const vh = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   TokenType: V,
   defaultOptions: Rt,
   getLineInfo: Si,
-  isIdentifierChar: Oe,
+  isIdentifierChar: Me,
   isIdentifierStart: Pe,
   isNewLine: Xe,
   keywordTypes: at,
@@ -5871,7 +5871,7 @@ function ms(e) {
 function Ch(e) {
   var t = {}, i = t.dts, s = i !== void 0 && i, a = t.allowSatisfies, o = a !== void 0 && a;
   return function(h) {
-    var d = h.acorn || vh, y = gh(d), u = d.tokTypes, S = d.keywordTypes, P = d.isIdentifierStart, M = d.lineBreak, U = d.isNewLine, he = d.tokContexts, Ne = d.isIdentifierChar, R = y.tokTypes, re = y.tokContexts, de = y.keywordsRegExp, ge = y.tokenIsLiteralPropertyName, Ke = y.tokenIsTemplate, Ar = y.tokenIsTSDeclarationStart, q = y.tokenIsIdentifier, Tt = y.tokenIsKeywordOrIdentifier, Cr = y.tokenIsTSTypeOperator;
+    var d = h.acorn || vh, y = gh(d), u = d.tokTypes, S = d.keywordTypes, P = d.isIdentifierStart, M = d.lineBreak, U = d.isNewLine, he = d.tokContexts, Le = d.isIdentifierChar, R = y.tokTypes, re = y.tokContexts, de = y.keywordsRegExp, ge = y.tokenIsLiteralPropertyName, Ke = y.tokenIsTemplate, Ar = y.tokenIsTSDeclarationStart, q = y.tokenIsIdentifier, Tt = y.tokenIsKeywordOrIdentifier, Cr = y.tokenIsTSTypeOperator;
     function Er(_, pe, ne) {
       ne === void 0 && (ne = _.length);
       for (var te = pe; te < ne; te++) {
@@ -6183,7 +6183,7 @@ function Ch(e) {
         var c = r + n.length;
         if (this.input.slice(r, c) === n) {
           var l = this.input.charCodeAt(c);
-          return !(Ne(l) || (64512 & l) == 55296);
+          return !(Le(l) || (64512 & l) == 55296);
         }
         return !1;
       }, f.isAbstractConstructorSignature = function() {
@@ -7647,7 +7647,7 @@ async function _e(e, t = [], i) {
 async function Nh() {
   We("Load environment variables"), (await import("dotenv")).config();
 }
-function ze(e) {
+function Ne(e) {
   const t = "\x1B[36m", i = "\x1B[0m", s = "─".repeat(e.length + 10);
   console.info(`
 ${t}${s}`), console.info(`🚀 ${e}`), console.info(`${s}${i}`);
@@ -7695,31 +7695,37 @@ async function Tr(e, t) {
 }
 async function $h() {
   try {
-    ze("Build Artifact"), await Ae("vite", ["build"]), Ve("Artifact build complete.");
+    Ne("Build Artifact"), await Ae("vite", ["build"]), Ve("Artifact built.");
   } catch (e) {
     console.error("❌ Error building artifact.", e), process.exit(1);
   }
 }
 async function Uh(e = !1) {
   try {
-    ze("Release Artifact");
+    Ne("Release Artifact");
     const t = await St("package.json");
-    await _r(t), await Lh(t), await Ae("vite", ["build"]), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${t.version}"`]), await _e("git", ["push", "origin", "main:main"]), await Ae("npm", ["publish", "--access", "public"]), Ve(`Version ${t.version} of artifact released.`);
+    await _r(t), await Lh(t), await Ae("vite", ["build"]), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${t.version}"`]), await _e("git", ["push", "origin", "main:main"]), await Ae("npm", ["publish", "--access", "public"]), Ve(`Artifact version ${t.version} released.`);
   } catch (t) {
     console.error("❌ Error releasing artifact.", t), process.exit(1);
   }
 }
 async function Zh() {
   try {
-    ze("Synchronising Artifact with GitHub");
+    Ne("Synchronise Artifact with GitHub");
     const e = await St("package.json");
-    We("Bump artifact version"), await _r(e), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${e.version}"`]), await _e("git", ["push", "origin", "main:main"]), Ve(`Version ${e.version} of artifact synchronised with GitHub.`);
+    We("Bump artifact version"), await _r(e), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${e.version}"`]), await _e("git", ["push", "origin", "main:main"]), Ve(`Artifact version ${e.version} synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising artifact with GitHub.", e), process.exit(1);
   }
 }
 function qh() {
-  console.log("Test artifact...");
+  try {
+    Ne("Test Artifact"), console.log(`
+❌ Test artifact is not implemented. No vitest command.
+`);
+  } catch (e) {
+    console.error("❌ Error testing artifact.", e), process.exit(1);
+  }
 }
 async function Lh(e) {
   We("Build artifact configuration");
@@ -7737,7 +7743,7 @@ async function _r(e, t = "./") {
 const Oh = ["critical", "high", "moderate", "low", "unknown"];
 async function Hh() {
   try {
-    ze("Audit Dependencies"), await Nh(), await Ae("owasp-dependency-check", [
+    Ne("Audit Dependencies"), await Nh(), await Ae("owasp-dependency-check", [
       "--project",
       "@datapos/datapos-development",
       "--enableRetired",
@@ -7795,14 +7801,14 @@ async function Rh(e) {
 }
 async function Wh() {
   try {
-    ze("Check Dependencies"), await Ae("npm", ["outdated"], !0), await Ae("npm-check-updates", ["-i"]), Ve("Dependency checking complete.");
+    Ne("Check Dependencies"), await Ae("npm", ["outdated"], !0), await Ae("npm-check-updates", ["-i"]), Ve("Dependency checking complete.");
   } catch (e) {
     console.error("❌ Error checking dependencies.", e), process.exit(1);
   }
 }
 async function Kh(e) {
   try {
-    ze("Document Dependencies");
+    Ne("Document Dependencies");
     const t = e.flatMap((i) => ["--allowed", i]);
     await _e(
       "license-report",
@@ -7835,21 +7841,21 @@ async function Dh() {
 }
 async function Gh() {
   try {
-    ze("Format Code"), await Ae("prettier", ["--write", "src/"]), Ve("Code formatting complete.");
+    Ne("Format Code"), await Ae("prettier", ["--write", "src/"]), Ve("Code formatting complete.");
   } catch (e) {
     console.error("❌ Error formatting code.", e), process.exit(1);
   }
 }
 async function Jh() {
   try {
-    ze("Lint Code"), await Ae("eslint", ["."]), Ve("Code linting complete.");
+    Ne("Lint Code"), await Ae("eslint", ["."]), Ve("Code linting complete.");
   } catch (e) {
     console.error("❌ Error linting code.", e), process.exit(1);
   }
 }
 async function Xh(e) {
   try {
-    ze("Update datapos Dependencies");
+    Ne("Update datapos Dependencies");
     for (const t of e)
       await Ae("npm", ["install", `@datapos/datapos-${t}@latest`]);
     Ve("Updating datapos dependencies complete.");

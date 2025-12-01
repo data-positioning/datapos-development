@@ -88,7 +88,7 @@ async function loadEnvironmentVariables(): Promise<void> {
 function logOperationHeader(text: string): void {
     const cyan = '\u001B[36m';
     const reset = '\u001B[0m';
-    const line = '─'.repeat(text.length + 10);
+    const line = '─'.repeat(text.length + 3);
     console.info(`\n${cyan}${line}`);
     console.info(`▶️  ${text}`);
     console.info(`${line}${reset}`);

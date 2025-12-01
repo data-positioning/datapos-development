@@ -7648,7 +7648,7 @@ async function Nh() {
   We("Load environment variables"), (await import("dotenv")).config();
 }
 function Ne(e) {
-  const t = "\x1B[36m", i = "\x1B[0m", s = "─".repeat(e.length + 10);
+  const t = "\x1B[36m", i = "\x1B[0m", s = "─".repeat(e.length + 3);
   console.info(`
 ${t}${s}`), console.info(`▶️  ${e}`), console.info(`${s}${i}`);
 }
@@ -7704,7 +7704,7 @@ async function Uh(e = !1) {
   try {
     Ne("Release Project");
     const t = await St("package.json");
-    await _r("1️⃣", t), await Lh("2️⃣", t), await Ae("3️⃣  Bundle project.", "vite", ["build"]), await _e("", "git", ["add", "."]), await _e("", "git", ["commit", "-m", `"v${t.version}"`]), await _e("", "git", ["push", "origin", "main:main"]), await Ae("", "npm", ["publish", "--access", "public"]), Ve(`Project version ${t.version} released.`);
+    await _r("1️⃣", t), await Lh("2️⃣", t), await Ae("3️⃣  Bundle project.", "vite", ["build"]), await _e("4️⃣  Stage changes", "git", ["add", "."]), await _e("5️⃣  Commit changes", "git", ["commit", "-m", `"v${t.version}"`]), await _e("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), await Ae("7️⃣. Publish to npm", "npm", ["publish", "--access", "public"]), Ve(`Project version '${t.version}' released.`);
   } catch (t) {
     console.error("❌ Error releasing project.", t), process.exit(1);
   }
@@ -7713,7 +7713,7 @@ async function Zh() {
   try {
     Ne("Synchronise Project with GitHub");
     const e = await St("package.json");
-    We("Bump project version"), await _r("1️⃣", e), await _e("2️⃣  Stage changes", "git", ["add", "."]), await _e("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await _e("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Ve(`Project version ${e.version} synchronised with GitHub.`);
+    We("Bump project version"), await _r("1️⃣", e), await _e("2️⃣  Stage changes", "git", ["add", "."]), await _e("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await _e("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Ve(`Project version '${e.version}' synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }
@@ -7734,10 +7734,10 @@ async function Lh(e, t) {
 }
 async function _r(e, t, i = "./") {
   if (We(`${e}  Bump project version`), t.version == null)
-    t.version = "0.0.001", console.warn(`⚠️ Project version initialised to ${t.version}.`), await di(`${i}package.json`, t);
+    t.version = "0.0.001", console.warn(`⚠️ Project version initialised to '${t.version}'.`), await di(`${i}package.json`, t);
   else {
     const s = t.version, a = t.version.split(".");
-    t.version = `${a[0]}.${a[1]}.${Number(a[2]) + 1}`, console.info(`✔️  Project version bumped from ${s} to ${t.version}.`), await di(`${i}package.json`, t);
+    t.version = `${a[0]}.${a[1]}.${Number(a[2]) + 1}`, console.info(`✔️  Project version bumped from '${s}' to '${t.version}'.`), await di(`${i}package.json`, t);
   }
 }
 const Oh = ["critical", "high", "moderate", "low", "unknown"];

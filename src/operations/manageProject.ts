@@ -35,13 +35,13 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         await spawnCommand('3️⃣  Bundle project.', 'vite', ['build']);
 
-        await execCommand('', 'git', ['add', '.']);
-        await execCommand('', 'git', ['commit', '-m', `"v${packageJSON.version}"`]);
-        await execCommand('', 'git', ['push', 'origin', 'main:main']);
+        await execCommand('4️⃣  Stage changes', 'git', ['add', '.']);
+        await execCommand('5️⃣  Commit changes', 'git', ['commit', '-m', `"v${packageJSON.version}"`]);
+        await execCommand('6️⃣  Push changes', 'git', ['push', 'origin', 'main:main']);
 
-        await spawnCommand('', 'npm', ['publish', '--access', 'public']);
+        await spawnCommand('7️⃣. Publish to npm', 'npm', ['publish', '--access', 'public']);
 
-        logOperationSuccess(`Project version ${packageJSON.version} released.`);
+        logOperationSuccess(`Project version '${packageJSON.version}' released.`);
     } catch (error) {
         console.error('❌ Error releasing project.', error);
         process.exit(1);
@@ -62,7 +62,7 @@ async function syncProjectWithGitHub(): Promise<void> {
         await execCommand('3️⃣  Commit changes', 'git', ['commit', '-m', `"v${packageJSON.version}"`]);
         await execCommand('4️⃣  Push changes', 'git', ['push', 'origin', 'main:main']);
 
-        logOperationSuccess(`Project version ${packageJSON.version} synchronised with GitHub.`);
+        logOperationSuccess(`Project version '${packageJSON.version}' synchronised with GitHub.`);
     } catch (error) {
         console.error('❌ Error synchronising project with GitHub.', error);
         process.exit(1);
@@ -98,13 +98,13 @@ async function bumpProjectVersion(stepIcon: string, packageJSON: PackageJson, pa
 
     if (packageJSON.version == null) {
         packageJSON.version = '0.0.001';
-        console.warn(`⚠️ Project version initialised to ${packageJSON.version}.`);
+        console.warn(`⚠️ Project version initialised to '${packageJSON.version}'.`);
         await writeJSONFile(`${path}package.json`, packageJSON);
     } else {
         const oldVersion = packageJSON.version;
         const versionSegments = packageJSON.version.split('.');
         packageJSON.version = `${versionSegments[0]}.${versionSegments[1]}.${Number(versionSegments[2]) + 1}`;
-        console.info(`✔️  Project version bumped from ${oldVersion} to ${packageJSON.version}.`);
+        console.info(`✔️  Project version bumped from '${oldVersion}' to '${packageJSON.version}'.`);
         await writeJSONFile(`${path}package.json`, packageJSON);
     }
 }

@@ -7694,14 +7694,14 @@ async function di(e, t) {
 async function Tr(e, t) {
   await $.writeFile(e, t, "utf8");
 }
-async function $h() {
+async function Zh() {
   try {
     Ne("Build Project"), await Ae("1️⃣  Bundle project", "vite", ["build"]), Ve("Project built.");
   } catch (e) {
     console.error("❌ Error building project.", e), process.exit(1);
   }
 }
-async function Uh(e = !1) {
+async function qh(e = !1) {
   try {
     Ne("Release Project");
     const t = await St("package.json");
@@ -7710,7 +7710,7 @@ async function Uh(e = !1) {
     console.error("❌ Error releasing project.", t), process.exit(1);
   }
 }
-async function Zh() {
+async function Hh() {
   try {
     Ne("Synchronise Project with GitHub");
     const e = await St("package.json");
@@ -7719,7 +7719,7 @@ async function Zh() {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }
 }
-function qh() {
+function Wh() {
   try {
     Ne("Test Project"), console.log(`
 ❌ Test project is not implemented. No 'vitest' command.
@@ -7741,8 +7741,15 @@ async function _r(e, t, i = "./") {
     t.version = `${a[0]}.${a[1]}.${Number(a[2]) + 1}`, console.info(`Project version bumped from '${s}' to '${t.version}'.`), await di(`${i}package.json`, t);
   }
 }
-const Oh = ["critical", "high", "moderate", "low", "unknown"];
-async function Hh() {
+const Oh = ["critical", "high", "moderate", "low", "unknown"], Mh = {
+  critical: { color: "D32F2F", label: "critical" },
+  high: { color: "EF6C00", label: "high" },
+  moderate: { color: "FBC02D", label: "moderate" },
+  low: { color: "6D8C31", label: "low" },
+  unknown: { color: "616161", label: "unknown" }
+  // If needed a possible info color could be #0288D1. See sample badges in ~/tests/sampleBadges.md.
+};
+async function Kh() {
   try {
     Ne("Audit Dependencies"), await Nh(), await Ae("", "owasp-dependency-check", [
       "--project",
@@ -7751,12 +7758,12 @@ async function Hh() {
       "--nodePackageSkipDevDependencies",
       "--nvdApiKey",
       process.env.NVD_API_KEY ?? ""
-    ]), We("Insert OWASP Badge(s) into 'README.md'"), await Mh(), await Ae("", "npm", ["audit"]), Ve("Dependency auditing complete.");
+    ]), We("Insert OWASP Badge(s) into 'README.md'"), await Rh(), await Ae("", "npm", ["audit"]), Ve("Dependency auditing complete.");
   } catch (e) {
     console.error("❌ Error auditing dependencies.", e), process.exit(1);
   }
 }
-async function Mh() {
+async function Rh() {
   const e = "<!-- OWASP_BADGES_START -->", t = "<!-- OWASP_BADGES_END -->";
   try {
     const i = await St("./dependency-check-reports/dependency-check-report.json"), s = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
@@ -7770,7 +7777,7 @@ async function Mh() {
           } else
             s.unknown++;
         }
-    const a = await Rh(s), o = await li("./README.md"), h = o.indexOf(e), d = o.indexOf(t);
+    const a = await Dh(s), o = await li("./README.md"), h = o.indexOf(e), d = o.indexOf(t);
     if (h === -1 || d === -1) {
       console.error("❌ No OWASP badge markers found in 'README.md'.");
       return;
@@ -7781,33 +7788,27 @@ async function Mh() {
     console.error("❌ Error inserting OWASP badges into 'README.md'.", i);
   }
 }
-async function Rh(e) {
-  const t = {
-    critical: { color: "D32F2F", label: "critical" },
-    high: { color: "EF6C00", label: "high" },
-    moderate: { color: "FBC02D", label: "moderate" },
-    low: { color: "6D8C31", label: "low" },
-    unknown: { color: "616161", label: "unknown" }
-  }, i = await St("config.json"), s = [];
-  if (Object.values(e).reduce((o, h) => o + h, 0) === 0)
-    console.info("No vulnerabilities found."), s.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/${i.id}/dependency-check-reports/dependency-check-report.html)`);
+async function Dh(e) {
+  const t = await St("config.json"), i = [];
+  if (Object.values(e).reduce((a, o) => a + o, 0) === 0)
+    console.info("No vulnerabilities found."), i.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/${t.id}/dependency-check-reports/dependency-check-report.html)`);
   else
-    for (const [o, h] of Object.entries(e)) {
-      const d = t[o];
-      if (console.warn(`⚠️  ${h} ${d.label} vulnerability(ies) found.`), h === 0) continue;
-      const y = `https://img.shields.io/badge/OWASP-${h}%20${d.label}-${d.color}`;
-      s.push(`[![OWASP](${y})](https://data-positioning.github.io/${i.id}/dependency-check-reports/dependency-check-report.html)`);
+    for (const [a, o] of Object.entries(e)) {
+      const h = Mh[a];
+      if (console.warn(`⚠️  ${o} ${h.label} vulnerability(ies) found.`), o === 0) continue;
+      const d = `https://img.shields.io/badge/OWASP-${o}%20${h.label}-${h.color}`;
+      i.push(`[![OWASP](${d})](https://data-positioning.github.io/${t.id}/dependency-check-reports/dependency-check-report.html)`);
     }
-  return s;
+  return i;
 }
-async function Wh() {
+async function Gh() {
   try {
-    Ne("Check Dependencies"), await Ae("", "npm", ["outdated"], !0), await Ae("", "npm-check-updates", ["-i"]), Ve("Dependency checking complete.");
+    Ne("Check Dependencies"), await Ae("1️⃣. Check using 'npm outdated'", "npm", ["outdated"], !0), await Ae("2️⃣. Check using 'npm-check-updates'", "npm-check-updates", ["-i"]), Ve("Dependencies checked.");
   } catch (e) {
     console.error("❌ Error checking dependencies.", e), process.exit(1);
   }
 }
-async function Kh(e) {
+async function Jh(e) {
   try {
     Ne("Document Dependencies");
     const t = e.flatMap((i) => ["--allowed", i]);
@@ -7821,12 +7822,12 @@ async function Kh(e) {
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", " --recurse", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenseTree.json"
-    ), await _e("5️⃣. Check 'licenseTree.json' file", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...t]), await Dh("6️⃣"), Ve("Dependencies documented.");
+    ), await _e("5️⃣. Check 'licenseTree.json' file", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...t]), await zh("6️⃣"), Ve("Dependencies documented.");
   } catch (t) {
     console.error("❌ Error documenting dependencies.", t), process.exit(1);
   }
 }
-async function Dh(e) {
+async function zh(e) {
   We(`${e}  Insert licenses into 'README.md'`);
   const t = "<!-- DEPENDENCY_LICENSES_START -->", i = "<!-- DEPENDENCY_LICENSES_END -->", a = (await li("./licenses.md")).trim(), o = await li("./README.md"), h = o.indexOf(t), d = o.indexOf(i);
   if (h === -1 || d === -1) {
@@ -7838,32 +7839,35 @@ async function Dh(e) {
 ` + o.slice(Math.max(0, d));
   await Tr("README.md", y);
 }
-async function Gh() {
+async function Xh() {
   try {
     Ne("Format Code"), await Ae("", "prettier", ["--write", "src/"]), Ve("Code formatting complete.");
   } catch (e) {
     console.error("❌ Error formatting code.", e), process.exit(1);
   }
 }
-async function Jh() {
+async function Qh() {
   try {
     Ne("Lint Code"), await Ae("", "eslint", ["."]), Ve("Code linting complete.");
   } catch (e) {
     console.error("❌ Error linting code.", e), process.exit(1);
   }
 }
-async function Xh(e) {
+const Vh = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"];
+async function Yh(e) {
   try {
-    Ne("Update datapos Dependencies");
-    for (const t of e)
-      await Ae("", "npm", ["install", `@datapos/datapos-${t}@latest`]);
-    Ve("Updating datapos dependencies complete.");
+    Ne("Update '@datapos/datapos' Dependencies");
+    for (const [t, i] of e.entries()) {
+      const s = Vh.at(t) ?? "🔢";
+      await Ae(`${s}  Update '${i}'`, "npm", ["install", `@datapos/datapos-${i}@latest`]);
+    }
+    Ve("'@datapos/datapos' dependencies updated.");
   } catch (t) {
-    console.error("❌ Error updating datapos dependencies.", t), process.exit(1);
+    console.error("❌ Error updating '@datapos/datapos' dependencies.", t), process.exit(1);
   }
 }
 const Pr = vs(ys);
-async function Qh() {
+async function ep() {
   try {
     console.info("🚀 Building configuration...");
     const e = JSON.parse(await $.readFile("package.json", "utf8")), t = JSON.parse(await $.readFile("config.json", "utf8"));
@@ -7872,7 +7876,7 @@ async function Qh() {
     console.error("❌ Error building configuration.", e);
   }
 }
-async function Yh() {
+async function tp() {
   try {
     console.info("🚀 Building connector configuration...");
     const [e, t, i] = await Promise.all([
@@ -7892,7 +7896,7 @@ async function Yh() {
     console.error("❌ Error building connector configuration.", e);
   }
 }
-async function ep() {
+async function ip() {
   try {
     console.info("🚀 Building context configuration...");
     const [e, t, i] = await Promise.all([
@@ -7912,7 +7916,7 @@ async function ep() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function tp() {
+async function sp() {
   try {
     console.info("🚀 Building presenter configuration...");
     const [e, t, i] = await Promise.all([
@@ -7932,7 +7936,7 @@ async function tp() {
     console.error("❌ Error building context configuration.", e);
   }
 }
-async function ip(e) {
+async function rp(e) {
   try {
     console.info(`🚀 Building public directory index for identifier '${e}'...`);
     const t = {};
@@ -7966,7 +7970,7 @@ async function ip(e) {
     console.error("❌ Error building public directory index.", t);
   }
 }
-async function sp() {
+async function ap() {
   try {
     console.info("🚀 Sending deployment notice...");
     const e = JSON.parse(await $.readFile("config.json", "utf8")), t = {
@@ -7980,7 +7984,7 @@ async function sp() {
     console.error("❌ Error sending deployment notice.", e);
   }
 }
-async function rp(e, t) {
+async function np(e, t) {
   try {
     console.info("🚀 Uploading directory to R2....");
     async function i(a, o, h) {
@@ -8002,7 +8006,7 @@ async function rp(e, t) {
     console.error("❌ Error uploading directory to R2.", i);
   }
 }
-async function ap() {
+async function op() {
   try {
     console.info("🚀 Uploading module configuration....");
     const e = JSON.parse(await $.readFile("config.json", "utf8")), t = e.id, i = {
@@ -8016,7 +8020,7 @@ async function ap() {
     console.error("❌ Error uploading module configuration.", e);
   }
 }
-async function np(e) {
+async function up(e) {
   try {
     console.info("🚀 Uploading module to R2...");
     const i = `v${JSON.parse(await $.readFile("package.json", "utf8")).version}`;
@@ -8037,23 +8041,23 @@ async function np(e) {
   }
 }
 export {
-  Hh as auditDependencies,
-  Qh as buildConfig,
-  Yh as buildConnectorConfig,
-  ep as buildContextConfig,
-  tp as buildPresenterConfig,
-  $h as buildProject,
-  ip as buildPublicDirectoryIndex,
-  Wh as checkDependencies,
-  Kh as documentDependencies,
-  Gh as formatCode,
-  Jh as lintCode,
-  Uh as releaseProject,
-  sp as sendDeploymentNotice,
-  Zh as syncProjectWithGitHub,
-  qh as testProject,
-  Xh as updateDataPosDependencies,
-  rp as uploadDirectoryToR2,
-  ap as uploadModuleConfigToDO,
-  np as uploadModuleToR2
+  Kh as auditDependencies,
+  ep as buildConfig,
+  tp as buildConnectorConfig,
+  ip as buildContextConfig,
+  sp as buildPresenterConfig,
+  Zh as buildProject,
+  rp as buildPublicDirectoryIndex,
+  Gh as checkDependencies,
+  Jh as documentDependencies,
+  Xh as formatCode,
+  Qh as lintCode,
+  qh as releaseProject,
+  ap as sendDeploymentNotice,
+  Hh as syncProjectWithGitHub,
+  Wh as testProject,
+  Yh as updateDataPosDependencies,
+  np as uploadDirectoryToR2,
+  op as uploadModuleConfigToDO,
+  up as uploadModuleToR2
 };

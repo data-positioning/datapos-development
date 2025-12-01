@@ -7638,11 +7638,11 @@ function Ih(e) {
     Mr.includes(s) && (t = !0), Or.includes(s) && (i = !0);
   return t && i ? "bidirectional" : t ? "source" : i ? "destination" : "unknown";
 }
-async function _e(e, t = [], i) {
-  const s = `${e} ${t.join(" ")}`;
-  We(`Execute command: ${s}`);
-  const { stdout: a, stderr: o } = await Eh(s);
-  i === void 0 ? a.trim() && console.log(a.trim()) : await $.writeFile(i, a.trim(), "utf8"), o.trim() && console.error(o.trim());
+async function _e(e, t, i = [], s) {
+  const a = `${t} ${i.join(" ")}`;
+  We(`${e}. Execute command: '${a}'`);
+  const { stdout: o, stderr: h } = await Eh(a);
+  o.trim() && console.log(o.trim()), h.trim() && console.error(h.trim());
 }
 async function Nh() {
   We("Load environment variables"), (await import("dotenv")).config();

@@ -7,6 +7,10 @@
 // Dependencies - Framework.
 import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readTextFile, writeTextFile } from '../utilities';
 
+// Constants
+const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
+const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
+
 // Operations - Document.
 async function documentDependencies(licenses: string[]): Promise<void> {
     try {
@@ -47,8 +51,6 @@ async function documentDependencies(licenses: string[]): Promise<void> {
 async function insertLicensesIntoReadme(stepIcon: string): Promise<void> {
     logStepHeader(`${stepIcon}  Insert licenses into 'README.md'`);
 
-    const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
-    const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
     const licensesContent = await readTextFile('./licenses.md');
     const trimmedLicensesContent = licensesContent.trim();
     const readmeContent = await readTextFile('./README.md');
@@ -58,7 +60,7 @@ async function insertLicensesIntoReadme(stepIcon: string): Promise<void> {
         console.error("❌ No dependency license markers found in 'README.md'.");
         return;
     }
-    const newContent = readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + '\n' + trimmedLicensesContent + '\n' + readmeContent.slice(Math.max(0, endIndex));
+    const newContent = `${readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length))}\n${trimmedLicensesContent}\n${readmeContent.slice(Math.max(0, endIndex))}`;
     await writeTextFile('README.md', newContent);
 }
 

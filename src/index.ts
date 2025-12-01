@@ -320,7 +320,7 @@ export {
     uploadModuleToR2
 };
 
-export { buildProject, releaseProject, syncProjectWithGitHub, testProject } from './operations/manageArtifact';
+export { buildProject, releaseProject, syncProjectWithGitHub, testProject } from './operations/manageProject';
 export { auditDependencies } from './operations/auditDependencies';
 export { checkDependencies } from './operations/checkDependencies';
 export { documentDependencies } from './operations/documentDependencies';

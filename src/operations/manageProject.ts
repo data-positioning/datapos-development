@@ -29,11 +29,11 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
-        await bumpArtifactVersion(packageJSON);
+        await bumpProjectVersion(packageJSON);
 
         await buildProjectConfig(packageJSON);
 
-        await spawnCommand('1️⃣ Bundle project.', 'vite', ['build']);
+        await spawnCommand('3️⃣ Bundle project.', 'vite', ['build']);
 
         await execCommand('git', ['add', '.']);
         await execCommand('git', ['commit', '-m', `"v${packageJSON.version}"`]);
@@ -56,7 +56,7 @@ async function syncProjectWithGitHub(): Promise<void> {
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
         logStepHeader('Bump project version');
-        await bumpArtifactVersion(packageJSON);
+        await bumpProjectVersion(packageJSON);
 
         await execCommand('git', ['add', '.']);
         await execCommand('git', ['commit', '-m', `"v${packageJSON.version}"`]);
@@ -82,7 +82,7 @@ function testProject(): void {
 
 // Helpers - Build project configuration.
 async function buildProjectConfig(packageJSON: PackageJson): Promise<void> {
-    logStepHeader('Build project configuration');
+    logStepHeader('2️⃣  Build project configuration');
 
     const configJSON = await readJSONFile<ModuleConfig>('config.json');
     if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
@@ -93,8 +93,8 @@ async function buildProjectConfig(packageJSON: PackageJson): Promise<void> {
 }
 
 // Helper - Bump project version.
-async function bumpArtifactVersion(packageJSON: PackageJson, path = './'): Promise<void> {
-    logStepHeader('Bump project version');
+async function bumpProjectVersion(packageJSON: PackageJson, path = './'): Promise<void> {
+    logStepHeader('1️⃣ Bump project version');
 
     if (packageJSON.version == null) {
         packageJSON.version = '0.0.001';

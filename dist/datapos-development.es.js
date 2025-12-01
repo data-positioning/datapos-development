@@ -7728,41 +7728,41 @@ async function Yh() {
     console.error("❌ Error building project.", e), process.exit(1);
   }
 }
-async function ep(e = !1) {
+async function ep() {
   try {
     Le("Release Project");
-    const t = await Ce("package.json"), i = await Ce("config.json");
-    await Pr("1️⃣", t);
-    const s = Rh(t);
-    switch (s) {
+    const e = await Ce("package.json"), t = await Ce("config.json");
+    await Pr("1️⃣", e);
+    const i = Rh(e);
+    switch (i) {
       case "connector":
-        await zh("2️⃣", t);
+        await zh("2️⃣", e);
         break;
       case "context":
-        await Vh("2️⃣", t);
+        await Vh("2️⃣", e);
         break;
       case "presenter":
-        await jh("2️⃣", t);
+        await jh("2️⃣", e);
         break;
       default:
-        await Dh("2️⃣", t);
+        await Dh("2️⃣", e);
     }
-    await Ee("3️⃣  Bundle project", "vite", ["build"]), await Te("4️⃣  Stage changes", "git", ["add", "."]), await Te("5️⃣  Commit changes", "git", ["commit", "-m", `"v${t.version}"`]), await Te("6️⃣  Push changes", "git", ["push", "origin", "main:main"]);
-    const a = Bh(s);
-    if (s === "app")
+    await Ee("3️⃣  Bundle project", "vite", ["build"]), await Te("4️⃣  Stage changes", "git", ["add", "."]), await Te("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Te("6️⃣  Push changes", "git", ["push", "origin", "main:main"]);
+    const s = Bh(i);
+    if (i === "app")
       oe("7️⃣  Register module"), await Mh();
-    else if (s === "engine")
+    else if (i === "engine")
       oe("7️⃣  Register module"), await ys(), await vs("datapos-engine-eu");
-    else if (a === void 0)
-      oe("7️⃣  Registration not required.");
+    else if (s === void 0)
+      oe("7️⃣  Registration NOT required.");
     else {
       oe("7️⃣  Register module"), await ys();
-      const o = i.id.slice(Math.max(0, i.id.lastIndexOf("-") + 1));
-      await vs(`datapos-engine-eu/${a}/${o}`);
+      const a = t.id.slice(Math.max(0, t.id.lastIndexOf("-") + 1));
+      await vs(`datapos-engine-eu/${s}/${a}`);
     }
-    await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]), Fe(`Project version '${t.version}' released.`);
-  } catch (t) {
-    console.error("❌ Error releasing project.", t), process.exit(1);
+    await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]), Fe(`Project version '${e.version}' released.`);
+  } catch (e) {
+    console.error("❌ Error releasing project.", e), process.exit(1);
   }
 }
 function Rh(e) {
@@ -7953,7 +7953,7 @@ async function np() {
 }
 async function op() {
   try {
-    Le("Lint Code"), await Ee("1️⃣  Lint", "eslint", ["."]), Fe("Code linted.");
+    Le("Lint Code"), await Ee("1️⃣  Lint", "eslint", []), Fe("Code linted.");
   } catch (e) {
     console.error("❌ Error linting code.", e), process.exit(1);
   }

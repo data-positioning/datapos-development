@@ -49,7 +49,7 @@ async function buildProject(): Promise<void> {
     }
 }
 // Operations - Release project.
-async function releaseProject(sendDeployNotice = false): Promise<void> {
+async function releaseProject(): Promise<void> {
     try {
         logOperationHeader('Release Project');
 
@@ -91,7 +91,7 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
             await uploadModuleConfigToDO();
             await uploadModuleToR2('datapos-engine-eu');
         } else if (moduleGroupName === undefined) {
-            logStepHeader('7️⃣  Registration not required.');
+            logStepHeader('7️⃣  Registration NOT required.');
         } else {
             logStepHeader('7️⃣  Register module');
             await uploadModuleConfigToDO();

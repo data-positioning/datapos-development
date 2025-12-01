@@ -7730,7 +7730,7 @@ function qh() {
 async function Lh(e) {
   We("2️⃣  Build project configuration");
   const t = await St("config.json");
-  e.name != null && (t.id = e.name.replace("@datapos/", "").replace("@data-positioning/", "")), e.version != null && (t.version = e.version), await di("config.json", t), console.info("ⓘ Configuration built.");
+  e.name != null && (t.id = e.name.replace("@datapos/", "").replace("@data-positioning/", "")), e.version != null && (t.version = e.version), await di("config.json", t), console.info("✔️ Configuration built.");
 }
 async function _r(e, t = "./") {
   if (We("1️⃣  Bump project version"), e.version == null)

@@ -89,7 +89,7 @@ async function buildProjectConfig(packageJSON: PackageJson): Promise<void> {
     if (packageJSON.version != null) configJSON.version = packageJSON.version;
     await writeJSONFile('config.json', configJSON);
 
-    console.info('ⓘ Configuration built.');
+    console.info('✔️ Configuration built.');
 }
 
 // Helper - Bump project version.

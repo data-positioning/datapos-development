@@ -7704,7 +7704,7 @@ async function Uh(e = !1) {
   try {
     Ne("Release Project");
     const t = await St("package.json");
-    await _r(t), await Lh(t), await Ae("3️⃣ Bundle project.", "vite", ["build"]), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${t.version}"`]), await _e("git", ["push", "origin", "main:main"]), await Ae("", "npm", ["publish", "--access", "public"]), Ve(`Project version ${t.version} released.`);
+    await _r(t), await Lh(t), await Ae("3️⃣  Bundle project.", "vite", ["build"]), await _e("git", ["add", "."]), await _e("git", ["commit", "-m", `"v${t.version}"`]), await _e("git", ["push", "origin", "main:main"]), await Ae("", "npm", ["publish", "--access", "public"]), Ve(`Project version ${t.version} released.`);
   } catch (t) {
     console.error("❌ Error releasing project.", t), process.exit(1);
   }
@@ -7730,10 +7730,10 @@ function qh() {
 async function Lh(e) {
   We("2️⃣  Build project configuration");
   const t = await St("config.json");
-  e.name != null && (t.id = e.name.replace("@datapos/", "").replace("@data-positioning/", "")), e.version != null && (t.version = e.version), await di("config.json", t), console.info("✅ Configuration built.");
+  e.name != null && (t.id = e.name.replace("@datapos/", "").replace("@data-positioning/", "")), e.version != null && (t.version = e.version), await di("config.json", t), console.info("ⓘ Configuration built.");
 }
 async function _r(e, t = "./") {
-  if (We("1️⃣ Bump project version"), e.version == null)
+  if (We("1️⃣  Bump project version"), e.version == null)
     e.version = "0.0.001", console.warn(`⚠️ Project version initialised to ${e.version}.`), await di(`${t}package.json`, e);
   else {
     const i = e.version, s = e.version.split(".");

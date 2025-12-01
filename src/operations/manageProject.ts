@@ -33,7 +33,7 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         await buildProjectConfig(packageJSON);
 
-        await spawnCommand('3️⃣ Bundle project.', 'vite', ['build']);
+        await spawnCommand('3️⃣  Bundle project.', 'vite', ['build']);
 
         await execCommand('git', ['add', '.']);
         await execCommand('git', ['commit', '-m', `"v${packageJSON.version}"`]);
@@ -89,12 +89,12 @@ async function buildProjectConfig(packageJSON: PackageJson): Promise<void> {
     if (packageJSON.version != null) configJSON.version = packageJSON.version;
     await writeJSONFile('config.json', configJSON);
 
-    console.info('✅ Configuration built.');
+    console.info('ⓘ Configuration built.');
 }
 
 // Helper - Bump project version.
 async function bumpProjectVersion(packageJSON: PackageJson, path = './'): Promise<void> {
-    logStepHeader('1️⃣ Bump project version');
+    logStepHeader('1️⃣  Bump project version');
 
     if (packageJSON.version == null) {
         packageJSON.version = '0.0.001';

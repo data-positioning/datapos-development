@@ -25,7 +25,6 @@ async function putState(): Promise<void> {
 
 // Utilities - Upload directory to Cloudflare R2.
 async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void> {
-    console.info('🚀 Uploading directory to R2....');
     async function listDirectoryEntriesRecursively(currentSourceDirectory: string, currentDestinationDirectory: string, names: string[]): Promise<void> {
         for (const name of names) {
             const sourceItemPath = `${currentSourceDirectory}/${name}`;
@@ -47,7 +46,6 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
 
 // Utilities - Upload module configuration to Cloudflare 'state' durable object.
 async function uploadModuleConfigToDO(): Promise<void> {
-    console.info('🚀 Uploading module configuration....');
     const configJSON = await readJSONFile<ModuleConfig>('config.json');
     const stateId = configJSON.id;
     const options = {

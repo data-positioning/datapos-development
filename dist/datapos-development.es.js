@@ -7700,7 +7700,6 @@ async function Mh() {
   if (!i.ok) throw new Error(await i.text());
 }
 async function ys() {
-  console.info("🚀 Uploading module configuration....");
   const e = await Ce("config.json"), t = e.id, i = {
     body: JSON.stringify(e),
     headers: { "Content-Type": "application/json" },

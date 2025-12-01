@@ -30,10 +30,10 @@ import type {
     PresenterConfig,
     PresenterOperation
 } from '@datapos/datapos-shared';
-import { uploadModuleToR2 } from '../utilities/cloudflare';
+import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '../utilities/cloudflare';
 
 // Interfaces/Types
-type PackageTypeId = 'connector' | 'context' | 'presenter' | 'tool' | 'other';
+type PackageTypeId = 'app' | 'connector' | 'context' | 'engine' | 'presenter' | 'tool' | 'other';
 
 // Operations - Build project.
 async function buildProject(): Promise<void> {
@@ -82,23 +82,22 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
         await execCommand('6️⃣  Push changes', 'git', ['push', 'origin', 'main:main']);
 
-        const prefix = 'tools';
-        const suffix = configJSON.id.slice(Math.max(0, configJSON.id.lastIndexOf('-') + 1));
-        console.log(1111, `${prefix}/${suffix}`);
-        // switch (packageTypeId) {
-        //     case 'connector':
-        //     case 'context':
-        //     case 'presenter':
-        //     case 'tool':
-        //         moduleConfigToDO();
-        //         uploadModuleToR2();
-        //         break;
-        //     default:
-        // }
+        const moduleGroupName = determineModuleGroupName(packageTypeId);
+        if (packageTypeId === 'app') {
+            logStepHeader('8️⃣. Register module');
+            await putState();
+        } else if (packageTypeId === 'engine') {
+            logStepHeader('8️⃣. Register module');
+            await uploadModuleConfigToDO();
+            await uploadModuleToR2('datapos-engine-eu');
+        } else if (moduleGroupName !== undefined) {
+            logStepHeader('8️⃣. Register module');
+            await uploadModuleConfigToDO();
+            const moduleTypeName = configJSON.id.slice(Math.max(0, configJSON.id.lastIndexOf('-') + 1));
+            await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
+        }
 
         await spawnCommand('7️⃣. Publish to npm', 'npm', ['publish', '--access', 'public']);
-
-        if (sendDeployNotice) await sendDeploymentNotice('8️⃣');
 
         logOperationSuccess(`Project version '${packageJSON.version}' released.`);
     } catch (error) {
@@ -109,7 +108,9 @@ async function releaseProject(sendDeployNotice = false): Promise<void> {
 
 function getPackageTypeId(packageJSON: PackageJson): PackageTypeId {
     const packageName = packageJSON.name ?? '';
-    if (packageName.includes('datapos-connector')) return 'connector';
+    if (packageName === 'datapos-app') return 'app';
+    else if (packageName === 'datapos-engine') return 'engine';
+    else if (packageName.includes('datapos-connector')) return 'connector';
     else if (packageName.includes('datapos-context')) return 'context';
     else if (packageName.includes('datapos-presenter')) return 'presenter';
     else if (packageName.includes('datapos-tool')) return 'tool';
@@ -276,21 +277,20 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
     return 'unknown';
 }
 
-// Helpers - Send deployment notice.
-async function sendDeploymentNotice(stepIcon: string): Promise<void> {
-    logStepHeader(`${stepIcon}  Send deployment notice`);
-
-    const configJSON = await readJSONFile<ModuleConfig>('config.json');
-    const options = {
-        body: JSON.stringify(configJSON),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'PUT'
-    };
-    const response = await fetch(`https://api.datapos.app/states/${configJSON.id}`, options);
-    if (!response.ok) throw new Error(await response.text());
+// Helpers - Determine module group name.
+function determineModuleGroupName(packageTypeId: PackageTypeId): string | undefined {
+    switch (packageTypeId) {
+        case 'connector':
+            return 'connectors';
+        case 'context':
+            return 'contexts';
+        case 'presenter':
+            return 'presenters';
+        case 'tool':
+            return 'tools';
+        default:
+            return;
+    }
 }
 
 export { buildProject, releaseProject, syncProjectWithGitHub, testProject };
-function moduleConfigToDO() {
-    throw new Error('Function not implemented.');
-}

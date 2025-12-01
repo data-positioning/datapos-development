@@ -11,7 +11,19 @@ import type { PackageJson } from 'type-fest';
 import type { ModuleConfig } from '@datapos/datapos-shared';
 import { execCommand, getDirectoryEntries, getStatsForPath, readJSONFile } from './index';
 
-// Operations - Upload directory to Cloudflare R2.
+// Utilities - Put state.
+async function putState(): Promise<void> {
+    const configJSON = await readJSONFile<ModuleConfig>('config.json');
+    const options = {
+        body: JSON.stringify(configJSON),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT'
+    };
+    const response = await fetch(`https://api.datapos.app/states/${configJSON.id}`, options);
+    if (!response.ok) throw new Error(await response.text());
+}
+
+// Utilities - Upload directory to Cloudflare R2.
 async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void> {
     console.info('🚀 Uploading directory to R2....');
     async function listDirectoryEntriesRecursively(currentSourceDirectory: string, currentDestinationDirectory: string, names: string[]): Promise<void> {
@@ -33,7 +45,7 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
     await listDirectoryEntriesRecursively(`${sourceDirectory}/${uploadDirectory}`, uploadDirectory, toplevelNames);
 }
 
-// Operations - Upload module configuration to Cloudflare 'state' durable object.
+// Utilities - Upload module configuration to Cloudflare 'state' durable object.
 async function uploadModuleConfigToDO(): Promise<void> {
     console.info('🚀 Uploading module configuration....');
     const configJSON = await readJSONFile<ModuleConfig>('config.json');
@@ -47,7 +59,7 @@ async function uploadModuleConfigToDO(): Promise<void> {
     if (!response.ok) throw new Error(await response.text());
 }
 
-// Operations - Upload module to Cloudflare R2.
+// Utilities - Upload module to Cloudflare R2.
 async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
     const version = `v${packageJSON.version}`;
@@ -68,4 +80,4 @@ async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
 }
 
 // Exposures
-export { uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };
+export { putState, uploadDirectoryToR2, uploadModuleConfigToDO, uploadModuleToR2 };

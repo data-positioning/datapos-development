@@ -13,6 +13,9 @@ import security from 'eslint-plugin-security';
 // Exposures - Configuration.
 export default [
     {
+        ignores: ['dist/**']
+    },
+    {
         files: ['vite.config.ts', 'src/**/*.ts'],
         languageOptions: { parser: tseslintParser, parserOptions: { project: './tsconfig.json' } },
         plugins: {

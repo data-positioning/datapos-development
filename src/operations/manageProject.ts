@@ -58,9 +58,9 @@ async function syncProjectWithGitHub(): Promise<void> {
         logStepHeader('Bump project version');
         await bumpProjectVersion('1️⃣', packageJSON);
 
-        await execCommand('', 'git', ['add', '.']);
-        await execCommand('', 'git', ['commit', '-m', `"v${packageJSON.version}"`]);
-        await execCommand('', 'git', ['push', 'origin', 'main:main']);
+        await execCommand('2️⃣  Stage changes', 'git', ['add', '.']);
+        await execCommand('3️⃣  Commit changes', 'git', ['commit', '-m', `"v${packageJSON.version}"`]);
+        await execCommand('4️⃣  Push changes', 'git', ['push', 'origin', 'main:main']);
 
         logOperationSuccess(`Project version ${packageJSON.version} synchronised with GitHub.`);
     } catch (error) {

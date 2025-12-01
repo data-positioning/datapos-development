@@ -7668,7 +7668,7 @@ async function li(e) {
   return await $.readFile(e, "utf8");
 }
 async function Ae(e, t, i = [], s = !1) {
-  return We(`${e}. Spawn command: ${t} ${i.join(" ")}`), new Promise((a, o) => {
+  return We(`${e}. Spawn command: '${t} ${i.join(" ")}'`), new Promise((a, o) => {
     Nr(t, i, { stdio: "inherit" }).on("close", (d) => {
       d === 0 || s ? a() : o(new Error(`${t} exited with code ${d}`));
     });
@@ -7713,7 +7713,7 @@ async function Zh() {
   try {
     Ne("Synchronise Project with GitHub");
     const e = await St("package.json");
-    We("Bump project version"), await _r("1️⃣", e), await _e("", "git", ["add", "."]), await _e("", "git", ["commit", "-m", `"v${e.version}"`]), await _e("", "git", ["push", "origin", "main:main"]), Ve(`Project version ${e.version} synchronised with GitHub.`);
+    We("Bump project version"), await _r("1️⃣", e), await _e("2️⃣  Stage changes", "git", ["add", "."]), await _e("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await _e("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Ve(`Project version ${e.version} synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }

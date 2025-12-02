@@ -11,7 +11,7 @@ import { logOperationHeader, logOperationSuccess, spawnCommand } from '../utilit
 const STEP_ICONS = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
 
 // Operations - Update datapos dependencies.
-async function updateDataPosDependencies(dependencies: string[]): Promise<void> {
+async function updateDataPosDependencies(dependencies: string[] = []): Promise<void> {
     try {
         logOperationHeader("Update '@datapos/datapos' Dependencies");
 

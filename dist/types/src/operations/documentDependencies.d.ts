@@ -1,5 +1,5 @@
 /**
  * Document dependencies operation.
  */
-declare function documentDependencies(licenses: string[]): Promise<void>;
+declare function documentDependencies(licenses?: string[], checkRecursive?: boolean): Promise<void>;
 export { documentDependencies };

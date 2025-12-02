@@ -34,6 +34,8 @@ const SEVERITY_BADGES: Record<keyof SeverityCounts, BadgeConfig> = {
     unknown: { color: '616161', label: 'unknown' }
     // See sample badges in ~/tests/sampleBadges.md. Also included 'info' colouring.
 };
+const START_MARKER = '<!-- OWASP_BADGES_START -->';
+const END_MARKER = '<!-- OWASP_BADGES_END -->';
 
 // Operations - Audit dependencies.
 async function auditDependencies(): Promise<void> {
@@ -42,7 +44,7 @@ async function auditDependencies(): Promise<void> {
 
         await loadEnvironmentVariables();
 
-        await spawnCommand('', 'owasp-dependency-check', [
+        await spawnCommand('1️⃣', 'owasp-dependency-check', [
             '--project',
             '@datapos/datapos-development',
             '--enableRetired',
@@ -51,10 +53,9 @@ async function auditDependencies(): Promise<void> {
             process.env.NVD_API_KEY ?? ''
         ]);
 
-        logStepHeader("Insert OWASP Badge(s) into 'README.md'");
-        await insertOWASPDependencyCheckBadgeIntoReadme();
+        await insertOWASPDependencyCheckBadgeIntoReadme('2️⃣');
 
-        await spawnCommand('', 'npm', ['audit']);
+        await spawnCommand('3️⃣', 'npm', ['audit']);
 
         logOperationSuccess('Dependencies audited.');
     } catch (error) {
@@ -64,9 +65,9 @@ async function auditDependencies(): Promise<void> {
 }
 
 // Helpers - Insert OWASP dependency check badge into README file.
-async function insertOWASPDependencyCheckBadgeIntoReadme(): Promise<void> {
-    const START_MARKER = '<!-- OWASP_BADGES_START -->';
-    const END_MARKER = '<!-- OWASP_BADGES_END -->';
+async function insertOWASPDependencyCheckBadgeIntoReadme(stepIcon: string): Promise<void> {
+    logStepHeader(`${stepIcon}  Insert OWASP Badge(s) into 'README.md'`);
+
     const dependencyCheckData = await readJSONFile<DependencyCheckData>('./dependency-check-reports/dependency-check-report.json');
     const severityCounts: SeverityCounts = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
     for (const dependency of dependencyCheckData.dependencies) {

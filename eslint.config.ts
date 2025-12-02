@@ -9,6 +9,8 @@ import datapos from '@datapos/eslint-config-datapos';
 export default [
     ...datapos,
     {
-        rules: {}
+        rules: {
+            'unicorn/switch-case-braces': ['warn', 'always']
+        }
     }
 ];

@@ -12,7 +12,7 @@ const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
 const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
 
 // Operations - Document.
-async function documentDependencies(licenses: string[]): Promise<void> {
+async function documentDependencies(licenses: string[] = [], checkRecursive = false): Promise<void> {
     try {
         logOperationHeader('Document Dependencies');
 
@@ -27,16 +27,21 @@ async function documentDependencies(licenses: string[]): Promise<void> {
 
         await execCommand("2️⃣  Generate 'licenses.md' file", 'license-report', ['--config', 'license-report-config.json', '--only=prod,peer', '--output=markdown'], 'licenses.md');
 
-        await execCommand("3️⃣. Check 'licenses.json' file", 'license-report-check', ['--source', './licenses.json', '--output=table', ...allowedFlags]);
+        await execCommand("3️⃣  Check 'licenses.json' file", 'license-report-check', ['--source', './licenses.json', '--output=table', ...allowedFlags]);
 
-        await execCommand(
-            "4️⃣  Generate 'licenseTree.json' file",
-            'license-report-recursive',
-            ['--only=prod,peer', '--output=tree', ' --recurse', '--department.value=n/a', '--licensePeriod=n/a', '--material=n/a', '--relatedTo.value=n/a'],
-            'licenseTree.json'
-        );
+        if (checkRecursive) {
+            await execCommand(
+                "4️⃣  Generate 'licenseTree.json' file",
+                'license-report-recursive',
+                ['--only=prod,peer', '--output=tree', ' --recurse', '--department.value=n/a', '--licensePeriod=n/a', '--material=n/a', '--relatedTo.value=n/a'],
+                'licenseTree.json'
+            );
 
-        await execCommand("5️⃣. Check 'licenseTree.json' file", 'license-report-check', ['--source', './licenseTree.json', '--output=table', ...allowedFlags]);
+            await execCommand("5️⃣  Check 'licenseTree.json' file", 'license-report-check', ['--source', './licenseTree.json', '--output=table', ...allowedFlags]);
+        } else {
+            logStepHeader("4️⃣  Skip 'licenseTree.json' file generate");
+            logStepHeader("5️⃣  Skip 'licenseTree.json' file check");
+        }
 
         await insertLicensesIntoReadme('6️⃣');
 

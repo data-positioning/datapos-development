@@ -12,7 +12,7 @@ const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
 const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
 
 // Operations - Document.
-async function documentDependencies(licenses: string[] = [], checkRecursive = false): Promise<void> {
+async function documentDependencies(licenses: string[] = [], checkRecursive = true): Promise<void> {
     try {
         logOperationHeader('Document Dependencies');
 

@@ -7913,7 +7913,7 @@ async function np() {
   }
 }
 const gs = "<!-- DEPENDENCY_LICENSES_START -->", Kh = "<!-- DEPENDENCY_LICENSES_END -->";
-async function op(e = [], t = !1) {
+async function op(e = [], t = !0) {
   try {
     Le("Document Dependencies");
     const i = e.flatMap((s) => ["--allowed", s]);

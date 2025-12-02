@@ -7866,7 +7866,7 @@ async function ap() {
       "--nodePackageSkipDevDependencies",
       "--nvdApiKey",
       process.env.NVD_API_KEY ?? ""
-    ]), await Hh("2️⃣"), await Ee("3️⃣", "npm", ["audit"]), Fe("Dependencies audited.");
+    ]), await Hh("2️⃣"), await Ee("3️⃣  Check using 'npm outdated'", "npm", ["audit"]), Fe("Dependencies audited.");
   } catch (e) {
     console.error("❌ Error auditing dependencies.", e), process.exit(1);
   }
@@ -7907,7 +7907,7 @@ async function Wh(e) {
 }
 async function np() {
   try {
-    Le("Check Dependencies"), await Ee("1️⃣ Check using 'npm outdated'", "npm", ["outdated"], !0), await Ee("2️⃣ Check using 'npm-check-updates'", "npm-check-updates", ["-i"]), Fe("Dependencies checked.");
+    Le("Check Dependencies"), await Ee("1️⃣  Check using 'npm outdated'", "npm", ["outdated"], !0), await Ee("2️⃣  Check using 'npm-check-updates'", "npm-check-updates", ["-i"]), Fe("Dependencies checked.");
   } catch (e) {
     console.error("❌ Error checking dependencies.", e), process.exit(1);
   }

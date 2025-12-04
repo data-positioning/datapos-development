@@ -7759,14 +7759,14 @@ async function ip() {
       const a = t.id.slice(Math.max(0, t.id.lastIndexOf("-") + 1));
       await vs(`datapos-engine-eu/${s}/${a}`);
     }
-    await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]), Fe(`Project version '${e.version}' released.`);
+    i === "connector" || i === "context" || i === "dev" || i === "presenter" || i === "shared" || i === "tool" ? await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]) : se(`7️⃣  Publishing NOT required for package type '${i}''.`), Fe(`Project version '${e.version}' released.`);
   } catch (e) {
     console.error("❌ Error releasing project.", e), process.exit(1);
   }
 }
 function Dh(e) {
   const t = e.name ?? "";
-  return t === "datapos-app" ? "app" : t === "datapos-engine" ? "engine" : t.includes("datapos-connector") ? "connector" : t.includes("datapos-context") ? "context" : t.includes("datapos-presenter") ? "presenter" : t.includes("datapos-tool") ? "tool" : "other";
+  return t === "datapos-app" ? "app" : t === "datapos-api" ? "api" : t === "datapos-engine" ? "engine" : t.includes("datapos-connector") ? "connector" : t.includes("datapos-context") ? "context" : t.includes("datapos-presenter") ? "presenter" : t.includes("datapos-tool") ? "tool" : "other";
 }
 async function sp() {
   try {

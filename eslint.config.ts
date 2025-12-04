@@ -10,7 +10,8 @@ export default [
     ...datapos,
     {
         rules: {
-            'unicorn/switch-case-braces': ['warn', 'always']
+            'sonarjs/prefer-switch': 'warn',
+            'sonarjs/todo-tag': 'warn'
         }
     }
 ];

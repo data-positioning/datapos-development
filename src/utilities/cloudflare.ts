@@ -46,6 +46,7 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
 
 // Utilities - Upload module configuration to Cloudflare 'state' durable object.
 async function uploadModuleConfigToDO(): Promise<void> {
+    // TODO: Pass configJSON as argument.
     const configJSON = await readJSONFile<ModuleConfig>('config.json');
     const stateId = configJSON.id;
     const options = {
@@ -59,6 +60,7 @@ async function uploadModuleConfigToDO(): Promise<void> {
 
 // Utilities - Upload module to Cloudflare R2.
 async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
+    // TODO: Pass packageJSON as argument.
     const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
     const version = `v${packageJSON.version}`;
     async function uploadDirectory(currentDirectory: string, prefix = ''): Promise<void> {

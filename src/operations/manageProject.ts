@@ -33,7 +33,7 @@ import type {
 import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '../utilities/cloudflare';
 
 // Interfaces/Types
-type PackageTypeId = 'app' | 'connector' | 'context' | 'engine' | 'presenter' | 'tool' | 'other';
+type PackageTypeId = 'api' | 'app' | 'connector' | 'context' | 'dev' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool' | 'other';
 
 // Operations - Build project.
 async function buildProject(): Promise<void> {
@@ -99,7 +99,19 @@ async function releaseProject(): Promise<void> {
             await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
         }
 
-        await spawnCommand('8️⃣  Publish to npm', 'npm', ['publish', '--access', 'public']);
+        // TODO: Convert this to a map.
+        if (
+            packageTypeId === 'connector' ||
+            packageTypeId === 'context' ||
+            packageTypeId === 'dev' ||
+            packageTypeId === 'presenter' ||
+            packageTypeId === 'shared' ||
+            packageTypeId === 'tool'
+        ) {
+            await spawnCommand('8️⃣  Publish to npm', 'npm', ['publish', '--access', 'public']);
+        } else {
+            logStepHeader(`7️⃣  Publishing NOT required for package type '${packageTypeId}''.`);
+        }
 
         logOperationSuccess(`Project version '${packageJSON.version}' released.`);
     } catch (error) {
@@ -111,6 +123,7 @@ async function releaseProject(): Promise<void> {
 function getPackageTypeId(packageJSON: PackageJson): PackageTypeId {
     const packageName = packageJSON.name ?? '';
     if (packageName === 'datapos-app') return 'app';
+    else if (packageName === 'datapos-api') return 'api';
     else if (packageName === 'datapos-engine') return 'engine';
     else if (packageName.includes('datapos-connector')) return 'connector';
     else if (packageName.includes('datapos-context')) return 'context';

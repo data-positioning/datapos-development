@@ -110,7 +110,7 @@ async function releaseProject(): Promise<void> {
         ) {
             await spawnCommand('8️⃣  Publish to npm', 'npm', ['publish', '--access', 'public']);
         } else {
-            logStepHeader(`7️⃣  Publishing NOT required for package type '${packageTypeId}''.`);
+            logStepHeader(`8️⃣  Publishing NOT required for package with type identifier of '${packageTypeId}'.`);
         }
 
         logOperationSuccess(`Project version '${packageJSON.version}' released.`);

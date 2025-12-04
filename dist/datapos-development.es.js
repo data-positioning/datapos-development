@@ -7759,7 +7759,7 @@ async function ip() {
       const a = t.id.slice(Math.max(0, t.id.lastIndexOf("-") + 1));
       await vs(`datapos-engine-eu/${s}/${a}`);
     }
-    i === "connector" || i === "context" || i === "dev" || i === "presenter" || i === "shared" || i === "tool" ? await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]) : se(`7️⃣  Publishing NOT required for package type '${i}''.`), Fe(`Project version '${e.version}' released.`);
+    i === "connector" || i === "context" || i === "dev" || i === "presenter" || i === "shared" || i === "tool" ? await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]) : se(`8️⃣  Publishing NOT required for package with type identifier of '${i}'.`), Fe(`Project version '${e.version}' released.`);
   } catch (e) {
     console.error("❌ Error releasing project.", e), process.exit(1);
   }

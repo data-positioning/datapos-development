@@ -89,7 +89,7 @@ async function releaseProject(): Promise<void> {
         } else if (packageTypeId === 'engine') {
             logStepHeader('7️⃣  Register module');
             await uploadModuleConfigToDO();
-            await uploadModuleToR2('datapos-engine-eu');
+            await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}`);
         } else if (moduleGroupName === undefined) {
             logStepHeader('7️⃣  Registration NOT required.');
         } else {
@@ -282,6 +282,8 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
 // Helpers - Determine module group name.
 function determineModuleGroupName(packageTypeId: PackageTypeId): string | undefined {
     switch (packageTypeId) {
+        case 'engine':
+            return 'engine';
         case 'connector':
             return 'connectors';
         case 'context':

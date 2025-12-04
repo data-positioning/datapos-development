@@ -7751,7 +7751,7 @@ async function ip() {
     if (i === "app")
       se("7️⃣  Register module"), await Rh();
     else if (i === "engine")
-      se("7️⃣  Register module"), await ys(), await vs("datapos-engine-eu");
+      se("7️⃣  Register module"), await ys(), await vs(`datapos-engine-eu/${s}`);
     else if (s === void 0)
       se("7️⃣  Registration NOT required.");
     else {
@@ -7837,6 +7837,8 @@ function Bh(e) {
 }
 function $h(e) {
   switch (e) {
+    case "engine":
+      return "engine";
     case "connector":
       return "connectors";
     case "context":

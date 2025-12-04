@@ -125,6 +125,7 @@ function getPackageTypeId(packageJSON: PackageJson): PackageTypeId {
     if (packageName === 'datapos-app') return 'app';
     else if (packageName === 'datapos-api') return 'api';
     else if (packageName === 'datapos-engine') return 'engine';
+    else if (packageName === 'datapos-development') return 'dev';
     else if (packageName.includes('datapos-connector')) return 'connector';
     else if (packageName.includes('datapos-context')) return 'context';
     else if (packageName.includes('datapos-presenter')) return 'presenter';

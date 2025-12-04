@@ -7766,7 +7766,7 @@ async function ip() {
 }
 function Dh(e) {
   const t = e.name ?? "";
-  return t === "datapos-app" ? "app" : t === "datapos-api" ? "api" : t === "datapos-engine" ? "engine" : t.includes("datapos-connector") ? "connector" : t.includes("datapos-context") ? "context" : t.includes("datapos-presenter") ? "presenter" : t.includes("datapos-tool") ? "tool" : "other";
+  return t === "datapos-app" ? "app" : t === "datapos-api" ? "api" : t === "datapos-engine" ? "engine" : t === "datapos-development" ? "dev" : t.includes("datapos-connector") ? "connector" : t.includes("datapos-context") ? "context" : t.includes("datapos-presenter") ? "presenter" : t.includes("datapos-tool") ? "tool" : "other";
 }
 async function sp() {
   try {

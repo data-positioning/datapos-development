@@ -10,8 +10,8 @@ export default [
     ...datapos,
     {
         rules: {
-            'sonarjs/prefer-switch': 'warn',
-            'sonarjs/todo-tag': 'warn'
+            'sonarjs/todo-tag': 'warn',
+            'unicorn/prefer-switch': 'warn'
         }
     }
 ];

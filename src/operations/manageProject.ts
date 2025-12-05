@@ -58,7 +58,7 @@ async function releaseProject(): Promise<void> {
 
         await bumpProjectVersion('1️⃣', packageJSON);
 
-        const packageTypeId = getPackageTypeId(packageJSON);
+        const packageTypeId = determinePackageTypeId(packageJSON);
 
         switch (packageTypeId) {
             case 'connector':
@@ -95,8 +95,8 @@ async function releaseProject(): Promise<void> {
         } else {
             logStepHeader('7️⃣  Register module');
             await uploadModuleConfigToDO();
-            const moduleTypeName = configJSON.id.slice(Math.max(0, configJSON.id.lastIndexOf('-') + 1));
-            await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
+            // const moduleTypeName = configJSON.id.slice(Math.max(0, configJSON.id.lastIndexOf('-') + 1));
+            await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}/${packageTypeId}`);
         }
 
         // TODO: Convert this to a map.
@@ -118,19 +118,6 @@ async function releaseProject(): Promise<void> {
         console.error('❌ Error releasing project.', error);
         process.exit(1);
     }
-}
-
-function getPackageTypeId(packageJSON: PackageJson): PackageTypeId {
-    const packageName = packageJSON.name ?? '';
-    if (packageName === 'datapos-app') return 'app';
-    else if (packageName === 'datapos-api') return 'api';
-    else if (packageName === 'datapos-engine') return 'engine';
-    else if (packageName === '@datapos/datapos-development') return 'dev';
-    else if (packageName.includes('datapos-connector')) return 'connector';
-    else if (packageName.includes('datapos-context')) return 'context';
-    else if (packageName.includes('datapos-presenter')) return 'presenter';
-    else if (packageName.includes('datapos-tool')) return 'tool';
-    else return 'other';
 }
 
 // Operations - Synchronise project with GitHub.
@@ -309,6 +296,21 @@ function determineModuleGroupName(packageTypeId: PackageTypeId): string | undefi
         default:
             return;
     }
+}
+
+// Helpers - Determine package type identifier.
+function determinePackageTypeId(packageJSON: PackageJson): PackageTypeId {
+    const packageName = packageJSON.name ?? '';
+    if (packageName === 'datapos-app') return 'app';
+    else if (packageName === 'datapos-api') return 'api';
+    else if (packageName === 'datapos-engine') return 'engine';
+    else if (packageName === '@datapos/datapos-development')
+        return 'dev'; // TODO: See '@datapos/' prefix. Needed in other tests?
+    else if (packageName.includes('datapos-connector')) return 'connector';
+    else if (packageName.includes('datapos-context')) return 'context';
+    else if (packageName.includes('datapos-presenter')) return 'presenter';
+    else if (packageName.includes('datapos-tool')) return 'tool';
+    else return 'other';
 }
 
 export { buildProject, releaseProject, syncProjectWithGitHub, testProject };

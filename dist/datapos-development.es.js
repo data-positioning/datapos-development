@@ -7732,41 +7732,26 @@ async function ip() {
     Le("Release Project");
     const e = await Ce("package.json"), t = await Ce("config.json");
     await Ar("1️⃣", e);
-    const i = Dh(e);
+    const i = $h(e);
     switch (i) {
       case "connector":
-        await Vh("2️⃣", e);
+        await zh("2️⃣", e);
         break;
       case "context":
-        await jh("2️⃣", e);
+        await Vh("2️⃣", e);
         break;
       case "presenter":
-        await Fh("2️⃣", e);
+        await jh("2️⃣", e);
         break;
       default:
-        await zh("2️⃣", e);
+        await Dh("2️⃣", e);
     }
     await Ee("3️⃣  Bundle project", "vite", ["build"]), await Te("4️⃣  Stage changes", "git", ["add", "."]), await Te("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Te("6️⃣  Push changes", "git", ["push", "origin", "main:main"]);
-    const s = $h(i);
-    if (i === "app")
-      se("7️⃣  Register module"), await Rh();
-    else if (i === "engine")
-      se("7️⃣  Register module"), await ys(), await vs(`datapos-engine-eu/${s}`);
-    else if (s === void 0)
-      se("7️⃣  Registration NOT required.");
-    else {
-      se("7️⃣  Register module"), await ys();
-      const a = t.id.slice(Math.max(0, t.id.lastIndexOf("-") + 1));
-      await vs(`datapos-engine-eu/${s}/${a}`);
-    }
-    i === "connector" || i === "context" || i === "dev" || i === "presenter" || i === "shared" || i === "tool" ? await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]) : se(`8️⃣  Publishing NOT required for package with type identifier of '${i}'.`), Fe(`Project version '${e.version}' released.`);
+    const s = Bh(i);
+    i === "app" ? (se("7️⃣  Register module"), await Rh()) : i === "engine" ? (se("7️⃣  Register module"), await ys(), await vs(`datapos-engine-eu/${s}`)) : s === void 0 ? se("7️⃣  Registration NOT required.") : (se("7️⃣  Register module"), await ys(), await vs(`datapos-engine-eu/${s}/${i}`)), i === "connector" || i === "context" || i === "dev" || i === "presenter" || i === "shared" || i === "tool" ? await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]) : se(`8️⃣  Publishing NOT required for package with type identifier of '${i}'.`), Fe(`Project version '${e.version}' released.`);
   } catch (e) {
     console.error("❌ Error releasing project.", e), process.exit(1);
   }
-}
-function Dh(e) {
-  const t = e.name ?? "";
-  return t === "datapos-app" ? "app" : t === "datapos-api" ? "api" : t === "datapos-engine" ? "engine" : t === "@datapos/datapos-development" ? "dev" : t.includes("datapos-connector") ? "connector" : t.includes("datapos-context") ? "context" : t.includes("datapos-presenter") ? "presenter" : t.includes("datapos-tool") ? "tool" : "other";
 }
 async function sp() {
   try {
@@ -7786,22 +7771,22 @@ function rp() {
     console.error("❌ Error testing project.", e), process.exit(1);
   }
 }
-async function zh(e, t) {
+async function Dh(e, t) {
   se(`${e}  Build project configuration`);
   const i = await Ce("config.json");
   t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), await ot("config.json", i);
 }
-async function Vh(e, t) {
+async function zh(e, t) {
   se(`${e}  Build connector project configuration`);
   const [i, s] = await Promise.all([Ce("config.json"), nt("src/index.ts")]), a = dh.safeParse(i);
   if (!a.success) {
     console.log("❌ Configuration is invalid:"), console.table(a.error.issues);
     return;
   }
-  const o = wi(s), h = Bh(o);
+  const o = wi(s), h = Fh(o);
   o.length > 0 ? (console.info(`ℹ️  Implements ${o.length} operations:`), console.table(o)) : console.warn("⚠️  Implements no operations."), h === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${h}' usage.`), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = o, i.usageId = h, await ot("config.json", i);
 }
-async function jh(e, t) {
+async function Vh(e, t) {
   se(`${e}  Build context project configuration`);
   const [i, s] = await Promise.all([Ce("config.json"), nt("src/index.ts")]), a = Sh.safeParse(i);
   if (!a.success) {
@@ -7811,7 +7796,7 @@ async function jh(e, t) {
   const o = wi(s);
   o.length > 0 ? (console.info(`ℹ️  Implements ${o.length} operations:`), console.table(o)) : console.warn("⚠️  Implements no operations."), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = o, await ot("config.json", i);
 }
-async function Fh(e, t) {
+async function jh(e, t) {
   se(`${e}  Build presenter project configuration`);
   const [i, s] = await Promise.all([Ce("config.json"), nt("src/index.ts")]), a = Mh.safeParse(i);
   if (!a.success) {
@@ -7829,13 +7814,13 @@ async function Ar(e, t, i = "./") {
     t.version = `${a[0]}.${a[1]}.${Number(a[2]) + 1}`, console.info(`Project version bumped from '${s}' to '${t.version}'.`), await ot(`${i}package.json`, t);
   }
 }
-function Bh(e) {
+function Fh(e) {
   let t = !1, i = !1;
   for (const s of e)
     Va.includes(s) && (t = !0), za.includes(s) && (i = !0);
   return t && i ? "bidirectional" : t ? "source" : i ? "destination" : "unknown";
 }
-function $h(e) {
+function Bh(e) {
   switch (e) {
     case "engine":
       return "engine";
@@ -7850,6 +7835,10 @@ function $h(e) {
     default:
       return;
   }
+}
+function $h(e) {
+  const t = e.name ?? "";
+  return t === "datapos-app" ? "app" : t === "datapos-api" ? "api" : t === "datapos-engine" ? "engine" : t === "@datapos/datapos-development" ? "dev" : t.includes("datapos-connector") ? "connector" : t.includes("datapos-context") ? "context" : t.includes("datapos-presenter") ? "presenter" : t.includes("datapos-tool") ? "tool" : "other";
 }
 const Uh = ["critical", "high", "moderate", "low", "unknown"], Zh = {
   critical: { color: "D32F2F", label: "critical" },

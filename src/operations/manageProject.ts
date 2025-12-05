@@ -95,8 +95,8 @@ async function releaseProject(): Promise<void> {
         } else {
             logStepHeader('7️⃣  Register module');
             await uploadModuleConfigToDO();
-            // const moduleTypeName = configJSON.id.slice(Math.max(0, configJSON.id.lastIndexOf('-') + 1));
-            await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}/${packageTypeId}`);
+            const moduleTypeName = configJSON.id.split('-').slice(2).join('-'); // configJSON.id.slice(Math.max(0, configJSON.id.lastIndexOf('-') + 1));
+            await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
         }
 
         // TODO: Convert this to a map.

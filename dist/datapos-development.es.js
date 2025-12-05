@@ -7748,7 +7748,18 @@ async function ip() {
     }
     await Ee("3️⃣  Bundle project", "vite", ["build"]), await Te("4️⃣  Stage changes", "git", ["add", "."]), await Te("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Te("6️⃣  Push changes", "git", ["push", "origin", "main:main"]);
     const s = Bh(i);
-    i === "app" ? (se("7️⃣  Register module"), await Rh()) : i === "engine" ? (se("7️⃣  Register module"), await ys(), await vs(`datapos-engine-eu/${s}`)) : s === void 0 ? se("7️⃣  Registration NOT required.") : (se("7️⃣  Register module"), await ys(), await vs(`datapos-engine-eu/${s}/${i}`)), i === "connector" || i === "context" || i === "dev" || i === "presenter" || i === "shared" || i === "tool" ? await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]) : se(`8️⃣  Publishing NOT required for package with type identifier of '${i}'.`), Fe(`Project version '${e.version}' released.`);
+    if (i === "app")
+      se("7️⃣  Register module"), await Rh();
+    else if (i === "engine")
+      se("7️⃣  Register module"), await ys(), await vs(`datapos-engine-eu/${s}`);
+    else if (s === void 0)
+      se("7️⃣  Registration NOT required.");
+    else {
+      se("7️⃣  Register module"), await ys();
+      const a = t.id.split("-").slice(2).join("-");
+      await vs(`datapos-engine-eu/${s}/${a}`);
+    }
+    i === "connector" || i === "context" || i === "dev" || i === "presenter" || i === "shared" || i === "tool" ? await Ee("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]) : se(`8️⃣  Publishing NOT required for package with type identifier of '${i}'.`), Fe(`Project version '${e.version}' released.`);
   } catch (e) {
     console.error("❌ Error releasing project.", e), process.exit(1);
   }

@@ -5,7 +5,10 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Framework.
+import { connectorConfigSchema } from '../schemas/connectorSchema';
+import { contextConfigSchema } from '../schemas/contextSchema';
 import type { PackageJson } from 'type-fest';
+import { presenterConfigSchema } from '../schemas/presenterSchema';
 import {
     execCommand,
     extractOperationsFromSource,
@@ -30,7 +33,6 @@ import type {
     PresenterConfig,
     PresenterOperation
 } from '@datapos/datapos-shared';
-import { connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared/schemas';
 import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '../utilities/cloudflare';
 
 // Interfaces/Types

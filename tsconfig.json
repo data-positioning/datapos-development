@@ -7,7 +7,7 @@
         "jsx": "preserve",
         "lib": ["ESNext", "dom", "dom.iterable", "scripthost"],
         "module": "ESNext",
-        "moduleResolution": "bundler",
+        "moduleResolution": "node",
         "noUncheckedIndexedAccess": true,
         "noImplicitAny": true,
         "outDir": "dist",

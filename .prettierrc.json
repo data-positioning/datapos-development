@@ -10,7 +10,7 @@
     "insertPragma": false,
     "jsxSingleQuote": false,
     "plugins": [],
-    "printWidth": 160,
+    "printWidth": 180,
     "proseWrap": "preserve",
     "quoteProps": "as-needed",
     "semi": true,

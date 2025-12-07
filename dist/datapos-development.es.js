@@ -7856,7 +7856,7 @@ function Zh(e) {
 }
 function Uh(e) {
   const t = e.name ?? "";
-  return t === "datapos-app" ? "app" : t === "datapos-api" ? "api" : t === "datapos-engine" ? "engine" : t === "@datapos/datapos-development" ? "dev" : t.includes("datapos-connector") ? "connector" : t.includes("datapos-context") ? "context" : t.includes("datapos-presenter") ? "presenter" : t.includes("datapos-tool") ? "tool" : "other";
+  return t === "datapos-app" ? "app" : t === "datapos-api" ? "api" : t === "datapos-engine" ? "engine" : t === "datapos-shared" ? "shared" : t === "@datapos/datapos-development" ? "dev" : t.includes("datapos-connector") ? "connector" : t.includes("datapos-context") ? "context" : t.includes("datapos-presenter") ? "presenter" : t.includes("datapos-tool") ? "tool" : "other";
 }
 const qh = ["critical", "high", "moderate", "low", "unknown"], Hh = {
   critical: { color: "D32F2F", label: "critical" },

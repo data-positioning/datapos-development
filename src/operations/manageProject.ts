@@ -20,7 +20,6 @@ import {
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
-import { connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared/schemas';
 import type {
     ConnectorConfig,
     ConnectorOperation,
@@ -31,6 +30,7 @@ import type {
     PresenterConfig,
     PresenterOperation
 } from '@datapos/datapos-shared';
+import { connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared/schemas';
 import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '../utilities/cloudflare';
 
 // Interfaces/Types
@@ -305,6 +305,7 @@ function determinePackageTypeId(packageJSON: PackageJson): PackageTypeId {
     if (packageName === 'datapos-app') return 'app';
     else if (packageName === 'datapos-api') return 'api';
     else if (packageName === 'datapos-engine') return 'engine';
+    else if (packageName === 'datapos-shared') return 'shared';
     else if (packageName === '@datapos/datapos-development')
         return 'dev'; // TODO: See '@datapos/' prefix. Needed in other tests?
     else if (packageName.includes('datapos-connector')) return 'connector';

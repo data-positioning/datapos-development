@@ -19,7 +19,8 @@ import {
 } from '../utilities';
 
 // Dependencies - Framework.
-import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS, connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
+import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
+import { connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared/schemas';
 import type {
     ConnectorConfig,
     ConnectorOperation,
@@ -95,7 +96,7 @@ async function releaseProject(): Promise<void> {
         } else {
             logStepHeader('7️⃣  Register module');
             await uploadModuleConfigToDO();
-            const moduleTypeName = configJSON.id.split('-').slice(2).join('-'); // configJSON.id.slice(Math.max(0, configJSON.id.lastIndexOf('-') + 1));
+            const moduleTypeName = configJSON.id.split('-').slice(2).join('-');
             await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
         }
 

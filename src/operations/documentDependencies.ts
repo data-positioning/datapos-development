@@ -5,8 +5,7 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Framework.
-import type { PackageJson } from 'type-fest';
-import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, writeTextFile } from '../utilities';
+import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readTextFile, writeTextFile } from '../utilities';
 
 // Constants
 const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
@@ -17,14 +16,12 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
     try {
         logOperationHeader('Document Dependencies');
 
-        const packageJSON = await readJSONFile<PackageJson>('package.json');
-
         const allowedFlags = licenses.flatMap((license) => ['--allowed', license]);
 
         await execCommand(
             "1️⃣  Generate 'licenses.json' file",
             'license-report',
-            ['--only=prod,peer', '--output=json', `--project=${packageJSON.name}`, '--department.value=n/a', '--licensePeriod=n/a', '--material=n/a', '--relatedTo.value=n/a'],
+            ['--only=prod,peer', '--output=json', '--department.value=n/a', '--licensePeriod=n/a', '--material=n/a', '--relatedTo.value=n/a'],
             'licenses.json'
         );
 

@@ -1,4 +1,4 @@
-import { promises as Pe } from "node:fs";
+import { promises as Ce } from "node:fs";
 import { nanoid as Os } from "nanoid";
 import { promisify as Rs } from "node:util";
 import { exec as Ds, spawn as Ms } from "node:child_process";
@@ -22,7 +22,7 @@ function ui(e, t) {
   }
   return !1;
 }
-function Ce(e, t) {
+function Ae(e, t) {
   return e < 65 ? e === 36 : e < 91 ? !0 : e < 97 ? e === 95 : e < 123 ? !0 : e <= 65535 ? e >= 170 && Fs.test(String.fromCharCode(e)) : t === !1 ? !1 : ui(e, kr);
 }
 function De(e, t) {
@@ -465,7 +465,7 @@ A.isLet = function(e) {
     return !1;
   if (r === 123 || r > 55295 && r < 56320)
     return !0;
-  if (Ce(r, !0)) {
+  if (Ae(r, !0)) {
     for (var n = i + 1; De(r = this.input.charCodeAt(n), !0); )
       ++n;
     if (r === 92 || r > 55295 && r < 56320)
@@ -505,7 +505,7 @@ A.isUsingKeyword = function(e, t) {
       return !1;
   }
   var o = this.input.charCodeAt(r);
-  return Ce(o, !0) || o === 92;
+  return Ae(o, !0) || o === 92;
 };
 A.isAwaitUsing = function(e) {
   return this.isUsingKeyword(!0, e);
@@ -944,8 +944,8 @@ A.isDirectiveCandidate = function(e) {
   return this.options.ecmaVersion >= 5 && e.type === "ExpressionStatement" && e.expression.type === "Literal" && typeof e.expression.value == "string" && // Reject parenthesized strings.
   (this.input[e.start] === '"' || this.input[e.start] === "'");
 };
-var we = X.prototype;
-we.toAssignable = function(e, t, i) {
+var Se = X.prototype;
+Se.toAssignable = function(e, t, i) {
   if (this.options.ecmaVersion >= 6 && e)
     switch (e.type) {
       case "Identifier":
@@ -990,7 +990,7 @@ we.toAssignable = function(e, t, i) {
   else i && this.checkPatternErrors(i, !0);
   return e;
 };
-we.toAssignableList = function(e, t) {
+Se.toAssignableList = function(e, t) {
   for (var i = e.length, r = 0; r < i; r++) {
     var n = e[r];
     n && this.toAssignable(n, t);
@@ -1001,15 +1001,15 @@ we.toAssignableList = function(e, t) {
   }
   return e;
 };
-we.parseSpread = function(e) {
+Se.parseSpread = function(e) {
   var t = this.startNode();
   return this.next(), t.argument = this.parseMaybeAssign(!1, e), this.finishNode(t, "SpreadElement");
 };
-we.parseRestBinding = function() {
+Se.parseRestBinding = function() {
   var e = this.startNode();
   return this.next(), this.options.ecmaVersion === 6 && this.type !== p.name && this.unexpected(), e.argument = this.parseBindingAtom(), this.finishNode(e, "RestElement");
 };
-we.parseBindingAtom = function() {
+Se.parseBindingAtom = function() {
   if (this.options.ecmaVersion >= 6)
     switch (this.type) {
       case p.bracketL:
@@ -1020,7 +1020,7 @@ we.parseBindingAtom = function() {
     }
   return this.parseIdent();
 };
-we.parseBindingList = function(e, t, i, r) {
+Se.parseBindingList = function(e, t, i, r) {
   for (var n = [], u = !0; !this.eat(e); )
     if (u ? u = !1 : this.expect(p.comma), t && this.type === p.comma)
       n.push(null);
@@ -1036,20 +1036,20 @@ we.parseBindingList = function(e, t, i, r) {
     }
   return n;
 };
-we.parseAssignableListItem = function(e) {
+Se.parseAssignableListItem = function(e) {
   var t = this.parseMaybeDefault(this.start, this.startLoc);
   return this.parseBindingListItem(t), t;
 };
-we.parseBindingListItem = function(e) {
+Se.parseBindingListItem = function(e) {
   return e;
 };
-we.parseMaybeDefault = function(e, t, i) {
+Se.parseMaybeDefault = function(e, t, i) {
   if (i = i || this.parseBindingAtom(), this.options.ecmaVersion < 6 || !this.eat(p.eq))
     return i;
   var r = this.startNodeAt(e, t);
   return r.left = i, r.right = this.parseMaybeAssign(), this.finishNode(r, "AssignmentPattern");
 };
-we.checkLValSimple = function(e, t, i) {
+Se.checkLValSimple = function(e, t, i) {
   t === void 0 && (t = Mt);
   var r = t !== Mt;
   switch (e.type) {
@@ -1068,7 +1068,7 @@ we.checkLValSimple = function(e, t, i) {
       this.raise(e.start, (r ? "Binding" : "Assigning to") + " rvalue");
   }
 };
-we.checkLValPattern = function(e, t, i) {
+Se.checkLValPattern = function(e, t, i) {
   switch (t === void 0 && (t = Mt), e.type) {
     case "ObjectPattern":
       for (var r = 0, n = e.properties; r < n.length; r += 1) {
@@ -1086,7 +1086,7 @@ we.checkLValPattern = function(e, t, i) {
       this.checkLValSimple(e, t, i);
   }
 };
-we.checkLValInnerPattern = function(e, t, i) {
+Se.checkLValInnerPattern = function(e, t, i) {
   switch (t === void 0 && (t = Mt), e.type) {
     case "Property":
       this.checkLValInnerPattern(e.value, t, i);
@@ -2119,7 +2119,7 @@ P.regexp_eatRegExpIdentifierStart = function(e) {
   return e.advance(i), r === 92 && this.regexp_eatRegExpUnicodeEscapeSequence(e, i) && (r = e.lastIntValue), ln(r) ? (e.lastIntValue = r, !0) : (e.pos = t, !1);
 };
 function ln(e) {
-  return Ce(e, !0) || e === 36 || e === 95;
+  return Ae(e, !0) || e === 36 || e === 95;
 }
 P.regexp_eatRegExpIdentifierPart = function(e) {
   var t = e.pos, i = this.options.ecmaVersion >= 11, r = e.current(i);
@@ -2623,7 +2623,7 @@ j.nextToken = function() {
   this.readToken(this.fullCharCodeAtPos());
 };
 j.readToken = function(e) {
-  return Ce(e, this.options.ecmaVersion >= 6) || e === 92 ? this.readWord() : this.getTokenFromCode(e);
+  return Ae(e, this.options.ecmaVersion >= 6) || e === 92 ? this.readWord() : this.getTokenFromCode(e);
 };
 j.fullCharCodeAtPos = function() {
   var e = this.input.charCodeAt(this.pos);
@@ -2763,7 +2763,7 @@ j.readToken_question = function() {
 };
 j.readToken_numberSign = function() {
   var e = this.options.ecmaVersion, t = 35;
-  if (e >= 13 && (++this.pos, t = this.fullCharCodeAtPos(), Ce(t, !0) || t === 92))
+  if (e >= 13 && (++this.pos, t = this.fullCharCodeAtPos(), Ae(t, !0) || t === 92))
     return this.finishToken(p.privateId, this.readWord1());
   this.raise(this.pos, "Unexpected character '" + Me(t) + "'");
 };
@@ -2911,7 +2911,7 @@ j.readRadixNumber = function(e) {
   var t = this.pos;
   this.pos += 2;
   var i = this.readInt(e);
-  return i == null && this.raise(this.start + 2, "Expected number in radix " + e), this.options.ecmaVersion >= 11 && this.input.charCodeAt(this.pos) === 110 ? (i = es(this.input.slice(t, this.pos)), ++this.pos) : Ce(this.fullCharCodeAtPos()) && this.raise(this.pos, "Identifier directly after number"), this.finishToken(p.num, i);
+  return i == null && this.raise(this.start + 2, "Expected number in radix " + e), this.options.ecmaVersion >= 11 && this.input.charCodeAt(this.pos) === 110 ? (i = es(this.input.slice(t, this.pos)), ++this.pos) : Ae(this.fullCharCodeAtPos()) && this.raise(this.pos, "Identifier directly after number"), this.finishToken(p.num, i);
 };
 j.readNumber = function(e) {
   var t = this.pos;
@@ -2921,9 +2921,9 @@ j.readNumber = function(e) {
   var r = this.input.charCodeAt(this.pos);
   if (!i && !e && this.options.ecmaVersion >= 11 && r === 110) {
     var n = es(this.input.slice(t, this.pos));
-    return ++this.pos, Ce(this.fullCharCodeAtPos()) && this.raise(this.pos, "Identifier directly after number"), this.finishToken(p.num, n);
+    return ++this.pos, Ae(this.fullCharCodeAtPos()) && this.raise(this.pos, "Identifier directly after number"), this.finishToken(p.num, n);
   }
-  i && /[89]/.test(this.input.slice(t, this.pos)) && (i = !1), r === 46 && !i && (++this.pos, this.readInt(10), r = this.input.charCodeAt(this.pos)), (r === 69 || r === 101) && !i && (r = this.input.charCodeAt(++this.pos), (r === 43 || r === 45) && ++this.pos, this.readInt(10) === null && this.raise(t, "Invalid number")), Ce(this.fullCharCodeAtPos()) && this.raise(this.pos, "Identifier directly after number");
+  i && /[89]/.test(this.input.slice(t, this.pos)) && (i = !1), r === 46 && !i && (++this.pos, this.readInt(10), r = this.input.charCodeAt(this.pos)), (r === 69 || r === 101) && !i && (r = this.input.charCodeAt(++this.pos), (r === 43 || r === 45) && ++this.pos, this.readInt(10) === null && this.raise(t, "Invalid number")), Ae(this.fullCharCodeAtPos()) && this.raise(this.pos, "Identifier directly after number");
   var u = bn(this.input.slice(t, this.pos), i);
   return this.finishToken(p.num, u);
 };
@@ -3086,7 +3086,7 @@ j.readWord1 = function() {
       var u = this.pos;
       this.input.charCodeAt(++this.pos) !== 117 && this.invalidStringToken(this.pos, "Expecting Unicode escape sequence \\uXXXX"), ++this.pos;
       var h = this.readCodePoint();
-      (t ? Ce : De)(h, r) || this.invalidStringToken(u, "Invalid Unicode escape"), e += Me(h), i = this.pos;
+      (t ? Ae : De)(h, r) || this.invalidStringToken(u, "Invalid Unicode escape"), e += Me(h), i = this.pos;
     } else
       break;
     t = !1;
@@ -3112,7 +3112,7 @@ X.acorn = {
   TokContext: ue,
   tokContexts: q,
   isIdentifierChar: De,
-  isIdentifierStart: Ce,
+  isIdentifierStart: Ae,
   Token: Kt,
   isNewLine: Je,
   lineBreak: ce,
@@ -3140,7 +3140,7 @@ const Sn = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   defaultOptions: Dt,
   getLineInfo: vi,
   isIdentifierChar: De,
-  isIdentifierStart: Ce,
+  isIdentifierStart: Ae,
   isNewLine: Je,
   keywordTypes: st,
   lineBreak: ce,
@@ -3319,7 +3319,7 @@ function Wi(e) {
 function Dn(e) {
   var t = {}, i = t.dts, r = i !== void 0 && i, n = t.allowSatisfies, u = n !== void 0 && n;
   return function(h) {
-    var d = h.acorn || Sn, y = Pn(d), o = d.tokTypes, w = d.keywordTypes, E = d.isIdentifierStart, D = d.lineBreak, B = d.isNewLine, H = d.tokContexts, Ee = d.isIdentifierChar, R = y.tokTypes, ne = y.tokContexts, dt = y.keywordsRegExp, Te = y.tokenIsLiteralPropertyName, xe = y.tokenIsTemplate, Ge = y.tokenIsTSDeclarationStart, U = y.tokenIsIdentifier, Ct = y.tokenIsKeywordOrIdentifier, Is = y.tokenIsTSTypeOperator;
+    var d = h.acorn || Sn, y = Pn(d), o = d.tokTypes, w = d.keywordTypes, E = d.isIdentifierStart, D = d.lineBreak, B = d.isNewLine, H = d.tokContexts, Ee = d.isIdentifierChar, R = y.tokTypes, ne = y.tokContexts, dt = y.keywordsRegExp, Pe = y.tokenIsLiteralPropertyName, xe = y.tokenIsTemplate, Ge = y.tokenIsTSDeclarationStart, U = y.tokenIsIdentifier, Ct = y.tokenIsKeywordOrIdentifier, Is = y.tokenIsTSTypeOperator;
     function Ns(T, pe, oe) {
       oe === void 0 && (oe = T.length);
       for (var te = pe; te < oe; te++) {
@@ -3694,7 +3694,7 @@ function Dn(e) {
           l ? m[a] = c : Object.defineProperty(m, a, { enumerable: l, value: c });
         }
       }, f.isLiteralPropertyName = function() {
-        return Te(this.type);
+        return Pe(this.type);
       }, f.hasPrecedingLineBreak = function() {
         return D.test(this.input.slice(this.lastTokEndLoc.index, this.start));
       }, f.createIdentifier = function(s, a) {
@@ -5084,10 +5084,10 @@ async function ke(e, t, i = [], r) {
   const n = `${t} ${i.join(" ")}`;
   e !== void 0 && se(`${e} - exec(${n})`);
   const { stdout: u, stderr: h } = await Mn(n);
-  r === void 0 ? u.trim() && console.log(u.trim()) : await Pe.writeFile(r, u.trim(), "utf8"), h.trim() && console.error(h.trim());
+  r === void 0 ? u.trim() && console.log(u.trim()) : await Ce.writeFile(r, u.trim(), "utf8"), h.trim() && console.error(h.trim());
 }
 async function Vn(e, t) {
-  return Pe.readdir(e, t);
+  return Ce.readdir(e, t);
 }
 async function zn() {
   se("Load environment variables"), (await import("dotenv")).config();
@@ -5107,11 +5107,11 @@ function se(e) {
 ${e}
 `);
 }
-async function Ae(e) {
-  return JSON.parse(await Pe.readFile(e, "utf8"));
+async function we(e) {
+  return JSON.parse(await Ce.readFile(e, "utf8"));
 }
 async function at(e) {
-  return await Pe.readFile(e, "utf8");
+  return await Ce.readFile(e, "utf8");
 }
 async function Ie(e, t, i = [], r = !1) {
   return se(`${e} - spawn(${t} ${i.join(" ")})`), new Promise((n, u) => {
@@ -5121,10 +5121,10 @@ async function Ie(e, t, i = [], r = !1) {
   });
 }
 async function ot(e, t) {
-  await Pe.writeFile(e, JSON.stringify(t, void 0, 4), "utf8");
+  await Ce.writeFile(e, JSON.stringify(t, void 0, 4), "utf8");
 }
 async function ss(e, t) {
-  await Pe.writeFile(e, t, "utf8");
+  await Ce.writeFile(e, t, "utf8");
 }
 function li(e, t) {
   t(e);
@@ -6311,19 +6311,19 @@ const Io = /* @__PURE__ */ k("$ZodObject", (e, t) => {
 }), No = /* @__PURE__ */ k("$ZodObjectJIT", (e, t) => {
   Io.init(e, t);
   const i = e._zod.parse, r = Si(() => bs(t)), n = (D) => {
-    const B = new Xa(["shape", "payload", "ctx"]), H = r.value, Ee = (Te) => {
-      const xe = Gi(Te);
+    const B = new Xa(["shape", "payload", "ctx"]), H = r.value, Ee = (Pe) => {
+      const xe = Gi(Pe);
       return `shape[${xe}]._zod.run({ value: input[${xe}], issues: [] }, ctx)`;
     };
     B.write("const input = payload.value;");
     const R = /* @__PURE__ */ Object.create(null);
     let ne = 0;
-    for (const Te of H.keys)
-      R[Te] = `key_${ne++}`;
+    for (const Pe of H.keys)
+      R[Pe] = `key_${ne++}`;
     B.write("const newResult = {};");
-    for (const Te of H.keys) {
-      const xe = R[Te], Ge = Gi(Te);
-      B.write(`const ${xe} = ${Ee(Te)};`), B.write(`
+    for (const Pe of H.keys) {
+      const xe = R[Pe], Ge = Gi(Pe);
+      B.write(`const ${xe} = ${Ee(Pe)};`), B.write(`
         if (${xe}.issues.length) {
           payload.issues = payload.issues.concat(${xe}.issues.map(iss => ({
             ...iss,
@@ -6344,7 +6344,7 @@ const Io = /* @__PURE__ */ k("$ZodObject", (e, t) => {
     }
     B.write("payload.value = newResult;"), B.write("return payload;");
     const dt = B.compile();
-    return (Te, xe) => dt(D, Te, xe);
+    return (Pe, xe) => dt(D, Pe, xe);
   };
   let u;
   const h = Ft, d = !as.jitless, o = d && Un.value, w = t.catchall;
@@ -7196,9 +7196,9 @@ const Gu = (e, t) => {
       // enumerable: false,
     }
   });
-}, Se = k("ZodError", Gu, {
+}, Te = k("ZodError", Gu, {
   Parent: Error
-}), Ju = /* @__PURE__ */ Ai(Se), Xu = /* @__PURE__ */ Ei(Se), Qu = /* @__PURE__ */ Gt(Se), Yu = /* @__PURE__ */ Jt(Se), ec = /* @__PURE__ */ na(Se), tc = /* @__PURE__ */ aa(Se), ic = /* @__PURE__ */ oa(Se), rc = /* @__PURE__ */ ua(Se), sc = /* @__PURE__ */ ca(Se), nc = /* @__PURE__ */ ha(Se), ac = /* @__PURE__ */ pa(Se), oc = /* @__PURE__ */ la(Se), ee = /* @__PURE__ */ k("ZodType", (e, t) => (Q.init(e, t), e.def = t, e.type = t.type, Object.defineProperty(e, "_def", { value: t }), e.check = (...i) => e.clone(Ye(t, {
+}), Ju = /* @__PURE__ */ Ai(Te), Xu = /* @__PURE__ */ Ei(Te), Qu = /* @__PURE__ */ Gt(Te), Yu = /* @__PURE__ */ Jt(Te), ec = /* @__PURE__ */ na(Te), tc = /* @__PURE__ */ aa(Te), ic = /* @__PURE__ */ oa(Te), rc = /* @__PURE__ */ ua(Te), sc = /* @__PURE__ */ ca(Te), nc = /* @__PURE__ */ ha(Te), ac = /* @__PURE__ */ pa(Te), oc = /* @__PURE__ */ la(Te), ee = /* @__PURE__ */ k("ZodType", (e, t) => (Q.init(e, t), e.def = t, e.type = t.type, Object.defineProperty(e, "_def", { value: t }), e.check = (...i) => e.clone(Ye(t, {
   checks: [
     ...t.checks ?? [],
     ...i.map((r) => typeof r == "function" ? { _zod: { check: r, def: { check: "custom" }, onattach: [] } } : r)
@@ -7699,7 +7699,7 @@ const ih = re([g("amber"), g("green"), g("red"), g("other")]), rh = re([
   typeId: g("presenter")
 });
 async function Vh() {
-  const e = await Ae("config.json"), t = {
+  const e = await we("config.json"), t = {
     body: JSON.stringify(e),
     headers: { "Content-Type": "application/json" },
     method: "PUT"
@@ -7707,7 +7707,7 @@ async function Vh() {
   if (!i.ok) throw new Error(await i.text());
 }
 async function xr() {
-  const e = await Ae("config.json"), t = e.id, i = {
+  const e = await we("config.json"), t = e.id, i = {
     body: JSON.stringify(e),
     headers: { "Content-Type": "application/json" },
     method: "PUT"
@@ -7715,7 +7715,7 @@ async function xr() {
   if (!r.ok) throw new Error(await r.text());
 }
 async function gr(e) {
-  const i = `v${JSON.parse(await Pe.readFile("package.json", "utf8")).version}`;
+  const i = `v${JSON.parse(await Ce.readFile("package.json", "utf8")).version}`;
   async function r(n, u = "") {
     const h = await Vn(n, { withFileTypes: !0 });
     for (const d of h) {
@@ -7737,7 +7737,7 @@ async function rp() {
 async function sp() {
   try {
     Oe("Release Project");
-    const e = await Ae("package.json"), t = await Ae("config.json");
+    const e = await we("package.json"), t = await we("config.json");
     await Es("1️⃣", e);
     const i = Uh(e);
     switch (i) {
@@ -7774,7 +7774,7 @@ async function sp() {
 async function np() {
   try {
     Oe("Synchronise Project with GitHub");
-    const e = await Ae("package.json");
+    const e = await we("package.json");
     se("Bump project version"), await Es("1️⃣", e), await ke("2️⃣  Stage changes", "git", ["add", "."]), await ke("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await ke("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), $e(`Project version '${e.version}' synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
@@ -7791,12 +7791,12 @@ function ap() {
 }
 async function zh(e, t) {
   se(`${e}  Build project configuration`);
-  const i = await Ae("config.json");
+  const i = await we("config.json");
   t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), await ot("config.json", i);
 }
 async function jh(e, t) {
   se(`${e}  Build connector project configuration`);
-  const [i, r] = await Promise.all([Ae("config.json"), at("src/index.ts")]), n = yh.safeParse(i);
+  const [i, r] = await Promise.all([we("config.json"), at("src/index.ts")]), n = yh.safeParse(i);
   if (!n.success) {
     console.log("❌ Configuration is invalid:"), console.table(n.error.issues);
     return;
@@ -7806,7 +7806,7 @@ async function jh(e, t) {
 }
 async function $h(e, t) {
   se(`${e}  Build context project configuration`);
-  const [i, r] = await Promise.all([Ae("config.json"), at("src/index.ts")]), n = Ph.safeParse(i);
+  const [i, r] = await Promise.all([we("config.json"), at("src/index.ts")]), n = Ph.safeParse(i);
   if (!n.success) {
     console.log("❌ Configuration is invalid:"), console.table(n.error.issues);
     return;
@@ -7816,7 +7816,7 @@ async function $h(e, t) {
 }
 async function Fh(e, t) {
   se(`${e}  Build presenter project configuration`);
-  const [i, r] = await Promise.all([Ae("config.json"), at("src/index.ts")]), n = Mh.safeParse(i);
+  const [i, r] = await Promise.all([we("config.json"), at("src/index.ts")]), n = Mh.safeParse(i);
   if (!n.success) {
     console.log("❌ Configuration is invalid:"), console.table(n.error.issues);
     return;
@@ -7882,7 +7882,7 @@ async function op() {
 }
 async function Kh(e) {
   se(`${e}  Insert OWASP Badge(s) into 'README.md'`);
-  const t = await Ae("./dependency-check-reports/dependency-check-report.json"), i = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
+  const t = await we("./dependency-check-reports/dependency-check-report.json"), i = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
   for (const o of t.dependencies)
     if (o.vulnerabilities != null)
       for (const w of o.vulnerabilities) {
@@ -7902,7 +7902,7 @@ async function Kh(e) {
   await ss("README.md", y), console.info("OWASP audit badge(s) inserted into 'README.md'");
 }
 async function Gh(e) {
-  const t = await Ae("config.json"), i = [];
+  const t = await we("config.json"), i = [];
   if (Object.values(e).reduce((n, u) => n + u, 0) === 0)
     console.info("No vulnerabilities found."), i.push(`[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/${t.id}/dependency-check-reports/dependency-check-report.html)`);
   else
@@ -7925,18 +7925,18 @@ const _r = "<!-- DEPENDENCY_LICENSES_START -->", Jh = "<!-- DEPENDENCY_LICENSES_
 async function cp(e = [], t = !0) {
   try {
     Oe("Document Dependencies");
-    const i = e.flatMap((r) => ["--allowed", r]);
+    const i = await we("package.json"), r = e.flatMap((n) => ["--allowed", n]);
     await ke(
       "1️⃣  Generate 'licenses.json' file",
       "license-report",
-      ["--only=prod,peer", "--output=json", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
+      ["--only=prod,peer", "--output=json", `--project=${i.name}`, "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenses.json"
-    ), await ke("2️⃣  Generate 'licenses.md' file", "license-report", ["--config", "license-report-config.json", "--only=prod,peer", "--output=markdown"], "licenses.md"), await ke("3️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "./licenses.json", "--output=table", ...i]), t ? (await ke(
+    ), await ke("2️⃣  Generate 'licenses.md' file", "license-report", ["--config", "license-report-config.json", "--only=prod,peer", "--output=markdown"], "licenses.md"), await ke("3️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "./licenses.json", "--output=table", ...r]), t ? (await ke(
       "4️⃣  Generate 'licenseTree.json' file",
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", " --recurse", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenseTree.json"
-    ), await ke("5️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...i])) : (se("4️⃣  Skip 'licenseTree.json' file generate"), se("5️⃣  Skip 'licenseTree.json' file check")), await Xh("6️⃣"), $e("Dependencies documented.");
+    ), await ke("5️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...r])) : (se("4️⃣  Skip 'licenseTree.json' file generate"), se("5️⃣  Skip 'licenseTree.json' file check")), await Xh("6️⃣"), $e("Dependencies documented.");
   } catch (i) {
     console.error("❌ Error documenting dependencies.", i), process.exit(1);
   }
@@ -7991,9 +7991,9 @@ async function fp(e) {
       for (const y of u) {
         const o = `${n}/${y}`;
         try {
-          const w = await Pe.stat(o);
+          const w = await Ce.stat(o);
           if (w.isDirectory()) {
-            const E = await Pe.readdir(o), D = { childCount: E.length, name: y, typeId: "folder" };
+            const E = await Ce.readdir(o), D = { childCount: E.length, name: y, typeId: "folder" };
             h.push(D), await i(o, E);
           } else {
             const E = { id: Os(), lastModifiedAt: w.mtimeMs, name: y, size: w.size, typeId: "object" };
@@ -8008,8 +8008,8 @@ async function fp(e) {
         return w === 0 ? y.name.localeCompare(o.name) : w;
       });
     }
-    const r = await Pe.readdir(`public/${e}`);
-    await i(`public/${e}`, r), await Pe.writeFile(`./public/${e}Index.json`, JSON.stringify(t), "utf8"), console.info("✅ Public directory index built.");
+    const r = await Ce.readdir(`public/${e}`);
+    await i(`public/${e}`, r), await Ce.writeFile(`./public/${e}Index.json`, JSON.stringify(t), "utf8"), console.info("✅ Public directory index built.");
   } catch (t) {
     console.error("❌ Error building public directory index.", t);
   }

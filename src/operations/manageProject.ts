@@ -305,7 +305,7 @@ function determinePackageTypeId(packageJSON: PackageJson): PackageTypeId {
     if (packageName === 'datapos-app') return 'app';
     else if (packageName === 'datapos-api') return 'api';
     else if (packageName === 'datapos-engine') return 'engine';
-    else if (packageName === 'datapos-shared') return 'shared';
+    else if (packageName === '@datapos/datapos-shared') return 'shared';
     else if (packageName === '@datapos/datapos-development')
         return 'dev'; // TODO: See '@datapos/' prefix. Needed in other tests?
     else if (packageName.includes('datapos-connector')) return 'connector';

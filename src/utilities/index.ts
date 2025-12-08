@@ -49,7 +49,13 @@ function extractOperationsFromSource<T>(source: string): T[] {
 
 // Utilities - Execute command.
 async function execCommand(label: string | undefined, command_: string, arguments_: string[] = [], outputFilePath?: string): Promise<void> {
-    const command = `${command_} ${arguments_.join(' ')}`;
+    const quoteArgument = (value: string): string => {
+        if (value === '') return "''";
+        if (/^[A-Za-z0-9@%_=+:,./-]+$/.test(value)) return value;
+        return `'${value.replace(/'/g, "'\\''")}'`;
+    };
+
+    const command = [command_, ...arguments_.map(quoteArgument)].join(' ').trim();
     if (label !== undefined) logStepHeader(`${label} - exec(${command})`);
     const { stdout, stderr } = await asyncExec(command);
     if (outputFilePath === undefined) {

@@ -7674,10 +7674,10 @@ function Ii(e) {
   }), r;
 }
 async function ve(e, t, i = [], r) {
-  const n = `${t} ${i.join(" ")}`;
-  e !== void 0 && se(`${e} - exec(${n})`);
-  const { stdout: u, stderr: h } = await Rh(n);
-  r === void 0 ? u.trim() && console.log(u.trim()) : await Ce.writeFile(r, u.trim(), "utf8"), h.trim() && console.error(h.trim());
+  const n = (y) => y === "" ? "''" : /^[A-Za-z0-9@%_=+:,./-]+$/.test(y) ? y : `'${y.replace(/'/g, "'\\''")}'`, u = [t, ...i.map(n)].join(" ").trim();
+  e !== void 0 && se(`${e} - exec(${u})`);
+  const { stdout: h, stderr: d } = await Rh(u);
+  r === void 0 ? h.trim() && console.log(h.trim()) : await Ce.writeFile(r, h.trim(), "utf8"), d.trim() && console.error(d.trim());
 }
 async function Dh(e, t) {
   return Ce.readdir(e, t);

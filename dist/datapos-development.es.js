@@ -7674,10 +7674,10 @@ function Ii(e) {
   }), r;
 }
 async function ve(e, t, i = [], r) {
-  const n = (y) => y === "" ? "''" : /^[A-Za-z0-9@%_=+:,./-]+$/.test(y) ? y : `'${y.replace(/'/g, "'\\''")}'`, u = [t, ...i.map(n)].join(" ").trim();
-  e !== void 0 && se(`${e} - exec(${u})`);
-  const { stdout: h, stderr: d } = await Rh(u);
-  r === void 0 ? h.trim() && console.log(h.trim()) : await Ce.writeFile(r, h.trim(), "utf8"), d.trim() && console.error(d.trim());
+  const n = `${t} ${i.join(" ")}`;
+  e !== void 0 && se(`${e} - exec(${n})`);
+  const { stdout: u, stderr: h } = await Rh(n);
+  r === void 0 ? u.trim() && console.log(u.trim()) : await Ce.writeFile(r, u.trim(), "utf8"), h.trim() && console.error(h.trim());
 }
 async function Dh(e, t) {
   return Ce.readdir(e, t);
@@ -7976,7 +7976,7 @@ async function lp(e = [], t = !0) {
       "2️⃣  Generate 'licenses.md' file",
       "license-report",
       // ['--config', 'licenses/license-report-config.json', '--only=prod,peer', '--output=markdown'],
-      ["--config", r, "--only=prod,peer", "--output=markdown"],
+      ["--config", `'${r}'`, "--only=prod,peer", "--output=markdown"],
       "licenses.md"
     ), await ve("3️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "./licenses.json", "--output=table", ...i]), t ? (await ve(
       "4️⃣  Generate 'licenseTree.json' file",

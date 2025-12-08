@@ -28,13 +28,13 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
             'licenses.json'
         );
 
-        // const LICENSE_REPORT_CONFIG = fileURLToPath(new URL(import.meta.resolve('@datapos/datapos-development/licenses/license-report-config.json')));
+        // NOTE: const LICENSE_REPORT_CONFIG = fileURLToPath(new URL(import.meta.resolve('@datapos/datapos-development/licenses/license-report-config.json')));
         const licenseReportConfigPath = fileURLToPath(new URL(import.meta.resolve('@datapos/datapos-development/license-report-config')));
         await execCommand(
             "2️⃣  Generate 'licenses.md' file",
             'license-report',
             // ['--config', 'licenses/license-report-config.json', '--only=prod,peer', '--output=markdown'],
-            ['--config', licenseReportConfigPath, '--only=prod,peer', '--output=markdown'],
+            ['--config', `'${licenseReportConfigPath}'`, '--only=prod,peer', '--output=markdown'],
             'licenses.md'
         );
 

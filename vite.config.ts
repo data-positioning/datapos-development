@@ -20,7 +20,7 @@ export default defineConfig({
         },
         target: 'ESNext',
         rollupOptions: {
-            external: ['nanoid', 'node:child_process', 'node:fs', 'node:readline', 'node:util', 'dotenv'],
+            external: ['dotenv', 'nanoid', 'node:child_process', 'node:fs', 'node:readline', 'node:url', 'node:util'],
             plugins: [
                 visualizer({
                     filename: 'stats.html', // HTML report.

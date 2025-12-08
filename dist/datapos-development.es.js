@@ -7971,7 +7971,7 @@ async function lp(e = [], t = !0) {
       ["--only=prod,peer", "--output=json", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenses.json"
     );
-    const r = Vs(new zs(import.meta.resolve("@datapos/datapos-development/licenses/license-report-config.json")));
+    const r = Vs(new zs(import.meta.resolve("@datapos/datapos-development/license-report-config")));
     await ve(
       "2️⃣  Generate 'licenses.md' file",
       "license-report",

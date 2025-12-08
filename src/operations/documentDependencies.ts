@@ -8,7 +8,23 @@
 import { fileURLToPath, URL } from 'node:url';
 
 // Dependencies - Framework.
-import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readTextFile, writeTextFile } from '../utilities';
+import { execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, writeTextFile } from '../utilities';
+
+// Interfaces/Types
+interface License {
+    department: string;
+    relatedTo: string;
+    name: string;
+    licensePeriod: string;
+    material: string;
+    licenseType: string;
+    link: string;
+    remoteVersion: string;
+    installedVersion: string;
+    definedVersion: string;
+    author: string;
+    licenseFileLink?: string;
+}
 
 // Constants
 const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
@@ -26,17 +42,6 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
             'license-report',
             ['--only=prod,peer', '--output=json', '--department.value=n/a', '--licensePeriod=n/a', '--material=n/a', '--relatedTo.value=n/a'],
             'licenses.json'
-        );
-
-        // Establish licence report configuration file path.This in combination with exports in 'package.json'
-        // allows us to share local 'licenses/license-report-config.json' file with other projects.
-        // 'licenses/license-report-config.json' is in licenses directory, not top level directory, so it does not confuse GitHub license detection engine.
-        const licenseReportConfigPath = fileURLToPath(new URL(import.meta.resolve('@datapos/datapos-development/license-report-config')));
-        await execCommand(
-            "2️⃣  Generate 'licenses.md' file",
-            'license-report',
-            ['--config', `'${licenseReportConfigPath}'`, '--only=prod,peer', '--output=markdown'],
-            'licenses.md'
         );
 
         await execCommand("3️⃣  Check 'licenses.json' file", 'license-report-check', ['--source', './licenses.json', '--output=table', ...allowedFlags]);
@@ -57,6 +62,12 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
 
         await execCommand('6️⃣  Download license files', 'license-downloader', ['--source', './licenses.json', '--licDir', './licenses', '--download']);
 
+        // Establish licence report configuration file path.This in combination with exports in 'package.json'
+        // allows us to share local 'licenses/license-report-config.json' file with other projects.
+        // 'licenses/license-report-config.json' is in licenses directory, not top level directory, so it does not confuse GitHub license detection engine.
+        const licenseReportConfigPath = fileURLToPath(new URL(import.meta.resolve('@datapos/datapos-development/license-report-config')));
+        await execCommand("2️⃣  Generate 'licenses.md' file", 'license-report', ['--config', `'${licenseReportConfigPath}'`, '--only=prod,peer', '--output=json'], 'licenses2.json');
+
         await insertLicensesIntoReadme('7️⃣');
 
         logOperationSuccess('Dependencies documented.');
@@ -70,8 +81,8 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
 async function insertLicensesIntoReadme(stepIcon: string): Promise<void> {
     logStepHeader(`${stepIcon}  Insert licenses into 'README.md'`);
 
-    const licensesContent = await readTextFile('./licenses.md');
-    const trimmedLicensesContent = licensesContent.trim();
+    //! const licensesContent = await readTextFile('./licenses.md');
+    //! const trimmedLicensesContent = licensesContent.trim();
     const readmeContent = await readTextFile('./README.md');
     const startIndex = readmeContent.indexOf(START_MARKER);
     const endIndex = readmeContent.indexOf(END_MARKER);
@@ -79,7 +90,33 @@ async function insertLicensesIntoReadme(stepIcon: string): Promise<void> {
         console.error("❌ No dependency license markers found in 'README.md'.");
         return;
     }
-    const newContent = `${readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length))}\n${trimmedLicensesContent}\n${readmeContent.slice(Math.max(0, endIndex))}`;
+
+    const productionPackageLicenses = await readJSONFile<License[]>('licenses2.json');
+    const productionDownloadLicenses = await readJSONFile<License[]>('licenses/licenses.ext.json');
+    const mergedLicenses = [
+        ...((): MapIterator<License> => {
+            const byName = new Map<string, License>();
+
+            for (const license of productionPackageLicenses) {
+                byName.set(license.name, { ...license });
+            }
+
+            for (const license of productionDownloadLicenses) {
+                const existing = byName.get(license.name);
+                byName.set(license.name, existing ? { ...existing, ...license } : { ...license });
+            }
+
+            return byName.values();
+        })()
+    ];
+    console.log('mergedLicenses', productionPackageLicenses.length, productionDownloadLicenses.length, mergedLicenses);
+    let licensesContent = '|Name|\n|-|\n';
+    for (const license of mergedLicenses) {
+        licensesContent += `|${license.name}|\n`;
+    }
+
+    //! const newContent = `${readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length))}\n${trimmedLicensesContent}\n${readmeContent.slice(Math.max(0, endIndex))}`;
+    const newContent = `${readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length))}\n${licensesContent}\n${readmeContent.slice(Math.max(0, endIndex))}`;
     await writeTextFile('README.md', newContent);
 }
 

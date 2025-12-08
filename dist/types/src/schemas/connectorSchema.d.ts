@@ -18,10 +18,25 @@ export declare const connectorConfigSchema: z.ZodObject<{
     lastUpdatedAt: z.ZodOptional<z.ZodNumber>;
     status: z.ZodOptional<z.ZodNullable<z.ZodObject<{
         id: z.ZodString;
-        color: z.ZodUnion<readonly [z.ZodLiteral<"amber">, z.ZodLiteral<"green">, z.ZodLiteral<"red">, z.ZodLiteral<"other">]>;
+        color: z.ZodEnum<{
+            amber: "amber";
+            green: "green";
+            red: "red";
+            other: "other";
+        }>;
         label: z.ZodString;
     }, z.core.$strip>>>;
-    statusId: z.ZodUnion<readonly [z.ZodLiteral<"alpha">, z.ZodLiteral<"beta">, z.ZodLiteral<"generalAvailability">, z.ZodLiteral<"notApplicable">, z.ZodLiteral<"preAlpha">, z.ZodLiteral<"proposed">, z.ZodLiteral<"releaseCandidate">, z.ZodLiteral<"unavailable">, z.ZodLiteral<"underReview">]>;
+    statusId: z.ZodEnum<{
+        alpha: "alpha";
+        beta: "beta";
+        generalAvailability: "generalAvailability";
+        notApplicable: "notApplicable";
+        preAlpha: "preAlpha";
+        proposed: "proposed";
+        releaseCandidate: "releaseCandidate";
+        unavailable: "unavailable";
+        underReview: "underReview";
+    }>;
     version: z.ZodString;
     category: z.ZodOptional<z.ZodObject<{
         id: z.ZodString;

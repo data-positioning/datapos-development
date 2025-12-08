@@ -60,7 +60,7 @@ The `src/index.ts' file exposes the following utilities:
 
 The OWASP Dependency Check Report identifies known vulnerabilities in project dependencies. It is generated automatically on each release using the npm package `owasp-dependency-check`.
 
-[View the OWASP Dependency Check Report](https://data-positioning.github.io/datapos-development/dependency-check-reports/dependency-check-report.html)
+[View the OWASP Dependency Check Report](https://data-positioning.github.io/datapos-development/dependency-check-report.html)
 
 ### Dependency Licenses
 
@@ -83,7 +83,7 @@ The following table lists top-level production and peer dependencies. All these 
 
 The Bundle Analysis Report provides a detailed breakdown of the bundle's composition and module sizes, helping to identify which modules contribute most to the final build. It is generated automatically on each release using the npm package `rollup-plugin-visualizer`.
 
-[View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/stats/index.html)
+[View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/stats.html)
 
 ## Repository Common Management Commands
 

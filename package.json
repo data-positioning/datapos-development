@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.285",
+    "version": "0.3.286",
     "description": "A library of utilities used to manage Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -22,7 +22,7 @@
             "types": "./dist/types/src/index.d.ts"
         },
         "./prettierrc": "./.prettierrc.json",
-        "./license-report-config": "./license-report-config.json"
+        "./license-report-config": "./licenses/license-report-config.json"
     },
     "files": [
         "dist",

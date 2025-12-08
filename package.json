@@ -21,11 +21,13 @@
             "import": "./dist/datapos-development.es.js",
             "types": "./dist/types/src/index.d.ts"
         },
-        "./prettierrc": "./.prettierrc.json"
+        "./prettierrc": "./.prettierrc.json",
+        "./license-report-config": "./licenses/license-report-config.json"
     },
     "files": [
         "dist",
-        ".prettierrc.json"
+        ".prettierrc.json",
+        "licenses/license-report-config.json"
     ],
     "dependencies": {
         "@datapos/datapos-shared": "^0.3.290",

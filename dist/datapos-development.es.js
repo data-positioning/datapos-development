@@ -7920,7 +7920,7 @@ async function op() {
 }
 async function Kh(e) {
   se(`${e}  Insert OWASP Badge(s) into 'README.md'`);
-  const t = await Se("./dependency-check-reports/dependency-check-report.json"), i = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
+  const t = await Se("./dependency-check-report.json"), i = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
   for (const o of t.dependencies)
     if (o.vulnerabilities != null)
       for (const S of o.vulnerabilities) {

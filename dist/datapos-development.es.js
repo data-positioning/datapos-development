@@ -7975,7 +7975,6 @@ async function lp(e = [], t = !0) {
     await ve(
       "2️⃣  Generate 'licenses.md' file",
       "license-report",
-      // ['--config', 'licenses/license-report-config.json', '--only=prod,peer', '--output=markdown'],
       ["--config", `'${r}'`, "--only=prod,peer", "--output=markdown"],
       "licenses.md"
     ), await ve("3️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "./licenses.json", "--output=table", ...i]), t ? (await ve(

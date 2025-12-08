@@ -47,6 +47,8 @@ async function auditDependencies(): Promise<void> {
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
         await spawnCommand('1️⃣', 'owasp-dependency-check', [
+            '--out',
+            '.',
             '--project',
             packageJSON.name ?? 'unknown',
             '--enableRetired',

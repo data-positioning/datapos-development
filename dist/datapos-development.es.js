@@ -7905,6 +7905,8 @@ async function op() {
     Re("Audit Dependencies"), await Rh();
     const e = await Se("package.json");
     await Ie("1️⃣", "owasp-dependency-check", [
+      "--out",
+      ".",
       "--project",
       e.name ?? "unknown",
       "--enableRetired",

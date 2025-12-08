@@ -23,7 +23,7 @@ export default defineConfig({
             external: ['nanoid', 'node:child_process', 'node:fs', 'node:readline', 'node:util', 'dotenv'],
             plugins: [
                 visualizer({
-                    filename: 'stats/index.html', // HTML report.
+                    filename: 'stats.html', // HTML report.
                     open: false, // Automatically opens in browser.
                     gzipSize: true, // Show gzip sizes.
                     brotliSize: true // Show brotli sizes.

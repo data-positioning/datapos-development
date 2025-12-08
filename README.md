@@ -67,16 +67,14 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 The following table lists top-level production and peer dependencies. All these dependencies (including transitive ones) have been recursively verified to use Apache-2.0, BSD-2-Clause, CC0-1.0, or MIT—commercially friendly licenses with minimal restrictions. Developers cloning this repository should independently verify dev and optional dependencies; users of the published library are covered by these checks. We do not include unlicensed dependencies. Used to support development activity and not released as part of the production release. Check if you clone. We use the `npm` packages [license-report](https://www.npmjs.com/package/license-report), [license-report-check](https://www.npmjs.com/package/license-report-check) and [license-report-recursive](https://www.npmjs.com/package/license-report-recursive) to identify dependency licenses.
 
 <!-- DEPENDENCY_LICENSES_START -->
-
 | Name                    |     Type     | Installed | Latest  | Latest Modified          |
 | :---------------------- | :----------: | :-------: | :-----: | :----------------------- |
-| @datapos/datapos-shared |     MIT      |  0.3.255  | 0.3.255 | 2025-11-29T17:16:07.774Z |
+| @datapos/datapos-shared |     MIT      |  0.3.290  | 0.3.293 | 2025-12-08T12:22:28.385Z |
 | acorn                   |     MIT      |  8.15.0   | 8.15.0  | 2025-06-09T04:08:15.567Z |
 | acorn-typescript        |     MIT      |  1.4.13   | 1.4.13  | 2024-01-03T02:25:10.152Z |
 | acorn-walk              |     MIT      |   8.3.4   |  8.3.4  | 2024-09-09T08:40:59.131Z |
 | dotenv                  | BSD-2-Clause |  17.2.3   | 17.2.3  | 2025-09-29T23:22:21.769Z |
-| zod                     |     MIT      |  4.1.13   | 4.1.13  | 2025-11-24T02:38:31.522Z |
-
+| zod                     |     MIT      |  4.1.13   | 4.1.13  | 2025-12-07T22:32:17.012Z |
 <!-- DEPENDENCY_LICENSES_END -->
 
 ### Bundle Analysis Report

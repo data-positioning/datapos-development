@@ -1174,8 +1174,8 @@ const Pa = /* @__PURE__ */ k("$ZodObject", (e, t) => {
   Pa.init(e, t);
   const i = e._zod.parse, r = yi(() => Vr(t)), n = (D) => {
     const B = new Kn(["shape", "payload", "ctx"]), H = r.value, Ee = (Pe) => {
-      const xe = Vi(Pe);
-      return `shape[${xe}]._zod.run({ value: input[${xe}], issues: [] }, ctx)`;
+      const ge = Vi(Pe);
+      return `shape[${ge}]._zod.run({ value: input[${ge}], issues: [] }, ctx)`;
     };
     B.write("const input = payload.value;");
     const R = /* @__PURE__ */ Object.create(null);
@@ -1184,29 +1184,29 @@ const Pa = /* @__PURE__ */ k("$ZodObject", (e, t) => {
       R[Pe] = `key_${ne++}`;
     B.write("const newResult = {};");
     for (const Pe of H.keys) {
-      const xe = R[Pe], Ge = Vi(Pe);
-      B.write(`const ${xe} = ${Ee(Pe)};`), B.write(`
-        if (${xe}.issues.length) {
-          payload.issues = payload.issues.concat(${xe}.issues.map(iss => ({
+      const ge = R[Pe], Ge = Vi(Pe);
+      B.write(`const ${ge} = ${Ee(Pe)};`), B.write(`
+        if (${ge}.issues.length) {
+          payload.issues = payload.issues.concat(${ge}.issues.map(iss => ({
             ...iss,
             path: iss.path ? [${Ge}, ...iss.path] : [${Ge}]
           })));
         }
         
         
-        if (${xe}.value === undefined) {
+        if (${ge}.value === undefined) {
           if (${Ge} in input) {
             newResult[${Ge}] = undefined;
           }
         } else {
-          newResult[${Ge}] = ${xe}.value;
+          newResult[${Ge}] = ${ge}.value;
         }
         
       `);
     }
     B.write("payload.value = newResult;"), B.write("return payload;");
     const dt = B.compile();
-    return (Pe, xe) => dt(D, Pe, xe);
+    return (Pe, ge) => dt(D, Pe, ge);
   };
   let u;
   const h = Dt, d = !Sr.jitless, o = d && Fs.value, S = t.catchall;
@@ -2200,7 +2200,7 @@ function Ou(e, t) {
 const Ru = /* @__PURE__ */ k("ZodRecord", (e, t) => {
   Ia.init(e, t), ee.init(e, t), e.keyType = t.keyType, e.valueType = t.valueType;
 });
-function ve(e, t, i) {
+function xe(e, t, i) {
   return new Ru({
     type: "record",
     keyType: e,
@@ -2410,14 +2410,14 @@ const Yu = re([g("amber"), g("green"), g("red"), g("other")]), ec = re([
   g("presenter"),
   g("presenterPresentation"),
   g("tool")
-]), ic = re([g("en-au"), g("en-gb"), g("en-us"), g("es-es")]), rc = ve(ic, L()), sc = Ne({
+]), ic = re([g("en-au"), g("en-gb"), g("en-us"), g("es-es")]), rc = xe(ic, L()), sc = Ne({
   id: L(),
   color: Yu,
   label: L()
 }), nc = Ne({
   id: L(),
-  label: ve(L(), L()),
-  description: ve(L(), L()),
+  label: xe(L(), L()),
+  description: xe(L(), L()),
   firstCreatedAt: De().optional(),
   icon: L().optional(),
   iconDark: L().optional(),
@@ -2435,7 +2435,7 @@ const Yu = re([g("amber"), g("green"), g("red"), g("other")]), ec = re([
   authMethodId: re([g("apiKey"), g("disabled"), g("oAuth2"), g("none")]),
   label: rc.optional(),
   maxConnectionCount: De().optional(),
-  params: He(ve(L(), L())).optional()
+  params: He(xe(L(), L())).optional()
 }), cc = re([g("application"), g("curatedDataset"), g("database"), g("fileStore")]), hc = re([
   g("abortOperation"),
   g("authenticateConnection"),
@@ -2455,7 +2455,7 @@ const Yu = re([g("amber"), g("green"), g("red"), g("other")]), ec = re([
 }), fc = lc.extend({
   category: oc.optional(),
   categoryId: cc,
-  implementations: ve(L(), uc),
+  implementations: xe(L(), uc),
   operations: He(hc),
   typeId: g("connector"),
   usageId: pc,
@@ -2502,16 +2502,16 @@ const Yu = re([g("amber"), g("green"), g("red"), g("other")]), ec = re([
   label: L()
 }), xc = Ne({
   id: L(),
-  label: ve(L(), L()),
-  description: ve(L(), L()),
+  label: xe(L(), L()),
+  description: xe(L(), L()),
   icon: L().optional(),
   iconDark: L().optional(),
   order: De(),
   path: L()
 }), qr = Ne({
   id: L(),
-  label: ve(L(), L()),
-  description: ve(L(), L()),
+  label: xe(L(), L()),
+  description: xe(L(), L()),
   firstCreatedAt: sr.optional(),
   icon: L().optional(),
   iconDark: L().optional(),
@@ -2569,16 +2569,16 @@ const Yu = re([g("amber"), g("green"), g("red"), g("other")]), ec = re([
   label: L()
 }), Ac = Ne({
   id: L(),
-  label: ve(L(), L()),
-  description: ve(L(), L()),
+  label: xe(L(), L()),
+  description: xe(L(), L()),
   icon: L().optional(),
   iconDark: L().optional(),
   order: De(),
   path: L()
 }), Ec = Ne({
   id: L(),
-  label: ve(L(), L()),
-  description: ve(L(), L()),
+  label: xe(L(), L()),
+  description: xe(L(), L()),
   firstCreatedAt: nr.optional(),
   icon: L().optional(),
   iconDark: L().optional(),
@@ -2623,10 +2623,10 @@ function Me(e, t) {
 var z = function(t, i) {
   i === void 0 && (i = {}), this.label = t, this.keyword = i.keyword, this.beforeExpr = !!i.beforeExpr, this.startsExpr = !!i.startsExpr, this.isLoop = !!i.isLoop, this.isAssign = !!i.isAssign, this.prefix = !!i.prefix, this.postfix = !!i.postfix, this.binop = i.binop || null, this.updateContext = null;
 };
-function ge(e, t) {
+function be(e, t) {
   return new z(e, { beforeExpr: !0, binop: t });
 }
-var be = { beforeExpr: !0 }, le = { startsExpr: !0 }, at = {};
+var _e = { beforeExpr: !0 }, le = { startsExpr: !0 }, at = {};
 function F(e, t) {
   return t === void 0 && (t = {}), t.keyword = e, at[e] = new z(e, t);
 }
@@ -2644,16 +2644,16 @@ var p = {
   braceR: new z("}"),
   parenL: new z("(", { beforeExpr: !0, startsExpr: !0 }),
   parenR: new z(")"),
-  comma: new z(",", be),
-  semi: new z(";", be),
-  colon: new z(":", be),
+  comma: new z(",", _e),
+  semi: new z(";", _e),
+  colon: new z(":", _e),
   dot: new z("."),
-  question: new z("?", be),
+  question: new z("?", _e),
   questionDot: new z("?."),
-  arrow: new z("=>", be),
+  arrow: new z("=>", _e),
   template: new z("template"),
   invalidTemplate: new z("invalidTemplate"),
-  ellipsis: new z("...", be),
+  ellipsis: new z("...", _e),
   backQuote: new z("`", le),
   dollarBraceL: new z("${", { beforeExpr: !0, startsExpr: !0 }),
   // Operators. These carry several kinds of properties to help the
@@ -2673,36 +2673,36 @@ var p = {
   assign: new z("_=", { beforeExpr: !0, isAssign: !0 }),
   incDec: new z("++/--", { prefix: !0, postfix: !0, startsExpr: !0 }),
   prefix: new z("!/~", { beforeExpr: !0, prefix: !0, startsExpr: !0 }),
-  logicalOR: ge("||", 1),
-  logicalAND: ge("&&", 2),
-  bitwiseOR: ge("|", 3),
-  bitwiseXOR: ge("^", 4),
-  bitwiseAND: ge("&", 5),
-  equality: ge("==/!=/===/!==", 6),
-  relational: ge("</>/<=/>=", 7),
-  bitShift: ge("<</>>/>>>", 8),
+  logicalOR: be("||", 1),
+  logicalAND: be("&&", 2),
+  bitwiseOR: be("|", 3),
+  bitwiseXOR: be("^", 4),
+  bitwiseAND: be("&", 5),
+  equality: be("==/!=/===/!==", 6),
+  relational: be("</>/<=/>=", 7),
+  bitShift: be("<</>>/>>>", 8),
   plusMin: new z("+/-", { beforeExpr: !0, binop: 9, prefix: !0, startsExpr: !0 }),
-  modulo: ge("%", 10),
-  star: ge("*", 10),
-  slash: ge("/", 10),
+  modulo: be("%", 10),
+  star: be("*", 10),
+  slash: be("/", 10),
   starstar: new z("**", { beforeExpr: !0 }),
-  coalesce: ge("??", 1),
+  coalesce: be("??", 1),
   // Keyword token types.
   _break: F("break"),
-  _case: F("case", be),
+  _case: F("case", _e),
   _catch: F("catch"),
   _continue: F("continue"),
   _debugger: F("debugger"),
-  _default: F("default", be),
+  _default: F("default", _e),
   _do: F("do", { isLoop: !0, beforeExpr: !0 }),
-  _else: F("else", be),
+  _else: F("else", _e),
   _finally: F("finally"),
   _for: F("for", { isLoop: !0 }),
   _function: F("function", le),
   _if: F("if"),
-  _return: F("return", be),
+  _return: F("return", _e),
   _switch: F("switch"),
-  _throw: F("throw", be),
+  _throw: F("throw", _e),
   _try: F("try"),
   _var: F("var"),
   _const: F("const"),
@@ -2712,7 +2712,7 @@ var p = {
   _this: F("this", le),
   _super: F("super", le),
   _class: F("class", le),
-  _extends: F("extends", be),
+  _extends: F("extends", _e),
   _export: F("export"),
   _import: F("import", le),
   _null: F("null", le),
@@ -4836,7 +4836,7 @@ P.regexp_eatDecimalEscape = function(e) {
   }
   return !1;
 };
-var gs = 0, ze = 1, _e = 2;
+var gs = 0, ze = 1, ke = 2;
 P.regexp_eatCharacterClassEscape = function(e) {
   var t = e.current();
   if (ph(t))
@@ -4852,7 +4852,7 @@ P.regexp_eatCharacterClassEscape = function(e) {
       125
       /* } */
     ))
-      return i && r === _e && e.raise("Invalid property name"), r;
+      return i && r === ke && e.raise("Invalid property name"), r;
     e.raise("Invalid property name");
   }
   return gs;
@@ -4885,7 +4885,7 @@ P.regexp_validateUnicodePropertyNameOrValue = function(e, t) {
   if (e.unicodeProperties.binary.test(t))
     return ze;
   if (e.switchV && e.unicodeProperties.binaryOfStrings.test(t))
-    return _e;
+    return ke;
   e.raise("Invalid property name");
 };
 P.regexp_eatUnicodePropertyName = function(e) {
@@ -4921,7 +4921,7 @@ P.regexp_eatCharacterClass = function(e) {
     return e.eat(
       93
       /* ] */
-    ) || e.raise("Unterminated character class"), t && i === _e && e.raise("Negated character class may contain strings"), !0;
+    ) || e.raise("Unterminated character class"), t && i === ke && e.raise("Negated character class may contain strings"), !0;
   }
   return !1;
 };
@@ -4982,13 +4982,13 @@ P.regexp_eatClassEscape = function(e) {
 P.regexp_classSetExpression = function(e) {
   var t = ze, i;
   if (!this.regexp_eatClassSetRange(e)) if (i = this.regexp_eatClassSetOperand(e)) {
-    i === _e && (t = _e);
+    i === ke && (t = ke);
     for (var r = e.pos; e.eatChars(
       [38, 38]
       /* && */
     ); ) {
       if (e.current() !== 38 && (i = this.regexp_eatClassSetOperand(e))) {
-        i !== _e && (t = ze);
+        i !== ke && (t = ze);
         continue;
       }
       e.raise("Invalid character in character class");
@@ -5008,7 +5008,7 @@ P.regexp_classSetExpression = function(e) {
     if (!this.regexp_eatClassSetRange(e)) {
       if (i = this.regexp_eatClassSetOperand(e), !i)
         return t;
-      i === _e && (t = _e);
+      i === ke && (t = ke);
     }
 };
 P.regexp_eatClassSetRange = function(e) {
@@ -5043,7 +5043,7 @@ P.regexp_eatNestedClass = function(e) {
       93
       /* ] */
     ))
-      return i && r === _e && e.raise("Negated character class may contain strings"), r;
+      return i && r === ke && e.raise("Negated character class may contain strings"), r;
     e.pos = t;
   }
   if (e.eat(
@@ -5084,13 +5084,13 @@ P.regexp_classStringDisjunctionContents = function(e) {
     124
     /* | */
   ); )
-    this.regexp_classString(e) === _e && (t = _e);
+    this.regexp_classString(e) === ke && (t = ke);
   return t;
 };
 P.regexp_classString = function(e) {
   for (var t = 0; this.regexp_eatClassSetCharacter(e); )
     t++;
-  return t === 1 ? ze : _e;
+  return t === 1 ? ze : ke;
 };
 P.regexp_eatClassSetCharacter = function(e) {
   var t = e.pos;
@@ -5911,7 +5911,7 @@ function vr(e) {
 function Nh(e) {
   var t = {}, i = t.dts, r = i !== void 0 && i, n = t.allowSatisfies, u = n !== void 0 && n;
   return function(h) {
-    var d = h.acorn || bh, y = kh(d), o = d.tokTypes, S = d.keywordTypes, E = d.isIdentifierStart, D = d.lineBreak, B = d.isNewLine, H = d.tokContexts, Ee = d.isIdentifierChar, R = y.tokTypes, ne = y.tokContexts, dt = y.keywordsRegExp, Pe = y.tokenIsLiteralPropertyName, xe = y.tokenIsTemplate, Ge = y.tokenIsTSDeclarationStart, U = y.tokenIsIdentifier, Ct = y.tokenIsKeywordOrIdentifier, Is = y.tokenIsTSTypeOperator;
+    var d = h.acorn || bh, y = kh(d), o = d.tokTypes, S = d.keywordTypes, E = d.isIdentifierStart, D = d.lineBreak, B = d.isNewLine, H = d.tokContexts, Ee = d.isIdentifierChar, R = y.tokTypes, ne = y.tokContexts, dt = y.keywordsRegExp, Pe = y.tokenIsLiteralPropertyName, ge = y.tokenIsTemplate, Ge = y.tokenIsTSDeclarationStart, U = y.tokenIsIdentifier, Ct = y.tokenIsKeywordOrIdentifier, Is = y.tokenIsTSTypeOperator;
     function Ns(T, pe, oe) {
       oe === void 0 && (oe = T.length);
       for (var te = pe; te < oe; te++) {
@@ -7468,7 +7468,7 @@ function Nh(e) {
             var Et = b.tsParseTypeArgumentsInExpression();
             if (!Et) return s;
             if (N && !b.match(o.parenL)) return V = b.curPosition(), s;
-            if (xe(b.type) || b.type === o.backQuote) {
+            if (ge(b.type) || b.type === o.backQuote) {
               var Oi = b.parseTaggedTemplateExpression(s, a, c, _);
               return Oi.typeParameters = Et, Oi;
             }
@@ -7672,7 +7672,7 @@ function Ii(e) {
     d && d !== "constructor" && u.accessibility !== "private" && r.push(d);
   }), r;
 }
-async function ke(e, t, i = [], r) {
+async function ve(e, t, i = [], r) {
   const n = `${t} ${i.join(" ")}`;
   e !== void 0 && se(`${e} - exec(${n})`);
   const { stdout: u, stderr: h } = await Lh(n);
@@ -7756,7 +7756,7 @@ async function gr(e) {
       const y = `${n}/${d.name}`, o = u ? `${u}/${d.name}` : d.name;
       if (d.isDirectory()) continue;
       const S = `${e}_${i}/${o}`.replaceAll("\\", "/"), E = d.name.endsWith(".css") ? "text/css" : "application/octet-stream", D = d.name.endsWith(".js") ? "application/javascript" : E;
-      console.info(`⚙️ Uploading '${o}' → '${S}'...`), await ke(void 0, `wrangler r2 object put "${S}" --file="${y}" --content-type ${D} --jurisdiction=eu --remote`);
+      console.info(`⚙️ Uploading '${o}' → '${S}'...`), await ve(void 0, `wrangler r2 object put "${S}" --file="${y}" --content-type ${D} --jurisdiction=eu --remote`);
     }
   }
   await r("dist");
@@ -7787,7 +7787,7 @@ async function sp() {
       default:
         await zh("2️⃣", e);
     }
-    await Ie("3️⃣  Bundle project", "vite", ["build"]), await ke("4️⃣  Stage changes", "git", ["add", "."]), await ke("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await ke("6️⃣  Push changes", "git", ["push", "origin", "main:main"]);
+    await Ie("3️⃣  Bundle project", "vite", ["build"]), await ve("4️⃣  Stage changes", "git", ["add", "."]), await ve("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await ve("6️⃣  Push changes", "git", ["push", "origin", "main:main"]);
     const r = Zh(i);
     if (i === "app")
       se("7️⃣  Register module"), await Vh();
@@ -7809,7 +7809,7 @@ async function np() {
   try {
     Re("Synchronise Project with GitHub");
     const e = await Se("package.json");
-    se("Bump project version"), await Es("1️⃣", e), await ke("2️⃣  Stage changes", "git", ["add", "."]), await ke("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await ke("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Fe(`Project version '${e.version}' synchronised with GitHub.`);
+    se("Bump project version"), await Es("1️⃣", e), await ve("2️⃣  Stage changes", "git", ["add", "."]), await ve("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await ve("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Fe(`Project version '${e.version}' synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }
@@ -7964,17 +7964,22 @@ async function cp(e = [], t = !0) {
   try {
     Re("Document Dependencies");
     const i = e.flatMap((r) => ["--allowed", r]);
-    await ke(
+    await ve(
       "1️⃣  Generate 'licenses.json' file",
       "license-report",
       ["--only=prod,peer", "--output=json", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenses.json"
-    ), await ke("2️⃣  Generate 'licenses.md' file", "license-report", ["--config", "license-report-config.json", "--only=prod,peer", "--output=markdown"], "licenses.md"), await ke("3️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "./licenses.json", "--output=table", ...i]), t ? (await ke(
+    ), await ve(
+      "2️⃣  Generate 'licenses.md' file",
+      "license-report",
+      ["--config", "licenses/license-report-config.json", "--only=prod,peer", "--output=markdown"],
+      "licenses.md"
+    ), await ve("3️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "./licenses.json", "--output=table", ...i]), t ? (await ve(
       "4️⃣  Generate 'licenseTree.json' file",
       "license-report-recursive",
-      ["--only=prod,peer", "--output=tree", " --recurse", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
+      ["--only=prod,peer", "--output=tree", "--recurse", "--department.value=n/a", "--licensePeriod=n/a", "--material=n/a", "--relatedTo.value=n/a"],
       "licenseTree.json"
-    ), await ke("5️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...i])) : (se("4️⃣  Skip 'licenseTree.json' file generate"), se("5️⃣  Skip 'licenseTree.json' file check")), await Xh("6️⃣"), Fe("Dependencies documented.");
+    ), await ve("5️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...i])) : (se("4️⃣  Skip 'licenseTree.json' file generate"), se("5️⃣  Skip 'licenseTree.json' file check")), await ve("6️⃣  Download license files", "license-downloader", ["--source", "./licenses.json", "--licDir", "./licenses", "--download"]), await Xh("7️⃣"), Fe("Dependencies documented.");
   } catch (i) {
     console.error("❌ Error documenting dependencies.", i), process.exit(1);
   }

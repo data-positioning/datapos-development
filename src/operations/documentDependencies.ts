@@ -25,7 +25,12 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
             'licenses.json'
         );
 
-        await execCommand("2️⃣  Generate 'licenses.md' file", 'license-report', ['--config', 'license-report-config.json', '--only=prod,peer', '--output=markdown'], 'licenses.md');
+        await execCommand(
+            "2️⃣  Generate 'licenses.md' file",
+            'license-report',
+            ['--config', 'licenses/license-report-config.json', '--only=prod,peer', '--output=markdown'],
+            'licenses.md'
+        );
 
         await execCommand("3️⃣  Check 'licenses.json' file", 'license-report-check', ['--source', './licenses.json', '--output=table', ...allowedFlags]);
 
@@ -33,7 +38,7 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
             await execCommand(
                 "4️⃣  Generate 'licenseTree.json' file",
                 'license-report-recursive',
-                ['--only=prod,peer', '--output=tree', ' --recurse', '--department.value=n/a', '--licensePeriod=n/a', '--material=n/a', '--relatedTo.value=n/a'],
+                ['--only=prod,peer', '--output=tree', '--recurse', '--department.value=n/a', '--licensePeriod=n/a', '--material=n/a', '--relatedTo.value=n/a'],
                 'licenseTree.json'
             );
 
@@ -43,7 +48,9 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
             logStepHeader("5️⃣  Skip 'licenseTree.json' file check");
         }
 
-        await insertLicensesIntoReadme('6️⃣');
+        await execCommand('6️⃣  Download license files', 'license-downloader', ['--source', './licenses.json', '--licDir', './licenses', '--download']);
+
+        await insertLicensesIntoReadme('7️⃣');
 
         logOperationSuccess('Dependencies documented.');
     } catch (error) {

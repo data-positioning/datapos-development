@@ -7996,13 +7996,13 @@ async function il(e, t) {
       return w.values();
     })()
   ];
-  let o = `|Name|Type|Installed|Latest|Latest Age|Deps|Document|
+  let o = `|Name|Type|Installed|Latest|Latest Update|Deps|Document|
 |:-|:-|:-:|:-:|:-|-:|:-|
 `;
   for (const w of y) {
     const C = w.installedVersion === w.remoteVersion ? w.installedVersion : `${w.installedVersion} ⚠️`, j = w.latestRemoteModified ? rl(w.latestRemoteModified.split("T")[0]) : "n/a", Z = w.dependencyCount != null && w.dependencyCount >= 0 ? w.dependencyCount : "n/a";
     let pe;
-    w.licenseFileLink == null || w.licenseFileLink == "" ? pe = "No license file ⚠️" : pe = `[${w.licenseFileLink.slice(Math.max(0, w.licenseFileLink.lastIndexOf("/") + 1))}](${w.licenseFileLink})`, o += `|${w.name}|${w.licenseType}|${C}|${w.remoteVersion}|${j}|${Z}|${pe}|
+    w.licenseFileLink == null || w.licenseFileLink == "" ? pe = "⚠️ No license file" : pe = `[${w.licenseFileLink.slice(Math.max(0, w.licenseFileLink.lastIndexOf("/") + 1))}](${w.licenseFileLink})`, o += `|${w.name}|${w.licenseType}|${C}|${w.remoteVersion}|${j}|${Z}|${pe}|
 `;
   }
   const S = `${i.slice(0, Math.max(0, r + kr.length))}
@@ -8016,7 +8016,7 @@ function rl(e) {
   if (t == null || t === "") return "n/a";
   const i = new Date(t), r = /* @__PURE__ */ new Date();
   let n = (r.getFullYear() - i.getFullYear()) * 12 + (r.getMonth() - i.getMonth());
-  return r.getDate() < i.getDate() && (n -= 1), n === 0 ? `current month - ${t}` : n === 1 ? `1 month ago - ${t}` : n <= 3 ? `${n} months ago - ${t}` : n <= 6 ? `${n} months ago - ${t} ⚠️` : `${n} months ago - ${t} ❗`;
+  return r.getDate() < i.getDate() && (n -= 1), n === 0 ? `current month - ${t}` : n === 1 ? `1 month ago - ${t}` : n <= 6 ? `${n} months ago - ${t}` : n <= 12 ? `${n} months ago - ${t} ⚠️` : `${n} months ago - ${t} ❗`;
 }
 async function xl() {
   try {

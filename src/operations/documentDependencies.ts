@@ -122,7 +122,7 @@ async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolea
         })()
     ];
 
-    let licensesContent = '|Name|Type|Installed|Latest|Latest Age|Deps|Document|\n|:-|:-|:-:|:-:|:-|-:|:-|\n';
+    let licensesContent = '|Name|Type|Installed|Latest|Latest Update|Deps|Document|\n|:-|:-|:-:|:-:|:-|-:|:-|\n';
     for (const license of mergedLicenses) {
         const installedVersion = license.installedVersion === license.remoteVersion ? license.installedVersion : `${license.installedVersion} ⚠️`;
 
@@ -132,7 +132,7 @@ async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolea
 
         let licenseLink;
         if (license.licenseFileLink == null || license.licenseFileLink == '') {
-            licenseLink = 'No license file ⚠️';
+            licenseLink = '⚠️ No license file';
         } else {
             const lastPart = license.licenseFileLink.slice(Math.max(0, license.licenseFileLink.lastIndexOf('/') + 1));
             licenseLink = `[${lastPart}](${license.licenseFileLink})`;
@@ -159,8 +159,8 @@ function determineLatestAge(momentString?: string): string {
 
     if (months === 0) return `current month - ${dateString}`;
     if (months === 1) return `1 month ago - ${dateString}`;
-    if (months <= 3) return `${months} months ago - ${dateString}`;
-    if (months <= 6) return `${months} months ago - ${dateString} ⚠️`;
+    if (months <= 6) return `${months} months ago - ${dateString}`;
+    if (months <= 12) return `${months} months ago - ${dateString} ⚠️`;
     return `${months} months ago - ${dateString} ❗`;
 }
 

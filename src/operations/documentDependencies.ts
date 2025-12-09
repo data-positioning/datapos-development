@@ -25,7 +25,7 @@ interface License {
     author: string;
     latestRemoteModified: string;
     requires?: License[];
-    dependencyCount: number;
+    dependencyCount?: number;
     licenseFileLink?: string;
 }
 
@@ -105,12 +105,12 @@ async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolea
             const byName = new Map<string, License>();
 
             for (const license of productionPackageLicenses) {
-                byName.set(license.name, { ...license, dependencyCount: 0 });
+                byName.set(license.name, { ...license });
             }
 
             for (const license of productionDownloadLicenses) {
                 const existing = byName.get(license.name);
-                byName.set(license.name, existing ? { ...existing, ...license } : { ...license, dependencyCount: 0 });
+                byName.set(license.name, existing ? { ...existing, ...license } : { ...license });
             }
 
             for (const license of productionPackageLicenseTree) {
@@ -124,18 +124,21 @@ async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolea
 
     let licensesContent = '|Name|Type|Installed|Latest|Latest Age|Deps|Document|\n|:-|:-|:-:|:-:|:-|-:|:-|\n';
     for (const license of mergedLicenses) {
-        const installedVersion = license.installedVersion === license.remoteVersion ? license.installedVersion : `<span style="color:#EF6C00">${license.installedVersion}</span>`;
+        const installedVersion = license.installedVersion === license.remoteVersion ? license.installedVersion : `${license.installedVersion} ⚠️`;
 
         const latestUpdate = license.latestRemoteModified ? determineLatestAge(license.latestRemoteModified.split('T')[0]) : 'n/a';
 
+        const dependencyCount = license.dependencyCount != null && license.dependencyCount >= 0 ? license.dependencyCount : 'n/a';
+
         let licenseLink;
         if (license.licenseFileLink == null || license.licenseFileLink == '') {
-            licenseLink = '⚠️ No license file.';
+            licenseLink = 'No license file ⚠️';
         } else {
             const lastPart = license.licenseFileLink.slice(Math.max(0, license.licenseFileLink.lastIndexOf('/') + 1));
             licenseLink = `[${lastPart}](${license.licenseFileLink})`;
         }
-        licensesContent += `|${license.name}|${license.licenseType}|${installedVersion}|${license.remoteVersion}|${latestUpdate}|${license.dependencyCount}|${licenseLink}|\n`;
+
+        licensesContent += `|${license.name}|${license.licenseType}|${installedVersion}|${license.remoteVersion}|${latestUpdate}|${dependencyCount}|${licenseLink}|\n`;
     }
 
     const newContent = `${readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length))}\n${licensesContent}\n${readmeContent.slice(Math.max(0, endIndex))}`;
@@ -154,14 +157,11 @@ function determineLatestAge(momentString?: string): string {
     let months = (now.getFullYear() - input.getFullYear()) * 12 + (now.getMonth() - input.getMonth());
     if (now.getDate() < input.getDate()) months -= 1;
 
-    const yearMonthString = dateString.slice(0, 7);
-    if (months === 0) return `${yearMonthString} •  <span style="color: #616161">current month</span>`;
-    if (months === 1) return `${yearMonthString} • <span style="color: #616161">1 month ago</span>`;
-    if (months <= 3) return `${yearMonthString} • <span style="color: #616161">${months} months ago</span>`;
-    if (months <= 6) return `${yearMonthString} • <span style="color: #6D8C31">${months} months ago</span>`;
-    if (months <= 9) return `${yearMonthString} • <span style="color: #FBC02D">${months} months ago</span>`;
-    if (months <= 12) return `${yearMonthString} • <span style="color: #EF6C00">${months} months ago</span>`;
-    return `${yearMonthString} • <span style="color: #D32F2F">${months} months ago</span>`;
+    if (months === 0) return `current month - ${dateString}`;
+    if (months === 1) return `1 month ago - ${dateString}`;
+    if (months <= 3) return `${months} months ago - ${dateString}`;
+    if (months <= 6) return `${months} months ago - ${dateString} ⚠️`;
+    return `${months} months ago - ${dateString} ❗`;
 }
 
 export { documentDependencies };

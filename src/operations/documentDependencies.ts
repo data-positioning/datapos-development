@@ -24,6 +24,8 @@ interface License {
     definedVersion: string;
     author: string;
     latestRemoteModified: string;
+    requires?: License[];
+    dependencyCount: number;
     licenseFileLink?: string;
 }
 
@@ -70,7 +72,7 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
 
         await execCommand('5️⃣  Download license files', 'license-downloader', ['--source', './licenses.json', '--licDir', './licenses', '--download']);
 
-        await insertLicensesIntoReadme('6️⃣');
+        await insertLicensesIntoReadme('6️⃣', checkRecursive);
 
         logOperationSuccess('Dependencies documented.');
     } catch (error) {
@@ -80,7 +82,7 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
 }
 
 // Helpers - Insert licenses into README file.
-async function insertLicensesIntoReadme(stepIcon: string): Promise<void> {
+async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolean): Promise<void> {
     logStepHeader(`${stepIcon}  Insert licenses into 'README.md'`);
 
     //! const licensesContent = await readTextFile('./licenses.md');
@@ -95,25 +97,37 @@ async function insertLicensesIntoReadme(stepIcon: string): Promise<void> {
 
     const productionPackageLicenses = await readJSONFile<License[]>('licenses.json');
     const productionDownloadLicenses = await readJSONFile<License[]>('licenses/licenses.ext.json');
+    let productionPackageLicenseTree: License[] = [];
+    if (checkRecursive) productionPackageLicenseTree = await readJSONFile<License[]>('licenseTree.json');
+
     const mergedLicenses = [
         ...((): MapIterator<License> => {
             const byName = new Map<string, License>();
 
             for (const license of productionPackageLicenses) {
-                byName.set(license.name, { ...license });
+                byName.set(license.name, { ...license, dependencyCount: 0 });
             }
 
             for (const license of productionDownloadLicenses) {
                 const existing = byName.get(license.name);
-                byName.set(license.name, existing ? { ...existing, ...license } : { ...license });
+                byName.set(license.name, existing ? { ...existing, ...license } : { ...license, dependencyCount: 0 });
+            }
+
+            for (const license of productionPackageLicenseTree) {
+                const existing = byName.get(license.name);
+                if (existing) byName.set(license.name, { ...existing, dependencyCount: license.requires?.length ?? 0 });
             }
 
             return byName.values();
         })()
     ];
 
-    let licensesContent = '|Name|Type|Installed|Latest|Latest Date|Document|\n|:-|:-:|:-:|:-:|:-|:-|\n';
+    let licensesContent = '|Name|Type|Installed|Latest|Latest Age|Deps|Document|\n|:-|:-|:-:|:-:|:-|-:|:-|\n';
     for (const license of mergedLicenses) {
+        const installedVersion = license.installedVersion === license.remoteVersion ? license.installedVersion : `<span style="color:#EF6C00">${license.installedVersion}</span>`;
+
+        const latestUpdate = license.latestRemoteModified ? determineLatestAge(license.latestRemoteModified.split('T')[0]) : 'n/a';
+
         let licenseLink;
         if (license.licenseFileLink == null || license.licenseFileLink == '') {
             licenseLink = '⚠️ No license file.';
@@ -121,11 +135,33 @@ async function insertLicensesIntoReadme(stepIcon: string): Promise<void> {
             const lastPart = license.licenseFileLink.slice(Math.max(0, license.licenseFileLink.lastIndexOf('/') + 1));
             licenseLink = `[${lastPart}](${license.licenseFileLink})`;
         }
-        licensesContent += `|${license.name}|${license.licenseType}|${license.installedVersion}|${license.remoteVersion}|${license.latestRemoteModified.split('T')[0]}|${licenseLink}|\n`;
+        licensesContent += `|${license.name}|${license.licenseType}|${installedVersion}|${license.remoteVersion}|${latestUpdate}|${license.dependencyCount}|${licenseLink}|\n`;
     }
 
     const newContent = `${readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length))}\n${licensesContent}\n${readmeContent.slice(Math.max(0, endIndex))}`;
     await writeTextFile('README.md', newContent);
+}
+
+// Helpers
+function determineLatestAge(momentString?: string): string {
+    if (momentString == null || momentString === '') return 'n/a';
+
+    const dateString = momentString.split('T')[0];
+    if (dateString == null || dateString === '') return 'n/a';
+
+    const input = new Date(dateString);
+    const now = new Date();
+    let months = (now.getFullYear() - input.getFullYear()) * 12 + (now.getMonth() - input.getMonth());
+    if (now.getDate() < input.getDate()) months -= 1;
+
+    const yearMonthString = dateString.slice(0, 7);
+    if (months === 0) return `${yearMonthString} •  <span style="color: #616161">current month</span>`;
+    if (months === 1) return `${yearMonthString} • <span style="color: #616161">1 month ago</span>`;
+    if (months <= 3) return `${yearMonthString} • <span style="color: #616161">${months} months ago</span>`;
+    if (months <= 6) return `${yearMonthString} • <span style="color: #6D8C31">${months} months ago</span>`;
+    if (months <= 9) return `${yearMonthString} • <span style="color: #FBC02D">${months} months ago</span>`;
+    if (months <= 12) return `${yearMonthString} • <span style="color: #EF6C00">${months} months ago</span>`;
+    return `${yearMonthString} • <span style="color: #D32F2F">${months} months ago</span>`;
 }
 
 export { documentDependencies };

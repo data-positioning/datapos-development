@@ -1,5 +1,5 @@
 /**
- * Audit dependencies operations
+ * Audit dependencies utilities.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -38,7 +38,7 @@ const SEVERITY_BADGES: Record<keyof SeverityCounts, BadgeConfig> = {
 const START_MARKER = '<!-- OWASP_BADGES_START -->';
 const END_MARKER = '<!-- OWASP_BADGES_END -->';
 
-// Operations - Audit dependencies.
+// Utilities - Audit dependencies.
 async function auditDependencies(): Promise<void> {
     try {
         logOperationHeader('Audit Dependencies');
@@ -127,4 +127,5 @@ async function buildOWASPBadges(severityCounts: SeverityCounts): Promise<string[
     return badges;
 }
 
+// Exposures
 export { auditDependencies };

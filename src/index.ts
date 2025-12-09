@@ -1,5 +1,5 @@
 /**
- * Development operations.
+ * Development utilities.
  */
 
 /* eslint-disable security/detect-non-literal-fs-filename */
@@ -8,7 +8,7 @@
 import { promises as fs } from 'node:fs';
 import { nanoid } from 'nanoid';
 
-/// Interfaces/Types - Directory entry.
+// Interfaces/Types - Directory entry.
 interface DirectoryEntry {
     name: string;
     typeId: 'folder' | 'object';
@@ -24,8 +24,8 @@ interface DirectoryObjectEntry extends DirectoryEntry {
     typeId: 'object';
 }
 
-// Operations - Build public directory index.
-async function buildPublicDirectoryIndex(id: string): Promise<void> {
+// Utilities - Build directory index.
+async function buildDirectoryIndex(id: string): Promise<void> {
     try {
         console.info(`🚀 Building public directory index for identifier '${id}'...`);
         const index: Record<string, DirectoryEntry[]> = {};
@@ -67,8 +67,8 @@ async function buildPublicDirectoryIndex(id: string): Promise<void> {
     }
 }
 
-// Exposures - Operations.
-export { buildPublicDirectoryIndex };
+// Exposures
+export { buildDirectoryIndex };
 
 export { buildProject, releaseProject, syncProjectWithGitHub, testProject } from './operations/manageProject';
 export { auditDependencies } from './operations/auditDependencies';

@@ -1,8 +1,8 @@
 /**
- * Development operations.
+ * Development utilities.
  */
-declare function buildPublicDirectoryIndex(id: string): Promise<void>;
-export { buildPublicDirectoryIndex };
+declare function buildDirectoryIndex(id: string): Promise<void>;
+export { buildDirectoryIndex };
 export { buildProject, releaseProject, syncProjectWithGitHub, testProject } from './operations/manageProject';
 export { auditDependencies } from './operations/auditDependencies';
 export { checkDependencies } from './operations/checkDependencies';

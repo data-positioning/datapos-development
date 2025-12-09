@@ -1,5 +1,5 @@
 /**
- * Audit dependencies operations
+ * Audit dependencies utilities.
  */
 export interface SeverityCounts {
     critical: number;

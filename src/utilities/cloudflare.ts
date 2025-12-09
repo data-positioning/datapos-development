@@ -1,5 +1,5 @@
 /**
- * Utilities.
+ * Cloudflare utilities.
  */
 
 // Dependencies - Vendor.

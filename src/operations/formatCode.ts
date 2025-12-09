@@ -1,5 +1,5 @@
 /**
- * Format code operation.
+ * Format code utilities.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -7,7 +7,7 @@
 // Dependencies - Framework.
 import { logOperationHeader, logOperationSuccess, spawnCommand } from '../utilities';
 
-// Operations - Format.
+// Utilities - Format.
 async function formatCode(): Promise<void> {
     try {
         logOperationHeader('Format Code');
@@ -21,4 +21,5 @@ async function formatCode(): Promise<void> {
     }
 }
 
+// Exposures
 export { formatCode };

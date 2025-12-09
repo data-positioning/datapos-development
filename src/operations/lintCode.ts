@@ -1,5 +1,5 @@
 /**
- * Lint code operation.
+ * Lint code utilities.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -7,7 +7,7 @@
 // Dependencies - Framework.
 import { logOperationHeader, logOperationSuccess, spawnCommand } from '../utilities';
 
-// Operations - Lint code.
+// Utilities - Lint code.
 async function lintCode(): Promise<void> {
     try {
         logOperationHeader('Lint Code');
@@ -21,4 +21,5 @@ async function lintCode(): Promise<void> {
     }
 }
 
+// Exposures
 export { lintCode };

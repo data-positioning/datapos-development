@@ -1,5 +1,5 @@
 /**
- * Check dependencies operation.
+ * Check dependencies utilities.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -7,7 +7,7 @@
 // Dependencies - Framework.
 import { logOperationHeader, logOperationSuccess, spawnCommand } from '../utilities';
 
-// Operations - Check dependencies.
+// Utilities - Check dependencies.
 async function checkDependencies(): Promise<void> {
     try {
         logOperationHeader('Check Dependencies');
@@ -23,4 +23,5 @@ async function checkDependencies(): Promise<void> {
     }
 }
 
+// Exposures
 export { checkDependencies };

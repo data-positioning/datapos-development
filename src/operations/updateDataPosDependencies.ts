@@ -1,5 +1,5 @@
 /**
- * Update datapos dependencies operation.
+ * Update datapos dependencies utilities.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -27,4 +27,5 @@ async function updateDataPosDependencies(dependencies: string[] = []): Promise<v
     }
 }
 
+// Exposures
 export { updateDataPosDependencies };

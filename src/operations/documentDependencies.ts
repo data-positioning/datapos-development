@@ -1,5 +1,5 @@
 /**
- * Document dependencies operation.
+ * Document dependencies utilities.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -33,7 +33,7 @@ interface License {
 const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
 const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
 
-// Operations - Document.
+// Utilities - Document.
 async function documentDependencies(licenses: string[] = [], checkRecursive = true): Promise<void> {
     try {
         logOperationHeader('Document Dependencies');
@@ -51,26 +51,26 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
             "1️⃣  Generate 'licenses.json' file",
             'license-report',
             ['--config', `'${licenseReportConfigPath}'`, '--only=prod,peer', '--output=json'],
-            'licenses.json'
+            'licenses/licenses.json'
         );
 
-        await execCommand("2️⃣  Check 'licenses.json' file", 'license-report-check', ['--source', './licenses.json', '--output=table', ...allowedFlags]);
+        await execCommand("2️⃣  Check 'licenses.json' file", 'license-report-check', ['--source', 'licenses/licenses.json', '--output=table', ...allowedFlags]);
 
         if (checkRecursive) {
             await execCommand(
                 "3️⃣  Generate 'licenseTree.json' file",
                 'license-report-recursive',
                 ['--only=prod,peer', '--output=tree', '--recurse', '--department.value=n/a', '--licensePeriod.value=n/a', '--material.value=n/a', '--relatedTo.value=n/a'],
-                'licenseTree.json'
+                'licenses/licenseTree.json'
             );
 
-            await execCommand("4️⃣  Check 'licenseTree.json' file", 'license-report-check', ['--source', './licenseTree.json', '--output=table', ...allowedFlags]);
+            await execCommand("4️⃣  Check 'licenseTree.json' file", 'license-report-check', ['--source', 'licenses/licenseTree.json', '--output=table', ...allowedFlags]);
         } else {
-            logStepHeader("3️⃣  Skip 'licenseTree.json' file generate");
-            logStepHeader("4️⃣  Skip 'licenseTree.json' file check");
+            logStepHeader("3️⃣  Skip 'licenses/licenseTree.json' file generate");
+            logStepHeader("4️⃣  Skip 'licenses/licenseTree.json' file check");
         }
 
-        await execCommand('5️⃣  Download license files', 'license-downloader', ['--source', './licenses.json', '--licDir', './licenses', '--download']);
+        await execCommand('5️⃣  Download license files', 'license-downloader', ['--source', 'licenses/licenses.json', '--licDir', 'licenses/downloads', '--download']);
 
         await insertLicensesIntoReadme('6️⃣', checkRecursive);
 
@@ -95,10 +95,10 @@ async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolea
         return;
     }
 
-    const productionPackageLicenses = await readJSONFile<License[]>('licenses.json');
-    const productionDownloadLicenses = await readJSONFile<License[]>('licenses/licenses.ext.json');
+    const productionPackageLicenses = await readJSONFile<License[]>('licenses/licenses.json');
+    const productionDownloadLicenses = await readJSONFile<License[]>('licenses/downloads/licenses.ext.json');
     let productionPackageLicenseTree: License[] = [];
-    if (checkRecursive) productionPackageLicenseTree = await readJSONFile<License[]>('licenseTree.json');
+    if (checkRecursive) productionPackageLicenseTree = await readJSONFile<License[]>('licenses/licenseTree.json');
 
     const mergedLicenses = [
         ...((): MapIterator<License> => {
@@ -122,7 +122,7 @@ async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolea
         })()
     ];
 
-    let licensesContent = '|Name|Type|Installed|Latest|Latest Update|Deps|Document|\n|:-|:-|:-:|:-:|:-|-:|:-|\n';
+    let licensesContent = '|Name|Type|Installed|Latest|Latest Updated|Deps|Document|\n|:-|:-|:-:|:-:|:-|-:|:-|\n';
     for (const license of mergedLicenses) {
         const installedVersion = license.installedVersion === license.remoteVersion ? license.installedVersion : `${license.installedVersion} ⚠️`;
 
@@ -157,11 +157,12 @@ function determineLatestAge(momentString?: string): string {
     let months = (now.getFullYear() - input.getFullYear()) * 12 + (now.getMonth() - input.getMonth());
     if (now.getDate() < input.getDate()) months -= 1;
 
-    if (months === 0) return `current month - ${dateString}`;
+    if (months === 0) return `this month - ${dateString}`;
     if (months === 1) return `1 month ago - ${dateString}`;
     if (months <= 6) return `${months} months ago - ${dateString}`;
     if (months <= 12) return `${months} months ago - ${dateString} ⚠️`;
-    return `${months} months ago - ${dateString} ❗`;
+    return `${months} months ago - ${dateString}❗`;
 }
 
+// Exposures
 export { documentDependencies };

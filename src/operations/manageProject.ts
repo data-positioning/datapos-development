@@ -1,5 +1,5 @@
 /**
- * Manage project operation.
+ * Manage project utilities.
  */
 
 /* eslint-disable unicorn/no-process-exit */
@@ -38,7 +38,7 @@ import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '../utilities
 // Interfaces/Types
 type PackageTypeId = 'api' | 'app' | 'connector' | 'context' | 'dev' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool' | 'other';
 
-// Operations - Build project.
+// Utilities - Build project.
 async function buildProject(): Promise<void> {
     try {
         logOperationHeader('Build Project');
@@ -51,7 +51,7 @@ async function buildProject(): Promise<void> {
         process.exit(1);
     }
 }
-// Operations - Release project.
+// Utilities - Release project.
 async function releaseProject(): Promise<void> {
     try {
         logOperationHeader('Release Project');
@@ -123,7 +123,7 @@ async function releaseProject(): Promise<void> {
     }
 }
 
-// Operations - Synchronise project with GitHub.
+// Utilities - Synchronise project with GitHub.
 async function syncProjectWithGitHub(): Promise<void> {
     try {
         logOperationHeader('Synchronise Project with GitHub');
@@ -146,7 +146,7 @@ async function syncProjectWithGitHub(): Promise<void> {
     }
 }
 
-// Operations - Test project.
+// Utilities - Test project.
 function testProject(): void {
     try {
         logOperationHeader('Test Project');
@@ -168,7 +168,7 @@ async function buildProjectConfig(stepIcon: string, packageJSON: PackageJson): P
     await writeJSONFile('config.json', configJSON);
 }
 
-// Operations - Build connector project configuration.
+// Utilities - Build connector project configuration.
 async function buildConnectorProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<void> {
     logStepHeader(`${stepIcon}  Build connector project configuration`);
 
@@ -200,7 +200,7 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
     await writeJSONFile('config.json', configJSON);
 }
 
-// Operations - Build context project configuration.
+// Utilities - Build context project configuration.
 async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<void> {
     logStepHeader(`${stepIcon}  Build context project configuration`);
 
@@ -226,7 +226,7 @@ async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJ
     await writeJSONFile('config.json', configJSON);
 }
 
-// Operations - Build presenter project configuration.
+// Utilities - Build presenter project configuration.
 async function buildPresenterProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<void> {
     logStepHeader(`${stepIcon}  Build presenter project configuration`);
 
@@ -317,4 +317,5 @@ function determinePackageTypeId(packageJSON: PackageJson): PackageTypeId {
     else return 'other';
 }
 
+// Exposures
 export { buildProject, releaseProject, syncProjectWithGitHub, testProject };

@@ -1,5 +1,5 @@
 /**
- * Manage project operation.
+ * Manage project utilities.
  */
 declare function buildProject(): Promise<void>;
 declare function releaseProject(): Promise<void>;

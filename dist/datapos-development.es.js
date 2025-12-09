@@ -7959,13 +7959,13 @@ async function vl(e = [], t = !0) {
       "1️⃣  Generate 'licenses.json' file",
       "license-report",
       ["--config", `'${r}'`, "--only=prod,peer", "--output=json"],
-      "licenses.json"
-    ), await we("2️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "./licenses.json", "--output=table", ...i]), t ? (await we(
+      "licenses/licenses.json"
+    ), await we("2️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "licenses/licenses.json", "--output=table", ...i]), t ? (await we(
       "3️⃣  Generate 'licenseTree.json' file",
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", "--recurse", "--department.value=n/a", "--licensePeriod.value=n/a", "--material.value=n/a", "--relatedTo.value=n/a"],
-      "licenseTree.json"
-    ), await we("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "./licenseTree.json", "--output=table", ...i])) : (re("3️⃣  Skip 'licenseTree.json' file generate"), re("4️⃣  Skip 'licenseTree.json' file check")), await we("5️⃣  Download license files", "license-downloader", ["--source", "./licenses.json", "--licDir", "./licenses", "--download"]), await il("6️⃣", t), $e("Dependencies documented.");
+      "licenses/licenseTree.json"
+    ), await we("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "licenses/licenseTree.json", "--output=table", ...i])) : (re("3️⃣  Skip 'licenses/licenseTree.json' file generate"), re("4️⃣  Skip 'licenses/licenseTree.json' file check")), await we("5️⃣  Download license files", "license-downloader", ["--source", "licenses/licenses.json", "--licDir", "licenses/downloads", "--download"]), await il("6️⃣", t), $e("Dependencies documented.");
   } catch (i) {
     console.error("❌ Error documenting dependencies.", i), process.exit(1);
   }
@@ -7977,9 +7977,9 @@ async function il(e, t) {
     console.error("❌ No dependency license markers found in 'README.md'.");
     return;
   }
-  const u = await ce("licenses.json"), h = await ce("licenses/licenses.ext.json");
+  const u = await ce("licenses/licenses.json"), h = await ce("licenses/downloads/licenses.ext.json");
   let d = [];
-  t && (d = await ce("licenseTree.json"));
+  t && (d = await ce("licenses/licenseTree.json"));
   const y = [
     ...(() => {
       const w = /* @__PURE__ */ new Map();
@@ -7996,7 +7996,7 @@ async function il(e, t) {
       return w.values();
     })()
   ];
-  let o = `|Name|Type|Installed|Latest|Latest Update|Deps|Document|
+  let o = `|Name|Type|Installed|Latest|Latest Updated|Deps|Document|
 |:-|:-|:-:|:-:|:-|-:|:-|
 `;
   for (const w of y) {
@@ -8016,7 +8016,7 @@ function rl(e) {
   if (t == null || t === "") return "n/a";
   const i = new Date(t), r = /* @__PURE__ */ new Date();
   let n = (r.getFullYear() - i.getFullYear()) * 12 + (r.getMonth() - i.getMonth());
-  return r.getDate() < i.getDate() && (n -= 1), n === 0 ? `current month - ${t}` : n === 1 ? `1 month ago - ${t}` : n <= 6 ? `${n} months ago - ${t}` : n <= 12 ? `${n} months ago - ${t} ⚠️` : `${n} months ago - ${t} ❗`;
+  return r.getDate() < i.getDate() && (n -= 1), n === 0 ? `this month - ${t}` : n === 1 ? `1 month ago - ${t}` : n <= 6 ? `${n} months ago - ${t}` : n <= 12 ? `${n} months ago - ${t} ⚠️` : `${n} months ago - ${t}❗`;
 }
 async function xl() {
   try {
@@ -8081,8 +8081,8 @@ async function _l(e) {
 }
 export {
   ml as auditDependencies,
+  _l as buildDirectoryIndex,
   ll as buildProject,
-  _l as buildPublicDirectoryIndex,
   yl as checkDependencies,
   vl as documentDependencies,
   xl as formatCode,

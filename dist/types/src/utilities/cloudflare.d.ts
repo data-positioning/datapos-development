@@ -1,5 +1,5 @@
 /**
- * Utilities.
+ * Cloudflare utilities.
  */
 declare function putState(): Promise<void>;
 declare function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void>;

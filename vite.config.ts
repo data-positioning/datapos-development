@@ -23,9 +23,9 @@ export default defineConfig({
         rollupOptions: {
             external: ['@datapos/datapos-shared', 'dotenv', 'nanoid', 'node:child_process', 'node:fs', 'node:readline', 'node:url', 'node:util'], // Keep runtime deps out of bundle.
             plugins: [
-                Sonda({ filename: 'sonda', format: 'html', gzip: true, brotli: true, open: false, outputDir: '.' }), // Run Sonda analyser to generate additional bundle insights.
+                Sonda({ filename: 'index', format: 'html', gzip: true, brotli: true, open: false, outputDir: './bundle-reports/sonda' }), // Run Sonda analyser to generate additional bundle insights.
                 visualizer({
-                    filename: 'stats.html', // Write report to stats.html in project root.
+                    filename: './bundle-reports/rollup-visualiser/index.html',
                     open: false, // Do not auto-open browser post-build.
                     gzipSize: true, // Display gzip sizes.
                     brotliSize: true // Display brotli sizes.

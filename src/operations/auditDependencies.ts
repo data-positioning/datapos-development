@@ -48,7 +48,7 @@ async function auditDependencies(): Promise<void> {
 
         await spawnCommand('1️⃣', 'owasp-dependency-check', [
             '--out',
-            '.',
+            'dependency-check-reports',
             '--project',
             packageJSON.name ?? 'unknown',
             '--enableRetired',
@@ -72,7 +72,7 @@ async function auditDependencies(): Promise<void> {
 async function insertOWASPDependencyCheckBadgeIntoReadme(stepIcon: string): Promise<void> {
     logStepHeader(`${stepIcon}  Insert OWASP Badge(s) into 'README.md'`);
 
-    const dependencyCheckData = await readJSONFile<DependencyCheckData>('./dependency-check-report.json');
+    const dependencyCheckData = await readJSONFile<DependencyCheckData>('dependency-check-reports/dependency-check-report.json');
     const severityCounts: SeverityCounts = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
     for (const dependency of dependencyCheckData.dependencies) {
         if (dependency.vulnerabilities == null) continue;

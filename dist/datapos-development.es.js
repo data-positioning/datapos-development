@@ -7897,7 +7897,7 @@ async function ml() {
     const e = await ce("package.json");
     await Ie("1️⃣", "owasp-dependency-check", [
       "--out",
-      ".",
+      "dependency-check-reports",
       "--project",
       e.name ?? "unknown",
       "--enableRetired",
@@ -7911,7 +7911,7 @@ async function ml() {
 }
 async function Qh(e) {
   re(`${e}  Insert OWASP Badge(s) into 'README.md'`);
-  const t = await ce("./dependency-check-report.json"), i = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
+  const t = await ce("dependency-check-reports/dependency-check-report.json"), i = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
   for (const o of t.dependencies)
     if (o.vulnerabilities != null)
       for (const S of o.vulnerabilities) {

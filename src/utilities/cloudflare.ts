@@ -3,7 +3,6 @@
  */
 
 // Dependencies - Vendor.
-import { promises as fs } from 'node:fs';
 import type { ObjectEncodingOptions } from 'node:fs';
 import type { PackageJson } from 'type-fest';
 
@@ -45,9 +44,7 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
 }
 
 // Utilities - Upload module configuration to Cloudflare 'state' durable object.
-async function uploadModuleConfigToDO(): Promise<void> {
-    // TODO: Pass configJSON as argument.
-    const configJSON = await readJSONFile<ModuleConfig>('config.json');
+async function uploadModuleConfigToDO(configJSON: ModuleConfig): Promise<void> {
     const stateId = configJSON.id;
     const options = {
         body: JSON.stringify(configJSON),
@@ -59,9 +56,7 @@ async function uploadModuleConfigToDO(): Promise<void> {
 }
 
 // Utilities - Upload module to Cloudflare R2.
-async function uploadModuleToR2(uploadDirectoryPath: string): Promise<void> {
-    // TODO: Pass packageJSON as argument.
-    const packageJSON = JSON.parse(await fs.readFile('package.json', 'utf8')) as PackageJson;
+async function uploadModuleToR2(packageJSON: PackageJson, uploadDirectoryPath: string): Promise<void> {
     const version = `v${packageJSON.version}`;
     async function uploadDirectory(currentDirectory: string, prefix = ''): Promise<void> {
         const entries = await getDirectoryEntries(currentDirectory, { withFileTypes: true } as ObjectEncodingOptions);

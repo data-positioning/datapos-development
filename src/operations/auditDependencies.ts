@@ -54,7 +54,7 @@ async function auditDependencies(): Promise<void> {
             '--enableRetired',
             '--nodePackageSkipDevDependencies',
             '--nvdApiKey',
-            process.env.NVD_API_KEY ?? ''
+            process.env.OWASP_NVD_API_KEY ?? ''
         ]);
 
         await insertOWASPDependencyCheckBadgeIntoReadme('2️⃣');

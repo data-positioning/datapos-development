@@ -91,15 +91,15 @@ async function releaseProject(): Promise<void> {
             await putState();
         } else if (packageTypeId === 'engine') {
             logStepHeader('7️⃣  Register module');
-            await uploadModuleConfigToDO();
-            await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}`);
+            await uploadModuleConfigToDO(configJSON);
+            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleGroupName}`);
         } else if (moduleGroupName === undefined) {
             logStepHeader('7️⃣  Registration NOT required.');
         } else {
             logStepHeader('7️⃣  Register module');
-            await uploadModuleConfigToDO();
+            await uploadModuleConfigToDO(configJSON);
             const moduleTypeName = configJSON.id.split('-').slice(2).join('-');
-            await uploadModuleToR2(`datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
+            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
         }
 
         // TODO: Convert this to a map.
@@ -304,17 +304,24 @@ function determineModuleGroupName(packageTypeId: PackageTypeId): string | undefi
 // Helpers - Determine package type identifier.
 function determinePackageTypeId(packageJSON: PackageJson): PackageTypeId {
     const packageName = packageJSON.name ?? '';
-    if (packageName === 'datapos-app') return 'app';
-    else if (packageName === 'datapos-api') return 'api';
-    else if (packageName === 'datapos-engine') return 'engine';
-    else if (packageName === '@datapos/datapos-shared') return 'shared';
-    else if (packageName === '@datapos/datapos-development')
-        return 'dev'; // TODO: See '@datapos/' prefix. Needed in other tests?
-    else if (packageName.includes('datapos-connector')) return 'connector';
-    else if (packageName.includes('datapos-context')) return 'context';
-    else if (packageName.includes('datapos-presenter')) return 'presenter';
-    else if (packageName.includes('datapos-tool')) return 'tool';
-    else return 'other';
+    switch (packageName) {
+        case 'datapos-app':
+            return 'app';
+        case 'datapos-api':
+            return 'api';
+        case 'datapos-engine':
+            return 'engine';
+        case '@datapos/datapos-shared':
+            return 'shared';
+        case '@datapos/datapos-development':
+            return 'dev';
+        default:
+            if (packageName.includes('datapos-connector')) return 'connector';
+            else if (packageName.includes('datapos-context')) return 'context';
+            else if (packageName.includes('datapos-presenter')) return 'presenter';
+            else if (packageName.includes('datapos-tool')) return 'tool';
+            else return 'other';
+    }
 }
 
 // Exposures

@@ -85,8 +85,6 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
 async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolean): Promise<void> {
     logStepHeader(`${stepIcon}  Insert licenses into 'README.md'`);
 
-    //! const licensesContent = await readTextFile('./licenses.md');
-    //! const trimmedLicensesContent = licensesContent.trim();
     const readmeContent = await readTextFile('./README.md');
     const startIndex = readmeContent.indexOf(START_MARKER);
     const endIndex = readmeContent.indexOf(END_MARKER);

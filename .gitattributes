@@ -1,2 +1,2 @@
+bundle-analysis-reports/** linguist-vendored
 dependency-check-reports/** linguist-vendored
-bundle-reports/** linguist-vendored

@@ -67,14 +67,14 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 The following table lists top-level production and peer dependencies. All these dependencies (including transitive ones) have been recursively verified to use Apache-2.0, BSD-2-Clause, CC0-1.0, or MIT—commercially friendly licenses with minimal restrictions. Developers cloning this repository should independently verify dev and optional dependencies; users of the published library are covered by these checks. We do not include unlicensed dependencies. Used to support development activity and not released as part of the production release. Check if you clone. We use the `npm` packages [license-report](https://www.npmjs.com/package/license-report), [license-report-check](https://www.npmjs.com/package/license-report-check) and [license-report-recursive](https://www.npmjs.com/package/license-report-recursive) to identify dependency licenses.
 
 <!-- DEPENDENCY_LICENSES_START -->
-|Name|
-|-|
-|@datapos/datapos-shared|
-|acorn|
-|acorn-typescript|
-|acorn-walk|
-|dotenv|
-|zod|
+|Name|Type|Installed|Latest|Latest Date|Document|
+|:-|:-:|:-:|:-:|:-|:-|
+|@datapos/datapos-shared|MIT|0.3.296|0.3.298|2025-12-09|[LICENSE](https://raw.githubusercontent.com/data-positioning/datapos-shared/main/LICENSE)|
+|acorn|MIT|8.15.0|8.15.0|2025-06-09|⚠️ No license file.|
+|acorn-typescript|MIT|1.4.13|1.4.13|2024-01-03|[LICENSE](https://raw.githubusercontent.com/TyrealHu/acorn-typescript/master/LICENSE)|
+|acorn-walk|MIT|8.3.4|8.3.4|2024-09-09|⚠️ No license file.|
+|dotenv|BSD-2-Clause|17.2.3|17.2.3|2025-09-29|[LICENSE](https://raw.githubusercontent.com/motdotla/dotenv/master/LICENSE)|
+|zod|MIT|4.1.13|4.1.13|2025-12-07|[LICENSE](https://raw.githubusercontent.com/colinhacks/zod/main/LICENSE)|
 
 <!-- DEPENDENCY_LICENSES_END -->
 

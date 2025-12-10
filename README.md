@@ -82,9 +82,21 @@ We use the `npm` packages [license-report](https://www.npmjs.com/package/license
 
 <!-- DEPENDENCY_LICENSES_END -->
 
-1. **Installed** column: A ⚠️ symbol is used to highlight any installed version that does not match the latest available version.
-1. **Latest Release** column: A ⚠️ symbol is used to highlight any dependency that has gone **more than 6 months** without an update but **no more than 12 months**. A **❗** symbol indicates a dependency that has gone **more than 12 months** without an update.
-1. **Document** column: the message “⚠️ No license file” is used to highlight any dependency that does not include a license file.
+1. **Installed** column:
+
+    A ⚠️ symbol is used to highlight any installed version that does not match the latest available version.
+
+1. **Latest Release** column:
+
+    A ⚠️ symbol is used to highlight any dependency that has gone **more than 6 months** without an update but **no more than 12 months**.
+
+    A **❗** symbol indicates a dependency that has gone **more than 12 months** without an update.
+
+    If a dependency has no, or only a small number of, transitive dependencies, then it may not require frequent updates. The **Deps** column shows the number of transitive dependencies. Full details for these dependencies can be found in [licenses/licenseTree.json](licenses/licenseTree.json).
+
+1. **Document** column:
+
+    The message “⚠️ No license file” is used to highlight any dependency that does not include a license file.
 
 ### Bundle Analysis Report
 

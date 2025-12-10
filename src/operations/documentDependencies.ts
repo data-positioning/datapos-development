@@ -40,7 +40,7 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
 
         await loadEnvironmentVariables(); // Ensure GitHub token is load from '.env', required when downloading license files (step 5).
 
-        const allowedFlags = licenses.flatMap((license) => ['--allowed', license]);
+        const allowedFlags = licenses.flatMap((license) => ['--allowed', `'${license}'`]);
 
         // Establish licence report configuration file path.This in combination with exports in 'package.json'
         // allows us to share local 'licenses/license-report-config.json' file with other projects.

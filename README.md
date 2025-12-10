@@ -5,16 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/@datapos/datapos-development.svg)](https://www.npmjs.com/package/@datapos/datapos-development)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-A library of utilities for managing the Data Positioning repositories.
-
-## Requirements
-
-Ensure your environment meets the following prerequisites before using this library:
-
-- **Node.js** version `>=22.0.0`,
-- **npm** version `>=11.0.0`,
-- A Unix-like shell (for command shortcuts, e.g., `bash`, `zsh`, or Git Bash on Windows),
-- Access to the [npm registry](https://www.npmjs.com/) and [GitHub](https://github.com/) for publishing and syncing.
+A library of utilities used to manage Data Positioning repositories.
 
 ## Installation
 
@@ -24,16 +15,15 @@ Install as a development (dev) dependency:
 npm install --save-dev @datapos/datapos-development
 ```
 
-Create `.npmrc` with access token. Access token needs to disable 2FA and allow all access.
+Ensure your local `.env` file contains the following variables:
 
-```ini
-registry=https://registry.npmjs.org/
-//registry.npmjs.org/:_authToken=<ACCESS TOKEN>
+```bash
+GITHUB_DOWNLOAD_LICENSE_API_TOKEN="<GITHUB_API_TOKEN>"
+NPM_TOKEN="<NPM_TOKEN>"
+OWASP_NVD_API_KEY="<NVD_API_KEY>"
 ```
 
 ## Utilities
-
-Designed to be run from `package.json` scripts.
 
 The `src/index.ts' file exposes the following utilities:
 
@@ -51,6 +41,20 @@ The `src/index.ts' file exposes the following utilities:
 | testProject               |                                                                   |
 | updateDataPosDependencies |                                                                   |
 
+All of the above utilities are designed to be run from `package.json` scripts and assume that the repository follows the standard Data Positioning directory structure and includes a `config.json` file in the root directory.
+
+```json
+{
+    ...
+    "scripts": {
+        ...
+        "build": "node -e \"import('@datapos/datapos-development').then(m => m.buildProject())\""
+        ...
+    }
+    ...
+}
+```
+
 ## Reports & Compliance
 
 ### Dependency Check Report
@@ -61,19 +65,26 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 
 ### Dependency Licenses
 
-The following table lists top-level production and peer dependencies. All these dependencies (including transitive ones) have been recursively verified to use Apache-2.0, BSD-2-Clause, CC0-1.0, or MIT—commercially friendly licenses with minimal restrictions. Developers cloning this repository should independently verify dev and optional dependencies; users of the published library are covered by these checks. We do not include unlicensed dependencies. Used to support development activity and not released as part of the production release. Check if you clone. We use the `npm` packages [license-report](https://www.npmjs.com/package/license-report), [license-report-check](https://www.npmjs.com/package/license-report-check) and [license-report-recursive](https://www.npmjs.com/package/license-report-recursive) to identify dependency licenses.
+The following table lists the top-level production and peer dependencies. All of these dependencies—along with their transitive dependencies—have been recursively verified to use one of the following commercially friendly licenses: **Apache-2.0**, **BSD-2-Clause**, **CC0-1.0**, or **MIT**. Developers cloning this repository should independently verify all **development** and **optional** dependencies. This project is used solely to support development activities and is not used in production or distributed in any other form.
+
+We use the `npm` packages [license-report](https://www.npmjs.com/package/license-report), [license-report-check](https://www.npmjs.com/package/license-report-check), [license-report-recursive](https://www.npmjs.com/package/license-report-recursive) and [license-downloader](https://www.npmjs.com/package/license-downloader) to identify all dependency licenses and include copies of them. We do not use any unlicensed dependencies in either production or development.
 
 <!-- DEPENDENCY_LICENSES_START -->
-|Name|Type|Installed|Latest|Latest Release|Deps|Document|
-|:-|:-|:-:|:-:|:-|-:|:-|
-|@datapos/datapos-shared|MIT|0.3.298|0.3.298|this month: 2025-12-09|3|[LICENSE](https://raw.githubusercontent.com/data-positioning/datapos-shared/main/LICENSE)|
-|acorn|MIT|8.15.0|8.15.0|6 months ago: 2025-06-09|0|⚠️ No license file|
-|acorn-typescript|MIT|1.4.13|1.4.13|23 months ago: 2024-01-03❗|1|[LICENSE](https://raw.githubusercontent.com/TyrealHu/acorn-typescript/master/LICENSE)|
-|acorn-walk|MIT|8.3.4|8.3.4|15 months ago: 2024-09-09❗|1|⚠️ No license file|
-|dotenv|BSD-2-Clause|17.2.3|17.2.3|2 months ago: 2025-09-29|0|[LICENSE](https://raw.githubusercontent.com/motdotla/dotenv/master/LICENSE)|
-|zod|MIT|4.1.13|4.1.13|this month: 2025-12-07|0|[LICENSE](https://raw.githubusercontent.com/colinhacks/zod/main/LICENSE)|
+
+| Name                    | Type         | Installed | Latest  | Latest Release              | Deps | Document                                                                                  |
+| :---------------------- | :----------- | :-------: | :-----: | :-------------------------- | ---: | :---------------------------------------------------------------------------------------- |
+| @datapos/datapos-shared | MIT          |  0.3.298  | 0.3.298 | this month: 2025-12-09      |    3 | [LICENSE](https://raw.githubusercontent.com/data-positioning/datapos-shared/main/LICENSE) |
+| acorn                   | MIT          |  8.15.0   | 8.15.0  | 6 months ago: 2025-06-09    |    0 | ⚠️ No license file                                                                        |
+| acorn-typescript        | MIT          |  1.4.13   | 1.4.13  | 23 months ago: 2024-01-03❗ |    1 | [LICENSE](https://raw.githubusercontent.com/TyrealHu/acorn-typescript/master/LICENSE)     |
+| acorn-walk              | MIT          |   8.3.4   |  8.3.4  | 15 months ago: 2024-09-09❗ |    1 | ⚠️ No license file                                                                        |
+| dotenv                  | BSD-2-Clause |  17.2.3   | 17.2.3  | 2 months ago: 2025-09-29    |    0 | [LICENSE](https://raw.githubusercontent.com/motdotla/dotenv/master/LICENSE)               |
+| zod                     | MIT          |  4.1.13   | 4.1.13  | this month: 2025-12-07      |    0 | [LICENSE](https://raw.githubusercontent.com/colinhacks/zod/main/LICENSE)                  |
 
 <!-- DEPENDENCY_LICENSES_END -->
+
+1. **Installed** column: A ⚠️ symbol is used to highlight any installed version that does not match the latest available version.
+1. **Latest Release** column: A ⚠️ symbol is used to highlight any dependency that has gone **more than 6 months** without an update but **no more than 12 months**. A **❗** symbol indicates a dependency that has gone **more than 12 months** without an update.
+1. **Document** column: the message “⚠️ No license file” is used to highlight any dependency that does not include a license file.
 
 ### Bundle Analysis Report
 
@@ -81,8 +92,9 @@ The Bundle Analysis Report provides a detailed breakdown of the bundle's composi
 
 [View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/stats.html)
 
-## Repository Common Management Commands
+## Repository Management Commands
 
+Implements the common Data Positioning repository management command detailed in
 The table below lists the repository management commands available in this project.
 For detailed implementation, see the `scripts` section in the `package.json` file.
 
@@ -102,6 +114,7 @@ For detailed implementation, see the `scripts` section in the `package.json` fil
 ## TODO
 
 1. Enhance `uploadDirectoryToR2`to batch upload files so more efficient and performant.
+2. Review if it is better to replace all `execCommand`calls with `spawnCommand` calls?
 
 ## License
 

@@ -18,6 +18,7 @@ import {
     logStepHeader,
     readJSONFile,
     readTextFile,
+    removeFile,
     spawnCommand,
     writeJSONFile,
     writeTextFile
@@ -118,9 +119,13 @@ async function releaseProject(): Promise<void> {
 
             // NOTE: await spawnCommand('', 'sh', ['-c', `echo "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}" > .npmrc`]);
 
-            await writeTextFile('.npmrc', `registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}`);
-
-            await spawnCommand('8️⃣  Publish to npm', 'npm', ['publish', '--access', 'public']);
+            const fileName = '.npmrc';
+            try {
+                await writeTextFile(fileName, `registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}`);
+                await spawnCommand('8️⃣  Publish to npm', 'npm', ['publish', '--access', 'public']);
+            } finally {
+                await removeFile(fileName);
+            }
         } else {
             logStepHeader(`8️⃣  Publishing NOT required for package with type identifier of '${packageTypeId}'.`);
         }

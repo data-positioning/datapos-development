@@ -19,7 +19,7 @@ interface BadgeConfig {
     color: string;
     label: string;
 }
-export interface SeverityCounts {
+interface SeverityCounts {
     critical: number;
     high: number;
     moderate: number;
@@ -28,7 +28,6 @@ export interface SeverityCounts {
 }
 
 // Constants
-export const ALLOWED_SEVERITY_KEYS = ['critical', 'high', 'moderate', 'low', 'unknown'] as (keyof SeverityCounts)[];
 const SEVERITY_BADGES: Record<keyof SeverityCounts, BadgeConfig> = {
     critical: { color: 'D32F2F', label: 'critical' },
     high: { color: 'EF6C00', label: 'high' },
@@ -79,10 +78,9 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(stepIcon: string): Prom
     for (const dependency of dependencyCheckData.dependencies) {
         if (dependency.vulnerabilities == null) continue;
         for (const vulnerability of dependency.vulnerabilities) {
-            const severity = (vulnerability.severity?.toLowerCase() ?? 'unknown') as keyof SeverityCounts;
+            const severity = vulnerability.severity?.toLowerCase() ?? 'unknown';
             if (severity in severityCounts) {
-                const severityKey = ALLOWED_SEVERITY_KEYS.find((key) => key === severity);
-                severityCounts[severityKey ?? 'unknown']++;
+                severityCounts[severity as keyof SeverityCounts]++;
             } else {
                 severityCounts.unknown++;
             }

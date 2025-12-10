@@ -40,6 +40,47 @@ import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '@/utilities/
 
 // Interfaces/Types
 type ModuleTypeId = 'api' | 'app' | 'connector' | 'context' | 'dev' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool' | 'other';
+interface ModuleTypeConfigMap {
+    app: { groupName: undefined; publish: boolean };
+    api: { groupName: undefined; publish: boolean };
+    connector: { groupName: string; publish: boolean };
+    context: { groupName: string; publish: boolean };
+    dev: { groupName: undefined; publish: boolean };
+    engine: { groupName: string; publish: boolean };
+    presenter: { groupName: string; publish: boolean };
+    resources: { groupName: undefined; publish: boolean };
+    shared: { groupName: undefined; publish: boolean };
+    tool: { groupName: string; publish: boolean };
+    other: { groupName: undefined; publish: boolean };
+}
+
+// Constants
+const MODULE_TYPE_CONFIG_MAP: ModuleTypeConfigMap = {
+    app: { groupName: undefined, publish: false },
+    api: { groupName: undefined, publish: false },
+    connector: { groupName: 'connectors', publish: true },
+    context: { groupName: 'contexts', publish: true },
+    dev: { groupName: undefined, publish: true },
+    engine: { groupName: 'engine', publish: false },
+    presenter: { groupName: 'presenters', publish: true },
+    resources: { groupName: undefined, publish: false },
+    shared: { groupName: undefined, publish: true },
+    tool: { groupName: 'tools', publish: true },
+    other: { groupName: undefined, publish: false }
+};
+
+const MODULE_TYPE_CONFIGS = [
+    { id: 'datapos-app-nuxt', groupName: undefined, publish: false },
+    { id: 'datapos-api', groupName: undefined, publish: false },
+    { id: 'datapos-connector', groupName: 'connectors', publish: true },
+    { id: 'datapos-context', groupName: 'contexts', publish: true },
+    { id: 'datapos-development', groupName: undefined, publish: true },
+    { id: 'datapos-engine', groupName: 'engine', publish: false },
+    { id: 'datapos-presenter', groupName: 'presenters', publish: true },
+    { id: 'datapos-resources', groupName: undefined, publish: false },
+    { id: 'datapos-shared', groupName: undefined, publish: true },
+    { id: 'datapos-tool', groupName: 'tools', publish: true }
+];
 
 // Utilities - Build project.
 async function buildProject(): Promise<void> {
@@ -54,6 +95,11 @@ async function buildProject(): Promise<void> {
         process.exit(1);
     }
 }
+
+function lookupModuleConfig(configId: string): { groupName: string | undefined; publish: boolean } | undefined {
+    return MODULE_TYPE_CONFIGS.find((config) => configId.startsWith(config.id));
+}
+
 // Utilities - Release project.
 async function releaseProject(): Promise<void> {
     try {
@@ -66,6 +112,8 @@ async function releaseProject(): Promise<void> {
         await bumpProjectVersion('1️⃣', packageJSON);
 
         const packageTypeId = determineModuleTypeId(packageJSON);
+        const xxxx = lookupModuleConfig(configJSON.id);
+        console.log('xxxx', xxxx);
 
         switch (packageTypeId) {
             case 'connector':
@@ -106,22 +154,8 @@ async function releaseProject(): Promise<void> {
             await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
         }
 
-        const modulePublishMap: Record<ModuleTypeId, { publish: boolean }> = {
-            app: { publish: false },
-            api: { publish: false },
-            connector: { publish: true },
-            context: { publish: true },
-            dev: { publish: true },
-            engine: { publish: false },
-            presenter: { publish: true },
-            resources: { publish: false },
-            shared: { publish: true },
-            tool: { publish: true },
-            other: { publish: false }
-        };
-
-        const modulePublishInfo = modulePublishMap[packageTypeId];
-        if (modulePublishInfo.publish) {
+        const moduleTypeConfig = MODULE_TYPE_CONFIG_MAP[packageTypeId as keyof ModuleTypeConfigMap];
+        if (moduleTypeConfig.publish) {
             const npmrcFileName = '.npmrc';
             try {
                 await writeTextFile(npmrcFileName, `registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN ?? ''}`);

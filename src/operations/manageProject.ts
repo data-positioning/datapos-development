@@ -39,7 +39,7 @@ import type {
 import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '@/utilities/cloudflare';
 
 // Interfaces/Types
-type PackageTypeId = 'api' | 'app' | 'connector' | 'context' | 'dev' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool' | 'other';
+type ModuleTypeId = 'api' | 'app' | 'connector' | 'context' | 'dev' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool' | 'other';
 
 // Utilities - Build project.
 async function buildProject(): Promise<void> {
@@ -65,7 +65,7 @@ async function releaseProject(): Promise<void> {
 
         await bumpProjectVersion('1️⃣', packageJSON);
 
-        const packageTypeId = determinePackageTypeId(packageJSON);
+        const packageTypeId = determineModuleTypeId(packageJSON);
 
         switch (packageTypeId) {
             case 'connector':
@@ -106,25 +106,28 @@ async function releaseProject(): Promise<void> {
             await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
         }
 
-        // TODO: Convert this to a map.
-        if (
-            packageTypeId === 'connector' ||
-            packageTypeId === 'context' ||
-            packageTypeId === 'dev' ||
-            packageTypeId === 'presenter' ||
-            packageTypeId === 'shared' ||
-            packageTypeId === 'tool'
-        ) {
-            // NOTE: "op run --env-file=.env -- sh -c 'echo \"registry=https://registry.npmjs.org/\\n//registry.npmjs.org/:_authToken=$NPM_TOKEN\" > .npmrc && npm publish && rm .npmrc'"
+        const modulePublishMap: Record<ModuleTypeId, { publish: boolean }> = {
+            app: { publish: false },
+            api: { publish: false },
+            connector: { publish: true },
+            context: { publish: true },
+            dev: { publish: true },
+            engine: { publish: false },
+            presenter: { publish: true },
+            resources: { publish: false },
+            shared: { publish: true },
+            tool: { publish: true },
+            other: { publish: false }
+        };
 
-            // NOTE: await spawnCommand('', 'sh', ['-c', `echo "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}" > .npmrc`]);
-
-            const fileName = '.npmrc';
+        const modulePublishInfo = modulePublishMap[packageTypeId];
+        if (modulePublishInfo.publish) {
+            const npmrcFileName = '.npmrc';
             try {
-                await writeTextFile(fileName, `registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}`);
+                await writeTextFile(npmrcFileName, `registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN ?? ''}`);
                 await spawnCommand('8️⃣  Publish to npm', 'npm', ['publish', '--access', 'public']);
             } finally {
-                await removeFile(fileName);
+                await removeFile(npmrcFileName);
             }
         } else {
             logStepHeader(`8️⃣  Publishing NOT required for package with type identifier of '${packageTypeId}'.`);
@@ -298,7 +301,7 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
 }
 
 // Helpers - Determine module group name.
-function determineModuleGroupName(packageTypeId: PackageTypeId): string | undefined {
+function determineModuleGroupName(packageTypeId: ModuleTypeId): string | undefined {
     switch (packageTypeId) {
         case 'engine':
             return 'engine';
@@ -315,8 +318,8 @@ function determineModuleGroupName(packageTypeId: PackageTypeId): string | undefi
     }
 }
 
-// Helpers - Determine package type identifier.
-function determinePackageTypeId(packageJSON: PackageJson): PackageTypeId {
+// Helpers - Determine module type identifier.
+function determineModuleTypeId(packageJSON: PackageJson): ModuleTypeId {
     const packageName = packageJSON.name ?? '';
     switch (packageName) {
         case 'datapos-app':

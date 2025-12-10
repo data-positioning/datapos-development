@@ -64,7 +64,7 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 The following table lists top-level production and peer dependencies. All these dependencies (including transitive ones) have been recursively verified to use Apache-2.0, BSD-2-Clause, CC0-1.0, or MIT—commercially friendly licenses with minimal restrictions. Developers cloning this repository should independently verify dev and optional dependencies; users of the published library are covered by these checks. We do not include unlicensed dependencies. Used to support development activity and not released as part of the production release. Check if you clone. We use the `npm` packages [license-report](https://www.npmjs.com/package/license-report), [license-report-check](https://www.npmjs.com/package/license-report-check) and [license-report-recursive](https://www.npmjs.com/package/license-report-recursive) to identify dependency licenses.
 
 <!-- DEPENDENCY_LICENSES_START -->
-|Name|Type|Installed|Latest|Latest Updated|Deps|Document|
+|Name|Type|Installed|Latest|Latest Release|Deps|Document|
 |:-|:-|:-:|:-:|:-|-:|:-|
 |@datapos/datapos-shared|MIT|0.3.298|0.3.298|this month: 2025-12-09|3|[LICENSE](https://raw.githubusercontent.com/data-positioning/datapos-shared/main/LICENSE)|
 |acorn|MIT|8.15.0|8.15.0|6 months ago: 2025-06-09|0|⚠️ No license file|

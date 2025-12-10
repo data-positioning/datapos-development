@@ -109,6 +109,15 @@ async function readTextFile(path: string): Promise<string> {
     return await fs.readFile(path, 'utf8');
 }
 
+// Utilities - Remove file.
+async function removeFile(path: string): Promise<void> {
+    try {
+        await fs.unlink(path);
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; // Ignore missing file errors, rethrow others.
+    }
+}
+
 // Utilities - Spawn command.
 async function spawnCommand(label: string, command: string, arguments_: string[] = [], ignoreErrors = false): Promise<void> {
     logStepHeader(`${label} - spawn(${command} ${arguments_.join(' ')})`);
@@ -163,6 +172,7 @@ export {
     logStepHeader,
     readJSONFile,
     readTextFile,
+    removeFile,
     spawnCommand,
     writeJSONFile,
     writeTextFile

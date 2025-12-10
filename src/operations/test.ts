@@ -4,7 +4,7 @@
 
 // Utilities - Test.
 function test(): void {
-    console.log('Test...');
+    console.error('❌ Test NOT implemented.');
 }
 
 // Exposures

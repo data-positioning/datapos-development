@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.312",
+    "version": "0.3.313",
     "description": "A library of utilities used to manage Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -44,6 +44,7 @@
         "@typescript-eslint/eslint-plugin": "^8.49.0",
         "@typescript-eslint/parser": "^8.49.0",
         "eslint": "^9.39.1",
+        "eslint-import-resolver-typescript": "^3.6.1",
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-security": "^3.0.1",
         "eslint-plugin-sonarjs": "^3.0.5",
@@ -77,8 +78,7 @@
         "sync": "node -e \"import('./dist/datapos-development.es.js').then(m => m.syncProjectWithGitHub())\"",
         "test": "node -e \"import('./dist/datapos-development.es.js').then(m => m.testProject())\"",
         "update": "node -e \"import('./dist/datapos-development.es.js').then(m => m.updateDataPosDependencies(['shared']))\"",
-        "___ts-to-zod": "npx ts-to-zod src/schemaTypes.ts src/schemaZOD.ts",
-        "build:npmrc": "op run --env-file=.env -- sh -c 'echo \"registry=https://registry.npmjs.org/\\n//registry.npmjs.org/:_authToken=$NPM_TOKEN\" > .npmrc && npm publish && rm .npmrc'"
+        "___ts-to-zod": "npx ts-to-zod src/schemaTypes.ts src/schemaZOD.ts"
     },
     "engines": {
         "node": ">=22.0.0",

@@ -5,7 +5,7 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Framework.
-import { logOperationHeader, logOperationSuccess, spawnCommand } from '../utilities';
+import { logOperationHeader, logOperationSuccess, spawnCommand } from '@/utilities';
 
 // Constants
 const STEP_ICONS = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];

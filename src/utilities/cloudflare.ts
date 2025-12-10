@@ -8,7 +8,7 @@ import type { PackageJson } from 'type-fest';
 
 // Dependencies - Framework.
 import type { ModuleConfig } from '@datapos/datapos-shared';
-import { execCommand, getDirectoryEntries, getStatsForPath, readJSONFile } from './index';
+import { execCommand, getDirectoryEntries, getStatsForPath, readJSONFile } from '@/utilities';
 
 // Utilities - Put state.
 async function putState(): Promise<void> {

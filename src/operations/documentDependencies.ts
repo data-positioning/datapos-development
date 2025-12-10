@@ -8,7 +8,7 @@
 import { fileURLToPath, URL } from 'node:url';
 
 // Dependencies - Framework.
-import { execCommand, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, writeTextFile } from '../utilities';
+import { execCommand, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, writeTextFile } from '@/utilities';
 
 // Interfaces/Types
 interface License {

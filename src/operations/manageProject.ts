@@ -5,21 +5,23 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Framework.
-import { connectorConfigSchema } from '../schemas/connectorSchema';
-import { contextConfigSchema } from '../schemas/contextSchema';
+import { connectorConfigSchema } from '@/schemas/connectorSchema';
+import { contextConfigSchema } from '@/schemas/contextSchema';
 import type { PackageJson } from 'type-fest';
-import { presenterConfigSchema } from '../schemas/presenterSchema';
+import { presenterConfigSchema } from '@/schemas/presenterSchema';
 import {
     execCommand,
     extractOperationsFromSource,
+    loadEnvironmentVariables,
     logOperationHeader,
     logOperationSuccess,
     logStepHeader,
     readJSONFile,
     readTextFile,
     spawnCommand,
-    writeJSONFile
-} from '../utilities';
+    writeJSONFile,
+    writeTextFile
+} from '@/utilities';
 
 // Dependencies - Framework.
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
@@ -33,7 +35,7 @@ import type {
     PresenterConfig,
     PresenterOperation
 } from '@datapos/datapos-shared';
-import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '../utilities/cloudflare';
+import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '@/utilities/cloudflare';
 
 // Interfaces/Types
 type PackageTypeId = 'api' | 'app' | 'connector' | 'context' | 'dev' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool' | 'other';
@@ -56,6 +58,7 @@ async function releaseProject(): Promise<void> {
     try {
         logOperationHeader('Release Project');
 
+        await loadEnvironmentVariables();
         const packageJSON = await readJSONFile<PackageJson>('package.json');
         const configJSON = await readJSONFile<ModuleConfig>('config.json');
 
@@ -111,6 +114,12 @@ async function releaseProject(): Promise<void> {
             packageTypeId === 'shared' ||
             packageTypeId === 'tool'
         ) {
+            // NOTE: "op run --env-file=.env -- sh -c 'echo \"registry=https://registry.npmjs.org/\\n//registry.npmjs.org/:_authToken=$NPM_TOKEN\" > .npmrc && npm publish && rm .npmrc'"
+
+            // NOTE: await spawnCommand('', 'sh', ['-c', `echo "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}" > .npmrc`]);
+
+            await writeTextFile('.npmrc', `registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}`);
+
             await spawnCommand('8️⃣  Publish to npm', 'npm', ['publish', '--access', 'public']);
         } else {
             logStepHeader(`8️⃣  Publishing NOT required for package with type identifier of '${packageTypeId}'.`);

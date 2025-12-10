@@ -4,10 +4,12 @@
 
 /* eslint-disable unicorn/no-process-exit */
 
+// Dependencies - Vendor.
+import type { PackageJson } from 'type-fest';
+
 // Dependencies - Framework.
 import type { ModuleConfig } from '@datapos/datapos-shared';
-import type { PackageJson } from 'type-fest';
-import { loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, spawnCommand, writeTextFile } from '../utilities';
+import { loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, spawnCommand, writeTextFile } from '@/utilities';
 
 // Interfaces/Types
 interface DependencyCheckData {

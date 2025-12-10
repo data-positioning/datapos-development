@@ -10,7 +10,11 @@ export default [
     ...datapos,
     {
         settings: {
-            'import/core-modules': ['sonda/vite'] // Treat sonda plugin as resolved for eslint-plugin-import.
+            'import/resolver': {
+                typescript: {
+                    project: './tsconfig.json' // Teach eslint-plugin-import about TS aliases.
+                }
+            }
         }
     }
 ];

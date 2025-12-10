@@ -5,7 +5,7 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Framework.
-import { logOperationHeader, logOperationSuccess, spawnCommand } from '../utilities';
+import { logOperationHeader, logOperationSuccess, spawnCommand } from '@/utilities';
 
 // Utilities - Check dependencies.
 async function checkDependencies(): Promise<void> {

@@ -40,16 +40,16 @@ import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '@/utilities/
 
 // Constants
 const MODULE_TYPE_CONFIGS = [
-    { idPrefix: 'datapos-app-nuxt', typeId: 'app', groupName: undefined, publish: false },
-    { idPrefix: 'datapos-api', typeId: 'api', groupName: undefined, publish: false },
-    { idPrefix: 'datapos-connector', typeId: 'connector', groupName: 'connectors', publish: true },
-    { idPrefix: 'datapos-context', typeId: 'context', groupName: 'contexts', publish: true },
-    { idPrefix: 'datapos-development', typeId: 'development', groupName: undefined, publish: true },
-    { idPrefix: 'datapos-engine', typeId: 'engine', groupName: 'engine', publish: false },
-    { idPrefix: 'datapos-presenter', typeId: 'presenter', groupName: 'presenters', publish: true },
-    { idPrefix: 'datapos-resources', typeId: 'resources', groupName: undefined, publish: false },
-    { idPrefix: 'datapos-shared', typeId: 'shared', groupName: undefined, publish: true },
-    { idPrefix: 'datapos-tool', typeId: 'tool', groupName: 'tools', publish: true }
+    { idPrefix: 'datapos-app-nuxt', typeId: 'app', publish: false, uploadGroupName: undefined },
+    { idPrefix: 'datapos-api', typeId: 'api', publish: false, uploadGroupName: undefined },
+    { idPrefix: 'datapos-connector', typeId: 'connector', publish: true, uploadGroupName: 'connectors' },
+    { idPrefix: 'datapos-context', typeId: 'context', publish: true, uploadGroupName: 'contexts' },
+    { idPrefix: 'datapos-development', typeId: 'development', publish: true, uploadGroupName: undefined },
+    { idPrefix: 'datapos-engine', typeId: 'engine', publish: false, uploadGroupName: 'engine' },
+    { idPrefix: 'datapos-presenter', typeId: 'presenter', publish: true, uploadGroupName: 'presenters' },
+    { idPrefix: 'datapos-resources', typeId: 'resources', publish: false, uploadGroupName: undefined },
+    { idPrefix: 'datapos-shared', typeId: 'shared', publish: true, uploadGroupName: undefined },
+    { idPrefix: 'datapos-tool', typeId: 'tool', publish: true, uploadGroupName: 'tools' }
 ];
 
 // Utilities - Build project.
@@ -109,14 +109,14 @@ async function releaseProject(): Promise<void> {
         } else if (moduleTypeConfig.typeId === 'engine') {
             logStepHeader('7️⃣  Register module');
             await uploadModuleConfigToDO(configJSON);
-            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.groupName}`);
-        } else if (moduleTypeConfig.groupName === undefined) {
+            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.uploadGroupName}`);
+        } else if (moduleTypeConfig.uploadGroupName === undefined) {
             logStepHeader('7️⃣  Registration NOT required.');
         } else {
             logStepHeader('7️⃣  Register module');
             await uploadModuleConfigToDO(configJSON);
             const moduleTypeName = configJSON.id.split('-').slice(2).join('-');
-            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.groupName}/${moduleTypeName}`);
+            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.uploadGroupName}/${moduleTypeName}`);
         }
 
         if (moduleTypeConfig.publish) {

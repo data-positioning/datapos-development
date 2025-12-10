@@ -38,48 +38,18 @@ import type {
 } from '@datapos/datapos-shared';
 import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '@/utilities/cloudflare';
 
-// Interfaces/Types
-type ModuleTypeId = 'api' | 'app' | 'connector' | 'context' | 'dev' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool' | 'other';
-interface ModuleTypeConfigMap {
-    app: { groupName: undefined; publish: boolean };
-    api: { groupName: undefined; publish: boolean };
-    connector: { groupName: string; publish: boolean };
-    context: { groupName: string; publish: boolean };
-    dev: { groupName: undefined; publish: boolean };
-    engine: { groupName: string; publish: boolean };
-    presenter: { groupName: string; publish: boolean };
-    resources: { groupName: undefined; publish: boolean };
-    shared: { groupName: undefined; publish: boolean };
-    tool: { groupName: string; publish: boolean };
-    other: { groupName: undefined; publish: boolean };
-}
-
 // Constants
-const MODULE_TYPE_CONFIG_MAP: ModuleTypeConfigMap = {
-    app: { groupName: undefined, publish: false },
-    api: { groupName: undefined, publish: false },
-    connector: { groupName: 'connectors', publish: true },
-    context: { groupName: 'contexts', publish: true },
-    dev: { groupName: undefined, publish: true },
-    engine: { groupName: 'engine', publish: false },
-    presenter: { groupName: 'presenters', publish: true },
-    resources: { groupName: undefined, publish: false },
-    shared: { groupName: undefined, publish: true },
-    tool: { groupName: 'tools', publish: true },
-    other: { groupName: undefined, publish: false }
-};
-
 const MODULE_TYPE_CONFIGS = [
-    { id: 'datapos-app-nuxt', groupName: undefined, publish: false },
-    { id: 'datapos-api', groupName: undefined, publish: false },
-    { id: 'datapos-connector', groupName: 'connectors', publish: true },
-    { id: 'datapos-context', groupName: 'contexts', publish: true },
-    { id: 'datapos-development', groupName: undefined, publish: true },
-    { id: 'datapos-engine', groupName: 'engine', publish: false },
-    { id: 'datapos-presenter', groupName: 'presenters', publish: true },
-    { id: 'datapos-resources', groupName: undefined, publish: false },
-    { id: 'datapos-shared', groupName: undefined, publish: true },
-    { id: 'datapos-tool', groupName: 'tools', publish: true }
+    { idPrefix: 'datapos-app-nuxt', typeId: 'app', groupName: undefined, publish: false },
+    { idPrefix: 'datapos-api', typeId: 'api', groupName: undefined, publish: false },
+    { idPrefix: 'datapos-connector', typeId: 'connector', groupName: 'connectors', publish: true },
+    { idPrefix: 'datapos-context', typeId: 'context', groupName: 'contexts', publish: true },
+    { idPrefix: 'datapos-development', typeId: 'development', groupName: undefined, publish: true },
+    { idPrefix: 'datapos-engine', typeId: 'engine', groupName: 'engine', publish: false },
+    { idPrefix: 'datapos-presenter', typeId: 'presenter', groupName: 'presenters', publish: true },
+    { idPrefix: 'datapos-resources', typeId: 'resources', groupName: undefined, publish: false },
+    { idPrefix: 'datapos-shared', typeId: 'shared', groupName: undefined, publish: true },
+    { idPrefix: 'datapos-tool', typeId: 'tool', groupName: 'tools', publish: true }
 ];
 
 // Utilities - Build project.
@@ -96,10 +66,6 @@ async function buildProject(): Promise<void> {
     }
 }
 
-function lookupModuleConfig(configId: string): { groupName: string | undefined; publish: boolean } | undefined {
-    return MODULE_TYPE_CONFIGS.find((config) => configId.startsWith(config.id));
-}
-
 // Utilities - Release project.
 async function releaseProject(): Promise<void> {
     try {
@@ -111,11 +77,11 @@ async function releaseProject(): Promise<void> {
 
         await bumpProjectVersion('1️⃣', packageJSON);
 
-        const packageTypeId = determineModuleTypeId(packageJSON);
-        const xxxx = lookupModuleConfig(configJSON.id);
-        console.log('xxxx', xxxx);
+        const moduleTypeConfig = MODULE_TYPE_CONFIGS.find((config) => configJSON.id.startsWith(config.idPrefix));
+        if (!moduleTypeConfig) throw new Error(`Failed to locate module type configuration for identifier '${configJSON.id}'.`);
+        console.log('moduleTypeConfig', moduleTypeConfig);
 
-        switch (packageTypeId) {
+        switch (moduleTypeConfig.typeId) {
             case 'connector':
                 await buildConnectorProjectConfig('2️⃣', packageJSON);
                 break;
@@ -137,24 +103,22 @@ async function releaseProject(): Promise<void> {
 
         await execCommand('6️⃣  Push changes', 'git', ['push', 'origin', 'main:main']);
 
-        const moduleGroupName = determineModuleGroupName(packageTypeId);
-        if (packageTypeId === 'app') {
+        if (moduleTypeConfig.typeId === 'app') {
             logStepHeader('7️⃣  Register module');
             await putState();
-        } else if (packageTypeId === 'engine') {
+        } else if (moduleTypeConfig.typeId === 'engine') {
             logStepHeader('7️⃣  Register module');
             await uploadModuleConfigToDO(configJSON);
-            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleGroupName}`);
-        } else if (moduleGroupName === undefined) {
+            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.groupName}`);
+        } else if (moduleTypeConfig.groupName === undefined) {
             logStepHeader('7️⃣  Registration NOT required.');
         } else {
             logStepHeader('7️⃣  Register module');
             await uploadModuleConfigToDO(configJSON);
             const moduleTypeName = configJSON.id.split('-').slice(2).join('-');
-            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleGroupName}/${moduleTypeName}`);
+            await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.groupName}/${moduleTypeName}`);
         }
 
-        const moduleTypeConfig = MODULE_TYPE_CONFIG_MAP[packageTypeId as keyof ModuleTypeConfigMap];
         if (moduleTypeConfig.publish) {
             const npmrcFileName = '.npmrc';
             try {
@@ -164,7 +128,7 @@ async function releaseProject(): Promise<void> {
                 await removeFile(npmrcFileName);
             }
         } else {
-            logStepHeader(`8️⃣  Publishing NOT required for package with type identifier of '${packageTypeId}'.`);
+            logStepHeader(`8️⃣  Publishing NOT required for package with type identifier of '${moduleTypeConfig.typeId}'.`);
         }
 
         logOperationSuccess(`Project version '${packageJSON.version}' released.`);
@@ -332,47 +296,6 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
     if (sourceOps) return 'source';
     if (destinationOps) return 'destination';
     return 'unknown';
-}
-
-// Helpers - Determine module group name.
-function determineModuleGroupName(packageTypeId: ModuleTypeId): string | undefined {
-    switch (packageTypeId) {
-        case 'engine':
-            return 'engine';
-        case 'connector':
-            return 'connectors';
-        case 'context':
-            return 'contexts';
-        case 'presenter':
-            return 'presenters';
-        case 'tool':
-            return 'tools';
-        default:
-            return;
-    }
-}
-
-// Helpers - Determine module type identifier.
-function determineModuleTypeId(packageJSON: PackageJson): ModuleTypeId {
-    const packageName = packageJSON.name ?? '';
-    switch (packageName) {
-        case 'datapos-app':
-            return 'app';
-        case 'datapos-api':
-            return 'api';
-        case 'datapos-engine':
-            return 'engine';
-        case '@datapos/datapos-shared':
-            return 'shared';
-        case '@datapos/datapos-development':
-            return 'dev';
-        default:
-            if (packageName.includes('datapos-connector')) return 'connector';
-            else if (packageName.includes('datapos-context')) return 'context';
-            else if (packageName.includes('datapos-presenter')) return 'presenter';
-            else if (packageName.includes('datapos-tool')) return 'tool';
-            else return 'other';
-    }
 }
 
 // Exposures

@@ -17,8 +17,10 @@ npm install --save-dev @datapos/datapos-development
 
 > [!NOTE]
 > See the Data Positioning security documentation for additional initialization requirements.
+
 > [!IMPORTANT]
 > See the Data Positioning security documentation for additional initialization requirements.
+
 > See the Data Positioning security documentation for additional initialization requirements.
 
 ## Utilities

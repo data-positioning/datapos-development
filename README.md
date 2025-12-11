@@ -15,7 +15,7 @@ Install as a development (dev) dependency:
 npm install --save-dev @datapos/datapos-development
 ```
 
-> [!NOTE ]
+> [!NOTE]
 > See the Data Positioning security documentation for additional initialization requirements.
 
 ## Utilities

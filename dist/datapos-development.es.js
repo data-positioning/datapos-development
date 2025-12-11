@@ -7977,7 +7977,7 @@ async function xl() {
 const Sr = "<!-- DEPENDENCY_LICENSES_START -->", il = "<!-- DEPENDENCY_LICENSES_END -->";
 async function gl(e = [], t = !0) {
   try {
-    Re("Document Dependencies"), await Li(), console.log(1111, process.env);
+    Re("Document Dependencies"), await Li();
     const i = e.flatMap((n) => ["--allowed", `'${n}'`]), r = Bs(new Zs(import.meta.resolve("@datapos/datapos-development/license-report-config")));
     await Te(
       "1️⃣  Generate 'licenses.json' file",

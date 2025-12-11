@@ -47,6 +47,7 @@ async function auditDependencies(): Promise<void> {
         await loadEnvironmentVariables();
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
+        console.log(1111, process.env.OWASP_NVD_API_KEY);
         await spawnCommand('1️⃣', 'owasp-dependency-check', [
             '--out',
             'dependency-check-reports',

@@ -7923,7 +7923,7 @@ async function vl() {
   try {
     Re("Audit Dependencies"), await Li();
     const e = await de("package.json");
-    await Ie("1️⃣", "owasp-dependency-check", [
+    console.log(1111, process.env.OWASP_NVD_API_KEY), await Ie("1️⃣", "owasp-dependency-check", [
       "--out",
       "dependency-check-reports",
       "--project",
@@ -7995,7 +7995,7 @@ async function gl(e = [], t = !0) {
       "--licDir",
       "licenses/downloads",
       "--githubToken.tokenEnvVar",
-      "GITHUB_DOWNLOAD_LICENSE_API_TOKEN",
+      "GITHUB_TOKEN",
       "--download"
     ]), await rl("6️⃣", t), Fe("Dependencies documented.");
   } catch (i) {

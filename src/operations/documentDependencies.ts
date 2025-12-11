@@ -87,7 +87,7 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
             '--licDir',
             'licenses/downloads',
             '--githubToken.tokenEnvVar',
-            'GITHUB_DOWNLOAD_LICENSE_API_TOKEN',
+            'GITHUB_TOKEN',
             '--download'
         ]);
 

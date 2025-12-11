@@ -1,7 +1,7 @@
 import { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
+declare function clearDirectory(directoryPath: string): Promise<void>;
 declare function extractOperationsFromSource<T>(source: string): T[];
 declare function execCommand(label: string | undefined, command_: string, arguments_?: string[], outputFilePath?: string): Promise<void>;
-declare function clearDirectory(directoryPath: string): Promise<void>;
 declare function getDirectoryEntries(path: string): Promise<string[]>;
 declare function getDirectoryEntries(path: string, options: ObjectEncodingOptions): Promise<Dirent[]>;
 declare function getStatsForPath(path: string): Promise<Stats>;

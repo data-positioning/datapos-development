@@ -5,18 +5,44 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
 // Dependencies - Vendor.
+import type { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
+import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv';
+import type { MethodDefinition, Node } from 'acorn';
+
 import acornTypeScript from 'acorn-typescript';
 import { promises as fs } from 'node:fs';
 import { Parser } from 'acorn';
 import path from 'node:path';
 import { promisify } from 'node:util';
-import type { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
-import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv';
 import { exec, spawn } from 'node:child_process';
-import type { MethodDefinition, Node } from 'acorn';
 
 // Initialisation
 const asyncExec = promisify(exec);
+
+// Utilities - Clear directory.
+async function clearDirectory(directoryPath: string): Promise<void> {
+    let entries: Dirent[];
+
+    // Get top level entries in directory.
+    try {
+        entries = await fs.readdir(directoryPath, { withFileTypes: true });
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') return; // Treat missing directory as already clear.
+        throw error;
+    }
+
+    // Remove everything in parallel; Node schedules deletions through libuv’s thread pool (default concurrency 4).
+    await Promise.all(
+        entries.map(async (entry) => {
+            const fullPath = path.join(directoryPath, entry.name);
+            try {
+                await fs.rm(fullPath, { recursive: true, force: true });
+            } catch (error) {
+                if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; // Tolerate entries that disappear mid-run.
+            }
+        })
+    );
+}
 
 // Utilities - Extract operations from source.
 function extractOperationsFromSource<T>(source: string): T[] {
@@ -59,29 +85,6 @@ async function execCommand(label: string | undefined, command_: string, argument
         await fs.writeFile(outputFilePath, stdout.trim(), 'utf8');
     }
     if (stderr.trim()) console.error(stderr.trim());
-}
-
-// Utilities - Clear directory contents.
-async function clearDirectory(directoryPath: string): Promise<void> {
-    let entries: Dirent[];
-
-    try {
-        entries = await fs.readdir(directoryPath, { withFileTypes: true });
-    } catch (error) {
-        if ((error as NodeJS.ErrnoException).code === 'ENOENT') return; // Treat missing directory as already clear.
-        throw error;
-    }
-
-    await Promise.all(
-        entries.map(async (entry) => {
-            const fullPath = path.join(directoryPath, entry.name);
-            try {
-                await fs.rm(fullPath, { recursive: true, force: true });
-            } catch (error) {
-                if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-            }
-        })
-    );
 }
 
 // Utilities - Get directory entries.

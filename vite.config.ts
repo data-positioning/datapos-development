@@ -21,14 +21,21 @@ export default defineConfig({
             formats: ['es'] // Only emit native ES modules.
         },
         rollupOptions: {
-            external: ['@datapos/datapos-shared', 'dotenv', 'nanoid', 'node:child_process', 'node:fs', 'node:readline', 'node:url', 'node:util'], // Keep runtime deps out of bundle.
+            external: ['@datapos/datapos-shared', 'dotenv', 'nanoid', 'node:child_process', 'node:fs', 'node:path', 'node:readline', 'node:url', 'node:util'], // Keep runtime dependencies out of bundle.
             plugins: [
-                Sonda({ filename: 'index', format: 'html', gzip: true, brotli: true, open: false, outputDir: './bundle-analysis-reports/sonda' }), // Run Sonda analyser to generate additional bundle insights.
-                visualizer({
-                    filename: './bundle-analysis-reports/rollup-visualiser/index.html',
+                Sonda({
+                    filename: 'index', // Output file name.
+                    format: 'html', // Output file format.
+                    gzip: true, // Include gzip sizes.
+                    brotli: true, // Include brotli sizes.
                     open: false, // Do not auto-open browser post-build.
-                    gzipSize: true, // Display gzip sizes.
-                    brotliSize: true // Display brotli sizes.
+                    outputDir: './bundle-analysis-reports/sonda' // Output directory.
+                }), // Run Sonda analyser to generate additional bundle insights.
+                visualizer({
+                    filename: './bundle-analysis-reports/rollup-visualiser/index.html', // Output file path.
+                    open: false, // Do not auto-open browser post-build.
+                    gzipSize: true, // Include gzip sizes.
+                    brotliSize: true // Include brotli sizes.
                 })
             ]
         },

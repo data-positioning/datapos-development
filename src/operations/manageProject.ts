@@ -79,7 +79,6 @@ async function releaseProject(): Promise<void> {
 
         const moduleTypeConfig = MODULE_TYPE_CONFIGS.find((config) => configJSON.id.startsWith(config.idPrefix));
         if (!moduleTypeConfig) throw new Error(`Failed to locate module type configuration for identifier '${configJSON.id}'.`);
-        console.log('moduleTypeConfig', moduleTypeConfig);
 
         switch (moduleTypeConfig.typeId) {
             case 'connector':

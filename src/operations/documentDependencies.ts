@@ -8,7 +8,17 @@
 import { fileURLToPath, URL } from 'node:url';
 
 // Dependencies - Framework.
-import { execCommand, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, writeTextFile } from '@/utilities';
+import {
+    clearDirectory,
+    execCommand,
+    loadEnvironmentVariables,
+    logOperationHeader,
+    logOperationSuccess,
+    logStepHeader,
+    readJSONFile,
+    readTextFile,
+    writeTextFile
+} from '@/utilities';
 
 // Interfaces/Types
 interface License {
@@ -70,6 +80,7 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
             logStepHeader("4️⃣  Skip 'licenses/licenseTree.json' file check");
         }
 
+        await clearDirectory('licenses/downloads');
         await execCommand('5️⃣  Download license files', 'license-downloader', ['--source', 'licenses/licenses.json', '--licDir', 'licenses/downloads', '--download']);
 
         await insertLicensesIntoReadme('6️⃣', checkRecursive);

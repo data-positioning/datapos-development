@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.341",
+    "version": "0.3.342",
     "description": "A library of utilities used to manage Data Positioning repositories.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -71,7 +71,7 @@
         "audit": "op run --env-file=.env -- node -e \"import('./dist/datapos-development.es.js').then(m => m.auditDependencies())\"",
         "build": "node -e \"import('./dist/datapos-development.es.js').then(m => m.buildProject())\"",
         "check": "node -e \"import('./dist/datapos-development.es.js').then(m => m.checkDependencies())\"",
-        "document": "op run --env-file=.env -- node -e \"import('./dist/datapos-development.es.js').then(m => m.documentDependencies(['BSD-2-Clause','MIT']))\"",
+        "document": "op run --env-file=.env -- node -e \"import('./dist/datapos-development.es.js').then(m => m.documentDependencies(['BSD-2-Clause', 'MIT']))\"",
         "format": "node -e \"import('./dist/datapos-development.es.js').then(m => m.formatCode())\"",
         "lint": "node -e \"import('./dist/datapos-development.es.js').then(m => m.lintCode())\"",
         "release": "op run --env-file=.env -- node -e \"import('./dist/datapos-development.es.js').then(m => m.releaseProject())\"",

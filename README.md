@@ -15,15 +15,7 @@ Install as a development (dev) dependency:
 npm install --save-dev @datapos/datapos-development
 ```
 
-> [!NOTE]
 > See the Data Positioning security documentation for additional initialization requirements.
-
-> [!IMPORTANT]
-> See the Data Positioning security documentation for additional initialization requirements.
-
-:information_source:
-
-> :information_source: See the Data Positioning security documentation for additional initialization requirements.
 
 ## Utilities
 
@@ -40,12 +32,12 @@ The library implements the following utilities:
 | lintCode                  | Use `eslint` to check the code for potential errors and enforces coding style rules.                                                            |
 | releaseProject            | Bump version, build library, synchronise with `GitHub` and publish to `npm`.                                                                    |
 | syncProjectWithGitHub     | Synchronise the local repository with the main GitHub repository.                                                                               |
-| testProject               |                                                                                                                                                 |
+| testProject               | ❌ Not implemented.                                                                                                                             |
 | updateDataPosDependencies | Install the latest version of all Data Positioning dependencies.                                                                                |
 
-Implements the common Data Positioning repository management command detailed in...
-The table below lists the repository management commands available in this project.
-For detailed implementation, see the `scripts` section in the `package.json` file.
+Implements the common Data Positioning repository management command set. For more information see [@datapos/datapos-development](https://github.com/data-positioning/datapos-development).
+
+### Usage
 
 All of the above utilities are designed to be run from `package.json` scripts and assume that the repository follows the standard Data Positioning directory structure and includes a `config.json` file in the root directory.
 
@@ -53,13 +45,26 @@ All of the above utilities are designed to be run from `package.json` scripts an
 {
     ...
     "scripts": {
-        ...
-        "build": "node -e \"import('@datapos/datapos-development').then(m => m.buildProject())\""
-        ...
+        "audit": "node -e \"import('@datapos/datapos-development').then(m => m.auditDependencies())\"",
+        "build": "node -e \"import('@datapos/datapos-development').then(m => m.buildProject())\"",
+        "check": "node -e \"import('@datapos/datapos-development').then(m => m.checkDependencies())\"",
+        "document": "node -e \"import('@datapos/datapos-development').then(m => m.documentDependencies(['MIT']))\"",
+        "format": "node -e \"import('@datapos/datapos-development').then(m => m.formatCode())\"",
+        "lint": "node -e \"import('@datapos/datapos-development').then(m => m.lintCode())\"",
+        "release": "node -e \"import('@datapos/datapos-development').then(m => m.releaseProject())\"",
+        "sync": "node -e \"import('@datapos/datapos-development').then(m => m.syncProjectWithGitHub())\"",
+        "test": "node -e \"import('@datapos/datapos-development').then(m => m.testProject())\"",
+        "update": "node -e \"import('@datapos/datapos-development').then(m => m.updateDataPosDependencies(['development']))\""
     }
     ...
 }
 ```
+
+## Bundle Analysis Reports
+
+The Bundle Analysis Report provides a detailed breakdown of the bundle's composition and module sizes, helping to identify which modules contribute most to the final build. It is generated automatically on each release using the `npm` package [rollup-plugin-visualizer](https://www.npmjs.com/package/rollup-plugin-visualizer).
+
+[View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/stats.html)
 
 ## Dependency Check Report
 
@@ -101,12 +106,6 @@ We use the `npm` packages [license-report](https://www.npmjs.com/package/license
 1. **Document** column:
 
     The message “⚠️ No license file” is used to highlight any dependency that does not include a license file.
-
-## Bundle Analysis Reports
-
-The Bundle Analysis Report provides a detailed breakdown of the bundle's composition and module sizes, helping to identify which modules contribute most to the final build. It is generated automatically on each release using the `npm` package [rollup-plugin-visualizer](https://www.npmjs.com/package/rollup-plugin-visualizer).
-
-[View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/stats.html)
 
 ## License
 

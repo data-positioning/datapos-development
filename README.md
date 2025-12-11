@@ -5,11 +5,11 @@
 [![npm version](https://img.shields.io/npm/v/@datapos/datapos-development.svg)](https://www.npmjs.com/package/@datapos/datapos-development)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-A library of utilities used to manage Data Positioning repositories.
+A collection of utilities for managing Data Positioning projects.
 
 ## Installation
 
-Install as a development (dev) dependency:
+Install as a development dependency:
 
 ```bash
 npm install --save-dev @datapos/datapos-development
@@ -21,25 +21,23 @@ npm install --save-dev @datapos/datapos-development
 
 The library implements the following utilities:
 
-| Name                      | Notes                                                                                                                                           |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| auditDependencies         | Audit the project's dependencies for known security vulnerabilities.                                                                            |
-| buildDirectoryIndex       | Build an index for a given directory.                                                                                                           |
-| buildProject              | Build the package using Vite. Output to '/dist' directory.                                                                                      |
-| checkDependencies         | Identify outdated dependencies using npm `outdated` and `npm-check-updates` with option to install latest versions. Also runs `retire` scanner. |
-| documentDependencies      | Identify licenses of the project's production and peer dependencies. See [licenses.json](./licenses.json).                                      |
-| formatCode                | Use `prettier` to enforce formatting style rules.                                                                                               |
-| lintCode                  | Use `eslint` to check the code for potential errors and enforces coding style rules.                                                            |
-| releaseProject            | Bump version, build library, synchronise with `GitHub` and publish to `npm`.                                                                    |
-| syncProjectWithGitHub     | Synchronise the local repository with the main GitHub repository.                                                                               |
-| testProject               | ❌ Not implemented.                                                                                                                             |
-| updateDataPosDependencies | Install the latest version of all Data Positioning dependencies.                                                                                |
-
-Implements the common Data Positioning repository management command set. For more information see [@datapos/datapos-development](https://github.com/data-positioning/datapos-development).
+| Name                      | Notes                                                                                                                                                                                                                                                                                                              |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| auditDependencies         | Audit the project's dependencies for known security vulnerabilities. uses the owasp-dependency-check module to perform the checks. Updates the OWASP badge(s) at the top of this page. Also runs the 'npm outdated`command.                                                                                        |
+| buildDirectoryIndex       | Build an index for a given directory.                                                                                                                                                                                                                                                                              |
+| buildProject              | Builds the package using Vite. Output to '/dist' directory.                                                                                                                                                                                                                                                        |
+| checkDependencies         | Identifies outdated dependencies using npm `outdated` and `npm-check-updates` with option to automatically install latest versions.                                                                                                                                                                                |
+| documentDependencies      | Identify licenses of the project's production and peer dependencies. Updates the table in the **Dependency Licenses** section of this page and summary files licenses.json and licenseTree.json in th licenses directory of this repository. Also downloads a copy of dependency license to `licenses/downloads'.. |
+| formatCode                | Uses `prettier` to enforce formatting style rules.                                                                                                                                                                                                                                                                 |
+| lintCode                  | Uses `eslint` to check the code for potential errors and enforces coding style rules.                                                                                                                                                                                                                              |
+| releaseProject            | Bump version, builds config, builds project, synchronise with `GitHub` and publish to `npm` or Cloudflare.                                                                                                                                                                                                         |
+| syncProjectWithGitHub     | Synchronise the local repository with the main GitHub repository.                                                                                                                                                                                                                                                  |
+| testProject               | ❌ Not implemented.                                                                                                                                                                                                                                                                                                |
+| updateDataPosDependencies | Install the latest version of the specified Data Positioning dependencies.                                                                                                                                                                                                                                         |
 
 ### Usage
 
-All of the above utilities are designed to be run from `package.json` scripts and assume that the repository follows the standard Data Positioning directory structure and includes a `config.json` file in the root directory.
+All utilities are designed to be run from `package.json` scripts and assume that the project follows the standard Data Positioning directory structure and that it includes a `config.json` file in the root directory.
 
 ```json
 {
@@ -62,7 +60,7 @@ All of the above utilities are designed to be run from `package.json` scripts an
 
 ## Bundle Analysis Reports
 
-The Bundle Analysis Report provides a detailed breakdown of the bundle's composition and module sizes, helping to identify which modules contribute most to the final build. It is generated automatically on each release using the `npm` package [rollup-plugin-visualizer](https://www.npmjs.com/package/rollup-plugin-visualizer).
+The Bundle Analysis Report provides a detailed breakdown of the bundle’s composition and module sizes, helping identify which modules contribute most to the final build. It is generated automatically on each release using the `npm` package [rollup-plugin-visualizer](https://www.npmjs.com/package/rollup-plugin-visualizer).
 
 [View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/stats.html)
 
@@ -74,7 +72,7 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 
 ## Dependency Licenses
 
-The following table lists the top-level production and peer dependencies. All of these dependencies—along with their transitive dependencies—have been recursively verified to use one of the following commercially friendly licenses: **Apache-2.0**, **BSD-2-Clause**, **CC0-1.0**, or **MIT**. Developers cloning this repository should independently verify all **development** and **optional** dependencies. This project is used solely to support development activities and is not used in production or distributed in any other form.
+The following table lists the top-level production and peer dependencies. All of these dependencies—along with their transitive dependencies—have been recursively verified to use one of the following commercially friendly licenses: **Apache-2.0**, **BSD-2-Clause**, **CC0-1.0**, or **MIT**. Developers cloning this repository should independently verify all **development** and **optional** dependencies. This project supports development activities only. It is not used in production or distributed in any other form.
 
 We use the `npm` packages [license-report](https://www.npmjs.com/package/license-report), [license-report-check](https://www.npmjs.com/package/license-report-check), [license-report-recursive](https://www.npmjs.com/package/license-report-recursive) and [license-downloader](https://www.npmjs.com/package/license-downloader) to identify all dependency licenses and include copies of them. We do not use any unlicensed dependencies in either production or development.
 
@@ -93,22 +91,22 @@ We use the `npm` packages [license-report](https://www.npmjs.com/package/license
 
 1. **Installed** column:
 
-    A ⚠️ symbol is used to highlight any installed version that does not match the latest available version.
+    The ⚠️ symbol indicates that the installed version does not match the latest available version.”.
 
 1. **Latest Release** column:
 
-    A ⚠️ symbol is used to highlight any dependency that has gone **more than 6 months** without an update but **no more than 12 months**.
+    The ⚠️ symbol indicates that the dependency has gone **more than 6 months** without an update but **no more than 12 months**.
 
-    A **❗** symbol indicates a dependency that has gone **more than 12 months** without an update.
+    The ❗ symbol indicates a dependency that has gone **more than 12 months** without an update.
 
     If a dependency has no, or only a small number of, transitive dependencies, then it may not require frequent updates. The **Deps** column shows the number of transitive dependencies. Full details for these dependencies can be found in [licenses/licenseTree.json](licenses/licenseTree.json).
 
 1. **Document** column:
 
-    The message “⚠️ No license file” is used to highlight any dependency that does not include a license file.
+    The “⚠️ No license file” message indicates a dependency that does not include a license file.
 
 ## License
 
-This project is licensed under the MIT License, allowing free use, modification, and distribution.
+This project is licensed under the MIT License, permitting free use, modification, and distribution.
 
 [MIT](./LICENSE) © 2026 Data Positioning Pty Ltd

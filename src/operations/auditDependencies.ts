@@ -61,7 +61,7 @@ async function auditDependencies(): Promise<void> {
 
         await insertOWASPDependencyCheckBadgeIntoReadme('2️⃣');
 
-        await spawnCommand("3️⃣  Check using 'npm outdated'", 'npm', ['audit']);
+        await spawnCommand("3️⃣  Check using 'npm audit'", 'npm', ['audit']);
 
         logOperationSuccess('Dependencies audited.');
     } catch (error) {

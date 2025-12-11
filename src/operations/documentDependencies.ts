@@ -139,7 +139,7 @@ async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolea
         })()
     ];
 
-    let licensesContent = '|Name|Type|Installed|Latest|Latest Release|Deps|Document|\n|:-|:-|:-:|:-:|:-|-:|:-|\n';
+    let licensesContent = '|Name|Type|Installed|Latest|Latest Released|Deps|Document|\n|:-|:-|:-:|:-:|:-|-:|:-|\n';
     for (const license of mergedLicenses) {
         const installedVersion = license.installedVersion === license.remoteVersion ? license.installedVersion : `${license.installedVersion} ⚠️`;
 

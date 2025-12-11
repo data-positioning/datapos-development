@@ -15,28 +15,30 @@ Install as a development (dev) dependency:
 npm install --save-dev @datapos/datapos-development
 ```
 
+> [!Other Requirements ]
 > See the Data Positioning security documentation for additional initialization requirements.
-
-> [!NOTE]
-> This is a blue note box.
 
 ## Utilities
 
-The `src/index.ts' file exposes the following utilities:
+The library implements the following utilities:
 
-| Name                      | Notes                                                             |
-| ------------------------- | ----------------------------------------------------------------- |
-| auditDependencies         |                                                                   |
-| buildDirectoryIndex       | Build an index for a given directory.                             |
-| buildProject              |                                                                   |
-| checkDependencies         |                                                                   |
-| documentDependencies      |                                                                   |
-| formatCode                |                                                                   |
-| lintCode                  |                                                                   |
-| releaseProject            |                                                                   |
-| syncProjectWithGitHub     | Synchronise the local repository with the main GitHub repository. |
-| testProject               |                                                                   |
-| updateDataPosDependencies |                                                                   |
+| Name                      | Notes                                                                                                                                           |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| auditDependencies         | Audit the project's dependencies for known security vulnerabilities.                                                                            |
+| buildDirectoryIndex       | Build an index for a given directory.                                                                                                           |
+| buildProject              | Build the package using Vite. Output to '/dist' directory.                                                                                      |
+| checkDependencies         | Identify outdated dependencies using npm `outdated` and `npm-check-updates` with option to install latest versions. Also runs `retire` scanner. |
+| documentDependencies      | Identify licenses of the project's production and peer dependencies. See [licenses.json](./licenses.json).                                      |
+| formatCode                | Use `prettier` to enforce formatting style rules.                                                                                               |
+| lintCode                  | Use `eslint` to check the code for potential errors and enforces coding style rules.                                                            |
+| releaseProject            | Bump version, build library, synchronise with `GitHub` and publish to `npm`.                                                                    |
+| syncProjectWithGitHub     | Synchronise the local repository with the main GitHub repository.                                                                               |
+| testProject               |                                                                                                                                                 |
+| updateDataPosDependencies | Install the latest version of all Data Positioning dependencies.                                                                                |
+
+Implements the common Data Positioning repository management command detailed in...
+The table below lists the repository management commands available in this project.
+For detailed implementation, see the `scripts` section in the `package.json` file.
 
 All of the above utilities are designed to be run from `package.json` scripts and assume that the repository follows the standard Data Positioning directory structure and includes a `config.json` file in the root directory.
 
@@ -52,15 +54,13 @@ All of the above utilities are designed to be run from `package.json` scripts an
 }
 ```
 
-## Reports & Compliance
-
-### Dependency Check Report
+## Dependency Check Report
 
 The OWASP Dependency Check Report identifies known vulnerabilities in project dependencies. It is generated automatically on each release using the `npm` package [owasp-dependency-check](https://dependency-check.github.io/DependencyCheck/index.html).
 
 [View the OWASP Dependency Check Report](https://data-positioning.github.io/datapos-development/dependency-check-report.html)
 
-### Dependency Licenses
+## Dependency Licenses
 
 The following table lists the top-level production and peer dependencies. All of these dependencies—along with their transitive dependencies—have been recursively verified to use one of the following commercially friendly licenses: **Apache-2.0**, **BSD-2-Clause**, **CC0-1.0**, or **MIT**. Developers cloning this repository should independently verify all **development** and **optional** dependencies. This project is used solely to support development activities and is not used in production or distributed in any other form.
 
@@ -95,30 +95,11 @@ We use the `npm` packages [license-report](https://www.npmjs.com/package/license
 
     The message “⚠️ No license file” is used to highlight any dependency that does not include a license file.
 
-### Bundle Analysis Report
+## Bundle Analysis Reports
 
 The Bundle Analysis Report provides a detailed breakdown of the bundle's composition and module sizes, helping to identify which modules contribute most to the final build. It is generated automatically on each release using the `npm` package [rollup-plugin-visualizer](https://www.npmjs.com/package/rollup-plugin-visualizer).
 
 [View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/stats.html)
-
-## Repository Management Commands
-
-Implements the common Data Positioning repository management command detailed in
-The table below lists the repository management commands available in this project.
-For detailed implementation, see the `scripts` section in the `package.json` file.
-
-| Name               | VS Key Code      | Notes                                                                                                                                           |
-| ------------------ | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| audit              | alt+ctrl+shift+a | Audit the project's dependencies for known security vulnerabilities.                                                                            |
-| build              | alt+ctrl+shift+b | Build the package using Vite. Output to '/dist' directory.                                                                                      |
-| check              | alt+ctrl+shift+c | Identify outdated dependencies using npm `outdated` and `npm-check-updates` with option to install latest versions. Also runs `retire` scanner. |
-| document           | alt+ctrl+shift+d | Identify licenses of the project's production and peer dependencies. See [licenses.json](./licenses.json).                                      |
-| format             | alt+ctrl+shift+f | Use `prettier` to enforce formatting style rules.                                                                                               |
-| lint               | alt+ctrl+shift+l | Use `eslint` to check the code for potential errors and enforces coding style rules.                                                            |
-| release            | alt+ctrl+shift+r | Bump version, build library, synchronise with `GitHub` and publish to `npm`.                                                                    |
-| sync:withGitHub    | alt+ctrl+shift+s | Synchronise local repository with the main GitHub repository.                                                                                   |
-| test               | alt+ctrl+shift+t | ❌ Not implemented.                                                                                                                             |
-| update:dataPosDeps | alt+ctrl+shift+u | Install the latest version of all Data Positioning dependencies.                                                                                |
 
 ## License
 

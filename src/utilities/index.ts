@@ -8,6 +8,7 @@
 import acornTypeScript from 'acorn-typescript';
 import { promises as fs } from 'node:fs';
 import { Parser } from 'acorn';
+import path from 'node:path';
 import { promisify } from 'node:util';
 import type { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
 import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv';
@@ -58,6 +59,29 @@ async function execCommand(label: string | undefined, command_: string, argument
         await fs.writeFile(outputFilePath, stdout.trim(), 'utf8');
     }
     if (stderr.trim()) console.error(stderr.trim());
+}
+
+// Utilities - Clear directory contents.
+async function clearDirectory(directoryPath: string): Promise<void> {
+    let entries: Dirent[];
+
+    try {
+        entries = await fs.readdir(directoryPath, { withFileTypes: true });
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') return; // Treat missing directory as already clear.
+        throw error;
+    }
+
+    await Promise.all(
+        entries.map(async (entry) => {
+            const fullPath = path.join(directoryPath, entry.name);
+            try {
+                await fs.rm(fullPath, { recursive: true, force: true });
+            } catch (error) {
+                if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+            }
+        })
+    );
 }
 
 // Utilities - Get directory entries.
@@ -162,6 +186,7 @@ function traverseAST(node: Node, doIt: (node: Node) => void): void {
 
 // Exposures
 export {
+    clearDirectory,
     execCommand,
     extractOperationsFromSource,
     getDirectoryEntries,

@@ -24,8 +24,8 @@ The library implements the following utilities:
 | Name                      | Notes                                                                                                                                                                                                                                                                                                              |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | auditDependencies         | Audit the project's dependencies for known security vulnerabilities. uses the owasp-dependency-check module to perform the checks. Updates the OWASP badge(s) at the top of this page. Also runs the 'npm outdated`command.                                                                                        |
-| buildDirectoryIndex       | Build an index for a given directory.                                                                                                                                                                                                                                                                              |
-| buildProject              | Builds the package using Vite. Output to '/dist' directory.                                                                                                                                                                                                                                                        |
+| buildDirectoryIndex       | Build an index for the specified directory path.                                                                                                                                                                                                                                                                   |
+| buildProject              | Builds the package using Vite. Output to '/dist' directory. Wrangler for api. Nuxt for app-nuxt. Builds bundle analysis reports.                                                                                                                                                                                   |
 | checkDependencies         | Identifies outdated dependencies using npm `outdated` and `npm-check-updates` with option to automatically install latest versions.                                                                                                                                                                                |
 | documentDependencies      | Identify licenses of the project's production and peer dependencies. Updates the table in the **Dependency Licenses** section of this page and summary files licenses.json and licenseTree.json in th licenses directory of this repository. Also downloads a copy of dependency license to `licenses/downloads'.. |
 | formatCode                | Uses `prettier` to enforce formatting style rules.                                                                                                                                                                                                                                                                 |
@@ -62,7 +62,9 @@ All utilities are designed to be run from `package.json` scripts and assume that
 
 The Bundle Analysis Report provides a detailed breakdown of the bundle’s composition and module sizes, helping identify which modules contribute most to the final build. It is generated automatically on each release using the `npm` package [rollup-plugin-visualizer](https://www.npmjs.com/package/rollup-plugin-visualizer).
 
-[View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/stats.html)
+[View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/bundle-analysis-reports/rollup-visualiser/index.html) created by the **rollup visualiser** plugin.
+
+[View the Bundle Analysis Report](https://data-positioning.github.io/datapos-development/bundle-analysis-reports/sonda/index.html) created by the **sonda** plugin.
 
 ## Dependency Check Report
 
@@ -72,7 +74,7 @@ The OWASP Dependency Check Report identifies known vulnerabilities in project de
 
 ## Dependency Licenses
 
-The following table lists the top-level production and peer dependencies. All of these dependencies—along with their transitive dependencies—have been recursively verified to use one of the following commercially friendly licenses: **Apache-2.0**, **BSD-2-Clause**, **CC0-1.0**, or **MIT**. Developers cloning this repository should independently verify all **development** and **optional** dependencies. This project supports development activities only. It is not used in production or distributed in any other form.
+The following table lists the top-level production and peer dependencies. All of these dependencies—along with their transitive dependencies—have been recursively verified to use one of the following commercially friendly licenses: **BSD-2-Clause**, **CC0-1.0**, or **MIT**. Developers cloning this repository should independently verify all **development** and **optional** dependencies. This project supports development activities only. It is not used in production or distributed in any other form.
 
 We use the `npm` packages [license-report](https://www.npmjs.com/package/license-report), [license-report-check](https://www.npmjs.com/package/license-report-check), [license-report-recursive](https://www.npmjs.com/package/license-report-recursive) and [license-downloader](https://www.npmjs.com/package/license-downloader) to identify all dependency licenses and include copies of them. We do not use any unlicensed dependencies in either production or development.
 
@@ -88,6 +90,8 @@ We use the `npm` packages [license-report](https://www.npmjs.com/package/license
 | zod                     | MIT          |   4.1.13   | 4.1.13  | this month: 2025-12-07      |    0 | [LICENSE](https://raw.githubusercontent.com/colinhacks/zod/main/LICENSE)                  |
 
 <!-- DEPENDENCY_LICENSES_END -->
+
+Insert link to other document for detailed explanation. Only show messages if issues arise.
 
 1. **Installed** column:
 

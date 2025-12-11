@@ -50,6 +50,7 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
 
         await loadEnvironmentVariables(); // Ensure GitHub token is load from '.env', required when downloading license files (step 5).
 
+        console.log(1111, process.env);
         const allowedFlags = licenses.flatMap((license) => ['--allowed', `'${license}'`]);
 
         // Establish licence report configuration file path.This in combination with exports in 'package.json'
@@ -81,7 +82,15 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
         }
 
         await clearDirectory('licenses/downloads');
-        await execCommand('5️⃣  Download license files', 'license-downloader', ['--source', 'licenses/licenses.json', '--licDir', 'licenses/downloads', '--download']);
+        await execCommand('5️⃣  Download license files', 'license-downloader', [
+            '--source',
+            'licenses/licenses.json',
+            '--licDir',
+            'licenses/downloads',
+            '--githubToken.tokenEnvVar',
+            'GITHUB_DOWNLOAD_LICENSE_API_TOKEN',
+            '--download'
+        ]);
 
         await insertLicensesIntoReadme('6️⃣', checkRecursive);
 

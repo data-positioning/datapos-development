@@ -7977,7 +7977,7 @@ async function xl() {
 const Sr = "<!-- DEPENDENCY_LICENSES_START -->", il = "<!-- DEPENDENCY_LICENSES_END -->";
 async function gl(e = [], t = !0) {
   try {
-    Re("Document Dependencies"), await Li();
+    Re("Document Dependencies"), await Li(), console.log(1111, process.env);
     const i = e.flatMap((n) => ["--allowed", `'${n}'`]), r = Bs(new Zs(import.meta.resolve("@datapos/datapos-development/license-report-config")));
     await Te(
       "1️⃣  Generate 'licenses.json' file",
@@ -7989,7 +7989,15 @@ async function gl(e = [], t = !0) {
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", "--recurse", "--department.value=n/a", "--licensePeriod.value=n/a", "--material.value=n/a", "--relatedTo.value=n/a"],
       "licenses/licenseTree.json"
-    ), await Te("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "licenses/licenseTree.json", "--output=table", ...i])) : (re("3️⃣  Skip 'licenses/licenseTree.json' file generate"), re("4️⃣  Skip 'licenses/licenseTree.json' file check")), await Bh("licenses/downloads"), await Te("5️⃣  Download license files", "license-downloader", ["--source", "licenses/licenses.json", "--licDir", "licenses/downloads", "--download"]), await rl("6️⃣", t), Fe("Dependencies documented.");
+    ), await Te("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "licenses/licenseTree.json", "--output=table", ...i])) : (re("3️⃣  Skip 'licenses/licenseTree.json' file generate"), re("4️⃣  Skip 'licenses/licenseTree.json' file check")), await Bh("licenses/downloads"), await Te("5️⃣  Download license files", "license-downloader", [
+      "--source",
+      "licenses/licenses.json",
+      "--licDir",
+      "licenses/downloads",
+      "--githubToken.tokenEnvVar",
+      "GITHUB_DOWNLOAD_LICENSE_API_TOKEN",
+      "--download"
+    ]), await rl("6️⃣", t), Fe("Dependencies documented.");
   } catch (i) {
     console.error("❌ Error documenting dependencies.", i), process.exit(1);
   }

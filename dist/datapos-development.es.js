@@ -8052,7 +8052,7 @@ function nl(e) {
 }
 async function kl() {
   try {
-    Re("Format Code"), await Ie("1️⃣  Format", "prettier", ["--write", "src/"]), Fe("Code formatted.");
+    Re("Format Code"), await Ie("1️⃣  Format", "prettier", ["--write", "*.ts", "src/"]), Fe("Code formatted.");
   } catch (e) {
     console.error("❌ Error formatting code.", e), process.exit(1);
   }

@@ -13,7 +13,6 @@ declare function readJSONFile<T>(path: string): Promise<T>;
 declare function readTextFile(path: string): Promise<string>;
 declare function removeFile(path: string): Promise<void>;
 declare function spawnCommand(label: string, command: string, arguments_?: string[], ignoreErrors?: boolean): Promise<void>;
-declare function syncConfigFiles(): Promise<void>;
 declare function writeJSONFile(path: string, data: object): Promise<void>;
 declare function writeTextFile(path: string, data: string): Promise<void>;
-export { clearDirectory, execCommand, extractOperationsFromSource, getDirectoryEntries, getStatsForPath, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, removeFile, spawnCommand, syncConfigFiles, writeJSONFile, writeTextFile };
+export { clearDirectory, execCommand, extractOperationsFromSource, getDirectoryEntries, getStatsForPath, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, removeFile, spawnCommand, writeJSONFile, writeTextFile };

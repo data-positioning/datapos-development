@@ -13,7 +13,6 @@ import acornTypeScript from 'acorn-typescript';
 import { promises as fs } from 'node:fs';
 import { Parser } from 'acorn';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { exec, spawn } from 'node:child_process';
 
@@ -161,27 +160,6 @@ async function spawnCommand(label: string, command: string, arguments_: string[]
     });
 }
 
-// Utilities - Synchronise configuration files.
-async function syncConfigFiles(): Promise<void> {
-    logOperationHeader('Synchronise config files');
-
-    const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
-
-    const editorConfigTemplatePath = path.resolve(moduleDirectory, '../.editorconfig');
-    const editorConfigTemplateContent = await fs.readFile(editorConfigTemplatePath, 'utf8');
-
-    const editorConfigDestinationPath = path.resolve(process.cwd(), '.editorconfig');
-    const editorConfigDestinationContent = await fs.readFile(editorConfigDestinationPath, 'utf8');
-
-    if (editorConfigDestinationContent === editorConfigTemplateContent) {
-        logOperationSuccess("File '.editorconfig' is already up to date.");
-        return;
-    }
-
-    await fs.writeFile(editorConfigDestinationPath, editorConfigTemplateContent, 'utf8');
-    logOperationSuccess("File '.editorconfig' synchronised.");
-}
-
 // Utilities - Write JSON file.
 async function writeJSONFile(path: string, data: object): Promise<void> {
     await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
@@ -224,7 +202,6 @@ export {
     readTextFile,
     removeFile,
     spawnCommand,
-    syncConfigFiles,
     writeJSONFile,
     writeTextFile
 };

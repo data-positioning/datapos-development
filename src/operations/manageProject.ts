@@ -7,7 +7,9 @@
 // Dependencies - Framework.
 import { connectorConfigSchema } from '@/schemas/connectorSchema';
 import { contextConfigSchema } from '@/schemas/contextSchema';
+import { fileURLToPath } from 'node:url';
 import type { PackageJson } from 'type-fest';
+import path from 'node:path';
 import { presenterConfigSchema } from '@/schemas/presenterSchema';
 import {
     execCommand,
@@ -66,6 +68,27 @@ async function buildProject(): Promise<void> {
     }
 }
 
+// Utilities - Synchronise project configuration files.
+async function syncProjectConfigFiles(typeId: string): Promise<void> {
+    logOperationHeader('Synchronise config files');
+
+    const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+
+    const editorConfigTemplatePath = path.resolve(moduleDirectory, '../.editorconfig');
+    const editorConfigTemplateContent = await readTextFile(editorConfigTemplatePath);
+
+    const editorConfigDestinationPath = path.resolve(process.cwd(), '.editorconfig');
+    const editorConfigDestinationContent = await readTextFile(editorConfigDestinationPath);
+
+    if (editorConfigDestinationContent === editorConfigTemplateContent) {
+        logOperationSuccess("File '.editorconfig' is already up to date.");
+        return;
+    }
+
+    await writeTextFile(editorConfigDestinationPath, editorConfigTemplateContent);
+    logOperationSuccess("File '.editorconfig' synchronised.");
+}
+
 // Utilities - Release project.
 async function releaseProject(): Promise<void> {
     try {
@@ -75,7 +98,7 @@ async function releaseProject(): Promise<void> {
         const packageJSON = await readJSONFile<PackageJson>('package.json');
         const configJSON = await readJSONFile<ModuleConfig>('config.json');
 
-        await bumpProjectVersion('1️⃣', packageJSON);
+        await bumpPackageVersion('1️⃣', packageJSON);
 
         const moduleTypeConfig = MODULE_TYPE_CONFIGS.find((config) => configJSON.id.startsWith(config.idPrefix));
         if (!moduleTypeConfig) throw new Error(`Failed to locate module type configuration for identifier '${configJSON.id}'.`);
@@ -145,7 +168,7 @@ async function syncProjectWithGitHub(): Promise<void> {
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
         logStepHeader('Bump project version');
-        await bumpProjectVersion('1️⃣', packageJSON);
+        await bumpPackageVersion('1️⃣', packageJSON);
 
         await execCommand('2️⃣  Stage changes', 'git', ['add', '.']);
 
@@ -266,8 +289,8 @@ async function buildPresenterProjectConfig(stepIcon: string, packageJSON: Packag
     await writeJSONFile('config.json', configJSON);
 }
 
-// Helper - Bump project version.
-async function bumpProjectVersion(stepIcon: string, packageJSON: PackageJson, path = './'): Promise<void> {
+// Helper - Bump package version.
+async function bumpPackageVersion(stepIcon: string, packageJSON: PackageJson, path = './'): Promise<void> {
     logStepHeader(`${stepIcon}  Bump project version`);
 
     if (packageJSON.version == null) {
@@ -298,4 +321,4 @@ function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorU
 }
 
 // Exposures
-export { buildProject, releaseProject, syncProjectWithGitHub, testProject };
+export { buildProject, releaseProject, syncProjectConfigFiles, syncProjectWithGitHub, testProject };

@@ -4,7 +4,7 @@
 
 /* eslint-disable security/detect-non-literal-fs-filename */
 
-// Dependencies - Vendor.
+/** Dependencies - Vendor. */
 import type { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
 import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv';
 import type { MethodDefinition, Node } from 'acorn';
@@ -16,7 +16,7 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 import { exec, spawn } from 'node:child_process';
 
-// Initialisation
+/** Initialisation */
 const asyncExec = promisify(exec);
 
 // Utilities - Clear directory.
@@ -44,7 +44,7 @@ async function clearDirectory(directoryPath: string): Promise<void> {
     );
 }
 
-// Utilities - Extract operations from source.
+/** Utilities - Extract operations from source. */
 function extractOperationsFromSource<T>(source: string): T[] {
     // @ts-expect-error - acorn-typescript runtime mismatch is fine.
     const TSParser = Parser.extend(acornTypeScript());
@@ -74,7 +74,7 @@ function extractOperationsFromSource<T>(source: string): T[] {
     return operations;
 }
 
-// Utilities - Execute command.
+/** Utilities - Execute command. */
 async function execCommand(label: string | undefined, command_: string, arguments_: string[] = [], outputFilePath?: string): Promise<void> {
     const command = `${command_} ${arguments_.join(' ')}`;
     if (label !== undefined) logStepHeader(`${label} - exec(${command})`);
@@ -87,26 +87,26 @@ async function execCommand(label: string | undefined, command_: string, argument
     if (stderr.trim()) console.error(stderr.trim());
 }
 
-// Utilities - Get directory entries.
+/** Utilities - Get directory entries. */
 function getDirectoryEntries(path: string): Promise<string[]>;
 function getDirectoryEntries(path: string, options: ObjectEncodingOptions): Promise<Dirent[]>;
 async function getDirectoryEntries(path: string, options?: ObjectEncodingOptions): Promise<string[] | Dirent[]> {
     return fs.readdir(path, options);
 }
 
-// Utilities - Get stats for path.
+/** Utilities - Get stats for path. */
 async function getStatsForPath(path: string): Promise<Stats> {
     return await fs.stat(path);
 }
 
-// Utilities - Load environment variables.
+/** Utilities - Load environment variables. */
 async function loadEnvironmentVariables(): Promise<void> {
     logStepHeader('Load environment variables');
     const dotenv = (await import('dotenv')) as { config(options?: DotenvConfigOptions): DotenvConfigOutput };
     dotenv.config();
 }
 
-// Utilities - Log operation header.
+/** Utilities - Log operation header. */
 function logOperationHeader(text: string): void {
     const cyan = '\u001B[36m';
     const reset = '\u001B[0m';
@@ -116,17 +116,17 @@ function logOperationHeader(text: string): void {
     console.info(`${line}${reset}`);
 }
 
-// Utilities - Log operation success.
+/** Utilities - Log operation success. */
 function logOperationSuccess(message: string): void {
     console.info(`\n✅ ${message}\n`);
 }
 
-// Utilities - Log step header.
+/** Utilities - Log step header. */
 function logStepHeader(text: string): void {
     console.info(`\n${text}\n`);
 }
 
-// Utilities - Read JSON file.
+/** Utilities - Read JSON file. */
 async function readJSONFile<T>(path: string): Promise<T> {
     return JSON.parse(await fs.readFile(path, 'utf8')) as T;
 }
@@ -136,7 +136,7 @@ async function readTextFile(path: string): Promise<string> {
     return await fs.readFile(path, 'utf8');
 }
 
-// Utilities - Remove file.
+/** Utilities - Remove file. */
 async function removeFile(path: string): Promise<void> {
     try {
         await fs.unlink(path);
@@ -145,7 +145,7 @@ async function removeFile(path: string): Promise<void> {
     }
 }
 
-// Utilities - Spawn command.
+/** Utilities - Spawn command. */
 async function spawnCommand(label: string, command: string, arguments_: string[] = [], ignoreErrors = false): Promise<void> {
     logStepHeader(`${label} - spawn(${command} ${arguments_.join(' ')})`);
     return new Promise((resolve, reject) => {
@@ -160,17 +160,26 @@ async function spawnCommand(label: string, command: string, arguments_: string[]
     });
 }
 
-// Utilities - Write JSON file.
+/** Utilities - Substitute content. */
+function substituteContent(originalContent: string, substituteContent: string, startMarker: string, endMarker: string): string {
+    const startIndex = originalContent.indexOf(startMarker);
+    const endIndex = originalContent.indexOf(endMarker);
+    if (startIndex === -1 || endIndex === -1) throw new Error(`Markers ${startMarker}-${endMarker} not found in content.`);
+    // return originalContent.slice(0, Math.max(0, startIndex + startMarker.length)) + substituteContent + originalContent.slice(Math.max(0, endIndex));
+    return `${originalContent.slice(0, Math.max(0, startIndex + startMarker.length))}\n${substituteContent}\n${originalContent.slice(Math.max(0, endIndex))}`;
+}
+
+/** Utilities - Write JSON file. */
 async function writeJSONFile(path: string, data: object): Promise<void> {
     await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
 }
 
-// Utilities - Write text file.
+/** Utilities - Write text file. */
 async function writeTextFile(path: string, data: string): Promise<void> {
     await fs.writeFile(path, data, 'utf8');
 }
 
-// Helpers - Traverse AST (Abstract Syntax Tree).
+/** Helpers - Traverse AST (Abstract Syntax Tree). */
 function traverseAST(node: Node, doIt: (node: Node) => void): void {
     doIt(node);
     for (const [key, value_] of Object.entries(node)) {
@@ -187,7 +196,7 @@ function traverseAST(node: Node, doIt: (node: Node) => void): void {
     }
 }
 
-// Exposures
+/** Exposures */
 export {
     clearDirectory,
     execCommand,
@@ -202,6 +211,7 @@ export {
     readTextFile,
     removeFile,
     spawnCommand,
+    substituteContent,
     writeJSONFile,
     writeTextFile
 };

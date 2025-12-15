@@ -4,10 +4,10 @@
 
 /* eslint-disable unicorn/no-process-exit */
 
-// Dependencies - Vendor.
+/** Dependencies - Vendor. */
 import { fileURLToPath, URL } from 'node:url';
 
-// Dependencies - Framework.
+/** Dependencies - Framework. */
 import {
     clearDirectory,
     execCommand,
@@ -17,10 +17,11 @@ import {
     logStepHeader,
     readJSONFile,
     readTextFile,
+    substituteContent,
     writeTextFile
 } from '@/utilities';
 
-// Interfaces/Types
+/** Interfaces/Types */
 interface License {
     department: string;
     relatedTo: string;
@@ -39,11 +40,11 @@ interface License {
     licenseFileLink?: string;
 }
 
-// Constants
+/** Constants */
 const START_MARKER = '<!-- DEPENDENCY_LICENSES_START -->';
 const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
 
-// Utilities - Document.
+/** Utilities - Document. */
 async function documentDependencies(licenses: string[] = [], checkRecursive = true): Promise<void> {
     try {
         logOperationHeader('Document Dependencies');
@@ -100,17 +101,9 @@ async function documentDependencies(licenses: string[] = [], checkRecursive = tr
     }
 }
 
-// Helpers - Insert licenses into README file.
+/** Helpers - Insert licenses into README file. */
 async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolean): Promise<void> {
     logStepHeader(`${stepIcon}  Insert licenses into 'README.md'`);
-
-    const readmeContent = await readTextFile('./README.md');
-    const startIndex = readmeContent.indexOf(START_MARKER);
-    const endIndex = readmeContent.indexOf(END_MARKER);
-    if (startIndex === -1 || endIndex === -1) {
-        console.error("❌ No dependency license markers found in 'README.md'.");
-        return;
-    }
 
     const productionPackageLicenses = await readJSONFile<License[]>('licenses/licenses.json');
     const productionDownloadLicenses = await readJSONFile<License[]>('licenses/downloads/licenses.ext.json');
@@ -158,11 +151,24 @@ async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolea
         licensesContent += `|${license.name}|${license.licenseType}|${installedVersion}|${license.remoteVersion}|${latestUpdate}|${dependencyCount}|${licenseLink}|\n`;
     }
 
-    const newContent = `${readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length))}\n${licensesContent}\n${readmeContent.slice(Math.max(0, endIndex))}`;
+    // const readmeContent = await readTextFile('./README.md');
+    // const startIndex = readmeContent.indexOf(START_MARKER);
+    // const endIndex = readmeContent.indexOf(END_MARKER);
+    // if (startIndex === -1 || endIndex === -1) {
+    //     console.error("❌ No dependency license markers found in 'README.md'.");
+    //     return;
+    // }
+    // const newContent = `${readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length))}\n${licensesContent}\n${readmeContent.slice(Math.max(0, endIndex))}`;
+
+    // Insert badges into README
+    const originalContent = await readTextFile('./README.md');
+    const newContent = substituteContent(originalContent, licensesContent, START_MARKER, END_MARKER);
+    await writeTextFile('README.md', newContent);
+    console.info("OWASP audit badge(s) inserted into 'README.md'");
     await writeTextFile('README.md', newContent);
 }
 
-// Helpers
+/** Helpers */
 function determineLatestAge(momentString?: string): string {
     if (momentString == null || momentString === '') return 'n/a';
 
@@ -181,5 +187,5 @@ function determineLatestAge(momentString?: string): string {
     return `${months} months ago: ${dateString}❗`;
 }
 
-// Exposures
+/** Exposures */
 export { documentDependencies };

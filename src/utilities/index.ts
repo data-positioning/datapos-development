@@ -166,7 +166,7 @@ async function syncEditorConfig(): Promise<void> {
     logOperationHeader('Synchronise .editorconfig');
 
     const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
-    const templateCandidates = [path.resolve(moduleDirectory, '../../.editorconfig'), path.resolve(moduleDirectory, '../.editorconfig')];
+    const templateCandidates = [path.resolve(moduleDirectory, '../../.editorconfig')];
 
     let templatePath: string | undefined;
     for (const candidate of templateCandidates) {

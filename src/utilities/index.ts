@@ -166,28 +166,35 @@ async function syncEditorConfig(): Promise<void> {
     logOperationHeader('Synchronise .editorconfig');
 
     const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
-    const templatePath = path.resolve(moduleDirectory, '../../.editorconfig');
+    const templateCandidates = [path.resolve(moduleDirectory, '../../.editorconfig'), path.resolve(moduleDirectory, '../.editorconfig')];
 
-    // try {
-    //     await fs.access(templatePath);
-    // } catch (error) {
-    //     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-    //         throw new Error('Unable to locate .editorconfig template at repository root.');
-    //     }
-    //     throw error;
-    // }
+    let templatePath: string | undefined;
+    for (const candidate of templateCandidates) {
+        try {
+            await fs.access(candidate);
+            templatePath = candidate;
+            break;
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+        }
+    }
+
+    if (templatePath === undefined) {
+        throw new Error('Unable to locate default.editorconfig template.');
+    }
 
     const destinationPath = path.resolve(process.cwd(), '.editorconfig');
     logStepHeader(`Template: ${templatePath}`);
     logStepHeader(`Destination: ${destinationPath}`);
 
     const templateContent = await fs.readFile(templatePath, 'utf8');
+    let destinationContent: string | undefined;
 
-    // try {
-    const destinationContent = await fs.readFile(destinationPath, 'utf8');
-    // } catch (error) {
-    //     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-    // }
+    try {
+        destinationContent = await fs.readFile(destinationPath, 'utf8');
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    }
 
     if (destinationContent === templateContent) {
         logOperationSuccess('.editorconfig already up to date.');

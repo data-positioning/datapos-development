@@ -8070,7 +8070,7 @@ async function Sl(e = []) {
     De("Update '@datapos/datapos' Dependencies");
     for (const [t, i] of e.entries()) {
       const r = nl.at(t) ?? "🔢";
-      await Ne(`${r}  Update '${i}'`, "npm", ["install", `@datapos/datapos-${i}@latest`]), i === "developer" && await al();
+      await Ne(`${r}  Update '${i}'`, "npm", ["install", `@datapos/datapos-${i}@latest`]), i === "development" && await al();
     }
     Ie("'@datapos/datapos' dependencies updated.");
   } catch (t) {

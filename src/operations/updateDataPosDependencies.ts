@@ -22,7 +22,7 @@ async function updateDataPosDependencies(dependencies: string[] = []): Promise<v
         for (const [index, dependency] of dependencies.entries()) {
             const stepIcon = STEP_ICONS.at(index) ?? '🔢';
             await spawnCommand(`${stepIcon}  Update '${dependency}'`, 'npm', ['install', `@datapos/datapos-${dependency}@latest`]);
-            if (dependency === 'developer') await syncProjectConfigFiles();
+            if (dependency === 'development') await syncProjectConfigFiles();
         }
 
         logOperationSuccess("'@datapos/datapos' dependencies updated.");

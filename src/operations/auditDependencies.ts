@@ -92,19 +92,29 @@ async function insertOWASPDependencyCheckBadgeIntoReadme(stepIcon: string): Prom
     const badges = await buildOWASPBadges(severityCounts);
 
     // Insert badges into README
-    const readmeContent = await readTextFile('./README.md');
-    const startIndex = readmeContent.indexOf(START_MARKER);
-    const endIndex = readmeContent.indexOf(END_MARKER);
+    const originalContent = await readTextFile('./README.md');
+    // const startIndex = readmeContent.indexOf(START_MARKER);
+    // const endIndex = readmeContent.indexOf(END_MARKER);
 
-    if (startIndex === -1 || endIndex === -1) {
-        console.error("❌ No OWASP badge markers found in 'README.md'.");
-        return;
-    }
+    // if (startIndex === -1 || endIndex === -1) {
+    //     console.error("❌ No OWASP badge markers found in 'README.md'.");
+    //     return;
+    // }
 
-    const badgeContent = badges.join(' ');
-    const newContent = readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + badgeContent + readmeContent.slice(Math.max(0, endIndex));
+    // const badgeContent = badges.join(' ');
+    // const newContent = readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length)) + badgeContent + readmeContent.slice(Math.max(0, endIndex));
+    const newContent = substituteContent(originalContent, badges.join(' '), START_MARKER, END_MARKER);
     await writeTextFile('README.md', newContent);
     console.info("OWASP audit badge(s) inserted into 'README.md'");
+}
+
+function substituteContent(originalContent: string, substituteContent: string, startMarker: string, endMarker: string): string {
+    const startIndex = originalContent.indexOf(startMarker);
+    const endIndex = originalContent.indexOf(endMarker);
+
+    if (startIndex === -1 || endIndex === -1) throw new Error(`Markers ${startMarker}-${endMarker} not found in content.`);
+
+    return originalContent.slice(0, Math.max(0, startIndex + startMarker.length)) + substituteContent + originalContent.slice(Math.max(0, endIndex));
 }
 
 // Helpers - Build OWASP badges.

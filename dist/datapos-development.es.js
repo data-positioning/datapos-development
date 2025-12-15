@@ -8083,7 +8083,13 @@ async function al(e) {
 }
 async function ol(e, t, i) {
   const r = Dt.resolve(e, `${t}${i}`), n = await Xe(r), u = Dt.resolve(process.cwd(), i);
-  if (await Xe(u) === n) {
+  let h;
+  try {
+    h = await Xe(u);
+  } catch (d) {
+    if (d.code !== "ENOENT") throw d;
+  }
+  if (h === n) {
     Ie(`File '${i}' is already up to date.`);
     return;
   }

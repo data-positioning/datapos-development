@@ -43,7 +43,13 @@ async function syncConfigFile(moduleDirectory: string, templateFilePath: string,
     const templateContent = await readTextFile(templatePath);
 
     const destinationPath = path.resolve(process.cwd(), fileName);
-    const destinationContent = await readTextFile(destinationPath);
+
+    let destinationContent;
+    try {
+        destinationContent = await readTextFile(destinationPath);
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    }
 
     if (destinationContent === templateContent) {
         logOperationSuccess(`File '${fileName}' is already up to date.`);

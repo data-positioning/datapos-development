@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.349",
+    "version": "0.3.350",
     "description": "A collection of utilities for managing Data Positioning projects.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -9,7 +9,7 @@
     "homepage": "https://www.datapos.app",
     "repository": {
         "type": "git",
-        "url": "https://github.com/data-positioning/datapos-development.git"
+        "url": "git+https://github.com/data-positioning/datapos-development.git"
     },
     "bugs": {
         "url": "https://github.com/data-positioning/datapos-development/issues"

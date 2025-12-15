@@ -6763,10 +6763,10 @@ function Fh(e) {
           a[v] = c[v];
         }
       }, f.tsParseModifiers = function(s) {
-        for (var a = this, c = s.modified, p = s.allowedModifiers, m = s.disallowedModifiers, v = s.stopOnStartOfClassStaticBlock, x = s.errorTemplate, g = x === void 0 ? N.InvalidModifierOnTypeMember : x, _ = {}, T = function(K, G, X, re) {
-          G === X && c[re] && a.raise(K.column, N.InvalidModifiersOrder({ orderedModifiers: [X, re] }));
-        }, L = function(K, G, X, re) {
-          (c[X] && G === re || c[re] && G === X) && a.raise(K.column, N.IncompatibleModifiers({ modifiers: [X, re] }));
+        for (var a = this, c = s.modified, p = s.allowedModifiers, m = s.disallowedModifiers, v = s.stopOnStartOfClassStaticBlock, x = s.errorTemplate, g = x === void 0 ? N.InvalidModifierOnTypeMember : x, _ = {}, T = function(K, G, X, ie) {
+          G === X && c[ie] && a.raise(K.column, N.InvalidModifiersOrder({ orderedModifiers: [X, ie] }));
+        }, L = function(K, G, X, ie) {
+          (c[X] && G === ie || c[ie] && G === X) && a.raise(K.column, N.IncompatibleModifiers({ modifiers: [X, ie] }));
         }; ; ) {
           var V = this.startLoc, E = this.tsParseModifier(p.concat(m ?? []), v);
           if (!E) break;
@@ -7255,8 +7255,8 @@ function Fh(e) {
           if (L = this.cloneCurLookaheadState(), !(V = this.tryParse(function() {
             return G.parseMaybeAssignOrigin(s, a, c);
           }, L)).error) return V.node;
-          var X = this.context, re = X[X.length - 1];
-          re === y.tokContexts.tc_oTag && X[X.length - 2] === y.tokContexts.tc_expr ? (X.pop(), X.pop()) : re !== y.tokContexts.tc_oTag && re !== y.tokContexts.tc_expr || X.pop();
+          var X = this.context, ie = X[X.length - 1];
+          ie === y.tokContexts.tc_oTag && X[X.length - 2] === y.tokContexts.tc_expr ? (X.pop(), X.pop()) : ie !== y.tokContexts.tc_oTag && ie !== y.tokContexts.tc_expr || X.pop();
         }
         if (!((p = V) != null && p.error || this.tsMatchLeftRelational())) return this.parseMaybeAssignOrigin(s, a, c);
         L && !this.compareLookaheadState(L, this.getCurLookaheadState()) || (L = this.cloneCurLookaheadState());
@@ -7409,9 +7409,9 @@ function Fh(e) {
             }
             L.push(this.parseMaybeAssign(a, K, this.parseParenItem));
           }
-          var re = this.lastTokEnd, ve = this.lastTokEndLoc;
+          var ie = this.lastTokEnd, ve = this.lastTokEndLoc;
           if (this.expect(o.parenR), this.maybeInArrowParameters = x, s && this.shouldParseArrow(L) && this.eat(o.arrow)) return this.checkPatternErrors(K, !1), this.checkYieldAwaitInDefaultParams(), this.yieldPos = G, this.awaitPos = X, this.parseParenArrowList(p, m, L, a);
-          L.length && !E || this.unexpected(this.lastTokStart), g && this.unexpected(g), this.checkExpressionErrors(K, !0), this.yieldPos = G || this.yieldPos, this.awaitPos = X || this.awaitPos, L.length > 1 ? ((c = this.startNodeAt(_, T)).expressions = L, this.finishNodeAt(c, "SequenceExpression", re, ve)) : c = L[0];
+          L.length && !E || this.unexpected(this.lastTokStart), g && this.unexpected(g), this.checkExpressionErrors(K, !0), this.yieldPos = G || this.yieldPos, this.awaitPos = X || this.awaitPos, L.length > 1 ? ((c = this.startNodeAt(_, T)).expressions = L, this.finishNodeAt(c, "SequenceExpression", ie, ve)) : c = L[0];
         } else c = this.parseParenExpression();
         if (this.options.preserveParens) {
           var $e = this.startNodeAt(p, m);
@@ -7481,8 +7481,8 @@ function Fh(e) {
         p && G && this.raise(this.lastTokStart, "Optional chaining cannot appear in the callee of new expressions");
         var X = this.eat(o.bracketL);
         if (X || G && this.type !== o.parenL && this.type !== o.backQuote || this.eat(o.dot)) {
-          var re = this.startNodeAt(a, c);
-          re.object = s, X ? (re.property = this.parseExpression(), this.expect(o.bracketR)) : re.property = this.type === o.privateId && s.type !== "Super" ? this.parsePrivateIdent() : this.parseIdent(this.options.allowReserved !== "never"), re.computed = !!X, K && (re.optional = G), s = this.finishNode(re, "MemberExpression");
+          var ie = this.startNodeAt(a, c);
+          ie.object = s, X ? (ie.property = this.parseExpression(), this.expect(o.bracketR)) : ie.property = this.type === o.privateId && s.type !== "Super" ? this.parsePrivateIdent() : this.parseIdent(this.options.allowReserved !== "never"), ie.computed = !!X, K && (ie.optional = G), s = this.finishNode(ie, "MemberExpression");
         } else if (!p && this.eat(o.parenL)) {
           var ve = this.maybeInArrowParameters;
           this.maybeInArrowParameters = !0;
@@ -7686,7 +7686,7 @@ function Li(e) {
 }
 async function Te(e, t, i = [], r) {
   const n = `${t} ${i.join(" ")}`;
-  e !== void 0 && ie(`${e} - exec(${n})`);
+  e !== void 0 && re(`${e} - exec(${n})`);
   const { stdout: u, stderr: h } = await $h(n);
   r === void 0 ? u.trim() && console.log(u.trim()) : await ae.writeFile(r, u.trim(), "utf8"), h.trim() && console.error(h.trim());
 }
@@ -7694,7 +7694,7 @@ async function Zh(e, t) {
   return ae.readdir(e, t);
 }
 async function Oi() {
-  ie("Load environment variables"), (await import("dotenv")).config();
+  re("Load environment variables"), (await import("dotenv")).config();
 }
 function Ne(e) {
   const t = "\x1B[36m", i = "\x1B[0m", r = "─".repeat(Math.max(e.length + 60, 60));
@@ -7706,7 +7706,7 @@ function Ie(e) {
 ✅ ${e}
 `);
 }
-function ie(e) {
+function re(e) {
   console.info(`
 ${e}
 `);
@@ -7725,28 +7725,20 @@ async function Uh(e) {
   }
 }
 async function Le(e, t, i = [], r = !1) {
-  return ie(`${e} - spawn(${t} ${i.join(" ")})`), new Promise((n, u) => {
+  return re(`${e} - spawn(${t} ${i.join(" ")})`), new Promise((n, u) => {
     $s(t, i, { stdio: "inherit" }).on("close", (d) => {
       d === 0 || r ? n() : u(new Error(`${t} exited with code ${d}`));
     });
   });
 }
 async function fl() {
-  Ne("Synchronise .editorconfig");
-  const e = Dt.dirname(Pr(import.meta.url)), t = Dt.resolve(e, "../.editorconfig"), i = Dt.resolve(process.cwd(), ".editorconfig");
-  ie(`Template: ${t}`), ie(`Destination: ${i}`);
-  const r = await ae.readFile(t, "utf8");
-  let n;
-  try {
-    n = await ae.readFile(i, "utf8");
-  } catch (u) {
-    if (u.code !== "ENOENT") throw u;
-  }
-  if (n === r) {
-    Ie(".editorconfig already up to date.");
+  Ne("Synchronise config files");
+  const e = Dt.dirname(Pr(import.meta.url)), t = Dt.resolve(e, "../.editorconfig"), i = await ae.readFile(t, "utf8"), r = Dt.resolve(process.cwd(), ".editorconfig");
+  if (await ae.readFile(r, "utf8") === i) {
+    Ie("File '.editorconfig' is already up to date.");
     return;
   }
-  await ae.writeFile(i, r, "utf8"), Ie(".editorconfig synchronised.");
+  await ae.writeFile(r, i, "utf8"), Ie("File '.editorconfig' synchronised.");
 }
 async function ut(e, t) {
   await ae.writeFile(e, JSON.stringify(t, void 0, 4), "utf8");
@@ -7836,13 +7828,13 @@ async function ml() {
         await Gh("2️⃣", e);
     }
     if (await Le("3️⃣  Bundle project", "vite", ["build"]), await Te("4️⃣  Stage changes", "git", ["add", "."]), await Te("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Te("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), i.typeId === "app")
-      ie("7️⃣  Register module"), await qh();
+      re("7️⃣  Register module"), await qh();
     else if (i.typeId === "engine")
-      ie("7️⃣  Register module"), await kr(t), await wr(e, `datapos-engine-eu/${i.uploadGroupName}`);
+      re("7️⃣  Register module"), await kr(t), await wr(e, `datapos-engine-eu/${i.uploadGroupName}`);
     else if (i.uploadGroupName === void 0)
-      ie("7️⃣  Registration NOT required.");
+      re("7️⃣  Registration NOT required.");
     else {
-      ie("7️⃣  Register module"), await kr(t);
+      re("7️⃣  Register module"), await kr(t);
       const r = t.id.split("-").slice(2).join("-");
       await wr(e, `datapos-engine-eu/${i.uploadGroupName}/${r}`);
     }
@@ -7855,7 +7847,7 @@ async function ml() {
         await Uh(r);
       }
     } else
-      ie(`8️⃣  Publishing NOT required for package with type identifier of '${i.typeId}'.`);
+      re(`8️⃣  Publishing NOT required for package with type identifier of '${i.typeId}'.`);
     Ie(`Project version '${e.version}' released.`);
   } catch (e) {
     console.error("❌ Error releasing project.", e), process.exit(1);
@@ -7865,7 +7857,7 @@ async function yl() {
   try {
     Ne("Synchronise Project with GitHub");
     const e = await me("package.json");
-    ie("Bump project version"), await Os("1️⃣", e), await Te("2️⃣  Stage changes", "git", ["add", "."]), await Te("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Te("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Ie(`Project version '${e.version}' synchronised with GitHub.`);
+    re("Bump project version"), await Os("1️⃣", e), await Te("2️⃣  Stage changes", "git", ["add", "."]), await Te("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Te("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Ie(`Project version '${e.version}' synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }
@@ -7880,12 +7872,12 @@ function vl() {
   }
 }
 async function Gh(e, t) {
-  ie(`${e}  Build project configuration`);
+  re(`${e}  Build project configuration`);
   const i = await me("config.json");
   t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), await ut("config.json", i);
 }
 async function Wh(e, t) {
-  ie(`${e}  Build connector project configuration`);
+  re(`${e}  Build connector project configuration`);
   const [i, r] = await Promise.all([me("config.json"), Pt("src/index.ts")]), n = kc.safeParse(i);
   if (!n.success) {
     console.log("❌ Configuration is invalid:"), console.table(n.error.issues);
@@ -7895,7 +7887,7 @@ async function Wh(e, t) {
   u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), h === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${h}' usage.`), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, i.usageId = h, await ut("config.json", i);
 }
 async function Kh(e, t) {
-  ie(`${e}  Build context project configuration`);
+  re(`${e}  Build context project configuration`);
   const [i, r] = await Promise.all([me("config.json"), Pt("src/index.ts")]), n = Lc.safeParse(i);
   if (!n.success) {
     console.log("❌ Configuration is invalid:"), console.table(n.error.issues);
@@ -7905,7 +7897,7 @@ async function Kh(e, t) {
   u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, await ut("config.json", i);
 }
 async function Xh(e, t) {
-  ie(`${e}  Build presenter project configuration`);
+  re(`${e}  Build presenter project configuration`);
   const [i, r] = await Promise.all([me("config.json"), Pt("src/index.ts")]), n = Bc.safeParse(i);
   if (!n.success) {
     console.log("❌ Configuration is invalid:"), console.table(n.error.issues);
@@ -7915,7 +7907,7 @@ async function Xh(e, t) {
   u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, await ut("config.json", i);
 }
 async function Os(e, t, i = "./") {
-  if (ie(`${e}  Bump project version`), t.version == null)
+  if (re(`${e}  Bump project version`), t.version == null)
     t.version = "0.0.001", console.warn(`⚠️ Project version initialised to '${t.version}'.`), await ut(`${i}package.json`, t);
   else {
     const r = t.version, n = t.version.split(".");
@@ -7955,7 +7947,7 @@ async function xl() {
   }
 }
 async function el(e) {
-  ie(`${e}  Insert OWASP Badge(s) into 'README.md'`);
+  re(`${e}  Insert OWASP Badge(s) into 'README.md'`);
   const t = await me("dependency-check-reports/dependency-check-report.json"), i = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
   for (const o of t.dependencies)
     if (o.vulnerabilities != null)
@@ -8006,7 +7998,7 @@ async function bl(e = [], t = !0) {
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", "--recurse", "--department.value=n/a", "--licensePeriod.value=n/a", "--material.value=n/a", "--relatedTo.value=n/a"],
       "licenses/licenseTree.json"
-    ), await Te("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "licenses/licenseTree.json", "--output=table", ...i])) : (ie("3️⃣  Skip 'licenses/licenseTree.json' file generate"), ie("4️⃣  Skip 'licenses/licenseTree.json' file check")), await Bh("licenses/downloads"), await Te("5️⃣  Download license files", "license-downloader", [
+    ), await Te("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "licenses/licenseTree.json", "--output=table", ...i])) : (re("3️⃣  Skip 'licenses/licenseTree.json' file generate"), re("4️⃣  Skip 'licenses/licenseTree.json' file check")), await Bh("licenses/downloads"), await Te("5️⃣  Download license files", "license-downloader", [
       "--source",
       "licenses/licenses.json",
       "--licDir",
@@ -8020,7 +8012,7 @@ async function bl(e = [], t = !0) {
   }
 }
 async function rl(e, t) {
-  ie(`${e}  Insert licenses into 'README.md'`);
+  re(`${e}  Insert licenses into 'README.md'`);
   const i = await Pt("./README.md"), r = i.indexOf(Tr), n = i.indexOf(il);
   if (r === -1 || n === -1) {
     console.error("❌ No dependency license markers found in 'README.md'.");
@@ -8137,7 +8129,7 @@ export {
   _l as formatCode,
   kl as lintCode,
   ml as releaseProject,
-  fl as syncEditorConfig,
+  fl as syncConfigFiles,
   yl as syncProjectWithGitHub,
   vl as testProject,
   wl as updateDataPosDependencies

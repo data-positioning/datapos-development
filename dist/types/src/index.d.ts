@@ -9,5 +9,5 @@ export { checkDependencies } from './operations/checkDependencies';
 export { documentDependencies } from './operations/documentDependencies';
 export { formatCode } from './operations/formatCode';
 export { lintCode } from './operations/lintCode';
-export { syncEditorConfig } from './utilities';
+export { syncConfigFiles } from './utilities';
 export { updateDataPosDependencies } from './operations/updateDataPosDependencies';

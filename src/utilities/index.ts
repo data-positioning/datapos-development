@@ -161,48 +161,25 @@ async function spawnCommand(label: string, command: string, arguments_: string[]
     });
 }
 
-// Utilities - Synchronise '.editorConfig' file.
-async function syncEditorConfig(): Promise<void> {
-    logOperationHeader('Synchronise .editorconfig');
+// Utilities - Synchronise configuration files.
+async function syncConfigFiles(): Promise<void> {
+    logOperationHeader('Synchronise config files');
 
     const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
-    const templatePath = path.resolve(moduleDirectory, '../.editorconfig');
 
-    // let templatePath: string | undefined;
-    // for (const candidate of templateCandidates) {
-    //     try {
-    //         await fs.access(candidate);
-    //         templatePath = candidate;
-    //         break;
-    //     } catch (error) {
-    //         if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-    //     }
-    // }
+    const editorConfigTemplatePath = path.resolve(moduleDirectory, '../.editorconfig');
+    const editorConfigTemplateContent = await fs.readFile(editorConfigTemplatePath, 'utf8');
 
-    // if (templatePath === undefined) {
-    //     throw new Error('Unable to locate default.editorconfig template.');
-    // }
+    const editorConfigDestinationPath = path.resolve(process.cwd(), '.editorconfig');
+    const editorConfigDestinationContent = await fs.readFile(editorConfigDestinationPath, 'utf8');
 
-    const destinationPath = path.resolve(process.cwd(), '.editorconfig');
-    logStepHeader(`Template: ${templatePath}`);
-    logStepHeader(`Destination: ${destinationPath}`);
-
-    const templateContent = await fs.readFile(templatePath, 'utf8');
-    let destinationContent: string | undefined;
-
-    try {
-        destinationContent = await fs.readFile(destinationPath, 'utf8');
-    } catch (error) {
-        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-    }
-
-    if (destinationContent === templateContent) {
-        logOperationSuccess('.editorconfig already up to date.');
+    if (editorConfigDestinationContent === editorConfigTemplateContent) {
+        logOperationSuccess("File '.editorconfig' is already up to date.");
         return;
     }
 
-    await fs.writeFile(destinationPath, templateContent, 'utf8');
-    logOperationSuccess('.editorconfig synchronised.');
+    await fs.writeFile(editorConfigDestinationPath, editorConfigTemplateContent, 'utf8');
+    logOperationSuccess("File '.editorconfig' synchronised.");
 }
 
 // Utilities - Write JSON file.
@@ -247,7 +224,7 @@ export {
     readTextFile,
     removeFile,
     spawnCommand,
-    syncEditorConfig,
+    syncConfigFiles,
     writeJSONFile,
     writeTextFile
 };

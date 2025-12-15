@@ -151,16 +151,7 @@ async function insertLicensesIntoReadme(stepIcon: string, checkRecursive: boolea
         licensesContent += `|${license.name}|${license.licenseType}|${installedVersion}|${license.remoteVersion}|${latestUpdate}|${dependencyCount}|${licenseLink}|\n`;
     }
 
-    // const readmeContent = await readTextFile('./README.md');
-    // const startIndex = readmeContent.indexOf(START_MARKER);
-    // const endIndex = readmeContent.indexOf(END_MARKER);
-    // if (startIndex === -1 || endIndex === -1) {
-    //     console.error("❌ No dependency license markers found in 'README.md'.");
-    //     return;
-    // }
-    // const newContent = `${readmeContent.slice(0, Math.max(0, startIndex + START_MARKER.length))}\n${licensesContent}\n${readmeContent.slice(Math.max(0, endIndex))}`;
-
-    // Insert badges into README
+    // Insert licenses into README
     const originalContent = await readTextFile('./README.md');
     const newContent = substituteContent(originalContent, licensesContent, START_MARKER, END_MARKER);
     await writeTextFile('README.md', newContent);

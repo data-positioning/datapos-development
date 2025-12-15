@@ -62,6 +62,20 @@ All utilities are designed to be run from `package.json` scripts and assume that
 }
 ```
 
+## Resources
+
+Common resources (files) used across Data Positioning projects.
+
+| Name                                          | File                                                                 |
+| --------------------------------------------- | -------------------------------------------------------------------- |
+| ESLint rules \*                               | [eslint.config.ts](eslint.config.ts)                                 |
+| Git path attributes                           | [.gitattributes](.gitattributes)                                     |
+| Git ignore rules for published repositories   | [resources/.gitignore](resources/.gitignore_PUBLISHED)               |
+| Git ignore rules for unpublished repositories | [.gitignore](resources/.gitignore_UNPUBLISHED)                       |
+| LICENSE                                       | [LICENSE](LICENSE)                                                   |
+| Markdown lint rules                           | [.markdownlint.json](.markdownlint.json)                             |
+| VS Code key bindings                          | [resources/vsCodeKeyBindings.json](resources/vsCodeKeyBindings.json) |
+
 ## Bundle Analysis Reports
 
 The Bundle Analysis Report provides a detailed breakdown of the bundle’s composition and module sizes, helping identify which modules contribute most to the final build. It is generated automatically on each release using the `npm` package [rollup-plugin-visualizer](https://www.npmjs.com/package/rollup-plugin-visualizer).

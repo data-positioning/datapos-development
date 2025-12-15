@@ -7733,7 +7733,7 @@ async function Le(e, t, i = [], r = !1) {
 }
 async function fl() {
   Ne("Synchronise .editorconfig");
-  const e = Dt.dirname(Pr(import.meta.url)), t = [Dt.resolve(e, "../../.editorconfig")];
+  const e = Dt.dirname(Pr(import.meta.url)), t = [Dt.resolve(e, "../.editorconfig")];
   let i;
   for (const c of t)
     try {

@@ -70,8 +70,8 @@ Common resources (files) used across Data Positioning projects.
 | --------------------------------------------- | -------------------------------------------------------------------- |
 | ESLint rules \*                               | [eslint.config.ts](eslint.config.ts)                                 |
 | Git path attributes                           | [.gitattributes](.gitattributes)                                     |
-| Git ignore rules for published repositories   | [resources/.gitignore](resources/.gitignore_PUBLISHED)               |
-| Git ignore rules for unpublished repositories | [.gitignore](resources/.gitignore_UNPUBLISHED)                       |
+| Git ignore rules for published repositories   | [resources/.gitignore_PUBLISHED](resources/.gitignore_PUBLISHED)     |
+| Git ignore rules for unpublished repositories | [resources/.gitignore_UNPUBLISHED](resources/.gitignore_UNPUBLISHED) |
 | LICENSE                                       | [LICENSE](LICENSE)                                                   |
 | Markdown lint rules                           | [.markdownlint.json](.markdownlint.json)                             |
 | VS Code key bindings                          | [resources/vsCodeKeyBindings.json](resources/vsCodeKeyBindings.json) |

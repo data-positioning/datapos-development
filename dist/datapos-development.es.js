@@ -8059,7 +8059,7 @@ async function kl() {
 }
 async function wl() {
   try {
-    Re("Lint Code"), await Ie("1️⃣  Lint", "eslint", []), Fe("Code linted.");
+    Re("Lint Code"), await Ie("1️⃣  Lint", "eslint", ["."]), Fe("Code linted.");
   } catch (e) {
     console.error("❌ Error linting code.", e), process.exit(1);
   }

@@ -1,10 +1,10 @@
 import { promises as ge } from "node:fs";
 import { nanoid as Ds } from "nanoid";
 import Ms from "node:path";
-import { promisify as Vs } from "node:util";
-import { exec as zs, spawn as js } from "node:child_process";
-import { CONNECTOR_SOURCE_OPERATIONS as Fs, CONNECTOR_DESTINATION_OPERATIONS as $s } from "@datapos/datapos-shared";
-import { fileURLToPath as Bs, URL as Zs } from "node:url";
+import { fileURLToPath as Vs, URL as zs } from "node:url";
+import { promisify as js } from "node:util";
+import { exec as Fs, spawn as $s } from "node:child_process";
+import { CONNECTOR_SOURCE_OPERATIONS as Bs, CONNECTOR_DESTINATION_OPERATIONS as Zs } from "@datapos/datapos-shared";
 function k(e, t, i) {
   function r(d, y) {
     if (d._zod || Object.defineProperty(d, "_zod", {
@@ -7650,7 +7650,7 @@ function Fh(e) {
     return Rs;
   };
 }
-const $h = Vs(zs);
+const $h = js(Fs);
 async function Bh(e) {
   let t;
   try {
@@ -7726,7 +7726,7 @@ async function Uh(e) {
 }
 async function Ie(e, t, i = [], r = !1) {
   return re(`${e} - spawn(${t} ${i.join(" ")})`), new Promise((n, u) => {
-    js(t, i, { stdio: "inherit" }).on("close", (d) => {
+    $s(t, i, { stdio: "inherit" }).on("close", (d) => {
       d === 0 || r ? n() : u(new Error(`${t} exited with code ${d}`));
     });
   });
@@ -7908,7 +7908,7 @@ async function Ns(e, t, i = "./") {
 function Jh(e) {
   let t = !1, i = !1;
   for (const r of e)
-    Fs.includes(r) && (t = !0), $s.includes(r) && (i = !0);
+    Bs.includes(r) && (t = !0), Zs.includes(r) && (i = !0);
   return t && i ? "bidirectional" : t ? "source" : i ? "destination" : "unknown";
 }
 const Yh = {
@@ -7932,7 +7932,7 @@ async function vl() {
       "--nodePackageSkipDevDependencies",
       "--nvdApiKey",
       process.env.OWASP_NVD_API_KEY ?? ""
-    ]), await el("2️⃣"), await Ie("3️⃣  Check using 'npm outdated'", "npm", ["audit"]), Fe("Dependencies audited.");
+    ]), await el("2️⃣"), await Ie("3️⃣  Check using 'npm audit'", "npm", ["audit"]), Fe("Dependencies audited.");
   } catch (e) {
     console.error("❌ Error auditing dependencies.", e), process.exit(1);
   }
@@ -7978,7 +7978,7 @@ const Sr = "<!-- DEPENDENCY_LICENSES_START -->", il = "<!-- DEPENDENCY_LICENSES_
 async function gl(e = [], t = !0) {
   try {
     Re("Document Dependencies"), await Li();
-    const i = e.flatMap((n) => ["--allowed", `'${n}'`]), r = Bs(new Zs(import.meta.resolve("@datapos/datapos-development/license-report-config")));
+    const i = e.flatMap((n) => ["--allowed", `'${n}'`]), r = Vs(new zs(import.meta.resolve("@datapos/datapos-development/license-report-config")));
     await Te(
       "1️⃣  Generate 'licenses.json' file",
       "license-report",
@@ -8028,7 +8028,7 @@ async function rl(e, t) {
       return S.values();
     })()
   ];
-  let o = `|Name|Type|Installed|Latest|Latest Release|Deps|Document|
+  let o = `|Name|Type|Installed|Latest|Latest Released|Deps|Document|
 |:-|:-|:-:|:-:|:-|-:|:-|
 `;
   for (const S of y) {

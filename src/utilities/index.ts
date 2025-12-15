@@ -13,6 +13,7 @@ import acornTypeScript from 'acorn-typescript';
 import { promises as fs } from 'node:fs';
 import { Parser } from 'acorn';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { exec, spawn } from 'node:child_process';
 
@@ -160,6 +161,50 @@ async function spawnCommand(label: string, command: string, arguments_: string[]
     });
 }
 
+// Utilities - Synchronise '.editorConfig' file.
+async function syncEditorConfig(): Promise<void> {
+    logOperationHeader('Synchronise .editorconfig');
+
+    const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+    const templateCandidates = [path.resolve(moduleDirectory, '../../default.editorconfig'), path.resolve(moduleDirectory, '../default.editorconfig')];
+
+    let templatePath: string | undefined;
+    for (const candidate of templateCandidates) {
+        try {
+            await fs.access(candidate);
+            templatePath = candidate;
+            break;
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+        }
+    }
+
+    if (templatePath === undefined) {
+        throw new Error('Unable to locate default.editorconfig template.');
+    }
+
+    const destinationPath = path.resolve(process.cwd(), '.editorconfig');
+    logStepHeader(`Template: ${templatePath}`);
+    logStepHeader(`Destination: ${destinationPath}`);
+
+    const templateContent = await fs.readFile(templatePath, 'utf8');
+    let destinationContent: string | undefined;
+
+    try {
+        destinationContent = await fs.readFile(destinationPath, 'utf8');
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    }
+
+    if (destinationContent === templateContent) {
+        logOperationSuccess('.editorconfig already up to date.');
+        return;
+    }
+
+    await fs.writeFile(destinationPath, templateContent, 'utf8');
+    logOperationSuccess('.editorconfig synchronised.');
+}
+
 // Utilities - Write JSON file.
 async function writeJSONFile(path: string, data: object): Promise<void> {
     await fs.writeFile(path, JSON.stringify(data, undefined, 4), 'utf8');
@@ -202,6 +247,7 @@ export {
     readTextFile,
     removeFile,
     spawnCommand,
+    syncEditorConfig,
     writeJSONFile,
     writeTextFile
 };

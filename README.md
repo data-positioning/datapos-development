@@ -5,7 +5,11 @@
 [![npm version](https://img.shields.io/npm/v/@datapos/datapos-development.svg)](https://www.npmjs.com/package/@datapos/datapos-development)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
+<!-- SUMMARY_START -->
+
 A collection of utilities for managing Data Positioning projects.
+
+<!-- SUMMARY_END -->
 
 ## Installation
 

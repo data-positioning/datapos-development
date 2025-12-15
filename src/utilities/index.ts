@@ -166,22 +166,22 @@ async function syncEditorConfig(): Promise<void> {
     logOperationHeader('Synchronise .editorconfig');
 
     const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
-    const templateCandidates = [path.resolve(moduleDirectory, '../.editorconfig')];
+    const templatePath = path.resolve(moduleDirectory, '../.editorconfig');
 
-    let templatePath: string | undefined;
-    for (const candidate of templateCandidates) {
-        try {
-            await fs.access(candidate);
-            templatePath = candidate;
-            break;
-        } catch (error) {
-            if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-        }
-    }
+    // let templatePath: string | undefined;
+    // for (const candidate of templateCandidates) {
+    //     try {
+    //         await fs.access(candidate);
+    //         templatePath = candidate;
+    //         break;
+    //     } catch (error) {
+    //         if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    //     }
+    // }
 
-    if (templatePath === undefined) {
-        throw new Error('Unable to locate default.editorconfig template.');
-    }
+    // if (templatePath === undefined) {
+    //     throw new Error('Unable to locate default.editorconfig template.');
+    // }
 
     const destinationPath = path.resolve(process.cwd(), '.editorconfig');
     logStepHeader(`Template: ${templatePath}`);

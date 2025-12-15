@@ -36,6 +36,7 @@ async function updateDataPosDependencies(dependencies: string[] = []): Promise<v
 async function syncProjectConfigFiles(typeId?: string): Promise<void> {
     const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
     await syncConfigFile(moduleDirectory, '../', '.editorconfig');
+    await syncConfigFile(moduleDirectory, '../', '..gitattributes');
 }
 
 async function syncConfigFile(moduleDirectory: string, templateFilePath: string, fileName: string): Promise<void> {
@@ -52,12 +53,12 @@ async function syncConfigFile(moduleDirectory: string, templateFilePath: string,
     }
 
     if (destinationContent === templateContent) {
-        logOperationSuccess(`File '${fileName}' is already up to date.`);
+        console.info(`ℹ️  File '${fileName}' is already up to date.`);
         return;
     }
 
     await writeTextFile(destinationPath, templateContent);
-    logOperationSuccess(`File '${fileName}' synchronised.`);
+    console.info(`ℹ️  File '${fileName}' synchronised.`);
 }
 
 // Exposures

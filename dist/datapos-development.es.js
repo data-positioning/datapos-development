@@ -8079,7 +8079,7 @@ async function Sl(e = []) {
 }
 async function ol(e) {
   const t = Dt.dirname(Cr(import.meta.url));
-  await Pr(t, "../", ".editorconfig"), await Pr(t, "../", "..gitattributes");
+  await Pr(t, "../", ".editorconfig"), await Pr(t, "../", ".gitattributes");
 }
 async function Pr(e, t, i) {
   const r = Dt.resolve(e, `${t}${i}`), n = await Xe(r), u = Dt.resolve(process.cwd(), i);

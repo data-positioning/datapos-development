@@ -1,0 +1,7 @@
+# Common Git ignore rules for UNPUBLISHED Data Positioning repositories.
+dependency-check-bin
+dist
+dist-scripts
+node_modules
+.env
+**/.DS_Store

@@ -1,10 +1,10 @@
 import { promises as ge } from "node:fs";
 import { nanoid as Vs } from "nanoid";
-import { fileURLToPath as Pr, URL as zs } from "node:url";
 import Dt from "node:path";
-import { promisify as js } from "node:util";
-import { exec as Fs, spawn as $s } from "node:child_process";
-import { CONNECTOR_SOURCE_OPERATIONS as Bs, CONNECTOR_DESTINATION_OPERATIONS as Zs } from "@datapos/datapos-shared";
+import { promisify as zs } from "node:util";
+import { exec as js, spawn as Fs } from "node:child_process";
+import { CONNECTOR_SOURCE_OPERATIONS as $s, CONNECTOR_DESTINATION_OPERATIONS as Bs } from "@datapos/datapos-shared";
+import { fileURLToPath as Pr, URL as Zs } from "node:url";
 function k(e, t, i) {
   function r(d, y) {
     if (d._zod || Object.defineProperty(d, "_zod", {
@@ -2172,7 +2172,7 @@ function He(e, t) {
 const Vu = /* @__PURE__ */ k("ZodObject", (e, t) => {
   Ra.init(e, t), ee.init(e, t), U(e, "shape", () => t.shape), e.keyof = () => Wt(Object.keys(e._zod.def.shape)), e.catchall = (i) => e.clone({ ...e._zod.def, catchall: i }), e.passthrough = () => e.clone({ ...e._zod.def, catchall: sr() }), e.loose = () => e.clone({ ...e._zod.def, catchall: sr() }), e.strict = () => e.clone({ ...e._zod.def, catchall: Du() }), e.strip = () => e.clone({ ...e._zod.def, catchall: void 0 }), e.extend = (i) => Qs(e, i), e.safeExtend = (i) => en(e, i), e.merge = (i) => tn(e, i), e.pick = (i) => Js(e, i), e.omit = (i) => Ys(e, i), e.partial = (...i) => rn(Wr, e, i[0]), e.required = (...i) => sn(Kr, e, i[0]);
 });
-function Oe(e, t) {
+function Le(e, t) {
   const i = {
     type: "object",
     shape: e ?? {},
@@ -2403,11 +2403,11 @@ const nc = ["amber", "green", "red", "other"], ac = Wt(nc), oc = ["alpha", "beta
   "presenter",
   "presenterPresentation",
   "tool"
-], hc = Wt(cc), lc = ae([b("en-au"), b("en-gb"), b("en-us"), b("es-es")]), pc = be(lc, O()), fc = Oe({
+], hc = Wt(cc), lc = ae([b("en-au"), b("en-gb"), b("en-us"), b("es-es")]), pc = be(lc, O()), fc = Le({
   id: O(),
   color: ac,
   label: O()
-}), dc = Oe({
+}), dc = Le({
   id: O(),
   label: be(O(), O()),
   description: be(O(), O()),
@@ -2418,10 +2418,10 @@ const nc = ["amber", "green", "red", "other"], ac = Wt(nc), oc = ["alpha", "beta
   status: fc.nullable().optional(),
   statusId: uc,
   typeId: hc
-}), mc = ae([b("app"), b("engine"), b("connector"), b("context"), b("presenter"), b("tool")]), yc = Oe({
+}), mc = ae([b("app"), b("engine"), b("connector"), b("context"), b("presenter"), b("tool")]), yc = Le({
   id: O(),
   label: O()
-}), vc = Oe({
+}), vc = Le({
   activeConnectionCount: Me().optional(),
   canDescribe: Lu().optional(),
   id: O().optional(),
@@ -2489,11 +2489,11 @@ const nc = ["amber", "green", "red", "other"], ac = Wt(nc), oc = ["alpha", "beta
   b("presenter"),
   b("presenterPresentation"),
   b("tool")
-]), ur = Me(), Pc = Oe({
+]), ur = Me(), Pc = Le({
   id: O(),
   color: wc,
   label: O()
-}), Cc = Oe({
+}), Cc = Le({
   id: O(),
   label: be(O(), O()),
   description: be(O(), O()),
@@ -2501,7 +2501,7 @@ const nc = ["amber", "green", "red", "other"], ac = Wt(nc), oc = ["alpha", "beta
   iconDark: O().optional(),
   order: Me(),
   path: O()
-}), Xr = Oe({
+}), Xr = Le({
   id: O(),
   label: be(O(), O()),
   description: be(O(), O()),
@@ -2556,11 +2556,11 @@ const nc = ["amber", "green", "red", "other"], ac = Wt(nc), oc = ["alpha", "beta
   b("presenter"),
   b("presenterPresentation"),
   b("tool")
-]), cr = Me(), Mc = Oe({
+]), cr = Me(), Mc = Le({
   id: O(),
   color: Oc,
   label: O()
-}), Vc = Oe({
+}), Vc = Le({
   id: O(),
   label: be(O(), O()),
   description: be(O(), O()),
@@ -2568,7 +2568,7 @@ const nc = ["amber", "green", "red", "other"], ac = Wt(nc), oc = ["alpha", "beta
   iconDark: O().optional(),
   order: Me(),
   path: O()
-}), zc = Oe({
+}), zc = Le({
   id: O(),
   label: be(O(), O()),
   description: be(O(), O()),
@@ -2889,21 +2889,21 @@ var Ft = 0, Ni = 1, Fe = 2, ns = 3, as = 4, os = 5, J = function(t, i, r) {
   var u = (n ? n + " " : "") + ai.strict;
   this.reservedWordsStrict = Ze(u), this.reservedWordsStrictBind = Ze(u + " " + ai.strictBind), this.input = String(i), this.containsEsc = !1, r ? (this.pos = r, this.lineStart = this.input.lastIndexOf(`
 `, r - 1) + 1, this.curLine = this.input.slice(0, this.lineStart).split(ce).length) : (this.pos = this.lineStart = 0, this.curLine = 1), this.type = l.eof, this.value = null, this.start = this.end = this.pos, this.startLoc = this.endLoc = this.curPosition(), this.lastTokEndLoc = this.lastTokStartLoc = null, this.lastTokStart = this.lastTokEnd = this.pos, this.context = this.initialContext(), this.exprAllowed = !0, this.inModule = t.sourceType === "module", this.strict = this.inModule || this.strictDirective(this.pos), this.potentialArrowAt = -1, this.potentialArrowInForAwait = !1, this.yieldPos = this.awaitPos = this.awaitIdentPos = 0, this.labels = [], this.undefinedExports = /* @__PURE__ */ Object.create(null), this.pos === 0 && t.allowHashBang && this.input.slice(0, 2) === "#!" && this.skipLineComment(2), this.scopeStack = [], this.enterScope(kt), this.regexpState = null, this.privateNameStack = [];
-}, Re = { inFunction: { configurable: !0 }, inGenerator: { configurable: !0 }, inAsync: { configurable: !0 }, canAwait: { configurable: !0 }, allowSuper: { configurable: !0 }, allowDirectSuper: { configurable: !0 }, treatFunctionsAsVar: { configurable: !0 }, allowNewDotTarget: { configurable: !0 }, inClassStaticBlock: { configurable: !0 } };
+}, Oe = { inFunction: { configurable: !0 }, inGenerator: { configurable: !0 }, inAsync: { configurable: !0 }, canAwait: { configurable: !0 }, allowSuper: { configurable: !0 }, allowDirectSuper: { configurable: !0 }, treatFunctionsAsVar: { configurable: !0 }, allowNewDotTarget: { configurable: !0 }, inClassStaticBlock: { configurable: !0 } };
 J.prototype.parse = function() {
   var t = this.options.program || this.startNode();
   return this.nextToken(), this.parseTopLevel(t);
 };
-Re.inFunction.get = function() {
+Oe.inFunction.get = function() {
   return (this.currentVarScope().flags & pt) > 0;
 };
-Re.inGenerator.get = function() {
+Oe.inGenerator.get = function() {
   return (this.currentVarScope().flags & is) > 0;
 };
-Re.inAsync.get = function() {
+Oe.inAsync.get = function() {
   return (this.currentVarScope().flags & Ai) > 0;
 };
-Re.canAwait.get = function() {
+Oe.canAwait.get = function() {
   for (var e = this.scopeStack.length - 1; e >= 0; e--) {
     var t = this.scopeStack[e], i = t.flags;
     if (i & (et | St))
@@ -2913,17 +2913,17 @@ Re.canAwait.get = function() {
   }
   return this.inModule && this.options.ecmaVersion >= 13 || this.options.allowAwaitOutsideFunction;
 };
-Re.allowSuper.get = function() {
+Oe.allowSuper.get = function() {
   var e = this.currentThisScope(), t = e.flags;
   return (t & Kt) > 0 || this.options.allowSuperOutsideMethod;
 };
-Re.allowDirectSuper.get = function() {
+Oe.allowDirectSuper.get = function() {
   return (this.currentThisScope().flags & ss) > 0;
 };
-Re.treatFunctionsAsVar.get = function() {
+Oe.treatFunctionsAsVar.get = function() {
   return this.treatFunctionsAsVarInScope(this.currentScope());
 };
-Re.allowNewDotTarget.get = function() {
+Oe.allowNewDotTarget.get = function() {
   for (var e = this.scopeStack.length - 1; e >= 0; e--) {
     var t = this.scopeStack[e], i = t.flags;
     if (i & (et | St) || i & pt && !(i & Ei))
@@ -2931,7 +2931,7 @@ Re.allowNewDotTarget.get = function() {
   }
   return !1;
 };
-Re.inClassStaticBlock.get = function() {
+Oe.inClassStaticBlock.get = function() {
   return (this.currentVarScope().flags & et) > 0;
 };
 J.extend = function() {
@@ -2950,7 +2950,7 @@ J.parseExpressionAt = function(t, i, r) {
 J.tokenizer = function(t, i) {
   return new this(i, t);
 };
-Object.defineProperties(J.prototype, Re);
+Object.defineProperties(J.prototype, Oe);
 var he = J.prototype, eh = /^(?:'((?:\\[^]|[^'\\])*?)'|"((?:\\[^]|[^"\\])*?)")/;
 he.strictDirective = function(e) {
   if (this.options.ecmaVersion < 5)
@@ -4361,17 +4361,17 @@ Zt.prototype.separatedFrom = function(t) {
 Zt.prototype.sibling = function() {
   return new Zt(this.parent, this.base);
 };
-var De = function(t) {
+var Re = function(t) {
   this.parser = t, this.validFlags = "gim" + (t.options.ecmaVersion >= 6 ? "uy" : "") + (t.options.ecmaVersion >= 9 ? "s" : "") + (t.options.ecmaVersion >= 13 ? "d" : "") + (t.options.ecmaVersion >= 15 ? "v" : ""), this.unicodeProperties = _s[t.options.ecmaVersion >= 14 ? 14 : t.options.ecmaVersion], this.source = "", this.flags = "", this.start = 0, this.switchU = !1, this.switchV = !1, this.switchN = !1, this.pos = 0, this.lastIntValue = 0, this.lastStringValue = "", this.lastAssertionIsQuantifiable = !1, this.numCapturingParens = 0, this.maxBackReference = 0, this.groupNames = /* @__PURE__ */ Object.create(null), this.backReferenceNames = [], this.branchID = null;
 };
-De.prototype.reset = function(t, i, r) {
+Re.prototype.reset = function(t, i, r) {
   var n = r.indexOf("v") !== -1, u = r.indexOf("u") !== -1;
   this.start = t | 0, this.source = i + "", this.flags = r, n && this.parser.options.ecmaVersion >= 15 ? (this.switchU = !0, this.switchV = !0, this.switchN = !0) : (this.switchU = u && this.parser.options.ecmaVersion >= 6, this.switchV = !1, this.switchN = u && this.parser.options.ecmaVersion >= 9);
 };
-De.prototype.raise = function(t) {
+Re.prototype.raise = function(t) {
   this.parser.raiseRecoverable(this.start, "Invalid regular expression: /" + this.source + "/: " + t);
 };
-De.prototype.at = function(t, i) {
+Re.prototype.at = function(t, i) {
   i === void 0 && (i = !1);
   var r = this.source, n = r.length;
   if (t >= n)
@@ -4382,7 +4382,7 @@ De.prototype.at = function(t, i) {
   var h = r.charCodeAt(t + 1);
   return h >= 56320 && h <= 57343 ? (u << 10) + h - 56613888 : u;
 };
-De.prototype.nextIndex = function(t, i) {
+Re.prototype.nextIndex = function(t, i) {
   i === void 0 && (i = !1);
   var r = this.source, n = r.length;
   if (t >= n)
@@ -4390,19 +4390,19 @@ De.prototype.nextIndex = function(t, i) {
   var u = r.charCodeAt(t), h;
   return !(i || this.switchU) || u <= 55295 || u >= 57344 || t + 1 >= n || (h = r.charCodeAt(t + 1)) < 56320 || h > 57343 ? t + 1 : t + 2;
 };
-De.prototype.current = function(t) {
+Re.prototype.current = function(t) {
   return t === void 0 && (t = !1), this.at(this.pos, t);
 };
-De.prototype.lookahead = function(t) {
+Re.prototype.lookahead = function(t) {
   return t === void 0 && (t = !1), this.at(this.nextIndex(this.pos, t), t);
 };
-De.prototype.advance = function(t) {
+Re.prototype.advance = function(t) {
   t === void 0 && (t = !1), this.pos = this.nextIndex(this.pos, t);
 };
-De.prototype.eat = function(t, i) {
+Re.prototype.eat = function(t, i) {
   return i === void 0 && (i = !1), this.current(i) === t ? (this.advance(i), !0) : !1;
 };
-De.prototype.eatChars = function(t, i) {
+Re.prototype.eatChars = function(t, i) {
   i === void 0 && (i = !1);
   for (var r = this.pos, n = 0, u = t; n < u.length; n += 1) {
     var h = u[n], d = this.at(r, i);
@@ -5464,7 +5464,7 @@ j.readRegexp = function() {
   ++this.pos;
   var u = this.pos, h = this.readWord1();
   this.containsEsc && this.unexpected(u);
-  var d = this.regexpState || (this.regexpState = new De(this));
+  var d = this.regexpState || (this.regexpState = new Re(this));
   d.reset(i, n, h), this.validateRegExpFlags(d), this.validateRegExpPattern(d);
   var y = null;
   try {
@@ -7650,7 +7650,7 @@ function Fh(e) {
     return Ms;
   };
 }
-const $h = js(Fs);
+const $h = zs(js);
 async function Bh(e) {
   let t;
   try {
@@ -7696,7 +7696,7 @@ async function Zh(e, t) {
 async function Ri() {
   re("Load environment variables"), (await import("dotenv")).config();
 }
-function Ne(e) {
+function De(e) {
   const t = "\x1B[36m", i = "\x1B[0m", r = "─".repeat(Math.max(e.length + 60, 60));
   console.info(`
 ${t}${r}`), console.info(`▶️  ${e}`), console.info(`${r}${i}`);
@@ -7724,9 +7724,9 @@ async function Uh(e) {
     if (t.code !== "ENOENT") throw t;
   }
 }
-async function Le(e, t, i = [], r = !1) {
+async function Ne(e, t, i = [], r = !1) {
   return re(`${e} - spawn(${t} ${i.join(" ")})`), new Promise((n, u) => {
-    $s(t, i, { stdio: "inherit" }).on("close", (d) => {
+    Fs(t, i, { stdio: "inherit" }).on("close", (d) => {
       d === 0 || r ? n() : u(new Error(`${t} exited with code ${d}`));
     });
   });
@@ -7791,25 +7791,16 @@ const Hh = [
   { idPrefix: "datapos-shared", typeId: "shared", publish: !0, uploadGroupName: void 0 },
   { idPrefix: "datapos-tool", typeId: "tool", publish: !0, uploadGroupName: "tools" }
 ];
-async function fl() {
+async function ml() {
   try {
-    Ne("Build Project"), await Le("1️⃣  Bundle project", "vite", ["build"]), Ie("Project built.");
+    De("Build Project"), await Ne("1️⃣  Bundle project", "vite", ["build"]), Ie("Project built.");
   } catch (e) {
     console.error("❌ Error building project.", e), process.exit(1);
   }
 }
-async function dl(e) {
-  Ne("Synchronise config files");
-  const t = Dt.dirname(Pr(import.meta.url)), i = Dt.resolve(t, "../.editorconfig"), r = await Xe(i), n = Dt.resolve(process.cwd(), ".editorconfig");
-  if (await Xe(n) === r) {
-    Ie("File '.editorconfig' is already up to date.");
-    return;
-  }
-  await ei(n, r), Ie("File '.editorconfig' synchronised.");
-}
-async function ml() {
+async function yl() {
   try {
-    Ne("Release Project"), await Ri();
+    De("Release Project"), await Ri();
     const e = await de("package.json"), t = await de("config.json");
     await Os("1️⃣", e);
     const i = Hh.find((r) => t.id.startsWith(r.idPrefix));
@@ -7827,7 +7818,7 @@ async function ml() {
       default:
         await Gh("2️⃣", e);
     }
-    if (await Le("3️⃣  Bundle project", "vite", ["build"]), await Te("4️⃣  Stage changes", "git", ["add", "."]), await Te("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Te("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), i.typeId === "app")
+    if (await Ne("3️⃣  Bundle project", "vite", ["build"]), await Te("4️⃣  Stage changes", "git", ["add", "."]), await Te("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Te("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), i.typeId === "app")
       re("7️⃣  Register module"), await qh();
     else if (i.typeId === "engine")
       re("7️⃣  Register module"), await kr(t), await wr(e, `datapos-engine-eu/${i.uploadGroupName}`);
@@ -7842,7 +7833,7 @@ async function ml() {
       const r = ".npmrc";
       try {
         await ei(r, `registry=https://registry.npmjs.org/
-//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN ?? ""}`), await Le("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]);
+//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN ?? ""}`), await Ne("8️⃣  Publish to npm", "npm", ["publish", "--access", "public"]);
       } finally {
         await Uh(r);
       }
@@ -7853,18 +7844,18 @@ async function ml() {
     console.error("❌ Error releasing project.", e), process.exit(1);
   }
 }
-async function yl() {
+async function vl() {
   try {
-    Ne("Synchronise Project with GitHub");
+    De("Synchronise Project with GitHub");
     const e = await de("package.json");
     re("Bump project version"), await Os("1️⃣", e), await Te("2️⃣  Stage changes", "git", ["add", "."]), await Te("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Te("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Ie(`Project version '${e.version}' synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }
 }
-function vl() {
+function xl() {
   try {
-    Ne("Test Project"), console.log(`
+    De("Test Project"), console.log(`
 ❌ Test project is not implemented. No 'vitest' command.
 `);
   } catch (e) {
@@ -7917,7 +7908,7 @@ async function Os(e, t, i = "./") {
 function Jh(e) {
   let t = !1, i = !1;
   for (const r of e)
-    Bs.includes(r) && (t = !0), Zs.includes(r) && (i = !0);
+    $s.includes(r) && (t = !0), Bs.includes(r) && (i = !0);
   return t && i ? "bidirectional" : t ? "source" : i ? "destination" : "unknown";
 }
 const Yh = {
@@ -7928,11 +7919,11 @@ const Yh = {
   unknown: { color: "616161", label: "unknown" }
   // See sample badges in ~/tests/sampleBadges.md. Also included 'info' colouring.
 }, Sr = "<!-- OWASP_BADGES_START -->", Qh = "<!-- OWASP_BADGES_END -->";
-async function xl() {
+async function gl() {
   try {
-    Ne("Audit Dependencies"), await Ri();
+    De("Audit Dependencies"), await Ri();
     const e = await de("package.json");
-    console.log(1111, process.env.OWASP_NVD_API_KEY), await Le("1️⃣", "owasp-dependency-check", [
+    console.log(1111, process.env.OWASP_NVD_API_KEY), await Ne("1️⃣", "owasp-dependency-check", [
       "--out",
       "dependency-check-reports",
       "--project",
@@ -7941,7 +7932,7 @@ async function xl() {
       "--nodePackageSkipDevDependencies",
       "--nvdApiKey",
       process.env.OWASP_NVD_API_KEY ?? ""
-    ]), await el("2️⃣"), await Le("3️⃣  Check using 'npm audit'", "npm", ["audit"]), Ie("Dependencies audited.");
+    ]), await el("2️⃣"), await Ne("3️⃣  Check using 'npm audit'", "npm", ["audit"]), Ie("Dependencies audited.");
   } catch (e) {
     console.error("❌ Error auditing dependencies.", e), process.exit(1);
   }
@@ -7976,18 +7967,18 @@ async function tl(e) {
     }
   return i;
 }
-async function gl() {
+async function bl() {
   try {
-    Ne("Check Dependencies"), await Le("1️⃣  Check using 'npm outdated'", "npm", ["outdated"], !0), await Le("2️⃣  Check using 'npm-check-updates'", "npm-check-updates", ["-i"]), Ie("Dependencies checked.");
+    De("Check Dependencies"), await Ne("1️⃣  Check using 'npm outdated'", "npm", ["outdated"], !0), await Ne("2️⃣  Check using 'npm-check-updates'", "npm-check-updates", ["-i"]), Ie("Dependencies checked.");
   } catch (e) {
     console.error("❌ Error checking dependencies.", e), process.exit(1);
   }
 }
 const Tr = "<!-- DEPENDENCY_LICENSES_START -->", il = "<!-- DEPENDENCY_LICENSES_END -->";
-async function bl(e = [], t = !0) {
+async function _l(e = [], t = !0) {
   try {
-    Ne("Document Dependencies"), await Ri();
-    const i = e.flatMap((n) => ["--allowed", `'${n}'`]), r = Pr(new zs(import.meta.resolve("@datapos/datapos-development/license-report-config")));
+    De("Document Dependencies"), await Ri();
+    const i = e.flatMap((n) => ["--allowed", `'${n}'`]), r = Pr(new Zs(import.meta.resolve("@datapos/datapos-development/license-report-config")));
     await Te(
       "1️⃣  Generate 'licenses.json' file",
       "license-report",
@@ -8059,34 +8050,46 @@ function sl(e) {
   let n = (r.getFullYear() - i.getFullYear()) * 12 + (r.getMonth() - i.getMonth());
   return r.getDate() < i.getDate() && (n -= 1), n === 0 ? `this month: ${t}` : n === 1 ? `1 month ago: ${t}` : n <= 6 ? `${n} months ago: ${t}` : n <= 12 ? `${n} months ago: ${t} ⚠️` : `${n} months ago: ${t}❗`;
 }
-async function _l() {
+async function kl() {
   try {
-    Ne("Format Code"), await Le("1️⃣  Format", "prettier", ["--write", "src/"]), Ie("Code formatted.");
+    De("Format Code"), await Ne("1️⃣  Format", "prettier", ["--write", "src/"]), Ie("Code formatted.");
   } catch (e) {
     console.error("❌ Error formatting code.", e), process.exit(1);
   }
 }
-async function kl() {
+async function wl() {
   try {
-    Ne("Lint Code"), await Le("1️⃣  Lint", "eslint", []), Ie("Code linted.");
+    De("Lint Code"), await Ne("1️⃣  Lint", "eslint", []), Ie("Code linted.");
   } catch (e) {
     console.error("❌ Error linting code.", e), process.exit(1);
   }
 }
 const nl = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"];
-async function wl(e = []) {
+async function Sl(e = []) {
   try {
-    Ne("Update '@datapos/datapos' Dependencies");
+    De("Update '@datapos/datapos' Dependencies");
     for (const [t, i] of e.entries()) {
       const r = nl.at(t) ?? "🔢";
-      await Le(`${r}  Update '${i}'`, "npm", ["install", `@datapos/datapos-${i}@latest`]);
+      await Ne(`${r}  Update '${i}'`, "npm", ["install", `@datapos/datapos-${i}@latest`]), i === "developer" && await al();
     }
     Ie("'@datapos/datapos' dependencies updated.");
   } catch (t) {
     console.error("❌ Error updating '@datapos/datapos' dependencies.", t), process.exit(1);
   }
 }
-async function Sl(e) {
+async function al(e) {
+  const t = Dt.dirname(Pr(import.meta.url));
+  await ol(t, "../", ".editorconfig");
+}
+async function ol(e, t, i) {
+  const r = Dt.resolve(e, `${t}${i}`), n = await Xe(r), u = Dt.resolve(process.cwd(), i);
+  if (await Xe(u) === n) {
+    Ie(`File '${i}' is already up to date.`);
+    return;
+  }
+  await ei(u, n), Ie(`File '${i}' synchronised.`);
+}
+async function Tl(e) {
   try {
     console.info(`🚀 Building public directory index for identifier '${e}'...`);
     const t = {};
@@ -8121,17 +8124,16 @@ async function Sl(e) {
   }
 }
 export {
-  xl as auditDependencies,
-  Sl as buildDirectoryIndex,
-  fl as buildProject,
-  gl as checkDependencies,
-  bl as documentDependencies,
-  _l as formatCode,
-  kl as lintCode,
-  ml as releaseProject,
-  dl as syncProjectConfigFiles,
-  yl as syncProjectWithGitHub,
-  vl as testProject,
-  wl as updateDataPosDependencies
+  gl as auditDependencies,
+  Tl as buildDirectoryIndex,
+  ml as buildProject,
+  bl as checkDependencies,
+  _l as documentDependencies,
+  kl as formatCode,
+  wl as lintCode,
+  yl as releaseProject,
+  vl as syncProjectWithGitHub,
+  xl as testProject,
+  Sl as updateDataPosDependencies
 };
 //# sourceMappingURL=datapos-development.es.js.map

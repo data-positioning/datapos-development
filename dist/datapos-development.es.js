@@ -7766,13 +7766,12 @@ async function qh() {
   if (!i.ok) throw new Error(await i.text());
 }
 async function kr(e) {
-  console.log(2222, e);
   const t = e.id, i = {
     body: JSON.stringify(e),
     headers: { "Content-Type": "application/json" },
     method: "PUT"
   }, r = await fetch(`https://api.datapos.app/states/${t}`, i);
-  if (console.log(3333, r), !r.ok) throw new Error(await r.text());
+  if (!r.ok) throw new Error(await r.text());
 }
 async function Sr(e, t) {
   const i = `v${e.version}`;
@@ -7809,22 +7808,23 @@ async function yl() {
 async function vl() {
   try {
     Re("Release Project"), await Di();
-    const e = await fe("package.json"), t = await fe("config.json");
+    const e = await fe("package.json");
+    let t = await fe("config.json");
     await Os("1️⃣", e);
     const i = Hh.find((r) => t.id.startsWith(r.idPrefix));
     if (!i) throw new Error(`Failed to locate module type configuration for identifier '${t.id}'.`);
     switch (i.typeId) {
       case "connector":
-        await Wh("2️⃣", e);
+        t = await Wh("2️⃣", e);
         break;
       case "context":
-        await Kh("2️⃣", e);
+        t = await Kh("2️⃣", e);
         break;
       case "presenter":
-        await Xh("2️⃣", e);
+        t = await Xh("2️⃣", e);
         break;
       default:
-        await Gh("2️⃣", e);
+        t = await Gh("2️⃣", e);
     }
     if (await Ie("3️⃣  Bundle project", "vite", ["build"]), await Se("4️⃣  Stage changes", "git", ["add", "."]), await Se("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Se("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), i.typeId === "app")
       re("7️⃣  Register module"), await qh();
@@ -7873,37 +7873,31 @@ function gl() {
 async function Gh(e, t) {
   re(`${e}  Build project configuration`);
   const i = await fe("config.json");
-  t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), await ct("config.json", i);
+  return t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), await ct("config.json", i), i;
 }
 async function Wh(e, t) {
   re(`${e}  Build connector project configuration`);
   const [i, r] = await Promise.all([fe("config.json"), Xe("src/index.ts")]), n = wc.safeParse(i);
-  if (!n.success) {
-    console.log("❌ Configuration is invalid:"), console.table(n.error.issues);
-    return;
-  }
+  if (!n.success)
+    throw console.log("❌ Configuration is invalid:"), console.table(n.error.issues), new Error("Configuration is invalid.");
   const u = Ri(r), h = Jh(u);
-  u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), h === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${h}' usage.`), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, i.usageId = h, await ct("config.json", i);
+  return u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), h === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${h}' usage.`), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, i.usageId = h, await ct("config.json", i), i;
 }
 async function Kh(e, t) {
   re(`${e}  Build context project configuration`);
   const [i, r] = await Promise.all([fe("config.json"), Xe("src/index.ts")]), n = Lc.safeParse(i);
-  if (!n.success) {
-    console.log("❌ Configuration is invalid:"), console.table(n.error.issues);
-    return;
-  }
+  if (!n.success)
+    throw console.log("❌ Configuration is invalid:"), console.table(n.error.issues), new Error("Configuration is invalid.");
   const u = Ri(r);
-  u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, await ct("config.json", i);
+  return u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, await ct("config.json", i), i;
 }
 async function Xh(e, t) {
   re(`${e}  Build presenter project configuration`);
   const [i, r] = await Promise.all([fe("config.json"), Xe("src/index.ts")]), n = Bc.safeParse(i);
-  if (!n.success) {
-    console.log("❌ Configuration is invalid:"), console.table(n.error.issues);
-    return;
-  }
+  if (!n.success)
+    throw console.log("❌ Configuration is invalid:"), console.table(n.error.issues), new Error("Configuration is invalid.");
   const u = Ri(r);
-  u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, await ct("config.json", i);
+  return u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, await ct("config.json", i), i;
 }
 async function Os(e, t, i = "./") {
   if (re(`${e}  Bump project version`), t.version == null)

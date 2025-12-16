@@ -73,7 +73,7 @@ async function releaseProject(): Promise<void> {
 
         await loadEnvironmentVariables();
         const packageJSON = await readJSONFile<PackageJson>('package.json');
-        const configJSON = await readJSONFile<ModuleConfig>('config.json');
+        let configJSON = await readJSONFile<ModuleConfig>('config.json');
 
         await bumpPackageVersion('1️⃣', packageJSON);
 
@@ -82,16 +82,16 @@ async function releaseProject(): Promise<void> {
 
         switch (moduleTypeConfig.typeId) {
             case 'connector':
-                await buildConnectorProjectConfig('2️⃣', packageJSON);
+                configJSON = await buildConnectorProjectConfig('2️⃣', packageJSON);
                 break;
             case 'context':
-                await buildContextProjectConfig('2️⃣', packageJSON);
+                configJSON = await buildContextProjectConfig('2️⃣', packageJSON);
                 break;
             case 'presenter':
-                await buildPresenterProjectConfig('2️⃣', packageJSON);
+                configJSON = await buildPresenterProjectConfig('2️⃣', packageJSON);
                 break;
             default:
-                await buildProjectConfig('2️⃣', packageJSON);
+                configJSON = await buildProjectConfig('2️⃣', packageJSON);
         }
 
         await spawnCommand('3️⃣  Bundle project', 'vite', ['build']);
@@ -174,17 +174,19 @@ function testProject(): void {
 }
 
 // Helpers - Build project configuration.
-async function buildProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<void> {
+async function buildProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<ModuleConfig> {
     logStepHeader(`${stepIcon}  Build project configuration`);
 
     const configJSON = await readJSONFile<ModuleConfig>('config.json');
     if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
     if (packageJSON.version != null) configJSON.version = packageJSON.version;
     await writeJSONFile('config.json', configJSON);
+
+    return configJSON;
 }
 
 // Utilities - Build connector project configuration.
-async function buildConnectorProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<void> {
+async function buildConnectorProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<ConnectorConfig> {
     logStepHeader(`${stepIcon}  Build connector project configuration`);
 
     const [configJSON, indexCode] = await Promise.all([readJSONFile<ConnectorConfig>('config.json'), readTextFile('src/index.ts')]);
@@ -193,7 +195,7 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
     if (!response.success) {
         console.log('❌ Configuration is invalid:');
         console.table(response.error.issues);
-        return;
+        throw new Error('Configuration is invalid.');
     }
 
     const operations = extractOperationsFromSource<ConnectorOperation>(indexCode);
@@ -213,10 +215,12 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
     configJSON.usageId = usageId;
 
     await writeJSONFile('config.json', configJSON);
+
+    return configJSON;
 }
 
 // Utilities - Build context project configuration.
-async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<void> {
+async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<ContextConfig> {
     logStepHeader(`${stepIcon}  Build context project configuration`);
 
     const [configJSON, indexCode] = await Promise.all([readJSONFile<ContextConfig>('config.json'), readTextFile('src/index.ts')]);
@@ -225,7 +229,7 @@ async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJ
     if (!response.success) {
         console.log('❌ Configuration is invalid:');
         console.table(response.error.issues);
-        return;
+        throw new Error('Configuration is invalid.');
     }
 
     const operations = extractOperationsFromSource<ContextOperation>(indexCode);
@@ -239,10 +243,12 @@ async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJ
     configJSON.operations = operations;
 
     await writeJSONFile('config.json', configJSON);
+
+    return configJSON;
 }
 
 // Utilities - Build presenter project configuration.
-async function buildPresenterProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<void> {
+async function buildPresenterProjectConfig(stepIcon: string, packageJSON: PackageJson): Promise<PresenterConfig> {
     logStepHeader(`${stepIcon}  Build presenter project configuration`);
 
     const [configJSON, indexCode] = await Promise.all([readJSONFile<PresenterConfig>('config.json'), readTextFile('src/index.ts')]);
@@ -251,7 +257,7 @@ async function buildPresenterProjectConfig(stepIcon: string, packageJSON: Packag
     if (!response.success) {
         console.log('❌ Configuration is invalid:');
         console.table(response.error.issues);
-        return;
+        throw new Error('Configuration is invalid.');
     }
 
     const operations = extractOperationsFromSource<PresenterOperation>(indexCode);
@@ -265,6 +271,8 @@ async function buildPresenterProjectConfig(stepIcon: string, packageJSON: Packag
     configJSON.operations = operations;
 
     await writeJSONFile('config.json', configJSON);
+
+    return configJSON;
 }
 
 // Helper - Bump package version.

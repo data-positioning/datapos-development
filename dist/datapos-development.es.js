@@ -7833,9 +7833,9 @@ async function vl() {
     else if (i.uploadGroupName === void 0)
       re("7️⃣  Registration NOT required.");
     else {
-      re("7️⃣  Register module"), await kr(t);
+      re("7️⃣  Register module");
       const r = t.id.split("-").slice(2).join("-");
-      await Sr(e, `datapos-engine-eu/${i.uploadGroupName}/${r}`);
+      await Sr(e, `datapos-engine-eu/${i.uploadGroupName}/${r}`), await kr(t);
     }
     if (i.publish) {
       const r = ".npmrc";

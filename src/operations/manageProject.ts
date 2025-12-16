@@ -114,9 +114,9 @@ async function releaseProject(): Promise<void> {
             logStepHeader('7️⃣  Registration NOT required.');
         } else {
             logStepHeader('7️⃣  Register module');
-            await uploadModuleConfigToDO(configJSON);
             const moduleTypeName = configJSON.id.split('-').slice(2).join('-');
             await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.uploadGroupName}/${moduleTypeName}`);
+            await uploadModuleConfigToDO(configJSON);
         }
 
         if (moduleTypeConfig.publish) {

@@ -8042,7 +8042,7 @@ function al(e) {
 }
 async function kl() {
   try {
-    Re("Format Code"), await Ie("1️⃣  Format", "prettier", ["--write", "*.json", "*.ts", "src/**"]), $e("Code formatted.");
+    Re("Format Code"), await Ie("1️⃣  Format", "prettier", ["--write", "*.json", "*.md", "*.ts", "src/**"]), $e("Code formatted.");
   } catch (e) {
     console.error("❌ Error formatting code.", e), process.exit(1);
   }

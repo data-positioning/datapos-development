@@ -12,7 +12,7 @@ async function formatCode(): Promise<void> {
     try {
         logOperationHeader('Format Code');
 
-        await spawnCommand('1️⃣  Format', 'prettier', ['--write', '*.json', '*.ts', 'src/**']);
+        await spawnCommand('1️⃣  Format', 'prettier', ['--write', '*.json', '*.md', '*.ts', 'src/**']);
 
         logOperationSuccess('Code formatted.');
     } catch (error) {

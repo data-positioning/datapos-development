@@ -16,6 +16,7 @@ A collection of utilities for managing Data Positioning projects.
 Install as a development dependency:
 
 ```bash
+cd datapos-development
 npm install --save-dev @datapos/datapos-development
 ```
 

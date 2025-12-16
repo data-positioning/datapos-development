@@ -165,7 +165,6 @@ function substituteContent(originalContent: string, substituteContent: string, s
     const startIndex = originalContent.indexOf(startMarker);
     const endIndex = originalContent.indexOf(endMarker);
     if (startIndex === -1 || endIndex === -1) throw new Error(`Markers ${startMarker}-${endMarker} not found in content.`);
-    // return originalContent.slice(0, Math.max(0, startIndex + startMarker.length)) + substituteContent + originalContent.slice(Math.max(0, endIndex));
     return `${originalContent.slice(0, Math.max(0, startIndex + startMarker.length))}\n${substituteContent}\n${originalContent.slice(Math.max(0, endIndex))}`;
 }
 

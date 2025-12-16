@@ -107,16 +107,15 @@ async function releaseProject(): Promise<void> {
             await putState();
         } else if (moduleTypeConfig.typeId === 'engine') {
             logStepHeader('7️⃣  Register module');
-            console.log(1111, configJSON);
-            await uploadModuleConfigToDO(configJSON);
             await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.uploadGroupName}`);
+            await uploadModuleConfigToDO(configJSON); // This MUST follow 'uploadModuleToR2', otherwise the app will receive a message a new engine is available and try to access it before it is uploaded to R2.
         } else if (moduleTypeConfig.uploadGroupName === undefined) {
             logStepHeader('7️⃣  Registration NOT required.');
         } else {
             logStepHeader('7️⃣  Register module');
             const moduleTypeName = configJSON.id.split('-').slice(2).join('-');
             await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.uploadGroupName}/${moduleTypeName}`);
-            await uploadModuleConfigToDO(configJSON);
+            await uploadModuleConfigToDO(configJSON); // This MUST follow 'uploadModuleToR2', otherwise the app will receive a message a new module is available and try to access it before it is uploaded to R2.
         }
 
         if (moduleTypeConfig.publish) {
@@ -166,7 +165,7 @@ function testProject(): void {
     try {
         logOperationHeader('Test Project');
 
-        console.log("\n❌ Test project is not implemented. No 'vitest' command.\n");
+        console.error('\n❌ No tests implemented.\n');
     } catch (error) {
         console.error('❌ Error testing project.', error);
         process.exit(1);
@@ -193,7 +192,7 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
 
     const response = connectorConfigSchema.safeParse(configJSON);
     if (!response.success) {
-        console.log('❌ Configuration is invalid:');
+        console.error('❌ Configuration is invalid:');
         console.table(response.error.issues);
         throw new Error('Configuration is invalid.');
     }
@@ -227,7 +226,7 @@ async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJ
 
     const response = contextConfigSchema.safeParse(configJSON);
     if (!response.success) {
-        console.log('❌ Configuration is invalid:');
+        console.error('❌ Configuration is invalid:');
         console.table(response.error.issues);
         throw new Error('Configuration is invalid.');
     }
@@ -255,7 +254,7 @@ async function buildPresenterProjectConfig(stepIcon: string, packageJSON: Packag
 
     const response = presenterConfigSchema.safeParse(configJSON);
     if (!response.success) {
-        console.log('❌ Configuration is invalid:');
+        console.error('❌ Configuration is invalid:');
         console.table(response.error.issues);
         throw new Error('Configuration is invalid.');
     }

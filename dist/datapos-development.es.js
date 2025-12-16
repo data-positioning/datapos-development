@@ -7829,7 +7829,7 @@ async function vl() {
     if (await Ie("3️⃣  Bundle project", "vite", ["build"]), await Se("4️⃣  Stage changes", "git", ["add", "."]), await Se("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Se("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), i.typeId === "app")
       re("7️⃣  Register module"), await qh();
     else if (i.typeId === "engine")
-      re("7️⃣  Register module"), console.log(1111, t), await kr(t), await Sr(e, `datapos-engine-eu/${i.uploadGroupName}`);
+      re("7️⃣  Register module"), await Sr(e, `datapos-engine-eu/${i.uploadGroupName}`), await kr(t);
     else if (i.uploadGroupName === void 0)
       re("7️⃣  Registration NOT required.");
     else {
@@ -7863,8 +7863,8 @@ async function xl() {
 }
 function gl() {
   try {
-    Re("Test Project"), console.log(`
-❌ Test project is not implemented. No 'vitest' command.
+    Re("Test Project"), console.error(`
+❌ No tests implemented.
 `);
   } catch (e) {
     console.error("❌ Error testing project.", e), process.exit(1);
@@ -7879,7 +7879,7 @@ async function Wh(e, t) {
   re(`${e}  Build connector project configuration`);
   const [i, r] = await Promise.all([fe("config.json"), Xe("src/index.ts")]), n = wc.safeParse(i);
   if (!n.success)
-    throw console.log("❌ Configuration is invalid:"), console.table(n.error.issues), new Error("Configuration is invalid.");
+    throw console.error("❌ Configuration is invalid:"), console.table(n.error.issues), new Error("Configuration is invalid.");
   const u = Ri(r), h = Jh(u);
   return u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), h === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${h}' usage.`), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, i.usageId = h, await ct("config.json", i), i;
 }
@@ -7887,7 +7887,7 @@ async function Kh(e, t) {
   re(`${e}  Build context project configuration`);
   const [i, r] = await Promise.all([fe("config.json"), Xe("src/index.ts")]), n = Lc.safeParse(i);
   if (!n.success)
-    throw console.log("❌ Configuration is invalid:"), console.table(n.error.issues), new Error("Configuration is invalid.");
+    throw console.error("❌ Configuration is invalid:"), console.table(n.error.issues), new Error("Configuration is invalid.");
   const u = Ri(r);
   return u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, await ct("config.json", i), i;
 }
@@ -7895,7 +7895,7 @@ async function Xh(e, t) {
   re(`${e}  Build presenter project configuration`);
   const [i, r] = await Promise.all([fe("config.json"), Xe("src/index.ts")]), n = Bc.safeParse(i);
   if (!n.success)
-    throw console.log("❌ Configuration is invalid:"), console.table(n.error.issues), new Error("Configuration is invalid.");
+    throw console.error("❌ Configuration is invalid:"), console.table(n.error.issues), new Error("Configuration is invalid.");
   const u = Ri(r);
   return u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, await ct("config.json", i), i;
 }

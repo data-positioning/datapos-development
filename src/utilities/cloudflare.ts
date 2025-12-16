@@ -45,6 +45,7 @@ async function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: str
 
 // Utilities - Upload module configuration to Cloudflare 'state' durable object.
 async function uploadModuleConfigToDO(configJSON: ModuleConfig): Promise<void> {
+    console.log(2222, configJSON);
     const stateId = configJSON.id;
     const options = {
         body: JSON.stringify(configJSON),
@@ -52,6 +53,7 @@ async function uploadModuleConfigToDO(configJSON: ModuleConfig): Promise<void> {
         method: 'PUT'
     };
     const response = await fetch(`https://api.datapos.app/states/${stateId}`, options);
+    console.log(3333, response);
     if (!response.ok) throw new Error(await response.text());
 }
 

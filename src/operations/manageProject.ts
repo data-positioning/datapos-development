@@ -107,6 +107,7 @@ async function releaseProject(): Promise<void> {
             await putState();
         } else if (moduleTypeConfig.typeId === 'engine') {
             logStepHeader('7️⃣  Register module');
+            console.log(1111, configJSON);
             await uploadModuleConfigToDO(configJSON);
             await uploadModuleToR2(packageJSON, `datapos-engine-eu/${moduleTypeConfig.uploadGroupName}`);
         } else if (moduleTypeConfig.uploadGroupName === undefined) {

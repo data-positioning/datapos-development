@@ -1,4 +1,5 @@
 import { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
+/** Utilities - Clear directory. */
 declare function clearDirectory(directoryPath: string): Promise<void>;
 /** Utilities - Extract operations from source. */
 declare function extractOperationsFromSource<T>(source: string): T[];

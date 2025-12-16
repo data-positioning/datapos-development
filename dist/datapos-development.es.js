@@ -7766,12 +7766,13 @@ async function qh() {
   if (!i.ok) throw new Error(await i.text());
 }
 async function kr(e) {
+  console.log(2222, e);
   const t = e.id, i = {
     body: JSON.stringify(e),
     headers: { "Content-Type": "application/json" },
     method: "PUT"
   }, r = await fetch(`https://api.datapos.app/states/${t}`, i);
-  if (!r.ok) throw new Error(await r.text());
+  if (console.log(3333, r), !r.ok) throw new Error(await r.text());
 }
 async function Sr(e, t) {
   const i = `v${e.version}`;
@@ -7828,7 +7829,7 @@ async function vl() {
     if (await Ie("3️⃣  Bundle project", "vite", ["build"]), await Se("4️⃣  Stage changes", "git", ["add", "."]), await Se("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await Se("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), i.typeId === "app")
       re("7️⃣  Register module"), await qh();
     else if (i.typeId === "engine")
-      re("7️⃣  Register module"), await kr(t), await Sr(e, `datapos-engine-eu/${i.uploadGroupName}`);
+      re("7️⃣  Register module"), console.log(1111, t), await kr(t), await Sr(e, `datapos-engine-eu/${i.uploadGroupName}`);
     else if (i.uploadGroupName === void 0)
       re("7️⃣  Registration NOT required.");
     else {

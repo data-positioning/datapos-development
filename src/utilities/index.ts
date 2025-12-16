@@ -19,7 +19,7 @@ import { exec, spawn } from 'node:child_process';
 /** Initialisation */
 const asyncExec = promisify(exec);
 
-// Utilities - Clear directory.
+/** Utilities - Clear directory. */
 async function clearDirectory(directoryPath: string): Promise<void> {
     let entries: Dirent[];
 

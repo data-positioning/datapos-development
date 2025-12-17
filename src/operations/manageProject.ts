@@ -5,7 +5,7 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Framework.
-import { connectorConfigSchema } from '~/src/schemas/connectorSchemaZ';
+import { connectorConfigSchema } from '~/src/schemas/connectorSchema';
 import { contextConfigSchema } from '@/schemas/contextSchema';
 import type { PackageJson } from 'type-fest';
 import { presenterConfigSchema } from '@/schemas/presenterSchema';

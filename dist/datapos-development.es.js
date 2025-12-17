@@ -156,11 +156,11 @@ function Re(e, t) {
   };
 }
 // @__NO_SIDE_EFFECTS__
-function X(e, t) {
+function z(e, t) {
   return {
     kind: "schema",
     type: "nullable",
-    reference: X,
+    reference: z,
     expects: `(${e.expects} | null)`,
     async: !1,
     wrapped: e,
@@ -444,21 +444,21 @@ const $e = (e) => /* @__PURE__ */ bt(e.map((t) => /* @__PURE__ */ Re(t))), Os = 
   label: oi,
   description: oi,
   firstCreatedAt: /* @__PURE__ */ F(/* @__PURE__ */ me()),
-  icon: /* @__PURE__ */ X(/* @__PURE__ */ I()),
-  iconDark: /* @__PURE__ */ X(/* @__PURE__ */ I()),
-  lastUpdatedAt: /* @__PURE__ */ X(/* @__PURE__ */ me()),
-  status: /* @__PURE__ */ X(Bs),
+  icon: /* @__PURE__ */ z(/* @__PURE__ */ I()),
+  iconDark: /* @__PURE__ */ z(/* @__PURE__ */ I()),
+  lastUpdatedAt: /* @__PURE__ */ z(/* @__PURE__ */ me()),
+  status: /* @__PURE__ */ z(Bs),
   statusId: Rs,
   typeId: /* @__PURE__ */ Re("connector"),
   version: /* @__PURE__ */ I(),
-  category: /* @__PURE__ */ X(Us),
+  category: /* @__PURE__ */ z(Us),
   categoryId: Ds,
   implementations: /* @__PURE__ */ qt(/* @__PURE__ */ I(), qs),
   operations: /* @__PURE__ */ Oe(Ms),
   usageId: Vs,
-  vendorAccountURL: /* @__PURE__ */ X(/* @__PURE__ */ I()),
-  vendorDocumentationURL: /* @__PURE__ */ X(/* @__PURE__ */ I()),
-  vendorHomeURL: /* @__PURE__ */ X(/* @__PURE__ */ I())
+  vendorAccountURL: /* @__PURE__ */ z(/* @__PURE__ */ I()),
+  vendorDocumentationURL: /* @__PURE__ */ z(/* @__PURE__ */ I()),
+  vendorHomeURL: /* @__PURE__ */ z(/* @__PURE__ */ I())
 }), $t = (e) => /* @__PURE__ */ bt(e.map((t) => /* @__PURE__ */ Re(t))), lt = /* @__PURE__ */ J({
   "en-au": /* @__PURE__ */ F(/* @__PURE__ */ I()),
   "en-gb": /* @__PURE__ */ F(/* @__PURE__ */ I()),
@@ -483,10 +483,10 @@ const $e = (e) => /* @__PURE__ */ bt(e.map((t) => /* @__PURE__ */ Re(t))), Os = 
   label: lt,
   description: lt,
   firstCreatedAt: /* @__PURE__ */ F(/* @__PURE__ */ me()),
-  icon: /* @__PURE__ */ X(/* @__PURE__ */ I()),
-  iconDark: /* @__PURE__ */ X(/* @__PURE__ */ I()),
-  lastUpdatedAt: /* @__PURE__ */ X(/* @__PURE__ */ me()),
-  status: /* @__PURE__ */ X(Ws),
+  icon: /* @__PURE__ */ z(/* @__PURE__ */ I()),
+  iconDark: /* @__PURE__ */ z(/* @__PURE__ */ I()),
+  lastUpdatedAt: /* @__PURE__ */ z(/* @__PURE__ */ me()),
+  status: /* @__PURE__ */ z(Ws),
   statusId: Ks
 }, zs = /* @__PURE__ */ J({
   id: /* @__PURE__ */ I(),
@@ -531,10 +531,10 @@ const $e = (e) => /* @__PURE__ */ bt(e.map((t) => /* @__PURE__ */ Re(t))), Os = 
   label: ft,
   description: ft,
   firstCreatedAt: /* @__PURE__ */ F(/* @__PURE__ */ me()),
-  icon: /* @__PURE__ */ X(/* @__PURE__ */ I()),
-  iconDark: /* @__PURE__ */ X(/* @__PURE__ */ I()),
-  lastUpdatedAt: /* @__PURE__ */ X(/* @__PURE__ */ me()),
-  status: /* @__PURE__ */ X(er),
+  icon: /* @__PURE__ */ z(/* @__PURE__ */ I()),
+  iconDark: /* @__PURE__ */ z(/* @__PURE__ */ I()),
+  lastUpdatedAt: /* @__PURE__ */ z(/* @__PURE__ */ me()),
+  status: /* @__PURE__ */ z(er),
   statusId: Ys
 }, ir = /* @__PURE__ */ J({
   id: /* @__PURE__ */ I(),
@@ -5650,7 +5650,7 @@ function Zt(e) {
 }
 async function de(e, t, s = [], a) {
   const n = `${t} ${s.join(" ")}`;
-  e !== void 0 && z(`${e} - exec(${n})`);
+  e !== void 0 && X(`${e} - exec(${n})`);
   const { stdout: p, stderr: f } = await ia(n);
   a === void 0 ? p.trim() && console.log(p.trim()) : await he.writeFile(a, p.trim(), "utf8"), f.trim() && console.error(f.trim());
 }
@@ -5658,7 +5658,6 @@ async function ra(e, t) {
   return he.readdir(e, t);
 }
 async function ei() {
-  z("Load environment variables"), (await import("dotenv")).config();
 }
 function Ce(e) {
   const t = "\x1B[36m", s = "\x1B[0m", a = "─".repeat(Math.max(e.length + 60, 60));
@@ -5670,7 +5669,7 @@ function Ie(e) {
 ✅ ${e}
 `);
 }
-function z(e) {
+function X(e) {
   console.info(`
 ${e}
 `);
@@ -5689,7 +5688,7 @@ async function aa(e) {
   }
 }
 async function be(e, t, s = [], a = !1) {
-  return z(`${e} - spawn(${t} ${s.join(" ")})`), new Promise((n, p) => {
+  return X(`${e} - spawn(${t} ${s.join(" ")})`), new Promise((n, p) => {
     bs(t, s, { stdio: "inherit" }).on("close", (x) => {
       x === 0 || a ? n() : p(new Error(`${t} exited with code ${x}`));
     });
@@ -5791,13 +5790,13 @@ async function La() {
         t = await ua("2️⃣", e);
     }
     if (await be("3️⃣  Bundle project", "vite", ["build"]), await de("4️⃣  Stage changes", "git", ["add", "."]), await de("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await de("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), s.typeId === "app")
-      z("7️⃣  Register module"), await na();
+      X("7️⃣  Register module"), await na();
     else if (s.typeId === "engine")
-      z("7️⃣  Register module"), await Si(e, `datapos-engine-eu/${s.uploadGroupName}`), await bi(t);
+      X("7️⃣  Register module"), await Si(e, `datapos-engine-eu/${s.uploadGroupName}`), await bi(t);
     else if (s.uploadGroupName === void 0)
-      z("7️⃣  Registration NOT required.");
+      X("7️⃣  Registration NOT required.");
     else {
-      z("7️⃣  Register module");
+      X("7️⃣  Register module");
       const a = t.id.split("-").slice(2).join("-");
       await Si(e, `datapos-engine-eu/${s.uploadGroupName}/${a}`), await bi(t);
     }
@@ -5810,7 +5809,7 @@ async function La() {
         await aa(a);
       }
     } else
-      z(`8️⃣  Publishing NOT required for package with type identifier of '${s.typeId}'.`);
+      X(`8️⃣  Publishing NOT required for package with type identifier of '${s.typeId}'.`);
     Ie(`Project version '${e.version}' released.`);
   } catch (e) {
     console.error("❌ Error releasing project.", e), process.exit(1);
@@ -5820,7 +5819,7 @@ async function Oa() {
   try {
     Ce("Synchronise Project with GitHub");
     const e = await ae("package.json");
-    z("Bump project version"), await cs("1️⃣", e), await de("2️⃣  Stage changes", "git", ["add", "."]), await de("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await de("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Ie(`Project version '${e.version}' synchronised with GitHub.`);
+    X("Bump project version"), await cs("1️⃣", e), await de("2️⃣  Stage changes", "git", ["add", "."]), await de("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await de("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), Ie(`Project version '${e.version}' synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }
@@ -5835,12 +5834,12 @@ function Ra() {
   }
 }
 async function ua(e, t) {
-  z(`${e}  Build project configuration`);
+  X(`${e}  Build project configuration`);
   const s = await ae("config.json");
   return t.name != null && (s.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (s.version = t.version), await He("config.json", s), s;
 }
 async function ha(e, t) {
-  z(`${e}  Build connector project configuration`);
+  X(`${e}  Build connector project configuration`);
   const [s, a] = await Promise.all([ae("config.json"), Me("src/index.ts")]), n = /* @__PURE__ */ Ht(Hs, s);
   if (!n.success)
     throw console.error("❌ Configuration is invalid:"), console.table(n.issues), new Error("Configuration is invalid.");
@@ -5848,7 +5847,7 @@ async function ha(e, t) {
   return p.length > 0 ? (console.info(`ℹ️  Implements ${p.length} operations:`), console.table(p)) : console.warn("⚠️  Implements no operations."), f === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${f}' usage.`), t.name != null && (s.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (s.version = t.version), s.operations = p, s.usageId = f, await He("config.json", s), s;
 }
 async function ca(e, t) {
-  z(`${e}  Build context project configuration`);
+  X(`${e}  Build context project configuration`);
   const [s, a] = await Promise.all([ae("config.json"), Me("src/index.ts")]), n = /* @__PURE__ */ Ht(Qs, s);
   if (!n.success)
     throw console.error("❌ Configuration is invalid:"), console.table(n.issues), new Error("Configuration is invalid.");
@@ -5856,7 +5855,7 @@ async function ca(e, t) {
   return p.length > 0 ? (console.info(`ℹ️  Implements ${p.length} operations:`), console.table(p)) : console.warn("⚠️  Implements no operations."), t.name != null && (s.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (s.version = t.version), s.operations = p, await He("config.json", s), s;
 }
 async function pa(e, t) {
-  z(`${e}  Build presenter project configuration`);
+  X(`${e}  Build presenter project configuration`);
   const [s, a] = await Promise.all([ae("config.json"), Me("src/index.ts")]), n = /* @__PURE__ */ Ht(sr, s);
   if (!n.success)
     throw console.error("❌ Configuration is invalid:"), console.table(n.issues), new Error("Configuration is invalid.");
@@ -5864,7 +5863,7 @@ async function pa(e, t) {
   return p.length > 0 ? (console.info(`ℹ️  Implements ${p.length} operations:`), console.table(p)) : console.warn("⚠️  Implements no operations."), t.name != null && (s.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (s.version = t.version), s.operations = p, await He("config.json", s), s;
 }
 async function cs(e, t, s = "./") {
-  if (z(`${e}  Bump project version`), t.version == null)
+  if (X(`${e}  Bump project version`), t.version == null)
     t.version = "0.0.001", console.warn(`⚠️ Project version initialised to '${t.version}'.`), await He(`${s}package.json`, t);
   else {
     const a = t.version, n = t.version.split(".");
@@ -5904,7 +5903,7 @@ async function Da() {
   }
 }
 async function ya(e) {
-  z(`${e}  Insert OWASP Badge(s) into 'README.md'`);
+  X(`${e}  Insert OWASP Badge(s) into 'README.md'`);
   const t = await ae("dependency-check-reports/dependency-check-report.json"), s = { critical: 0, high: 0, moderate: 0, low: 0, unknown: 0 };
   for (const f of t.dependencies)
     if (f.vulnerabilities != null)
@@ -5950,7 +5949,7 @@ async function Va(e = [], t = !0) {
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", "--recurse", "--department.value=n/a", "--licensePeriod.value=n/a", "--material.value=n/a", "--relatedTo.value=n/a"],
       "licenses/licenseTree.json"
-    ), await de("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "licenses/licenseTree.json", "--output=table", ...s])) : (z("3️⃣  Skip 'licenses/licenseTree.json' file generate"), z("4️⃣  Skip 'licenses/licenseTree.json' file check")), await sa("licenses/downloads"), await de("5️⃣  Download license files", "license-downloader", [
+    ), await de("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "licenses/licenseTree.json", "--output=table", ...s])) : (X("3️⃣  Skip 'licenses/licenseTree.json' file generate"), X("4️⃣  Skip 'licenses/licenseTree.json' file check")), await sa("licenses/downloads"), await de("5️⃣  Download license files", "license-downloader", [
       "--source",
       "licenses/licenses.json",
       "--licDir",
@@ -5964,7 +5963,7 @@ async function Va(e = [], t = !0) {
   }
 }
 async function ba(e, t) {
-  z(`${e}  Insert licenses into 'README.md'`);
+  X(`${e}  Insert licenses into 'README.md'`);
   const s = await ae("licenses/licenses.json"), a = await ae("licenses/downloads/licenses.ext.json");
   let n = [];
   t && (n = await ae("licenses/licenseTree.json"));
@@ -6006,7 +6005,7 @@ function Sa(e) {
 }
 async function Fa() {
   try {
-    Ce("Format Code"), await be("1️⃣  Format", "prettier", ["--write", "*.json", "*.md", "*.ts", "src/**"]), Ie("Code formatted.");
+    Ce("Format Code"), await be("1️⃣  Format", "prettier", ["--write", "*.json", "*.md", "*.ts", "app/**", "src/**"]), Ie("Code formatted.");
   } catch (e) {
     console.error("❌ Error formatting code.", e), process.exit(1);
   }

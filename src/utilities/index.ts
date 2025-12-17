@@ -101,9 +101,9 @@ async function getStatsForPath(path: string): Promise<Stats> {
 
 /** Utilities - Load environment variables. */
 async function loadEnvironmentVariables(): Promise<void> {
-    logStepHeader('Load environment variables');
-    const dotenv = (await import('dotenv')) as { config(options?: DotenvConfigOptions): DotenvConfigOutput };
-    dotenv.config();
+    // logStepHeader('Load environment variables');
+    // const dotenv = (await import('dotenv')) as { config(options?: DotenvConfigOptions): DotenvConfigOutput };
+    // dotenv.config();
 }
 
 /** Utilities - Log operation header. */

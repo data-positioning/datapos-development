@@ -39,6 +39,14 @@ import type {
 } from '@datapos/datapos-shared';
 import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '@/utilities/cloudflare';
 
+// Interfaces/Types
+interface OperationConfig {
+    id?: string;
+    version?: string;
+    operations?: string[];
+    usageId?: string;
+}
+
 // Constants
 const MODULE_TYPE_CONFIGS = [
     { idPrefix: 'datapos-app-nuxt', typeId: 'app', publish: false, uploadGroupName: undefined },
@@ -201,6 +209,28 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
     const operations = extractOperationsFromSource<ConnectorOperation>(indexCode);
     const usageId = determineConnectorUsageId(operations);
 
+    // if (operations.length > 0) {
+    //     console.info(`ℹ️  Implements ${operations.length} operations:`);
+    //     console.table(operations);
+    // } else console.warn('⚠️  Implements no operations.');
+
+    // if (usageId === 'unknown') console.warn('⚠️  No usage identified.');
+    // else console.info(`ℹ️  Supports '${usageId}' usage.`);
+
+    // if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
+    // if (packageJSON.version != null) configJSON.version = packageJSON.version;
+    // configJSON.operations = operations;
+    // configJSON.usageId = usageId;
+
+    // await writeJSONFile('config.json', configJSON);
+
+    // return configJSON;
+
+    return await processOperations<ConnectorConfig>(packageJSON, configJSON, operations, usageId);
+}
+
+// Helpers - Process operations.
+async function processOperations<T extends OperationConfig>(packageJSON: PackageJson, configJSON: T, operations: string[], usageId?: string): Promise<T> {
     if (operations.length > 0) {
         console.info(`ℹ️  Implements ${operations.length} operations:`);
         console.table(operations);
@@ -233,18 +263,19 @@ async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJ
     }
 
     const operations = extractOperationsFromSource<ContextOperation>(indexCode);
-    if (operations.length > 0) {
-        console.info(`ℹ️  Implements ${operations.length} operations:`);
-        console.table(operations);
-    } else console.warn('⚠️  Implements no operations.');
+    // if (operations.length > 0) {
+    //     console.info(`ℹ️  Implements ${operations.length} operations:`);
+    //     console.table(operations);
+    // } else console.warn('⚠️  Implements no operations.');
 
-    if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-    if (packageJSON.version != null) configJSON.version = packageJSON.version;
-    configJSON.operations = operations;
+    // if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
+    // if (packageJSON.version != null) configJSON.version = packageJSON.version;
+    // configJSON.operations = operations;
 
-    await writeJSONFile('config.json', configJSON);
+    // await writeJSONFile('config.json', configJSON);
 
-    return configJSON;
+    // return configJSON;
+    return await processOperations<ContextConfig>(packageJSON, configJSON, operations);
 }
 
 // Utilities - Build presenter project configuration.
@@ -261,18 +292,19 @@ async function buildPresenterProjectConfig(stepIcon: string, packageJSON: Packag
     }
 
     const operations = extractOperationsFromSource<PresenterOperation>(indexCode);
-    if (operations.length > 0) {
-        console.info(`ℹ️  Implements ${operations.length} operations:`);
-        console.table(operations);
-    } else console.warn('⚠️  Implements no operations.');
+    // if (operations.length > 0) {
+    //     console.info(`ℹ️  Implements ${operations.length} operations:`);
+    //     console.table(operations);
+    // } else console.warn('⚠️  Implements no operations.');
 
-    if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-    if (packageJSON.version != null) configJSON.version = packageJSON.version;
-    configJSON.operations = operations;
+    // if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
+    // if (packageJSON.version != null) configJSON.version = packageJSON.version;
+    // configJSON.operations = operations;
 
-    await writeJSONFile('config.json', configJSON);
+    // await writeJSONFile('config.json', configJSON);
 
-    return configJSON;
+    // return configJSON;
+    return await processOperations<PresenterConfig>(packageJSON, configJSON, operations);
 }
 
 // Helper - Bump package version.

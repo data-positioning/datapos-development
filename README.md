@@ -102,11 +102,10 @@ We use the `npm` packages [license-report](https://www.npmjs.com/package/license
 <!-- DEPENDENCY_LICENSES_START -->
 |Name|Type|Installed|Latest|Latest Released|Deps|Document|
 |:-|:-|:-:|:-:|:-|-:|:-|
-|@datapos/datapos-shared|MIT|0.3.298 ⚠️|0.3.306|this month: 2025-12-17|3|[LICENSE](https://raw.githubusercontent.com/data-positioning/datapos-shared/main/LICENSE)|
+|@datapos/datapos-shared|MIT|0.3.298 ⚠️|0.3.311|this month: 2025-12-17|3|[LICENSE](https://raw.githubusercontent.com/data-positioning/datapos-shared/main/LICENSE)|
 |acorn|MIT|8.15.0|8.15.0|6 months ago: 2025-06-09|0|⚠️ No license file|
 |acorn-typescript|MIT|1.4.13|1.4.13|23 months ago: 2024-01-03❗|1|[LICENSE](https://raw.githubusercontent.com/TyrealHu/acorn-typescript/master/LICENSE)|
 |acorn-walk|MIT|8.3.4|8.3.4|15 months ago: 2024-09-09❗|1|⚠️ No license file|
-|dotenv|BSD-2-Clause|17.2.3|17.2.3|2 months ago: 2025-09-29|0|[LICENSE](https://raw.githubusercontent.com/motdotla/dotenv/master/LICENSE)|
 |nanoid|MIT|5.1.6|5.1.6|2 months ago: 2025-09-22|0|[LICENSE](https://raw.githubusercontent.com/ai/nanoid/main/LICENSE)|
 |valibot|MIT|1.2.0|1.2.0|this month: 2025-11-24|1|[LICENSE.md](https://raw.githubusercontent.com/open-circle/valibot/main/LICENSE.md)|
 

@@ -6,7 +6,7 @@
 
 /** Dependencies - Vendor. */
 import type { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
-import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv';
+/** import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv'; */
 import type { MethodDefinition, Node } from 'acorn';
 
 import acornTypeScript from 'acorn-typescript';
@@ -101,9 +101,11 @@ async function getStatsForPath(path: string): Promise<Stats> {
 
 /** Utilities - Load environment variables. */
 async function loadEnvironmentVariables(): Promise<void> {
-    // logStepHeader('Load environment variables');
-    // const dotenv = (await import('dotenv')) as { config(options?: DotenvConfigOptions): DotenvConfigOutput };
-    // dotenv.config();
+    /**
+     * logStepHeader('Load environment variables');
+     * const dotenv = (await import('dotenv')) as { config(options?: DotenvConfigOptions): DotenvConfigOutput };
+     * dotenv.config();
+     */
 }
 
 /** Utilities - Log operation header. */

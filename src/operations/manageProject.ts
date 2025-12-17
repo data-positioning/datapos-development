@@ -5,10 +5,11 @@
 /* eslint-disable unicorn/no-process-exit */
 
 // Dependencies - Framework.
-import { connectorConfigSchema } from '@/schemas/connectorSchema';
+import { connectorConfigSchema } from '~/src/schemas/connectorSchemaZ';
 import { contextConfigSchema } from '@/schemas/contextSchema';
 import type { PackageJson } from 'type-fest';
 import { presenterConfigSchema } from '@/schemas/presenterSchema';
+import { safeParse } from 'valibot';
 import {
     execCommand,
     extractOperationsFromSource,
@@ -190,10 +191,17 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
 
     const [configJSON, indexCode] = await Promise.all([readJSONFile<ConnectorConfig>('config.json'), readTextFile('src/index.ts')]);
 
-    const response = connectorConfigSchema.safeParse(configJSON);
-    if (!response.success) {
+    const response1 = connectorConfigSchema.safeParse(configJSON);
+    if (!response1.success) {
         console.error('❌ Configuration is invalid:');
-        console.table(response.error.issues);
+        console.table(response1.issues);
+        throw new Error('Configuration is invalid.');
+    }
+
+    const response2 = safeParse(connectorConfigSchema, configJSON);
+    if (!response2.success) {
+        console.error('❌ Configuration is invalid:');
+        console.table(response2.issues);
         throw new Error('Configuration is invalid.');
     }
 

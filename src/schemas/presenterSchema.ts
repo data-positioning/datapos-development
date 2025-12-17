@@ -2,9 +2,8 @@
  * Created by asking Copilot to generate a 'valibot' schema for the 'PresenterConfig' interface.
  */
 
-import { array, literal, nullable, number, object, optional, string, union } from 'valibot';
-
-const literalUnion = (values: readonly string[]): ReturnType<typeof union> => union(values.map((value) => literal(value)));
+import { literalUnion } from './componentSchemas';
+import { array, literal, nullable, number, object, optional, string } from 'valibot';
 
 const partialLocalisedStringSchema = object({
     'en-au': optional(string()),

@@ -209,23 +209,6 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
     const operations = extractOperationsFromSource<ConnectorOperation>(indexCode);
     const usageId = determineConnectorUsageId(operations);
 
-    // if (operations.length > 0) {
-    //     console.info(`ℹ️  Implements ${operations.length} operations:`);
-    //     console.table(operations);
-    // } else console.warn('⚠️  Implements no operations.');
-
-    // if (usageId === 'unknown') console.warn('⚠️  No usage identified.');
-    // else console.info(`ℹ️  Supports '${usageId}' usage.`);
-
-    // if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-    // if (packageJSON.version != null) configJSON.version = packageJSON.version;
-    // configJSON.operations = operations;
-    // configJSON.usageId = usageId;
-
-    // await writeJSONFile('config.json', configJSON);
-
-    // return configJSON;
-
     return await processOperations<ConnectorConfig>(packageJSON, configJSON, operations, usageId);
 }
 
@@ -263,18 +246,6 @@ async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJ
     }
 
     const operations = extractOperationsFromSource<ContextOperation>(indexCode);
-    // if (operations.length > 0) {
-    //     console.info(`ℹ️  Implements ${operations.length} operations:`);
-    //     console.table(operations);
-    // } else console.warn('⚠️  Implements no operations.');
-
-    // if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-    // if (packageJSON.version != null) configJSON.version = packageJSON.version;
-    // configJSON.operations = operations;
-
-    // await writeJSONFile('config.json', configJSON);
-
-    // return configJSON;
     return await processOperations<ContextConfig>(packageJSON, configJSON, operations);
 }
 
@@ -292,18 +263,6 @@ async function buildPresenterProjectConfig(stepIcon: string, packageJSON: Packag
     }
 
     const operations = extractOperationsFromSource<PresenterOperation>(indexCode);
-    // if (operations.length > 0) {
-    //     console.info(`ℹ️  Implements ${operations.length} operations:`);
-    //     console.table(operations);
-    // } else console.warn('⚠️  Implements no operations.');
-
-    // if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
-    // if (packageJSON.version != null) configJSON.version = packageJSON.version;
-    // configJSON.operations = operations;
-
-    // await writeJSONFile('config.json', configJSON);
-
-    // return configJSON;
     return await processOperations<PresenterConfig>(packageJSON, configJSON, operations);
 }
 

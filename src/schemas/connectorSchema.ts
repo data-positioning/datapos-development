@@ -1,6 +1,10 @@
+/**
+ * Created by asking Copilot to generate a 'valibot' schema for the 'ConnectorConfig' interface.
+ */
+
 import { array, boolean, literal, nullable, number, object, optional, record, string, union } from 'valibot';
 
-const literalUnion = (values: readonly string[]) => union(values.map((value) => literal(value)));
+const literalUnion = (values: readonly string[]): ReturnType<typeof union> => union(values.map((value) => literal(value)));
 
 const statusColorIdSchema = literalUnion(['amber', 'green', 'red', 'other'] as const);
 const componentStatusIdSchema = literalUnion([

@@ -1,28 +1,50 @@
-import { z } from 'zod';
-export declare const presenterConfigSchema: z.ZodObject<{
-    id: z.ZodString;
-    label: z.ZodRecord<z.ZodString, z.ZodString>;
-    description: z.ZodRecord<z.ZodString, z.ZodString>;
-    firstCreatedAt: z.ZodOptional<z.ZodNumber>;
-    icon: z.ZodOptional<z.ZodString>;
-    iconDark: z.ZodOptional<z.ZodString>;
-    lastUpdatedAt: z.ZodOptional<z.ZodNumber>;
-    status: z.ZodOptional<z.ZodObject<{
-        id: z.ZodString;
-        color: z.ZodUnion<readonly [z.ZodLiteral<"amber">, z.ZodLiteral<"green">, z.ZodLiteral<"red">, z.ZodLiteral<"other">]>;
-        label: z.ZodString;
-    }, z.core.$strip>>;
-    statusId: z.ZodUnion<readonly [z.ZodLiteral<"alpha">, z.ZodLiteral<"beta">, z.ZodLiteral<"generalAvailability">, z.ZodLiteral<"notApplicable">, z.ZodLiteral<"preAlpha">, z.ZodLiteral<"proposed">, z.ZodLiteral<"releaseCandidate">, z.ZodLiteral<"unavailable">, z.ZodLiteral<"underReview">]>;
-    version: z.ZodString;
-    presentations: z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        label: z.ZodRecord<z.ZodString, z.ZodString>;
-        description: z.ZodRecord<z.ZodString, z.ZodString>;
-        icon: z.ZodOptional<z.ZodString>;
-        iconDark: z.ZodOptional<z.ZodString>;
-        order: z.ZodNumber;
-        path: z.ZodString;
-    }, z.core.$strip>>;
-    operations: z.ZodArray<z.ZodUnion<readonly [z.ZodLiteral<"list">, z.ZodLiteral<"render">, z.ZodLiteral<"setColorMode">]>>;
-    typeId: z.ZodLiteral<"presenter">;
-}, z.core.$strip>;
+/**
+ * Created by asking Copilot to generate a 'valibot' schema for the 'PresenterConfig' interface.
+ */
+export declare const presenterConfigSchema: import('valibot').ObjectSchema<{
+    readonly typeId: import('valibot').LiteralSchema<"presenter", undefined>;
+    readonly version: import('valibot').StringSchema<undefined>;
+    readonly presentations: import('valibot').ArraySchema<import('valibot').ObjectSchema<{
+        readonly id: import('valibot').StringSchema<undefined>;
+        readonly label: import('valibot').ObjectSchema<{
+            readonly 'en-au': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+            readonly 'en-gb': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+            readonly 'en-us': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+            readonly 'es-es': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        }, undefined>;
+        readonly description: import('valibot').ObjectSchema<{
+            readonly 'en-au': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+            readonly 'en-gb': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+            readonly 'en-us': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+            readonly 'es-es': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        }, undefined>;
+        readonly icon: import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        readonly iconDark: import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        readonly order: import('valibot').NumberSchema<undefined>;
+        readonly path: import('valibot').StringSchema<undefined>;
+    }, undefined>, undefined>;
+    readonly operations: import('valibot').ArraySchema<import('valibot').UnionSchema<import('valibot').UnionOptions, import('valibot').ErrorMessage<import('valibot').UnionIssue<import('valibot').BaseIssue<unknown>>> | undefined>, undefined>;
+    readonly id: import('valibot').StringSchema<undefined>;
+    readonly label: import('valibot').ObjectSchema<{
+        readonly 'en-au': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        readonly 'en-gb': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        readonly 'en-us': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        readonly 'es-es': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+    }, undefined>;
+    readonly description: import('valibot').ObjectSchema<{
+        readonly 'en-au': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        readonly 'en-gb': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        readonly 'en-us': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+        readonly 'es-es': import('valibot').OptionalSchema<import('valibot').StringSchema<undefined>, undefined>;
+    }, undefined>;
+    readonly firstCreatedAt: import('valibot').OptionalSchema<import('valibot').NumberSchema<undefined>, undefined>;
+    readonly icon: import('valibot').NullableSchema<import('valibot').StringSchema<undefined>, undefined>;
+    readonly iconDark: import('valibot').NullableSchema<import('valibot').StringSchema<undefined>, undefined>;
+    readonly lastUpdatedAt: import('valibot').NullableSchema<import('valibot').NumberSchema<undefined>, undefined>;
+    readonly status: import('valibot').NullableSchema<import('valibot').ObjectSchema<{
+        readonly id: import('valibot').StringSchema<undefined>;
+        readonly color: import('valibot').UnionSchema<import('valibot').UnionOptions, import('valibot').ErrorMessage<import('valibot').UnionIssue<import('valibot').BaseIssue<unknown>>> | undefined>;
+        readonly label: import('valibot').StringSchema<undefined>;
+    }, undefined>, undefined>;
+    readonly statusId: import('valibot').UnionSchema<import('valibot').UnionOptions, import('valibot').ErrorMessage<import('valibot').UnionIssue<import('valibot').BaseIssue<unknown>>> | undefined>;
+}, undefined>;

@@ -191,18 +191,10 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
 
     const [configJSON, indexCode] = await Promise.all([readJSONFile<ConnectorConfig>('config.json'), readTextFile('src/index.ts')]);
 
-    // const response1 = connectorConfigSchema.safeParse(configJSON);
-    // if (!response1.success) {
-    //     console.error('❌ Configuration is invalid:');
-    //     console.table(response1.issues);
-    //     throw new Error('Configuration is invalid.');
-    // }
-
-    const response2 = safeParse(connectorConfigSchema, configJSON);
-    console.log(7777, response2);
-    if (!response2.success) {
+    const response = safeParse(connectorConfigSchema, configJSON);
+    if (!response.success) {
         console.error('❌ Configuration is invalid:');
-        console.table(response2.issues);
+        console.table(response.issues);
         throw new Error('Configuration is invalid.');
     }
 
@@ -233,10 +225,10 @@ async function buildContextProjectConfig(stepIcon: string, packageJSON: PackageJ
 
     const [configJSON, indexCode] = await Promise.all([readJSONFile<ContextConfig>('config.json'), readTextFile('src/index.ts')]);
 
-    const response = contextConfigSchema.safeParse(configJSON);
+    const response = safeParse(contextConfigSchema, configJSON);
     if (!response.success) {
         console.error('❌ Configuration is invalid:');
-        console.table(response.error.issues);
+        console.table(response.issues);
         throw new Error('Configuration is invalid.');
     }
 
@@ -261,10 +253,10 @@ async function buildPresenterProjectConfig(stepIcon: string, packageJSON: Packag
 
     const [configJSON, indexCode] = await Promise.all([readJSONFile<PresenterConfig>('config.json'), readTextFile('src/index.ts')]);
 
-    const response = presenterConfigSchema.safeParse(configJSON);
+    const response = safeParse(presenterConfigSchema, configJSON);
     if (!response.success) {
         console.error('❌ Configuration is invalid:');
-        console.table(response.error.issues);
+        console.table(response.issues);
         throw new Error('Configuration is invalid.');
     }
 

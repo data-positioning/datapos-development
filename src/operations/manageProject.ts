@@ -199,6 +199,7 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
     // }
 
     const response2 = safeParse(connectorConfigSchema, configJSON);
+    console.log(7777, response2);
     if (!response2.success) {
         console.error('❌ Configuration is invalid:');
         console.table(response2.issues);

@@ -8216,7 +8216,7 @@ async function kl(e, t) {
 async function _l(e, t) {
   se(`${e}  Build connector project configuration`);
   const [i, r] = await Promise.all([de("config.json"), Qe("src/index.ts")]), n = /* @__PURE__ */ mn($n, i);
-  if (!n.success)
+  if (console.log(7777, n), !n.success)
     throw console.error("❌ Configuration is invalid:"), console.table(n.issues), new Error("Configuration is invalid.");
   const u = Hi(r), c = Tl(u);
   return u.length > 0 ? (console.info(`ℹ️  Implements ${u.length} operations:`), console.table(u)) : console.warn("⚠️  Implements no operations."), c === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${c}' usage.`), t.name != null && (i.id = t.name.replace("@datapos/", "").replace("@data-positioning/", "")), t.version != null && (i.version = t.version), i.operations = u, i.usageId = c, await dt("config.json", i), i;

@@ -102,7 +102,7 @@ const componentConfigSchema = z.object({
     firstCreatedAt: z.number().optional(),
     icon: z.string().optional(),
     iconDark: z.string().optional(),
-    lastUpdatedAt: z.number().optional(),
+    lastUpdatedAt: z.number().nullable().optional(),
     status: componentStatusSchema.nullable().optional(),
     statusId: componentStatusIdSchema,
     typeId: componentTypeIdSchema
@@ -150,7 +150,7 @@ const moduleConfigSchema = componentConfigSchema.extend({
 });
 
 export const connectorConfigSchema = moduleConfigSchema.extend({
-    category: connectorCategorySchema.optional(),
+    category: connectorCategorySchema.nullable().optional(),
     categoryId: connectorModuleCategoryIdSchema,
     implementations: z.record(z.string(), connectorImplementationSchema),
     operations: z.array(connectorOperationSchema),

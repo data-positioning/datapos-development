@@ -15,7 +15,7 @@ export declare const connectorConfigSchema: z.ZodObject<{
     firstCreatedAt: z.ZodOptional<z.ZodNumber>;
     icon: z.ZodOptional<z.ZodString>;
     iconDark: z.ZodOptional<z.ZodString>;
-    lastUpdatedAt: z.ZodOptional<z.ZodNumber>;
+    lastUpdatedAt: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     status: z.ZodOptional<z.ZodNullable<z.ZodObject<{
         id: z.ZodString;
         color: z.ZodEnum<{
@@ -38,10 +38,10 @@ export declare const connectorConfigSchema: z.ZodObject<{
         underReview: "underReview";
     }>;
     version: z.ZodString;
-    category: z.ZodOptional<z.ZodObject<{
+    category: z.ZodOptional<z.ZodNullable<z.ZodObject<{
         id: z.ZodString;
         label: z.ZodString;
-    }, z.core.$strip>>;
+    }, z.core.$strip>>>;
     categoryId: z.ZodUnion<readonly [z.ZodLiteral<"application">, z.ZodLiteral<"curatedDataset">, z.ZodLiteral<"database">, z.ZodLiteral<"fileStore">]>;
     implementations: z.ZodRecord<z.ZodString, z.ZodObject<{
         activeConnectionCount: z.ZodOptional<z.ZodNumber>;

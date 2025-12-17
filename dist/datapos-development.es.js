@@ -2414,7 +2414,7 @@ const nc = ["amber", "green", "red", "other"], ac = Xt(nc), oc = ["alpha", "beta
   firstCreatedAt: De().optional(),
   icon: L().optional(),
   iconDark: L().optional(),
-  lastUpdatedAt: De().optional(),
+  lastUpdatedAt: De().nullable().optional(),
   status: fc.nullable().optional(),
   statusId: uc,
   typeId: hc
@@ -2446,7 +2446,7 @@ const nc = ["amber", "green", "red", "other"], ac = Xt(nc), oc = ["alpha", "beta
   typeId: mc,
   version: L()
 }), wc = _c.extend({
-  category: yc.optional(),
+  category: yc.nullable().optional(),
   categoryId: xc,
   implementations: ge(L(), vc),
   operations: He(gc),

@@ -191,12 +191,12 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
 
     const [configJSON, indexCode] = await Promise.all([readJSONFile<ConnectorConfig>('config.json'), readTextFile('src/index.ts')]);
 
-    const response1 = connectorConfigSchema.safeParse(configJSON);
-    if (!response1.success) {
-        console.error('❌ Configuration is invalid:');
-        console.table(response1.issues);
-        throw new Error('Configuration is invalid.');
-    }
+    // const response1 = connectorConfigSchema.safeParse(configJSON);
+    // if (!response1.success) {
+    //     console.error('❌ Configuration is invalid:');
+    //     console.table(response1.issues);
+    //     throw new Error('Configuration is invalid.');
+    // }
 
     const response2 = safeParse(connectorConfigSchema, configJSON);
     if (!response2.success) {

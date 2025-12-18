@@ -4,12 +4,22 @@
 
 /* eslint-disable unicorn/no-process-exit */
 
-// Dependencies - Framework.
-import { connectorConfigSchema } from '~/src/schemas/connectorSchema';
-import { contextConfigSchema } from '@/schemas/contextSchema';
+// Dependencies - Vendor.
 import type { PackageJson } from 'type-fest';
-import { presenterConfigSchema } from '@/schemas/presenterSchema';
 import { safeParse } from 'valibot';
+
+// Dependencies - Framework.
+import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS, connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
+import type {
+    ConnectorConfig,
+    ConnectorOperation,
+    ConnectorUsageId,
+    ContextConfig,
+    ContextOperation,
+    ModuleConfig,
+    PresenterConfig,
+    PresenterOperation
+} from '@datapos/datapos-shared';
 import {
     execCommand,
     extractOperationsFromSource,
@@ -24,19 +34,6 @@ import {
     writeJSONFile,
     writeTextFile
 } from '@/utilities';
-
-// Dependencies - Framework.
-import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS } from '@datapos/datapos-shared';
-import type {
-    ConnectorConfig,
-    ConnectorOperation,
-    ConnectorUsageId,
-    ContextConfig,
-    ContextOperation,
-    ModuleConfig,
-    PresenterConfig,
-    PresenterOperation
-} from '@datapos/datapos-shared';
 import { putState, uploadModuleConfigToDO, uploadModuleToR2 } from '@/utilities/cloudflare';
 
 // Interfaces/Types

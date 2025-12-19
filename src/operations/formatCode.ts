@@ -4,6 +4,9 @@
 
 /* eslint-disable unicorn/no-process-exit */
 
+// Dependencies - Core.
+import { existsSync } from 'node:fs';
+
 // Dependencies - Framework.
 import { logOperationHeader, logOperationSuccess, spawnCommand } from '@/utilities';
 
@@ -12,7 +15,11 @@ async function formatCode(): Promise<void> {
     try {
         logOperationHeader('Format Code');
 
-        await spawnCommand('1️⃣  Format', 'prettier', ['--write', '*.json', '*.md', '*.ts', 'app/**', 'src/**']);
+        const optionalDirectories = ['app', 'src'];
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
+        const optionalGlobs = optionalDirectories.filter((directory) => existsSync(directory)).map((directory) => `${directory}/**`);
+        const formatTargets = ['--write', '*.json', '*.md', '*.ts', ...optionalGlobs];
+        await spawnCommand('1️⃣  Format', 'prettier', formatTargets);
 
         logOperationSuccess('Code formatted.');
     } catch (error) {

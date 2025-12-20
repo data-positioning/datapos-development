@@ -45,25 +45,22 @@ async function updateDataPosDependencies(dependencies: string[] = []): Promise<v
 
 // Helpers - Synchronise project configuration files.
 async function syncProjectConfigFiles(moduleTypeConfig: ModuleTypeConfig): Promise<void> {
-    console.log(1111, moduleTypeConfig);
     const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
     await syncConfigFile(moduleDirectory, '../', '.editorconfig');
     await syncConfigFile(moduleDirectory, '../', '.gitattributes');
+    await (moduleTypeConfig.isPublish
+        ? syncConfigFile(moduleDirectory, '../', '.gitignore_published', '.gitignore2')
+        : syncConfigFile(moduleDirectory, '../', '.gitignore_unpublished', '.gitignore2'));
     await syncConfigFile(moduleDirectory, '../', '.markdownlint.json');
+    await syncConfigFile(moduleDirectory, '../', 'eslint.config.ts', 'eslint.config2.ts');
     await syncConfigFile(moduleDirectory, '../', 'LICENSE');
-    if (moduleTypeConfig.isPublish) {
-        await syncConfigFile(moduleDirectory, '../', '.gitignore_published', '.gitignore2');
-    }
 }
 
-async function syncConfigFile(moduleDirectory: string, templateFilePath: string, fileName: string, destinationFileName: string): Promise<void> {
-    console.log(2222, moduleDirectory, templateFilePath, fileName);
+async function syncConfigFile(moduleDirectory: string, templateFilePath: string, fileName: string, destinationFileName?: string): Promise<void> {
     const templatePath = path.resolve(moduleDirectory, `${templateFilePath}${fileName}`);
-    console.log(3333, templatePath);
     const templateContent = await readTextFile(templatePath);
 
-    const destinationPath = path.resolve(process.cwd(), destinationFileName || fileName);
-    console.log(4444, destinationPath);
+    const destinationPath = path.resolve(process.cwd(), destinationFileName ?? fileName);
 
     let destinationContent;
     try {

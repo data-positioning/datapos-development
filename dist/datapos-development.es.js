@@ -5520,25 +5520,25 @@ async function $r(t = []) {
 async function Ar(t) {
   console.log(1111, t);
   const e = te.dirname(ri(import.meta.url));
-  await Ut(e, "../", ".editorconfig"), await Ut(e, "../", ".gitattributes"), await Ut(e, "../", ".markdownlint.json"), await Ut(e, "../", "LICENSE"), t.isPublish && await Ut(e, "../", ".gitignore_published");
+  await Ut(e, "../", ".editorconfig"), await Ut(e, "../", ".gitattributes"), await Ut(e, "../", ".markdownlint.json"), await Ut(e, "../", "LICENSE"), t.isPublish && await Ut(e, "../", ".gitignore_published", ".gitignore2");
 }
-async function Ut(t, e, s) {
+async function Ut(t, e, s, a) {
   console.log(2222, t, e, s);
-  const a = te.resolve(t, `${e}${s}`);
-  console.log(3333, a);
-  const o = await At(a), l = te.resolve(process.cwd(), s);
-  console.log(4444, l);
-  let d;
+  const o = te.resolve(t, `${e}${s}`);
+  console.log(3333, o);
+  const l = await At(o), d = te.resolve(process.cwd(), a || s);
+  console.log(4444, d);
+  let v;
   try {
-    d = await At(l);
-  } catch (v) {
-    if (v.code !== "ENOENT") throw v;
+    v = await At(d);
+  } catch (g) {
+    if (g.code !== "ENOENT") throw g;
   }
-  if (d === o) {
+  if (v === l) {
     console.info(`ℹ️  File '${s}' is already up to date.`);
     return;
   }
-  await Gt(l, o), console.info(`ℹ️  File '${s}' synchronised.`);
+  await Gt(d, l), console.info(`ℹ️  File '${s}' synchronised.`);
 }
 async function Gr(t) {
   try {

@@ -52,17 +52,17 @@ async function syncProjectConfigFiles(moduleTypeConfig: ModuleTypeConfig): Promi
     await syncConfigFile(moduleDirectory, '../', '.markdownlint.json');
     await syncConfigFile(moduleDirectory, '../', 'LICENSE');
     if (moduleTypeConfig.isPublish) {
-        await syncConfigFile(moduleDirectory, '../', '.gitignore_published');
+        await syncConfigFile(moduleDirectory, '../', '.gitignore_published', '.gitignore2');
     }
 }
 
-async function syncConfigFile(moduleDirectory: string, templateFilePath: string, fileName: string): Promise<void> {
+async function syncConfigFile(moduleDirectory: string, templateFilePath: string, fileName: string, destinationFileName: string): Promise<void> {
     console.log(2222, moduleDirectory, templateFilePath, fileName);
     const templatePath = path.resolve(moduleDirectory, `${templateFilePath}${fileName}`);
     console.log(3333, templatePath);
     const templateContent = await readTextFile(templatePath);
 
-    const destinationPath = path.resolve(process.cwd(), fileName);
+    const destinationPath = path.resolve(process.cwd(), destinationFileName || fileName);
     console.log(4444, destinationPath);
 
     let destinationContent;

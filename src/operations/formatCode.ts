@@ -4,7 +4,7 @@
 
 /* eslint-disable unicorn/no-process-exit */
 
-// Dependencies - Core.
+// Dependencies - Vendor.
 import { existsSync } from 'node:fs';
 
 // Dependencies - Framework.

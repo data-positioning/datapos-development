@@ -68,7 +68,8 @@ async function syncConfigFile(moduleDirectory: string, templateFilePath: string,
     const templatePath = path.resolve(moduleDirectory, `${templateFilePath}${fileName}`);
     const templateContent = await readTextFile(templatePath);
 
-    const destinationPath = path.resolve(process.cwd(), destinationFileName ?? fileName);
+    const destinationPath = path.resolve(process.cwd(), fileName);
+    const destinationWritePath = path.resolve(process.cwd(), destinationFileName ?? fileName);
 
     let destinationContent;
     try {
@@ -82,7 +83,7 @@ async function syncConfigFile(moduleDirectory: string, templateFilePath: string,
         return;
     }
 
-    await writeTextFile(destinationPath, templateContent);
+    await writeTextFile(destinationWritePath, templateContent);
     console.info(`ℹ️  File '${fileName}' synchronised.`);
 }
 

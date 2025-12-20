@@ -5520,7 +5520,7 @@ async function $r(t = []) {
 async function Ar(t) {
   console.log(1111, t);
   const e = te.dirname(ri(import.meta.url));
-  await Ut(e, "../", ".editorconfig"), await Ut(e, "../", ".gitattributes"), await Ut(e, "../", ".markdownlint.json"), await Ut(e, "../", "LICENSE"), t.isPublish && await Ut(e, "../resources/published", ".gitignore");
+  await Ut(e, "../", ".editorconfig"), await Ut(e, "../", ".gitattributes"), await Ut(e, "../", ".markdownlint.json"), await Ut(e, "../", "LICENSE"), t.isPublish && await Ut(e, "../resources/published/", ".gitignore");
 }
 async function Ut(t, e, s) {
   console.log(2222, t, e, s);

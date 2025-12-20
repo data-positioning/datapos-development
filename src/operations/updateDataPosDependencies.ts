@@ -52,7 +52,7 @@ async function syncProjectConfigFiles(moduleTypeConfig: ModuleTypeConfig): Promi
     await syncConfigFile(moduleDirectory, '../', '.markdownlint.json');
     await syncConfigFile(moduleDirectory, '../', 'LICENSE');
     if (moduleTypeConfig.isPublish) {
-        await syncConfigFile(moduleDirectory, '../resources/published/', '.gitignore');
+        await syncConfigFile(moduleDirectory, '../', '.gitignore_published');
     }
 }
 

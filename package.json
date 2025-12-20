@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.404",
+    "version": "0.3.405",
     "description": "A collection of utilities for managing Data Positioning projects.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -22,20 +22,18 @@
             "types": "./dist/types/src/index.d.ts"
         },
         "./prettierrc": "./.prettierrc.json",
-        "./license-report-config": "./licenses/license-report-config.json",
-        "./resources/published/.gitignore": "./resources/published/.gitignore",
-        "./resources/unpublished/.gitignore": "./resources/unpublished/.gitignore"
+        "./license-report-config": "./licenses/license-report-config.json"
     },
     "files": [
         ".editorconfig",
         ".gitattributes",
+        ".gitignore_published",
+        ".gitignore_unpublished",
         ".markdownlint.json",
         ".prettierrc.json",
         "dist",
         "LICENSE",
-        "licenses/license-report-config.json",
-        "resources/published/.gitignore",
-        "resources/unpublished/.gitignore"
+        "licenses/license-report-config.json"
     ],
     "dependencies": {
         "@datapos/datapos-shared": "^0.3.330",

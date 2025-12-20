@@ -54,6 +54,9 @@ async function syncProjectConfigFiles(moduleTypeConfig: ModuleTypeConfig): Promi
     await syncConfigFile(moduleDirectory, '../', '.markdownlint.json');
     await syncConfigFile(moduleDirectory, '../', 'eslint.config.ts', 'eslint.config2.ts');
     await syncConfigFile(moduleDirectory, '../', 'LICENSE');
+    await syncConfigFile(moduleDirectory, '../', 'tsconfig.json', 'tsconfig2.json');
+    await syncConfigFile(moduleDirectory, '../', 'vite.config.ts', 'vite.config2.ts');
+    await syncConfigFile(moduleDirectory, '../', 'vitest.config.ts', 'vitest.config2.ts');
 }
 
 async function syncConfigFile(moduleDirectory: string, templateFilePath: string, fileName: string, destinationFileName?: string): Promise<void> {

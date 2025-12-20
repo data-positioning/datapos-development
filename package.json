@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.409",
+    "version": "0.3.410",
     "description": "A collection of utilities for managing Data Positioning projects.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -34,7 +34,10 @@
         "dist",
         "eslint.config.ts",
         "LICENSE",
-        "licenses/license-report-config.json"
+        "licenses/license-report-config.json",
+        "tsconfig.json",
+        "vite.config.ts",
+        "vitest.config.ts"
     ],
     "dependencies": {
         "@datapos/datapos-shared": "^0.3.330",

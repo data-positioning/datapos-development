@@ -64,7 +64,6 @@ function extractOperationsFromSource<T>(source: string): T[] {
         if (key.type !== 'Identifier') return;
         const name = key.name;
 
-        console.log(1111, name, md);
         if (!name) return;
         if (name === 'constructor') return;
         if (md.accessibility === 'private') return;

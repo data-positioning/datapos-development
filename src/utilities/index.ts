@@ -17,7 +17,7 @@ import type { MethodDefinition, Node } from 'acorn';
 /** Interfaces/Types */
 export interface ModuleTypeConfig {
     idPrefix: string;
-    typeId: 'app' | 'api' | 'connector' | 'context' | 'development' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool';
+    typeId: 'app' | 'api' | 'connector' | 'context' | 'development' | 'engine' | 'eslint' | 'presenter' | 'resources' | 'shared' | 'tool';
     isPublish: boolean;
     uploadGroupName?: 'connectors' | 'contexts' | 'engine' | 'presenters' | 'tools';
 }
@@ -33,7 +33,8 @@ const MODULE_TYPE_CONFIGS: ModuleTypeConfig[] = [
     { idPrefix: 'datapos-presenter', typeId: 'presenter', isPublish: true, uploadGroupName: 'presenters' },
     { idPrefix: 'datapos-resources', typeId: 'resources', isPublish: false, uploadGroupName: undefined },
     { idPrefix: 'datapos-shared', typeId: 'shared', isPublish: true, uploadGroupName: undefined },
-    { idPrefix: 'datapos-tool', typeId: 'tool', isPublish: true, uploadGroupName: 'tools' }
+    { idPrefix: 'datapos-tool', typeId: 'tool', isPublish: true, uploadGroupName: 'tools' },
+    { idPrefix: 'eslint-config-datapos', typeId: 'eslint', isPublish: true, uploadGroupName: undefined }
 ];
 
 /** Initialisation */

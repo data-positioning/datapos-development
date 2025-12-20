@@ -5098,7 +5098,8 @@ const nr = [
   { idPrefix: "datapos-presenter", typeId: "presenter", isPublish: !0, uploadGroupName: "presenters" },
   { idPrefix: "datapos-resources", typeId: "resources", isPublish: !1, uploadGroupName: void 0 },
   { idPrefix: "datapos-shared", typeId: "shared", isPublish: !0, uploadGroupName: void 0 },
-  { idPrefix: "datapos-tool", typeId: "tool", isPublish: !0, uploadGroupName: "tools" }
+  { idPrefix: "datapos-tool", typeId: "tool", isPublish: !0, uploadGroupName: "tools" },
+  { idPrefix: "eslint-config-datapos", typeId: "eslint", isPublish: !0, uploadGroupName: void 0 }
 ], or = ss(rs);
 async function hr(t) {
   let e;

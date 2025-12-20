@@ -2,7 +2,7 @@ import { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
 /** Interfaces/Types */
 export interface ModuleTypeConfig {
     idPrefix: string;
-    typeId: 'app' | 'api' | 'connector' | 'context' | 'development' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool';
+    typeId: 'app' | 'api' | 'connector' | 'context' | 'development' | 'engine' | 'eslint' | 'presenter' | 'resources' | 'shared' | 'tool';
     isPublish: boolean;
     uploadGroupName?: 'connectors' | 'contexts' | 'engine' | 'presenters' | 'tools';
 }

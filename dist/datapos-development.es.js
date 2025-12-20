@@ -5520,7 +5520,7 @@ async function $r(t = []) {
 }
 async function Ar(t) {
   const e = te.dirname(ri(import.meta.url));
-  await mt(e, "../", ".editorconfig"), await mt(e, "../", ".gitattributes"), await (t.isPublish ? mt(e, "../", ".gitignore_published", ".gitignore2") : mt(e, "../", ".gitignore_unpublished", ".gitignore2")), await mt(e, "../", ".markdownlint.json"), await mt(e, "../", "eslint.config.ts", "eslint.config2.ts"), await mt(e, "../", "LICENSE"), await mt(e, "../", "tsconfig.json", "tsconfig2.json"), await mt(e, "../", "vite.config.ts", "vite.config2.ts"), await mt(e, "../", "vitest.config.ts", "vitest.config2.ts");
+  await mt(e, "../", ".editorconfig"), await mt(e, "../", ".gitattributes"), await (t.isPublish ? mt(e, "../", ".gitignore_published", ".gitignore2") : mt(e, "../", ".gitignore_unpublished", ".gitignore2")), await mt(e, "../", ".markdownlint.json"), await mt(e, "../", "LICENSE"), await mt(e, "../", "tsconfig.json", "tsconfig2.json"), t.typeId === "eslint" || (await mt(e, "../", "eslint.config.ts", "eslint.config2.ts"), await mt(e, "../", "vite.config.ts", "vite.config2.ts"), await mt(e, "../", "vitest.config.ts", "vitest.config2.ts"));
 }
 async function mt(t, e, s, a) {
   const o = te.resolve(t, `${e}${s}`), l = await Et(o), d = te.resolve(process.cwd(), a ?? s);

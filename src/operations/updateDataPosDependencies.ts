@@ -24,7 +24,7 @@ async function updateDataPosDependencies(dependencies: string[] = []): Promise<v
         for (const [index, dependency] of dependencies.entries()) {
             const stepIcon = STEP_ICONS.at(index) ?? '🔢';
             if (dependency === 'eslint') {
-                await spawnCommand(`${stepIcon}  Update '${dependency}'`, 'npm', ['install', `@datapos/eslint-config-datapos@latest`]);
+                await spawnCommand(`${stepIcon}  Update '${dependency}'`, 'npm', ['install', '@datapos/eslint-config-datapos@latest']);
             } else {
                 await spawnCommand(`${stepIcon}  Update '${dependency}'`, 'npm', ['install', `@datapos/datapos-${dependency}@latest`]);
                 if (dependency === 'development') {
@@ -52,7 +52,7 @@ async function syncProjectConfigFiles(moduleTypeConfig: ModuleTypeConfig): Promi
     await syncConfigFile(moduleDirectory, '../', '.markdownlint.json');
     await syncConfigFile(moduleDirectory, '../', 'LICENSE');
     if (moduleTypeConfig.isPublish) {
-        // await syncConfigFile(moduleDirectory, '../', '.gitignore');
+        await syncConfigFile(moduleDirectory, '../resources/published', '.gitignore');
     }
 }
 

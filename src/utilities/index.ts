@@ -5,16 +5,36 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
 /** Dependencies - Vendor. */
-import type { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
-/** import type { DotenvConfigOptions, DotenvConfigOutput } from 'dotenv'; */
-import type { MethodDefinition, Node } from 'acorn';
-
 import acornTypeScript from 'acorn-typescript';
 import { promises as fs } from 'node:fs';
 import { Parser } from 'acorn';
 import path from 'node:path';
 import { promisify } from 'node:util';
+import type { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
 import { exec, spawn } from 'node:child_process';
+import type { MethodDefinition, Node } from 'acorn';
+
+/** Interfaces/Types */
+export interface ModuleTypeConfig {
+    idPrefix: string;
+    typeId: 'app' | 'api' | 'connector' | 'context' | 'development' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool';
+    isPublish: boolean;
+    uploadGroupName?: 'connectors' | 'contexts' | 'engine' | 'presenters' | 'tools';
+}
+
+/** Constants */
+const MODULE_TYPE_CONFIGS: ModuleTypeConfig[] = [
+    { idPrefix: 'datapos-app-nuxt', typeId: 'app', isPublish: false, uploadGroupName: undefined },
+    { idPrefix: 'datapos-api', typeId: 'api', isPublish: false, uploadGroupName: undefined },
+    { idPrefix: 'datapos-connector', typeId: 'connector', isPublish: true, uploadGroupName: 'connectors' },
+    { idPrefix: 'datapos-context', typeId: 'context', isPublish: true, uploadGroupName: 'contexts' },
+    { idPrefix: 'datapos-development', typeId: 'development', isPublish: true, uploadGroupName: undefined },
+    { idPrefix: 'datapos-engine', typeId: 'engine', isPublish: false, uploadGroupName: 'engine' },
+    { idPrefix: 'datapos-presenter', typeId: 'presenter', isPublish: true, uploadGroupName: 'presenters' },
+    { idPrefix: 'datapos-resources', typeId: 'resources', isPublish: false, uploadGroupName: undefined },
+    { idPrefix: 'datapos-shared', typeId: 'shared', isPublish: true, uploadGroupName: undefined },
+    { idPrefix: 'datapos-tool', typeId: 'tool', isPublish: true, uploadGroupName: 'tools' }
+];
 
 /** Initialisation */
 const asyncExec = promisify(exec);
@@ -74,7 +94,7 @@ function extractOperationsFromSource<T>(source: string): T[] {
     return operations;
 }
 
-/** Utilities - Execute command. */
+/** TODO Utilities - Execute command. */
 async function execCommand(label: string | undefined, command_: string, arguments_: string[] = [], outputFilePath?: string): Promise<void> {
     const command = `${command_} ${arguments_.join(' ')}`;
     if (label !== undefined) logStepHeader(`${label} - exec(${command})`);
@@ -92,6 +112,13 @@ function getDirectoryEntries(path: string): Promise<string[]>;
 function getDirectoryEntries(path: string, options: ObjectEncodingOptions): Promise<Dirent[]>;
 async function getDirectoryEntries(path: string, options?: ObjectEncodingOptions): Promise<string[] | Dirent[]> {
     return fs.readdir(path, options);
+}
+
+/** Utilities - Get module type identifier. */
+function getModuleConfig(configId: string): ModuleTypeConfig {
+    const moduleTypeConfig = MODULE_TYPE_CONFIGS.find((config) => configId.startsWith(config.idPrefix));
+    if (!moduleTypeConfig) throw new Error(`Failed to locate module type configuration for identifier '${configId}'.`);
+    return moduleTypeConfig;
 }
 
 /** Utilities - Get stats for path. */
@@ -203,6 +230,7 @@ export {
     execCommand,
     extractOperationsFromSource,
     getDirectoryEntries,
+    getModuleConfig,
     getStatsForPath,
     loadEnvironmentVariables,
     logOperationHeader,

@@ -23,6 +23,7 @@ import type {
 import {
     execCommand,
     extractOperationsFromSource,
+    getModuleConfig,
     loadEnvironmentVariables,
     logOperationHeader,
     logOperationSuccess,
@@ -43,20 +44,6 @@ interface OperationConfig {
     operations?: string[];
     usageId?: string;
 }
-
-// Constants
-const MODULE_TYPE_CONFIGS = [
-    { idPrefix: 'datapos-app-nuxt', typeId: 'app', publish: false, uploadGroupName: undefined },
-    { idPrefix: 'datapos-api', typeId: 'api', publish: false, uploadGroupName: undefined },
-    { idPrefix: 'datapos-connector', typeId: 'connector', publish: true, uploadGroupName: 'connectors' },
-    { idPrefix: 'datapos-context', typeId: 'context', publish: true, uploadGroupName: 'contexts' },
-    { idPrefix: 'datapos-development', typeId: 'development', publish: true, uploadGroupName: undefined },
-    { idPrefix: 'datapos-engine', typeId: 'engine', publish: false, uploadGroupName: 'engine' },
-    { idPrefix: 'datapos-presenter', typeId: 'presenter', publish: true, uploadGroupName: 'presenters' },
-    { idPrefix: 'datapos-resources', typeId: 'resources', publish: false, uploadGroupName: undefined },
-    { idPrefix: 'datapos-shared', typeId: 'shared', publish: true, uploadGroupName: undefined },
-    { idPrefix: 'datapos-tool', typeId: 'tool', publish: true, uploadGroupName: 'tools' }
-];
 
 // Utilities - Build project.
 async function buildProject(): Promise<void> {
@@ -83,8 +70,7 @@ async function releaseProject(): Promise<void> {
 
         await bumpPackageVersion('1️⃣', packageJSON);
 
-        const moduleTypeConfig = MODULE_TYPE_CONFIGS.find((config) => configJSON.id.startsWith(config.idPrefix));
-        if (!moduleTypeConfig) throw new Error(`Failed to locate module type configuration for identifier '${configJSON.id}'.`);
+        const moduleTypeConfig = getModuleConfig(configJSON.id);
 
         switch (moduleTypeConfig.typeId) {
             case 'connector':
@@ -124,7 +110,7 @@ async function releaseProject(): Promise<void> {
             await uploadModuleConfigToDO(configJSON); // This MUST follow 'uploadModuleToR2', otherwise the app will receive a message a new module is available and try to access it before it is uploaded to R2.
         }
 
-        if (moduleTypeConfig.publish) {
+        if (moduleTypeConfig.isPublish) {
             const npmrcFileName = '.npmrc';
             try {
                 await writeTextFile(npmrcFileName, `registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN ?? ''}`);

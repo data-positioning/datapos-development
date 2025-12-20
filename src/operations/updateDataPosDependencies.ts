@@ -9,7 +9,9 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 // Dependencies - Framework.
-import { logOperationHeader, logOperationSuccess, readTextFile, spawnCommand, writeTextFile } from '@/utilities';
+import type { ModuleConfig } from '@datapos/datapos-shared';
+import type { ModuleTypeConfig } from '@/utilities';
+import { getModuleConfig, logOperationHeader, logOperationSuccess, readJSONFile, readTextFile, spawnCommand, writeTextFile } from '@/utilities';
 
 // Constants
 const STEP_ICONS = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
@@ -21,8 +23,17 @@ async function updateDataPosDependencies(dependencies: string[] = []): Promise<v
 
         for (const [index, dependency] of dependencies.entries()) {
             const stepIcon = STEP_ICONS.at(index) ?? '🔢';
-            await spawnCommand(`${stepIcon}  Update '${dependency}'`, 'npm', ['install', `@datapos/datapos-${dependency}@latest`]);
-            if (dependency === 'development') await syncProjectConfigFiles();
+            if (dependency === 'eslint') {
+                await spawnCommand(`${stepIcon}  Update '${dependency}'`, 'npm', ['install', `@datapos/eslint-config-datapos@latest`]);
+            } else {
+                await spawnCommand(`${stepIcon}  Update '${dependency}'`, 'npm', ['install', `@datapos/datapos-${dependency}@latest`]);
+                if (dependency === 'development') {
+                    const configJSON = await readJSONFile<ModuleConfig>('config.json');
+                    const moduleTypeConfig = getModuleConfig(configJSON.id);
+
+                    await syncProjectConfigFiles(moduleTypeConfig);
+                }
+            }
         }
 
         logOperationSuccess("'@datapos/datapos' dependencies updated.");
@@ -33,19 +44,26 @@ async function updateDataPosDependencies(dependencies: string[] = []): Promise<v
 }
 
 // Helpers - Synchronise project configuration files.
-async function syncProjectConfigFiles(typeId?: string): Promise<void> {
+async function syncProjectConfigFiles(moduleTypeConfig: ModuleTypeConfig): Promise<void> {
+    console.log(1111, moduleTypeConfig);
     const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
     await syncConfigFile(moduleDirectory, '../', '.editorconfig');
     await syncConfigFile(moduleDirectory, '../', '.gitattributes');
     await syncConfigFile(moduleDirectory, '../', '.markdownlint.json');
     await syncConfigFile(moduleDirectory, '../', 'LICENSE');
+    if (moduleTypeConfig.isPublish) {
+        // await syncConfigFile(moduleDirectory, '../', '.gitignore');
+    }
 }
 
 async function syncConfigFile(moduleDirectory: string, templateFilePath: string, fileName: string): Promise<void> {
+    console.log(2222, moduleDirectory, templateFilePath, fileName);
     const templatePath = path.resolve(moduleDirectory, `${templateFilePath}${fileName}`);
+    console.log(3333, templatePath);
     const templateContent = await readTextFile(templatePath);
 
     const destinationPath = path.resolve(process.cwd(), fileName);
+    console.log(4444, destinationPath);
 
     let destinationContent;
     try {

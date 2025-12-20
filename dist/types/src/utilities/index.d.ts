@@ -1,13 +1,22 @@
 import { Dirent, ObjectEncodingOptions, Stats } from 'node:fs';
+/** Interfaces/Types */
+export interface ModuleTypeConfig {
+    idPrefix: string;
+    typeId: 'app' | 'api' | 'connector' | 'context' | 'development' | 'engine' | 'presenter' | 'resources' | 'shared' | 'tool';
+    isPublish: boolean;
+    uploadGroupName?: 'connectors' | 'contexts' | 'engine' | 'presenters' | 'tools';
+}
 /** Utilities - Clear directory. */
 declare function clearDirectory(directoryPath: string): Promise<void>;
 /** Utilities - Extract operations from source. */
 declare function extractOperationsFromSource<T>(source: string): T[];
-/** Utilities - Execute command. */
+/** TODO Utilities - Execute command. */
 declare function execCommand(label: string | undefined, command_: string, arguments_?: string[], outputFilePath?: string): Promise<void>;
 /** Utilities - Get directory entries. */
 declare function getDirectoryEntries(path: string): Promise<string[]>;
 declare function getDirectoryEntries(path: string, options: ObjectEncodingOptions): Promise<Dirent[]>;
+/** Utilities - Get module type identifier. */
+declare function getModuleConfig(configId: string): ModuleTypeConfig;
 /** Utilities - Get stats for path. */
 declare function getStatsForPath(path: string): Promise<Stats>;
 /** Utilities - Load environment variables. */
@@ -32,4 +41,4 @@ declare function writeJSONFile(path: string, data: object): Promise<void>;
 /** Utilities - Write text file. */
 declare function writeTextFile(path: string, data: string): Promise<void>;
 /** Exposures */
-export { clearDirectory, execCommand, extractOperationsFromSource, getDirectoryEntries, getStatsForPath, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, removeFile, spawnCommand, substituteContent, writeJSONFile, writeTextFile };
+export { clearDirectory, execCommand, extractOperationsFromSource, getDirectoryEntries, getModuleConfig, getStatsForPath, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, removeFile, spawnCommand, substituteContent, writeJSONFile, writeTextFile };

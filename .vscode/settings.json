@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "data-positioning",
+        "projectKey": "data-positioning_datapos-development"
+    }
+}

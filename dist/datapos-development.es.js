@@ -5530,7 +5530,7 @@ async function mt(t, e, s, a) {
   } catch (o) {
     if (o.code !== "ENOENT") throw o;
   }
-  if (console.log(1111, g), console.log(2222, l), g === l) {
+  if (g === l) {
     console.info(`ℹ️  File '${s}' is already up to date.`);
     return;
   }

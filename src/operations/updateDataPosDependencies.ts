@@ -79,6 +79,8 @@ async function syncConfigFile(moduleDirectory: string, templateFilePath: string,
     }
 
     if (destinationContent === templateContent) {
+        console.log(1111, destinationContent);
+        console.log(2222, templateContent);
         console.info(`ℹ️  File '${fileName}' is already up to date.`);
         return;
     }

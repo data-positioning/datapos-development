@@ -84,7 +84,7 @@ async function syncConfigFile(moduleDirectory: string, templateFilePath: string,
     }
 
     await writeTextFile(destinationWritePath, templateContent);
-    console.info(`ℹ️  File '${destinationWritePath}' synchronised.`);
+    console.info(`ℹ️  File '${destinationFileName ?? fileName}' synchronised.`);
 }
 
 // Exposures

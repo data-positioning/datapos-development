@@ -5530,8 +5530,8 @@ async function mt(t, e, s, a) {
   } catch (o) {
     if (o.code !== "ENOENT") throw o;
   }
-  if (g === l) {
-    console.log(1111, g), console.log(2222, l), console.info(`ℹ️  File '${s}' is already up to date.`);
+  if (console.log(1111, g), console.log(2222, l), g === l) {
+    console.info(`ℹ️  File '${s}' is already up to date.`);
     return;
   }
   await Wt(v, l), console.info(`ℹ️  File '${s}' synchronised.`);

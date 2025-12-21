@@ -78,9 +78,9 @@ async function syncConfigFile(moduleDirectory: string, templateFilePath: string,
         if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
     }
 
+    console.log(1111, destinationContent);
+    console.log(2222, templateContent);
     if (destinationContent === templateContent) {
-        console.log(1111, destinationContent);
-        console.log(2222, templateContent);
         console.info(`ℹ️  File '${fileName}' is already up to date.`);
         return;
     }

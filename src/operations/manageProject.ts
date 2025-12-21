@@ -12,7 +12,7 @@ import { safeParse } from 'valibot';
 import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS, connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
 import type {
     ConnectorConfig,
-    ConnectorOperation,
+    ConnectorOperationName,
     ConnectorUsageId,
     ContextConfig,
     ContextOperation,
@@ -189,7 +189,7 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
         throw new Error('Configuration is invalid.');
     }
 
-    const operations = extractOperationsFromSource<ConnectorOperation>(indexCode);
+    const operations = extractOperationsFromSource<ConnectorOperationName>(indexCode);
     const usageId = determineConnectorUsageId(operations);
 
     return await processOperations<ConnectorConfig>(packageJSON, configJSON, operations, usageId);
@@ -267,7 +267,7 @@ async function bumpPackageVersion(stepIcon: string, packageJSON: PackageJson, pa
 }
 
 // Helpers - Determine connector usage identifier.
-function determineConnectorUsageId(operations: ConnectorOperation[]): ConnectorUsageId {
+function determineConnectorUsageId(operations: ConnectorOperationName[]): ConnectorUsageId {
     let sourceOps = false;
     let destinationOps = false;
     for (const operation of operations) {

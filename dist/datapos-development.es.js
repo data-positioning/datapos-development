@@ -5531,7 +5531,7 @@ async function mt(t, e, s, a) {
     if (o.code !== "ENOENT") throw o;
   }
   if (g === l) {
-    console.info(`ℹ️  File '${s}' is already up to date.`);
+    console.info(`ℹ️  File '${s.split("_")[0] ?? s}' is already up to date.`);
     return;
   }
   await Wt(v, l), console.info(`ℹ️  File '${s}' synchronised.`);

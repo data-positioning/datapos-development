@@ -5534,7 +5534,7 @@ async function mt(t, e, s, a) {
     console.info(`ℹ️  File '${s.split("_")[0] ?? s}' is already up to date.`);
     return;
   }
-  await Wt(v, l), console.info(`ℹ️  File '${s}' synchronised.`);
+  await Wt(v, l), console.info(`ℹ️  File '${v}' synchronised.`);
 }
 async function Gr(t) {
   try {

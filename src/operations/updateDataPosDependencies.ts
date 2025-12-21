@@ -68,7 +68,7 @@ async function syncConfigFile(moduleDirectory: string, templateFilePath: string,
     const templatePath = path.resolve(moduleDirectory, `${templateFilePath}${fileName}`);
     const templateContent = await readTextFile(templatePath);
 
-    const destinationPath = path.resolve(process.cwd(), fileName);
+    const destinationPath = path.resolve(process.cwd(), fileName.split('_')[0] ?? fileName);
     const destinationWritePath = path.resolve(process.cwd(), destinationFileName ?? fileName);
 
     let destinationContent;

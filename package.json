@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.427",
+    "version": "0.3.428",
     "description": "A collection of utilities for managing Data Positioning projects.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -85,8 +85,7 @@
         "release": "op run --env-file=.env -- node -e \"import('./dist/datapos-development.es.js').then(m => m.releaseProject())\"",
         "sync": "node -e \"import('./dist/datapos-development.es.js').then(m => m.syncProjectWithGitHub())\"",
         "test": "node -e \"import('./dist/datapos-development.es.js').then(m => m.testProject())\"",
-        "update": "node -e \"import('./dist/datapos-development.es.js').then(m => m.updateDataPosDependencies(['shared']))\"",
-        "___ts-to-zod": "npx ts-to-zod src/schemaTypes.ts src/schemaZOD.ts"
+        "update": "node -e \"import('./dist/datapos-development.es.js').then(m => m.updateDataPosDependencies(['eslint', 'shared']))\""
     },
     "engines": {
         "node": ">=22.0.0",

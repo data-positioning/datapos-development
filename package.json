@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.430",
+    "version": "0.3.431",
     "description": "A collection of utilities for managing Data Positioning projects.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -36,6 +36,7 @@
         "LICENSE",
         "licenses/license-report-config.json",
         "tsconfig.json",
+        "tsconfig.vite.json",
         "vite.config.ts",
         "vitest.config.ts"
     ],

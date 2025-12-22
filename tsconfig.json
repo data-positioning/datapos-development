@@ -1,27 +1,29 @@
 {
     "compilerOptions": {
-        "baseUrl": "./", // Makes relative imports like "src/..." resolve from the repo root.
-        "declaration": true, // Emit .d.ts files so consumers get typings.
-        "esModuleInterop": true, // Allow default-import syntax for CommonJS packages.
-        "isolatedModules": true, // Treat each file as a separate module; keeps Vite happy.
-        "lib": ["ESNext", "dom"], // Target the latest JavaScript libs and built-ins.
-        "module": "ESNext", // Generate native ESM output for bundlers.
-        "moduleResolution": "bundler", // Resolve modules like a bundler (needed for aliases and imports such as 'sonda/vite').
-        "noUncheckedIndexedAccess": true, // Enforce checks when indexing into objects or arrays.
+        "declaration": true, // Emit '.d.ts' files so downstream consumers keep typings.
+        "esModuleInterop": true, // Permit default-import syntax when targeting CommonJS packages.
+        "exactOptionalPropertyTypes": true, // Preserve optional fields exactly instead of widening to undefined.
+        "forceConsistentCasingInFileNames": true, // Prevent case-mismatch imports that break on some filesystems.
+        "incremental": true, // Cache build info to speed up repeated compiles.
+        "lib": ["ESNext"], // Target only modern Node libs since this build is server-side.
+        "module": "NodeNext", // Emit NodeNext-compatible modules for native ESM tooling.
+        "moduleDetection": "force", // Treat every file as a module unless it is clearly script-only.
+        "moduleResolution": "nodenext", // Mirror NodeNext's resolver instead of bundler heuristics.
         "noImplicitAny": true, // Disallow implicit any types to keep everything typed.
-        "outDir": "dist", // Place compiler output in dist/.
-        "paths": {
-            // Configure import aliases used across the project.
-            "~/*": ["*"],
-            "@/*": ["src/*"]
-        },
+        "noImplicitOverride": true, // Require explicit override keyword for subclass members.
+        "noUncheckedIndexedAccess": true, // Enforce checks when indexing into objects or arrays.
+        "noUnusedLocals": true, // Detect unused locals for tidier builds.
+        "noUnusedParameters": true, // Detect unused params to prevent drifting APIs.
+        "outDir": "dist", // Place compiler output in 'dist' directory.
+        "noPropertyAccessFromIndexSignature": true, // Catch dot-notation typos on index signatures.
         "resolveJsonModule": true, // Allow importing JSON modules directly.
-        "skipLibCheck": true, // Skip type checking for .d.ts in node_modules to speed up builds.
+        "skipLibCheck": true, // Skip type checking for '.d.ts' in node_modules to speed up builds.
         "sourceMap": true, // Emit source maps for better debugging.
         "strict": true, // Enable the full strict type-checking suite.
         "strictNullChecks": true, // Major strict setting: enforce null/undefined checks.
         "target": "ESNext", // Target latest JavaScript syntax when emitting.
+        "tsBuildInfoFile": "./node_modules/.cache/tsconfig.tsbuildinfo", // Persist incremental metadata outside 'dist' directory.
         "useDefineForClassFields": true // Use define semantics for class fields (aligns with JS standard).
     },
-    "include": ["vite.config.*", "src/**/*", "tests/**/*"]
+    "include": ["src/**/*"] // Type-check project sources only.
 }

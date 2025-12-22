@@ -19,7 +19,7 @@ export interface ModuleTypeConfig {
     idPrefix: string;
     typeId: 'app' | 'api' | 'connector' | 'context' | 'development' | 'engine' | 'eslint' | 'presenter' | 'resources' | 'shared' | 'tool';
     isPublish: boolean;
-    uploadGroupName?: 'connectors' | 'contexts' | 'engine' | 'presenters' | 'tools';
+    uploadGroupName: 'connectors' | 'contexts' | 'engine' | 'presenters' | 'tools' | undefined;
 }
 
 /** Constants */

@@ -127,15 +127,6 @@ async function getStatsForPath(path: string): Promise<Stats> {
     return await fs.stat(path);
 }
 
-/** Utilities - Load environment variables. */
-async function loadEnvironmentVariables(): Promise<void> {
-    /**
-     * logStepHeader('Load environment variables');
-     * const dotenv = (await import('dotenv')) as { config(options?: DotenvConfigOptions): DotenvConfigOutput };
-     * dotenv.config();
-     */
-}
-
 /** Utilities - Log operation header. */
 function logOperationHeader(text: string): void {
     const cyan = '\u001B[36m';
@@ -233,7 +224,6 @@ export {
     getDirectoryEntries,
     getModuleConfig,
     getStatsForPath,
-    loadEnvironmentVariables,
     logOperationHeader,
     logOperationSuccess,
     logStepHeader,

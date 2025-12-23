@@ -9,17 +9,7 @@ import type { PackageJson } from 'type-fest';
 
 // Dependencies - Framework.
 import type { ModuleConfig } from '@datapos/datapos-shared';
-import {
-    loadEnvironmentVariables,
-    logOperationHeader,
-    logOperationSuccess,
-    logStepHeader,
-    readJSONFile,
-    readTextFile,
-    spawnCommand,
-    substituteContent,
-    writeTextFile
-} from '@/utilities';
+import { logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, spawnCommand, substituteContent, writeTextFile } from '@/utilities';
 
 // Interfaces/Types
 interface DependencyCheckData {
@@ -54,7 +44,6 @@ async function auditDependencies(): Promise<void> {
     try {
         logOperationHeader('Audit Dependencies');
 
-        await loadEnvironmentVariables();
         const packageJSON = await readJSONFile<PackageJson>('package.json');
 
         await spawnCommand('1️⃣', 'owasp-dependency-check', [

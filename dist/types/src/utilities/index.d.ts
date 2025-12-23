@@ -19,8 +19,6 @@ declare function getDirectoryEntries(path: string, options: ObjectEncodingOption
 declare function getModuleConfig(configId: string): ModuleTypeConfig;
 /** Utilities - Get stats for path. */
 declare function getStatsForPath(path: string): Promise<Stats>;
-/** Utilities - Load environment variables. */
-declare function loadEnvironmentVariables(): Promise<void>;
 /** Utilities - Log operation header. */
 declare function logOperationHeader(text: string): void;
 /** Utilities - Log operation success. */
@@ -41,4 +39,4 @@ declare function writeJSONFile(path: string, data: object): Promise<void>;
 /** Utilities - Write text file. */
 declare function writeTextFile(path: string, data: string): Promise<void>;
 /** Exposures */
-export { clearDirectory, execCommand, extractOperationsFromSource, getDirectoryEntries, getModuleConfig, getStatsForPath, loadEnvironmentVariables, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, removeFile, spawnCommand, substituteContent, writeJSONFile, writeTextFile };
+export { clearDirectory, execCommand, extractOperationsFromSource, getDirectoryEntries, getModuleConfig, getStatsForPath, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, removeFile, spawnCommand, substituteContent, writeJSONFile, writeTextFile };

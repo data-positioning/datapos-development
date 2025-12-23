@@ -8,18 +8,7 @@
 import { fileURLToPath, URL } from 'node:url';
 
 /** Dependencies - Framework. */
-import {
-    clearDirectory,
-    execCommand,
-    loadEnvironmentVariables,
-    logOperationHeader,
-    logOperationSuccess,
-    logStepHeader,
-    readJSONFile,
-    readTextFile,
-    substituteContent,
-    writeTextFile
-} from '@/utilities';
+import { clearDirectory, execCommand, logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, substituteContent, writeTextFile } from '@/utilities';
 
 /** Interfaces/Types */
 interface License {
@@ -48,8 +37,6 @@ const END_MARKER = '<!-- DEPENDENCY_LICENSES_END -->';
 async function documentDependencies(licenses: string[] = [], checkRecursive = true): Promise<void> {
     try {
         logOperationHeader('Document Dependencies');
-
-        await loadEnvironmentVariables(); // Ensure GitHub token is load from '.env', required when downloading license files (step 5).
 
         const allowedFlags = licenses.flatMap((license) => ['--allowed', `'${license}'`]);
 

@@ -24,7 +24,6 @@ import {
     execCommand,
     extractOperationsFromSource,
     getModuleConfig,
-    loadEnvironmentVariables,
     logOperationHeader,
     logOperationSuccess,
     logStepHeader,
@@ -68,7 +67,6 @@ async function releaseProject(): Promise<void> {
     try {
         logOperationHeader('Release Project');
 
-        await loadEnvironmentVariables();
         const packageJSON = await readJSONFile<PackageJson>('package.json');
         let configJSON = await readJSONFile<ModuleConfig>('config.json');
 

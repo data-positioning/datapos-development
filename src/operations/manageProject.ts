@@ -9,7 +9,6 @@ import type { PackageJson } from 'type-fest';
 import { safeParse } from 'valibot';
 
 // Dependencies - Framework.
-import { CONNECTOR_DESTINATION_OPERATIONS, CONNECTOR_SOURCE_OPERATIONS, connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
 import type {
     ConnectorConfig,
     ConnectorOperationName,
@@ -20,6 +19,7 @@ import type {
     PresenterConfig,
     PresenterOperation
 } from '@datapos/datapos-shared';
+import { connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
 import {
     execCommand,
     extractOperationsFromSource,
@@ -44,6 +44,10 @@ interface OperationConfig {
     operations?: string[];
     usageId?: string;
 }
+
+/** Constants  */
+const CONNECTOR_DESTINATION_OPERATIONS = new Set(['createObject', 'dropObject', 'removeRecords', 'upsertRecords']);
+const CONNECTOR_SOURCE_OPERATIONS = new Set(['findObject', 'getReadableStream', 'getRecord', 'listNodes', 'previewObject', 'retrieveChunks', 'retrieveRecords']);
 
 // Utilities - Build project.
 async function buildProject(): Promise<void> {
@@ -113,7 +117,7 @@ async function releaseProject(): Promise<void> {
         if (moduleTypeConfig.isPublish) {
             const npmrcFileName = '.npmrc';
             try {
-                await writeTextFile(npmrcFileName, `registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN ?? ''}`);
+                await writeTextFile(npmrcFileName, `registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${process.env['NPM_TOKEN'] ?? ''}`);
                 await spawnCommand('8️⃣  Publish to npm', 'npm', ['publish', '--access', 'public']);
             } finally {
                 await removeFile(npmrcFileName);
@@ -208,7 +212,7 @@ async function processOperations<T extends OperationConfig>(packageJSON: Package
     if (packageJSON.name != null) configJSON.id = packageJSON.name.replace('@datapos/', '').replace('@data-positioning/', '');
     if (packageJSON.version != null) configJSON.version = packageJSON.version;
     configJSON.operations = operations;
-    configJSON.usageId = usageId;
+    configJSON.usageId = usageId ?? 'unknown';
 
     await writeJSONFile('config.json', configJSON);
 
@@ -271,8 +275,8 @@ function determineConnectorUsageId(operations: ConnectorOperationName[]): Connec
     let sourceOps = false;
     let destinationOps = false;
     for (const operation of operations) {
-        if (CONNECTOR_SOURCE_OPERATIONS.includes(operation)) sourceOps = true;
-        if (CONNECTOR_DESTINATION_OPERATIONS.includes(operation)) destinationOps = true;
+        if (CONNECTOR_SOURCE_OPERATIONS.has(operation)) sourceOps = true;
+        if (CONNECTOR_DESTINATION_OPERATIONS.has(operation)) destinationOps = true;
     }
     if (sourceOps && destinationOps) return 'bidirectional';
     if (sourceOps) return 'source';

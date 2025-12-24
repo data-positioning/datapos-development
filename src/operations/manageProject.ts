@@ -46,7 +46,7 @@ interface OperationConfig {
 
 /** Constants  */
 const CONNECTOR_DESTINATION_OPERATIONS = new Set(['createObject', 'dropObject', 'removeRecords', 'upsertRecords']);
-const CONNECTOR_SOURCE_OPERATIONS = new Set(['findObject', 'getReadableStream', 'getRecord', 'listNodes', 'previewObject', 'retrieveChunks', 'retrieveRecords']);
+const CONNECTOR_SOURCE_OPERATIONS = new Set(['findObjectFolderPath', 'getReadableStream', 'getRecord', 'listNodes', 'previewObject', 'retrieveChunks', 'retrieveRecords']);
 
 // Utilities - Build project.
 async function buildProject(): Promise<void> {

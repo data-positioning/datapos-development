@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.435",
+    "version": "0.3.436",
     "description": "A collection of utilities for managing Data Positioning projects.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -41,7 +41,7 @@
         "vitest.config.ts"
     ],
     "dependencies": {
-        "@datapos/datapos-shared": "^0.3.396",
+        "@datapos/datapos-shared": "^0.3.403",
         "acorn": "^8.15.0",
         "acorn-typescript": "^1.4.13",
         "acorn-walk": "^8.3.4",
@@ -49,7 +49,7 @@
         "valibot": "^1.2.0"
     },
     "devDependencies": {
-        "@datapos/eslint-config-datapos": "^1.0.32",
+        "@datapos/eslint-config-datapos": "^1.0.34",
         "@types/eslint-plugin-security": "^3.0.0",
         "@types/node": "^25.0.3",
         "@typescript-eslint/eslint-plugin": "^8.50.1",

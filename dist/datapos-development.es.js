@@ -492,7 +492,7 @@ const Ht = {
   "createObject",
   "describeConnection",
   "dropObject",
-  "findObject",
+  "findObjectFolderPath",
   "getReadableStream",
   "getRecord",
   "listNodes",
@@ -5744,7 +5744,7 @@ async function gi(e, t) {
   }
   await a("dist");
 }
-const ea = /* @__PURE__ */ new Set(["createObject", "dropObject", "removeRecords", "upsertRecords"]), ta = /* @__PURE__ */ new Set(["findObject", "getReadableStream", "getRecord", "listNodes", "previewObject", "retrieveChunks", "retrieveRecords"]);
+const ea = /* @__PURE__ */ new Set(["createObject", "dropObject", "removeRecords", "upsertRecords"]), ta = /* @__PURE__ */ new Set(["findObjectFolderPath", "getReadableStream", "getRecord", "listNodes", "previewObject", "retrieveChunks", "retrieveRecords"]);
 async function Ta() {
   try {
     we("Build Project"), await ge("1️⃣  Bundle project", "vite", ["build"]), Ne("Project built.");

@@ -8,7 +8,7 @@
 import type { PackageJson } from 'type-fest';
 
 // Dependencies - Framework.
-import type { ModuleConfig } from '@datapos/datapos-shared';
+import type { ModuleConfig } from '@datapos/datapos-shared/component';
 import { logOperationHeader, logOperationSuccess, logStepHeader, readJSONFile, readTextFile, spawnCommand, substituteContent, writeTextFile } from '@/utilities';
 
 // Interfaces/Types

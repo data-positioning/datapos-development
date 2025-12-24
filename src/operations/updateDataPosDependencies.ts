@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 // Dependencies - Framework.
-import type { ModuleConfig } from '@datapos/datapos-shared';
+import type { ModuleConfig } from '@datapos/datapos-shared/component';
 import type { ModuleTypeConfig } from '@/utilities';
 import { getModuleConfig, logOperationHeader, logOperationSuccess, readJSONFile, readTextFile, spawnCommand, writeTextFile } from '@/utilities';
 

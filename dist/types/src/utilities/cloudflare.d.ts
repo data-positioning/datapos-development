@@ -1,5 +1,5 @@
 import { PackageJson } from 'type-fest';
-import { ModuleConfig } from '@datapos/datapos-shared';
+import { ModuleConfig } from '@datapos/datapos-shared/component';
 declare function putState(): Promise<void>;
 declare function uploadDirectoryToR2(sourceDirectory: string, uploadDirectory: string): Promise<void>;
 declare function uploadModuleConfigToDO(configJSON: ModuleConfig): Promise<void>;

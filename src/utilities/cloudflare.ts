@@ -7,7 +7,7 @@ import type { ObjectEncodingOptions } from 'node:fs';
 import type { PackageJson } from 'type-fest';
 
 // Dependencies - Framework.
-import type { ModuleConfig } from '@datapos/datapos-shared';
+import type { ModuleConfig } from '@datapos/datapos-shared/component';
 import { execCommand, getDirectoryEntries, getStatsForPath, readJSONFile } from '@/utilities';
 
 // Utilities - Put state.

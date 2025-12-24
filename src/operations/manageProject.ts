@@ -9,17 +9,11 @@ import type { PackageJson } from 'type-fest';
 import { safeParse } from 'valibot';
 
 // Dependencies - Framework.
-import type {
-    ConnectorConfig,
-    ConnectorOperationName,
-    ConnectorUsageId,
-    ContextConfig,
-    ContextOperation,
-    ModuleConfig,
-    PresenterConfig,
-    PresenterOperation
-} from '@datapos/datapos-shared';
-import { connectorConfigSchema, contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
+import { connectorConfigSchema } from '@datapos/datapos-shared/component/connector';
+import type { ModuleConfig } from '@datapos/datapos-shared/component';
+import type { ConnectorConfig, ConnectorOperationName, ConnectorUsageId } from '@datapos/datapos-shared/component/connector';
+import type { ContextConfig, ContextOperation, PresenterConfig, PresenterOperation } from '@datapos/datapos-shared';
+import { contextConfigSchema, presenterConfigSchema } from '@datapos/datapos-shared';
 import {
     execCommand,
     extractOperationsFromSource,

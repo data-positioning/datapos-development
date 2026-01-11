@@ -5749,7 +5749,16 @@ async function bi(e, t) {
   }
   await a("dist");
 }
-const ta = /* @__PURE__ */ new Set(["createObject", "dropObject", "removeRecords", "upsertRecords"]), ia = /* @__PURE__ */ new Set(["findObjectFolderPath", "getReadableStream", "getRecord", "listNodes", "previewObject", "retrieveChunks", "retrieveRecords"]);
+const ta = /* @__PURE__ */ new Set(["createObject", "dropObject", "removeRecords", "upsertRecords"]), ia = /* @__PURE__ */ new Set([
+  "auditContent",
+  "findObjectFolderPath",
+  "getReadableStream",
+  "getRecord",
+  "listNodes",
+  "previewObject",
+  "retrieveChunks",
+  "retrieveRecords"
+]);
 async function Ca() {
   try {
     we("Build Project"), await ge("1️⃣  Bundle project", "vite", ["build"]), Ne("Project built.");

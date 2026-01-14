@@ -41,7 +41,7 @@ interface OperationConfig {
 /** Constants  */
 const CONNECTOR_DESTINATION_OPERATIONS = new Set(['createObject', 'dropObject', 'removeRecords', 'upsertRecords']);
 const CONNECTOR_SOURCE_OPERATIONS = new Set([
-    'auditContent',
+    'auditObjectContent',
     'findObjectFolderPath',
     'getReadableStream',
     'getRecord',

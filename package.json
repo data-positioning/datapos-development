@@ -1,6 +1,6 @@
 {
     "name": "@datapos/datapos-development",
-    "version": "0.3.441",
+    "version": "0.3.442",
     "description": "A collection of utilities for managing Data Positioning projects.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
@@ -41,7 +41,7 @@
         "vitest.config.ts"
     ],
     "dependencies": {
-        "@datapos/datapos-shared": "^0.3.514",
+        "@datapos/datapos-shared": "^0.3.527",
         "acorn": "^8.15.0",
         "acorn-typescript": "^1.4.13",
         "acorn-walk": "^8.3.4",
@@ -51,9 +51,9 @@
     "devDependencies": {
         "@datapos/eslint-config-datapos": "^1.0.40",
         "@types/eslint-plugin-security": "^3.0.0",
-        "@types/node": "^25.0.6",
-        "@typescript-eslint/eslint-plugin": "^8.52.0",
-        "@typescript-eslint/parser": "^8.52.0",
+        "@types/node": "^25.0.8",
+        "@typescript-eslint/eslint-plugin": "^8.53.0",
+        "@typescript-eslint/parser": "^8.53.0",
         "eslint": "^9.39.2",
         "eslint-import-resolver-typescript": "^4.4.4",
         "eslint-plugin-import": "^2.32.0",
@@ -70,11 +70,11 @@
         "prettier": "^3.7.4",
         "rollup-plugin-visualizer": "^6.0.5",
         "sonda": "^0.10.1",
-        "type-fest": "^5.3.1",
+        "type-fest": "^5.4.1",
         "typescript": "^5.9.3",
         "vite": "^7.3.1",
         "vite-plugin-dts": "^4.5.4",
-        "vitest": "^4.0.16"
+        "vitest": "^4.0.17"
     },
     "scripts": {
         "audit": "op run --env-file=.env -- node -e \"import('./dist/datapos-development.es.js').then(m => m.auditDependencies())\"",

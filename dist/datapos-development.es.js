@@ -5746,7 +5746,7 @@ async function vi(e, t) {
   await a("dist");
 }
 const ea = /* @__PURE__ */ new Set(["createObject", "dropObject", "removeRecords", "upsertRecords"]), ta = /* @__PURE__ */ new Set([
-  "auditContent",
+  "auditObjectContent",
   "findObjectFolderPath",
   "getReadableStream",
   "getRecord",

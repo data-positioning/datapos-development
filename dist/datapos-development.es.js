@@ -488,7 +488,7 @@ const qt = {
   params: /* @__PURE__ */ ce(/* @__PURE__ */ Re(/* @__PURE__ */ $t(/* @__PURE__ */ V(), /* @__PURE__ */ V())))
 }), Bs = Se(["application", "curatedDataset", "database", "fileStore"]), Us = Se([
   "abortOperation",
-  "auditContent",
+  "auditObjectContent",
   "authenticateConnection",
   "createObject",
   "describeConnection",

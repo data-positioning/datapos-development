@@ -1,4 +1,6 @@
 # Data Positioning Development Library
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development?ref=badge_shield)
+
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=data-positioning_datapos-development&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=data-positioning_datapos-development)
 <span><!-- OWASP_BADGES_START -->
@@ -134,3 +136,6 @@ Insert link to other document for detailed explanation. Only show messages if is
 This project is licensed under the MIT License, permitting free use, modification, and distribution.
 
 [MIT](./LICENSE) © 2026 Data Positioning Pty Ltd
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdata-positioning%2Fdatapos-development?ref=badge_large)

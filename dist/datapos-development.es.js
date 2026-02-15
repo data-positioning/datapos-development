@@ -180,11 +180,11 @@ function He(e, t) {
   };
 }
 // @__NO_SIDE_EFFECTS__
-function me(e, t) {
+function le(e, t) {
   return {
     kind: "schema",
     type: "nullable",
-    reference: me,
+    reference: le,
     expects: `(${e.expects} | null)`,
     async: !1,
     wrapped: e,
@@ -271,11 +271,11 @@ function ve(e, t) {
   };
 }
 // @__NO_SIDE_EFFECTS__
-function ce(e, t) {
+function me(e, t) {
   return {
     kind: "schema",
     type: "optional",
-    reference: ce,
+    reference: me,
     expects: `(${e.expects} | undefined)`,
     async: !1,
     wrapped: e,
@@ -411,10 +411,10 @@ const Se = (e) => /* @__PURE__ */ Si(e.map((t) => /* @__PURE__ */ He(t))), Rs = 
   "en-us": /* @__PURE__ */ V(),
   "es-es": /* @__PURE__ */ V()
 }), tt = /* @__PURE__ */ ve({
-  "en-au": /* @__PURE__ */ ce(/* @__PURE__ */ V()),
-  "en-gb": /* @__PURE__ */ ce(/* @__PURE__ */ V()),
-  "en-us": /* @__PURE__ */ ce(/* @__PURE__ */ V()),
-  "es-es": /* @__PURE__ */ ce(/* @__PURE__ */ V())
+  "en-au": /* @__PURE__ */ me(/* @__PURE__ */ V()),
+  "en-gb": /* @__PURE__ */ me(/* @__PURE__ */ V()),
+  "en-us": /* @__PURE__ */ me(/* @__PURE__ */ V()),
+  "es-es": /* @__PURE__ */ me(/* @__PURE__ */ V())
 }), Ms = Se(["amber", "green", "red", "other"]), Ds = Se([
   "alpha",
   "beta",
@@ -459,18 +459,18 @@ const Vs = /* @__PURE__ */ ve({
   id: /* @__PURE__ */ V(),
   label: tt,
   description: tt,
-  firstCreatedAt: /* @__PURE__ */ ce(/* @__PURE__ */ De()),
-  icon: /* @__PURE__ */ me(/* @__PURE__ */ V()),
-  iconDark: /* @__PURE__ */ me(/* @__PURE__ */ V()),
-  lastUpdatedAt: /* @__PURE__ */ me(/* @__PURE__ */ De()),
-  status: /* @__PURE__ */ me(Vs),
+  firstCreatedAt: /* @__PURE__ */ me(/* @__PURE__ */ De()),
+  icon: /* @__PURE__ */ le(/* @__PURE__ */ V()),
+  iconDark: /* @__PURE__ */ le(/* @__PURE__ */ V()),
+  lastUpdatedAt: /* @__PURE__ */ le(/* @__PURE__ */ De()),
+  status: /* @__PURE__ */ le(Vs),
   statusId: Ds
 }, Ci = /* @__PURE__ */ ve({
   id: /* @__PURE__ */ V(),
   label: tt,
   description: tt,
-  icon: /* @__PURE__ */ me(/* @__PURE__ */ V()),
-  iconDark: /* @__PURE__ */ me(/* @__PURE__ */ V()),
+  icon: /* @__PURE__ */ le(/* @__PURE__ */ V()),
+  iconDark: /* @__PURE__ */ le(/* @__PURE__ */ V()),
   order: /* @__PURE__ */ De(),
   path: /* @__PURE__ */ V()
 });
@@ -480,12 +480,12 @@ const qt = {
   version: /* @__PURE__ */ V()
 }, js = Se(["apiKey", "disabled", "oAuth2", "none"]), Fs = /* @__PURE__ */ ve({
   authMethodId: js,
-  activeConnectionCount: /* @__PURE__ */ ce(/* @__PURE__ */ De()),
-  canDescribe: /* @__PURE__ */ ce(/* @__PURE__ */ Pi()),
-  id: /* @__PURE__ */ ce(/* @__PURE__ */ V()),
-  label: /* @__PURE__ */ ce(Rs),
-  maxConnectionCount: /* @__PURE__ */ ce(/* @__PURE__ */ De()),
-  params: /* @__PURE__ */ ce(/* @__PURE__ */ Re(/* @__PURE__ */ $t(/* @__PURE__ */ V(), /* @__PURE__ */ V())))
+  activeConnectionCount: /* @__PURE__ */ me(/* @__PURE__ */ De()),
+  canDescribe: /* @__PURE__ */ me(/* @__PURE__ */ Pi()),
+  id: /* @__PURE__ */ me(/* @__PURE__ */ V()),
+  label: /* @__PURE__ */ me(Rs),
+  maxConnectionCount: /* @__PURE__ */ le(/* @__PURE__ */ De()),
+  params: /* @__PURE__ */ me(/* @__PURE__ */ Re(/* @__PURE__ */ $t(/* @__PURE__ */ V(), /* @__PURE__ */ V())))
 }), Bs = Se(["application", "curatedDataset", "database", "fileStore"]), Us = Se([
   "abortOperation",
   "auditObjectContent",
@@ -508,14 +508,14 @@ const qt = {
 }), Hs = /* @__PURE__ */ ve({
   ...qt,
   typeId: /* @__PURE__ */ He("connector"),
-  category: /* @__PURE__ */ me(qs),
+  category: /* @__PURE__ */ le(qs),
   categoryId: Bs,
   implementations: /* @__PURE__ */ $t(/* @__PURE__ */ V(), Fs),
   operations: /* @__PURE__ */ Re(Us),
   usageId: $s,
-  vendorAccountURL: /* @__PURE__ */ me(/* @__PURE__ */ V()),
-  vendorDocumentationURL: /* @__PURE__ */ me(/* @__PURE__ */ V()),
-  vendorHomeURL: /* @__PURE__ */ me(/* @__PURE__ */ V())
+  vendorAccountURL: /* @__PURE__ */ le(/* @__PURE__ */ V()),
+  vendorDocumentationURL: /* @__PURE__ */ le(/* @__PURE__ */ V()),
+  vendorHomeURL: /* @__PURE__ */ le(/* @__PURE__ */ V())
 }), Gs = Se(["list"]), Ks = /* @__PURE__ */ ve({
   ...Ti,
   typeId: /* @__PURE__ */ He("contextModelGroup"),
@@ -2774,7 +2774,7 @@ C.regexp_eatDecimalEscape = function(e) {
   }
   return !1;
 };
-var Yi = 0, Ee = 1, pe = 2;
+var Yi = 0, Ee = 1, ce = 2;
 C.regexp_eatCharacterClassEscape = function(e) {
   var t = e.current();
   if (Ar(t))
@@ -2790,7 +2790,7 @@ C.regexp_eatCharacterClassEscape = function(e) {
       125
       /* } */
     ))
-      return s && a === pe && e.raise("Invalid property name"), a;
+      return s && a === ce && e.raise("Invalid property name"), a;
     e.raise("Invalid property name");
   }
   return Yi;
@@ -2823,7 +2823,7 @@ C.regexp_validateUnicodePropertyNameOrValue = function(e, t) {
   if (e.unicodeProperties.binary.test(t))
     return Ee;
   if (e.switchV && e.unicodeProperties.binaryOfStrings.test(t))
-    return pe;
+    return ce;
   e.raise("Invalid property name");
 };
 C.regexp_eatUnicodePropertyName = function(e) {
@@ -2859,7 +2859,7 @@ C.regexp_eatCharacterClass = function(e) {
     return e.eat(
       93
       /* ] */
-    ) || e.raise("Unterminated character class"), t && s === pe && e.raise("Negated character class may contain strings"), !0;
+    ) || e.raise("Unterminated character class"), t && s === ce && e.raise("Negated character class may contain strings"), !0;
   }
   return !1;
 };
@@ -2920,13 +2920,13 @@ C.regexp_eatClassEscape = function(e) {
 C.regexp_classSetExpression = function(e) {
   var t = Ee, s;
   if (!this.regexp_eatClassSetRange(e)) if (s = this.regexp_eatClassSetOperand(e)) {
-    s === pe && (t = pe);
+    s === ce && (t = ce);
     for (var a = e.pos; e.eatChars(
       [38, 38]
       /* && */
     ); ) {
       if (e.current() !== 38 && (s = this.regexp_eatClassSetOperand(e))) {
-        s !== pe && (t = Ee);
+        s !== ce && (t = Ee);
         continue;
       }
       e.raise("Invalid character in character class");
@@ -2946,7 +2946,7 @@ C.regexp_classSetExpression = function(e) {
     if (!this.regexp_eatClassSetRange(e)) {
       if (s = this.regexp_eatClassSetOperand(e), !s)
         return t;
-      s === pe && (t = pe);
+      s === ce && (t = ce);
     }
 };
 C.regexp_eatClassSetRange = function(e) {
@@ -2981,7 +2981,7 @@ C.regexp_eatNestedClass = function(e) {
       93
       /* ] */
     ))
-      return s && a === pe && e.raise("Negated character class may contain strings"), a;
+      return s && a === ce && e.raise("Negated character class may contain strings"), a;
     e.pos = t;
   }
   if (e.eat(
@@ -3022,13 +3022,13 @@ C.regexp_classStringDisjunctionContents = function(e) {
     124
     /* | */
   ); )
-    this.regexp_classString(e) === pe && (t = pe);
+    this.regexp_classString(e) === ce && (t = ce);
   return t;
 };
 C.regexp_classString = function(e) {
   for (var t = 0; this.regexp_eatClassSetCharacter(e); )
     t++;
-  return t === 1 ? Ee : pe;
+  return t === 1 ? Ee : ce;
 };
 C.regexp_eatClassSetCharacter = function(e) {
   var t = e.pos;
@@ -5641,7 +5641,7 @@ function Jt(e) {
     v && v !== "constructor" && p.accessibility !== "private" && a.push(v);
   }), a;
 }
-async function le(e, t, s = [], a) {
+async function pe(e, t, s = [], a) {
   const n = `${t} ${s.join(" ")}`;
   e !== void 0 && W(`${e} - exec(${n})`);
   const { stdout: p, stderr: f } = await Xr(n);
@@ -5740,7 +5740,7 @@ async function vi(e, t) {
       const x = `${n}/${v.name}`, o = p ? `${p}/${v.name}` : v.name;
       if (v.isDirectory()) continue;
       const S = `${t}_${s}/${o}`.replaceAll("\\", "/"), I = v.name.endsWith(".css") ? "text/css" : "application/octet-stream", B = v.name.endsWith(".js") ? "application/javascript" : I;
-      console.info(`⚙️ Uploading '${o}' → '${S}'...`), await le(void 0, `wrangler r2 object put "${S}" --file="${x}" --content-type ${B} --jurisdiction=eu --remote`);
+      console.info(`⚙️ Uploading '${o}' → '${S}'...`), await pe(void 0, `wrangler r2 object put "${S}" --file="${x}" --content-type ${B} --jurisdiction=eu --remote`);
     }
   }
   await a("dist");
@@ -5782,7 +5782,7 @@ async function Ca() {
       default:
         t = await ia("2️⃣", e);
     }
-    if (await xe("3️⃣  Bundle project", "vite", ["build"]), await le("4️⃣  Stage changes", "git", ["add", "."]), await le("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await le("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), s.typeId === "app")
+    if (await xe("3️⃣  Bundle project", "vite", ["build"]), await pe("4️⃣  Stage changes", "git", ["add", "."]), await pe("5️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await pe("6️⃣  Push changes", "git", ["push", "origin", "main:main"]), s.typeId === "app")
       W("7️⃣  Register module"), await Zr();
     else if (s.typeId === "engine")
       W("7️⃣  Register module"), await vi(e, `datapos-engine-eu/${s.uploadGroupName}`), await xi(t);
@@ -5812,7 +5812,7 @@ async function ka() {
   try {
     ke("Synchronise Project with GitHub");
     const e = await J("package.json");
-    W("Bump project version"), await hs("1️⃣", e), await le("2️⃣  Stage changes", "git", ["add", "."]), await le("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await le("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), _e(`Project version '${e.version}' synchronised with GitHub.`);
+    W("Bump project version"), await hs("1️⃣", e), await pe("2️⃣  Stage changes", "git", ["add", "."]), await pe("3️⃣  Commit changes", "git", ["commit", "-m", `"v${e.version}"`]), await pe("4️⃣  Push changes", "git", ["push", "origin", "main:main"]), _e(`Project version '${e.version}' synchronised with GitHub.`);
   } catch (e) {
     console.error("❌ Error synchronising project with GitHub.", e), process.exit(1);
   }
@@ -5935,17 +5935,17 @@ async function Ia(e = [], t = !0) {
   try {
     ke("Document Dependencies");
     const s = e.flatMap((n) => ["--allowed", `'${n}'`]), a = gi(new bs(import.meta.resolve("@datapos/datapos-development/license-report-config")));
-    await le(
+    await pe(
       "1️⃣  Generate 'licenses.json' file",
       "license-report",
       ["--config", `'${a}'`, "--only=prod,peer", "--output=json"],
       "licenses/licenses.json"
-    ), await le("2️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "licenses/licenses.json", "--output=table", ...s]), t ? (await le(
+    ), await pe("2️⃣  Check 'licenses.json' file", "license-report-check", ["--source", "licenses/licenses.json", "--output=table", ...s]), t ? (await pe(
       "3️⃣  Generate 'licenseTree.json' file",
       "license-report-recursive",
       ["--only=prod,peer", "--output=tree", "--recurse", "--department.value=n/a", "--licensePeriod.value=n/a", "--material.value=n/a", "--relatedTo.value=n/a"],
       "licenses/licenseTree.json"
-    ), await le("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "licenses/licenseTree.json", "--output=table", ...s])) : (W("3️⃣  Skip 'licenses/licenseTree.json' file generate"), W("4️⃣  Skip 'licenses/licenseTree.json' file check")), await Qr("licenses/downloads"), await le("5️⃣  Download license files", "license-downloader", [
+    ), await pe("4️⃣  Check 'licenseTree.json' file", "license-report-check", ["--source", "licenses/licenseTree.json", "--output=table", ...s])) : (W("3️⃣  Skip 'licenses/licenseTree.json' file generate"), W("4️⃣  Skip 'licenses/licenseTree.json' file check")), await Qr("licenses/downloads"), await pe("5️⃣  Download license files", "license-downloader", [
       "--source",
       "licenses/licenses.json",
       "--licDir",

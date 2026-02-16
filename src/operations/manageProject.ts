@@ -194,8 +194,11 @@ async function buildConnectorProjectConfig(stepIcon: string, packageJSON: Packag
         throw new Error('Configuration is invalid.');
     }
 
+    console.log(1111);
     const operations = extractOperationsFromSource<ConnectorOperationName>(indexCode);
+    console.log(2222);
     const usageId = determineConnectorUsageId(operations);
+    console.log(3333);
 
     return await processOperations<ConnectorConfig>(packageJSON, configJSON, operations, usageId);
 }

@@ -5836,8 +5836,11 @@ async function sa(e, t) {
   const [s, a] = await Promise.all([J("config.json"), Ve("src/index.ts")]), n = /* @__PURE__ */ Bt(Hs, s);
   if (!n.success)
     throw console.error("❌ Configuration is invalid:"), console.table(n.issues), new Error("Configuration is invalid.");
-  const p = Jt(a), f = na(p);
-  return await Yt(t, s, p, f);
+  console.log(1111);
+  const p = Jt(a);
+  console.log(2222);
+  const f = na(p);
+  return console.log(3333), await Yt(t, s, p, f);
 }
 async function Yt(e, t, s, a) {
   return s.length > 0 ? (console.info(`ℹ️  Implements ${s.length} operations:`), console.table(s)) : console.warn("⚠️  Implements no operations."), a === "unknown" ? console.warn("⚠️  No usage identified.") : console.info(`ℹ️  Supports '${a}' usage.`), e.name != null && (t.id = e.name.replace("@datapos/", "").replace("@data-positioning/", "")), e.version != null && (t.version = e.version), t.operations = s, t.usageId = a ?? "unknown", await vt("config.json", t), t;

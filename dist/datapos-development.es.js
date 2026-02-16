@@ -5633,12 +5633,13 @@ function Jt(e) {
     sourceType: "module",
     locations: !0
   }), a = [];
-  return Ft(s, (n) => {
-    if (n.type !== "MethodDefinition") return;
+  return console.log("aaaa"), Ft(s, (n) => {
+    if (console.log("bbbb", n), n.type !== "MethodDefinition") return;
+    console.log("cccc");
     const p = n, f = p.key;
     if (f.type !== "Identifier") return;
     const v = f.name;
-    v && v !== "constructor" && p.accessibility !== "private" && a.push(v);
+    console.log("dddd"), v && v !== "constructor" && p.accessibility !== "private" && (console.log("eeee"), a.push(v), console.log("ffff"));
   }), a;
 }
 async function pe(e, t, s = [], a) {

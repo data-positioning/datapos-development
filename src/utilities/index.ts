@@ -77,22 +77,29 @@ function extractOperationsFromSource<T>(source: string): T[] {
 
     const operations: T[] = [];
 
+    console.log('aaaa');
     traverseAST(ast, (node) => {
+        console.log('bbbb', node);
         if (node.type !== 'MethodDefinition') return;
 
+        console.log('cccc');
         const md = node as MethodDefinition & { accessibility?: string };
         const key = md.key;
         if (key.type !== 'Identifier') return;
         const name = key.name;
 
+        console.log('dddd');
         if (!name) return;
         if (name === 'constructor') return;
         if (md.accessibility === 'private') return;
 
+        console.log('eeee');
         operations.push(name as T);
+        console.log('ffff');
     });
 
     return operations;
+    console.log('zzzz');
 }
 
 /** TODO Utilities - Execute command. */

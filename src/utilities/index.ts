@@ -67,6 +67,7 @@ async function clearDirectory(directoryPath: string): Promise<void> {
 
 /** Utilities - Extract operations from source. */
 function extractOperationsFromSource<T>(source: string): T[] {
+    console.log('aaaa1');
     // @ts-expect-error - acorn-typescript runtime mismatch is fine.
     const TSParser = Parser.extend(acornTypeScript());
     const ast = TSParser.parse(source, {
@@ -74,10 +75,10 @@ function extractOperationsFromSource<T>(source: string): T[] {
         sourceType: 'module',
         locations: true
     });
+    console.log('aaaa2');
 
     const operations: T[] = [];
 
-    console.log('aaaa');
     traverseAST(ast, (node) => {
         console.log('bbbb', node);
         if (node.type !== 'MethodDefinition') return;

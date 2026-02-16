@@ -5628,12 +5628,15 @@ async function Qr(e) {
   );
 }
 function Jt(e) {
+  console.log("aaaa1");
   const s = H.extend(Wr()).parse(e, {
     ecmaVersion: "latest",
     sourceType: "module",
     locations: !0
-  }), a = [];
-  return console.log("aaaa"), Ft(s, (n) => {
+  });
+  console.log("aaaa2");
+  const a = [];
+  return Ft(s, (n) => {
     if (console.log("bbbb", n), n.type !== "MethodDefinition") return;
     console.log("cccc");
     const p = n, f = p.key;

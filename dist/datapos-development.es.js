@@ -493,7 +493,7 @@ const qt = {
   "createObject",
   "describeConnection",
   "dropObject",
-  "findObjectFolderPath",
+  "findObject",
   "getReadableStream",
   "getRecord",
   "listNodes",
